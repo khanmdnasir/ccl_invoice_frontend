@@ -62,6 +62,7 @@ const MenuItemWithChildren = ({ item, linkClassName, subMenuClassNames, activeMe
                             return (
                                 <React.Fragment key={i}>
                                     {child.children ? (
+                                        
                                         <>
                                             {/* parent */}
                                             <MenuItemWithChildren
@@ -129,7 +130,7 @@ interface AppMenuProps {
 
 const AppMenu = ({ menuItems }: AppMenuProps) => {
     let location = useLocation();
-
+    const user_permissions = useSelector((state:RootState)=> state.Role.user_role);
     const menuRef: any = useRef(null);
 
     const [activeMenuItems, setActiveMenuItems] = useState<Array<string>>([]);
@@ -197,6 +198,7 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
                                             linkClassName="side-nav-link"
                                         />
                                     ) : (
+                                        (user_permissions.includes(item.key) || item.key === 'dashboards') &&
                                         <MenuItem
                                             item={item}
                                             linkClassName="side-nav-link"

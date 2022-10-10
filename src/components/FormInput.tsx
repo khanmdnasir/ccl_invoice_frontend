@@ -173,6 +173,7 @@ const FormInput = ({
                                         rows={rows}
                                         {...otherProps}
                                         autoComplete={name}
+                                        
                                     >
                                         {children ? children : null}
                                     </Form.Control>

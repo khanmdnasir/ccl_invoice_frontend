@@ -26,14 +26,29 @@ const MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
-        key: 'client',
-        label: 'Client',
+        key: 'dashboards',
+        label: 'Contact',
         isTitle: false,
-        icon: 'airplay',
-        url: '/app/client',
+        icon: 'clipboard',
+        url: '/app/contact',
         
     },
-    
+    {
+        key: 'dashboards',
+        label: 'Service',
+        isTitle: false,
+        icon: 'service',
+        url: '/app/service',
+        
+    },
+    {
+        key: 'dashboards',
+        label: 'Invoice',
+        isTitle: false,
+        icon: 'invoice',
+        url: '/app/invoice',
+        
+    },
     {
         key: 'settings',
         label: 'Settings',
@@ -52,12 +67,7 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 url: '/app/users',
                 parentKey: 'settings',
             },
-            {
-                key: 'view_currency',
-                label: 'Currency',
-                url: '/app/currency',
-                parentKey: 'settings',
-            },
+            
             
         ],
     },  
@@ -74,13 +84,29 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
-        key: 'client',
-        label: 'Client',
+        key: 'dashboards',
+        label: 'Contact',
         isTitle: false,
-        icon: 'airplay',
-        url: '/app/client',
+        icon: 'clipboard',
+        url: '/app/contact',
         
-    },    
+    },   
+    {
+        key: 'dashboards',
+        label: 'Service',
+        isTitle: false,
+        icon: 'phone',
+        url: '/app/service',
+        
+    }, 
+    {
+        key: 'dashboards',
+        label: 'Invoice',
+        isTitle: false,
+        icon: 'file-text',
+        url: '/app/invoice',
+        
+    },
     {
         key: 'settings',
         label: 'Settings',
@@ -99,12 +125,7 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 url: '/app/users',
                 parentKey: 'settings',
             },
-            {
-                key: 'view_currency',
-                label: 'Currency',
-                url: '/app/currency',
-                parentKey: 'settings',
-            },
+            
             
         ],
     },
@@ -121,13 +142,29 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
-        key: 'client',
-        label: 'Client',
+        key: 'dashboards',
+        label: 'Contact',
         isTitle: false,
-        icon: 'airplay',
-        url: '/app/client',
+        icon: 'clipboard',
+        url: '/app/contact',
         
-    },    
+    },   
+    {
+        key: 'dashboards',
+        label: 'Service',
+        isTitle: false,
+        icon: 'phone',
+        url: '/app/service',
+        
+    }, 
+    {
+        key: 'dashboards',
+        label: 'Invoice',
+        isTitle: false,
+        icon: 'file-text',
+        url: '/app/invoice',
+        
+    },
     {
         key: 'settings',
         label: 'Settings',
@@ -146,12 +183,7 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 url: '/app/users',
                 parentKey: 'settings',
             },
-            {
-                key: 'view_currency',
-                label: 'Currency',
-                url: '/app/currency',
-                parentKey: 'settings',
-            },
+            
             
         ],
     },

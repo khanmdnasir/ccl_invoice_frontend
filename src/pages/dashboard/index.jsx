@@ -1,11 +1,10 @@
 import { Button,Row, Col, Form } from 'react-bootstrap';
 
 // components
-import Statistics from './Statistics';
+
 import DashboardWatchList from './DashboardWatchList';
 import AssetTypeChart from './AssetTypeChart';
 import IndustryChart from './IndustryChart';
-import CurrencyChart from './CurrencyChart';
 import CountryChart from './CountryChart';
 import DashboardUpcomingEvents from './DashboardUpcomingEvents';
 import { ReactSortable } from 'react-sortablejs';
@@ -26,12 +25,6 @@ const Dashboard = () => {
         {
             id: 2,
             component: IndustryChart,
-            
-            
-        },
-        {
-            id: 3,
-            component: CurrencyChart,
             
             
         },
@@ -138,7 +131,6 @@ const Dashboard = () => {
                 </Col>
             </Row>
 
-            <Statistics />
 
             
             { editDashboard ?

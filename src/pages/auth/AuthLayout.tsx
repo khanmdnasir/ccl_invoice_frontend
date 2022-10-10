@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 
-import Logo from '../../assets/images/ITracker.svg';
+import CCL_Logo from '../../assets/images/ccl.jpg';
 
 
 
@@ -39,13 +39,13 @@ const AuthLayout = ({ helpText, bottomLinks, children, isCombineForm }: AccountL
                                 <div className="auth-logo">
                                     <Link to="/" className="logo logo-dark text-center outline-none">
                                         <span className="logo-lg">
-                                            <img src={Logo} alt="" height="50" />
+                                            <img src={CCL_Logo} alt="" height="90" />
                                         </span>
                                     </Link>
 
                                     <Link to="/" className="logo logo-light text-center">
                                         <span className="logo-lg">
-                                            <img src={Logo} alt="" height="50" />
+                                            <img src={CCL_Logo} alt="" height="90" />
                                         </span>
                                     </Link>
                                 </div>

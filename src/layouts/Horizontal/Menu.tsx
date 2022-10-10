@@ -126,7 +126,9 @@ const MenuItemWithChildren = ({
                                             />
                                         </>
                                     ) : (
-                                        user_permissions.includes(child.key) &&
+                                        
+                                        
+                                        user_permissions.includes(child.key)  &&
                                         <>
                                             {/* child */}
                                             
@@ -137,6 +139,7 @@ const MenuItemWithChildren = ({
                                                 })}
                                             />
                                         </>
+                                            
                                     )}
                                 </React.Fragment>
                             );
@@ -201,7 +204,7 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
     const [topnavMenuItems] = useState<MenuItemTypes[]>(menuItems);
     const [activeMenuItems, setActiveMenuItems] = useState<string[]>([]);
     
-    
+    const user_permissions = useSelector((state:RootState)=> state.Role.user_role);
 
     /*
      * toggle the menus
@@ -261,7 +264,7 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
                                     toggleMenu={toggleMenu}
                                 />
                             ) : (
-                                
+                                (user_permissions.includes(item.key) || item.key === 'dashboards') &&
                                 <MenuItem
                                     item={item}
                                     linkClassName={classNames('nav-link', 'dropdown-toggle', {

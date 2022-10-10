@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, RouteProps } from 'react-router-dom';
-import Client from '../pages/app/Client';
+import Contact from '../pages/app/Contact';
 
 import ChangePassword from '../pages/app/user-management/ChangePassword';
 import RoleForm from '../pages/Form/RoleForm';
@@ -10,6 +10,12 @@ import PasswordResetSuccess from '../pages/auth/PasswordResetSuccess';
 // components
 import PrivateRoute from './PrivateRoute';
 import Root from './Root';
+import Service from '../pages/app/service';
+import ServiceForm from '../pages/Form/ServiceForm';
+import ContactCard from '../pages/app/ContactCard';
+import Invoice from '../pages/app/invoice';
+import InvoiceForm from '../pages/Form/InvoiceForm';
+import InvoiceDetails from '../pages/app/InvoiceDetails';
 
 // lazy load all the views
 
@@ -29,7 +35,6 @@ const MyProfile = React.lazy(() => import('../pages/app/user-management/MyProfil
 const Users = React.lazy(() => import('../pages/app/user-management/Users'));
 const Role = React.lazy(() => import('../pages/app/user-management/Role'));
 
-const Currency = React.lazy(() => import('../pages/app/settings/Currency'));
 
 
 //others
@@ -107,15 +112,45 @@ const AppRoutes = {
             route: PrivateRoute,
         },
         {
-            path: '/app/currency',
-            name: 'Currency',
-            component: Currency,
+            path: '/app/contact',
+            name: 'Contact',
+            component: Contact,
             route: PrivateRoute,
         },
         {
-            path: '/app/client',
-            name: 'Client',
-            component: Client,
+            path: '/app/service',
+            name: 'Service',
+            component: ContactCard,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/service_by_contact',
+            name: 'Service',
+            component: Service,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/service_form',
+            name: 'Service Form',
+            component: ServiceForm,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/invoice',
+            name: 'Invoice',
+            component: Invoice,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/invoice_form',
+            name: 'Invoice Form',
+            component: InvoiceForm,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/invoice_details',
+            name: 'Invoice Details',
+            component: InvoiceDetails,
             route: PrivateRoute,
         },
         

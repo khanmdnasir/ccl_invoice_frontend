@@ -1,7 +1,7 @@
 import * as type from './types';
 
 const INIT_STATE = {
-    currencies: [],
+    accounts: [],
     previous: '',
     next: '',
     current_page: '',
@@ -13,19 +13,19 @@ const INIT_STATE = {
 
 
 
-const Currency = (state = INIT_STATE, action: any) => {
+const ChartAccount = (state = INIT_STATE, action: any) => {
     switch (action.type) {
-        case type.GET_CURRENCY_REQUESTED: {
+        case type.GET_CHARTACCOUNT_REQUESTED: {
             return {
                 ...state,
                 loading: true,
             };
         }
-        case type.GET_CURRENCY_SUCCESS: {
+        case type.GET_CHARTACCOUNT_SUCCESS: {
             return {
                 ...state,
                 loading: false,
-                currencies: action.data,
+                accounts: action.data.results,
                 previous: action.data.previous,
                 next: action.data.next,
                 current_page: action.data.current_page,
@@ -33,7 +33,7 @@ const Currency = (state = INIT_STATE, action: any) => {
                 active: action.data.current_page,
             };
         }
-        case type.GET_CURRENCY_FAILED: {
+        case type.GET_CHARTACCOUNT_FAILED: {
             return {
                 ...state,
                 loading: false,
@@ -48,4 +48,4 @@ const Currency = (state = INIT_STATE, action: any) => {
     }
 };
 
-export default Currency;
+export default ChartAccount;

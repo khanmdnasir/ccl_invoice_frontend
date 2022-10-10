@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { Form } from 'react-bootstrap';
 // actions
-import { showRightSidebar, changeSidebarType, getCurrency, selectCurrency, getUserRole } from '../redux/actions';
+import { showRightSidebar, changeSidebarType, getUserRole } from '../redux/actions';
 
 // store
 import { RootState, AppDispatch } from '../redux/store';
@@ -17,7 +17,7 @@ import TopbarSearch from '../components/TopbarSearch';
 import MaximizeScreen from '../components/MaximizeScreen';
 import SearchDropdown from '../components/SearchDropdown';
 import ProfileDropdown from '../components/ProfileDropdown';
-import ITracker from '../assets/images/ITracker1.svg';
+import CCL_Logo from '../assets/images/ccl.jpg';
 import NoImage from '../assets/images/no_image.jpg';
 
 
@@ -109,7 +109,6 @@ interface TopbarProps {
 
 const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: TopbarProps) => {
     const dispatch = useDispatch<AppDispatch>();
-    const currencies = useSelector((state:RootState) => state.Currency.currency)
     const [isopen, setIsopen] = useState<boolean>(false);
     const navbarCssClasses: string = navCssClasses || '';
     const containerCssClasses: string = !hideLogo ? 'container-fluid' : '';
@@ -147,15 +146,12 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
         if (leftSideBarType === 'condensed') dispatch(changeSidebarType(SideBarTypes.LEFT_SIDEBAR_TYPE_DEFAULT));
     };
 
-    const handleSelectCurrency = (e:any) =>{
-        let scurrency = currencies.filter((item:any) => {return parseInt(item.id) === parseInt(e.target.value)});
-        dispatch(selectCurrency(scurrency[0]));
-    }
+   
 
             
     useEffect(()=>{
         dispatch(getUserRole());
-        dispatch(getCurrency(0,1));
+        
     },[])
    
     return (
@@ -166,25 +162,25 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         <div className="logo-box">
                             <Link to="/" className="logo logo-dark text-center">
                                 <span className="logo-sm">
-                                    <img src={ITracker} alt="" height="10" />
+                                    <img src={CCL_Logo} alt="" height="40" />
                                 </span>
                                 <span className="logo-lg">
                                     <img
-                                        src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? ITracker : ITracker}
+                                        src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? CCL_Logo : CCL_Logo}
                                         alt=""
-                                        height="20"
+                                        height="40"
                                     />
                                 </span>
                             </Link>
                             <Link to="/" className="logo logo-light text-center">
                                 <span className="logo-sm">
-                                    <img src={ITracker} alt="" height="10" />
+                                    <img src={CCL_Logo} alt="" height="30" />
                                 </span>
                                 <span className="logo-lg">
                                     <img
-                                        src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? ITracker : ITracker}
+                                        src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? CCL_Logo : CCL_Logo}
                                         alt=""
-                                        height="20"
+                                        height="40"
                                     />
                                 </span>
                             </Link>
@@ -260,22 +256,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                                 </div>
                             </Link>
                         </li>
-                        {currencies.length > 0 ?
-                        <li className="dropdown  ">
-                        <Form.Group>
-                            <Form.Select  style={{backgroundColor: '#0c5cad',border:'none',color: 'rgba(255, 255, 255, 0.6)',marginTop: '20px',lineHeight: '20px'}} aria-label="Default select example" onChange={(e:any)=> handleSelectCurrency(e)}>
-                                {currencies.map((item:any)=>{
-                                    return <option value={item.id} >{item.short_key}</option>
-                                })}
-                                
-                            </Form.Select>
-                        </Form.Group>
-                        </li>:
-                        <li className="dropdown  " style={{marginTop: '25px'}}>
-                            <Link to='/app/currency' style={{backgroundColor: '#0c5cad',border:'none',color: 'rgba(255, 255, 255, 0.6)',marginTop: '20px',lineHeight: '20px'}}>Add Currency</Link>
-                        </li>
                         
-                        }
                     </ul>
                 </div>
             </div>
