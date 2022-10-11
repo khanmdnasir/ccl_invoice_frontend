@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { APICore } from '../../helpers/api/apiCore';
-import { Row, Col, Card, Form, Alert } from 'react-bootstrap';
+import { Row, Col, Card, Form, Alert, Tab, Nav} from 'react-bootstrap';
 import { withSwal } from 'react-sweetalert2';
 
 // components
@@ -69,7 +69,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
 
     return (
         <>
-            <Link to={{pathname: '/app/invoice_details',state: row.original}} className="action-icon" >
+            <Link to={{pathname: '/app/invoice_details',state: row.original.id}} className="action-icon" >
                 <i className="mdi mdi-eye"></i>
             </Link>
 
@@ -193,7 +193,45 @@ const Invoice = () => {
                 ]}
                 title={`Invoice`}
             />
+            <Tab.Container defaultActiveKey="trading">
+                <Nav as="ul" variant="tabs">                    
+                    <Nav.Item as="li" key='trading'>
+                        <Nav.Link className="cursor-pointer" href="#" eventKey='trading' >
+                            Trading
+                        </Nav.Link>
+                    </Nav.Item>                        
+                    <Nav.Item as="li" key='transaction'>
+                        <Nav.Link className="cursor-pointer" href="#" eventKey='transaction'>
+                            Transaction
+                        </Nav.Link>
+                    </Nav.Item>                        
+                    <Nav.Item as="li" key='dividend'>
+                        <Nav.Link className="cursor-pointer" href="#" eventKey='dividend'>
+                            Dividend
+                        </Nav.Link>
+                    </Nav.Item>                        
+                    <Nav.Item as="li" key='dump_box'>
+                        <Nav.Link className="cursor-pointer" href="#" eventKey='dump_box'>
+                            Dump Box
+                        </Nav.Link>
+                    </Nav.Item>                        
+                </Nav>
 
+                {/* <Tab.Content>
+                    <Tab.Pane eventKey='trading'  key='trading'>
+                        <Trading />
+                    </Tab.Pane>                        
+                    <Tab.Pane eventKey='transaction'  key='transaction'>
+                        <Transaction />
+                    </Tab.Pane>                        
+                    <Tab.Pane eventKey='dividend'  key='dividend'>
+                        <Dividend />
+                    </Tab.Pane>                        
+                    <Tab.Pane eventKey='dump_box'  key='dump_box'>
+                        <DumpBox />
+                    </Tab.Pane>                        
+                </Tab.Content> */}
+            </Tab.Container>
             <Row>
                 <Col>
                     <Card>

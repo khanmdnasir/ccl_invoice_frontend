@@ -16,11 +16,11 @@ const api = new APICore()
 
 const InvoiceDetails = () => {
     const location = useLocation();
-    const [invoice,setInvoice] = useState({});
+    const [invoiceId,setInvoiceId] = useState({});
 
     useEffect(()=>{ 
         const state = location.state
-        setInvoice(state);
+        setInvoiceId(state);
     },[])
     
    
