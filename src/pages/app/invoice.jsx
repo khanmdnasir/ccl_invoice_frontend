@@ -69,7 +69,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
 
     return (
         <>
-            <Link to="#" className="action-icon" >
+            <Link to={{pathname: '/app/invoice_details',state: row.original}} className="action-icon" >
                 <i className="mdi mdi-eye"></i>
             </Link>
 

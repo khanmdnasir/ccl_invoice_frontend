@@ -804,11 +804,11 @@ const InvoiceForm = () => {
                                     </div>
                                     <div className="d-flex justify-content-between">
 
-                                        <Button variant="info" type="button" className="waves-effect waves-light me-1" onClick={()=>setNewItems([...newItems,items])}>
+                                        <Button variant="info" type="submit" className="waves-effect waves-light me-1" >
                                             Save
                                         </Button>
                                         <div>
-                                        <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading}>
+                                        <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading} onClick={()=>setStatus('approve')}>
                                             {rloading ? 'Loaidng...': 'Approve'}
                                         </Button>
                                         <Link
