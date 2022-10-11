@@ -27,9 +27,9 @@ function* getInvoice({ payload: {limit,page}}:InvoiceData):SagaIterator {
     }
 }
 
-function* getInvoiceDetails({ payload: {id}}:InvoiceData):SagaIterator {
+function* getInvoiceDetails({ payload }:InvoiceData):SagaIterator {
     try {
-        const response = yield call(getInvoiceDetailsApi,{id});
+        const response = yield call(getInvoiceDetailsApi,{payload});
         const data = response.data;
         yield put({type: 'GET_INVOICEDETAILS_SUCCESS' , data: data});
     } catch (error) {
