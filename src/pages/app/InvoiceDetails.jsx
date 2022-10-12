@@ -187,7 +187,7 @@ const InvoiceDetails = () => {
 
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.account_id}
+                                                                    defaultValue={item.account_id.account_name}
                                                                 >
 
                                                                 </Form.Control>
