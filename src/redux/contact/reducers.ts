@@ -2,7 +2,7 @@ import * as type from './types';
 
 const INIT_STATE = {
     contact: [],
-    contact_details: [],
+    invoice_list: [],
     all_contact: [],
     previous: '',
     next: '',
@@ -43,20 +43,20 @@ const Contact = (state = INIT_STATE, action: any) => {
             };
         }
 
-        case type.GET_CONTACT_DETAILS_REQUESTED: {
+        case type.GET_CONTACT_INVOICE_REQUESTED: {
             return {
                 ...state,
                 loading: true,
             };
         }
-        case type.GET_CONTACT_DETAILS_SUCCESS: {
+        case type.GET_CONTACT_INVOICE_SUCCESS: {
             return {
                 ...state,
                 loading: false,
-                contact_details: action.data.results,
+                invoice_list: action.data.results,
             };
         }
-        case type.GET_CONTACT_DETAILS_FAILED: {
+        case type.GET_CONTACT_INVOICE_FAILED: {
             return {
                 ...state,
                 loading: false,

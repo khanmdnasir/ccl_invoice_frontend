@@ -8,7 +8,7 @@ function getContact(params: {limit: number,page:number}) {
     return api.get(`${baseUrl}`,params);
 }
 
-function getContactDetails(params:any) {
+function getContactInvoice(params:any) {
     const baseUrl = `/api/invoice/?${params.payload}/`;
     return api.get(`${baseUrl}`,{});
 }
@@ -29,4 +29,4 @@ function deleteContact(id:number) {
 }
 
 
-export { getContact, addContact,deleteContact,getAllContact, getContactDetails };
+export { getContact, addContact,deleteContact,getAllContact, getContactInvoice };
