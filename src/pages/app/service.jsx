@@ -150,7 +150,7 @@ const columns = [
 const Service = () => {
     const dispatch = useDispatch();
     const location = useLocation();
-    const state = location.state;
+    const [contact,setContact] = useState({});
     const services = useSelector(state => state.Service.contact_services);
     // const previous = useSelector(state => state.Service.previous);
     // const next = useSelector(state => state.Service.next);
@@ -185,6 +185,8 @@ const Service = () => {
 
 
     useEffect(()=>{ 
+        const state = location.state;
+        setContact(state);
         dispatch(getContactService(state.id));   
     },[pageSize])
     return (
@@ -194,7 +196,7 @@ const Service = () => {
                     { label: 'Service', path: '/app/service', active: false },
                     { label: 'Contact Service', path: '/app/service_by_contact', active: true },
                 ]}
-                title={`Service of ${state.name}`}
+                title={`Service of ${contact.name}`}
             />
 
             <Row>
@@ -221,7 +223,7 @@ const Service = () => {
                                 <Col sm={8}>
                                     <div className="text-sm-end mt-2 mt-sm-0">
                                         { user_role.includes('change_service') ?
-                                            <Link className="btn btn-info mb-2 me-1" to={{pathname:'/app/service_form',state: {'services':services,'contactId':state.id}}}>
+                                            <Link className="btn btn-info mb-2 me-1" to={{pathname:'/app/service_form',state: {'services':services,'contactId':contact.id}}}>
                                             <i className="mdi mdi-pencil me-1"></i> Edit
                                             </Link>:
                                             <>

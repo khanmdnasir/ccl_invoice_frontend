@@ -147,7 +147,7 @@ const columns = [
     
 ];
 
-const Invoice = () => {
+const RepeatingInvoice = () => {
     const dispatch = useDispatch();
     const [filteredIncoices,setFilteredInvoices] = useState([]);
     const invoices = useSelector(state => state.Invoice.invoices);
@@ -211,9 +211,9 @@ const Invoice = () => {
         <>
             <PageTitle
                 breadCrumbItems={[
-                    { label: 'Invoice', path: '/app/invoice', active: false },
+                    { label: 'Repeating Invoice', path: '/app/repeating_invoice', active: false },
                 ]}
-                title={`Invoice`}
+                title={`Repeating Invoice`}
             />
             <Tab.Container defaultActiveKey="all">
                 <Nav as="ul" variant="tabs">                    
@@ -244,20 +244,7 @@ const Invoice = () => {
                     </Nav.Item>                        
                 </Nav>
 
-                {/* <Tab.Content>
-                    <Tab.Pane eventKey='trading'  key='trading'>
-                        <Trading />
-                    </Tab.Pane>                        
-                    <Tab.Pane eventKey='transaction'  key='transaction'>
-                        <Transaction />
-                    </Tab.Pane>                        
-                    <Tab.Pane eventKey='dividend'  key='dividend'>
-                        <Dividend />
-                    </Tab.Pane>                        
-                    <Tab.Pane eventKey='dump_box'  key='dump_box'>
-                        <DumpBox />
-                    </Tab.Pane>                        
-                </Tab.Content> */}
+               
             </Tab.Container>
             <Row>
                 <Col>
@@ -337,4 +324,4 @@ const Invoice = () => {
     );
 };
 
-export default Invoice;
+export default RepeatingInvoice;
