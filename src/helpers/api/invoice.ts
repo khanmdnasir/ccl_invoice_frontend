@@ -8,8 +8,8 @@ function getInvoice(params: {limit: number,page:number}) {
     return api.get(`${baseUrl}`,params);
 }
 
-function getInvoiceDetails(params: {id:number}) {
-    const baseUrl = `/api/invoice/${params}/`;
+function getInvoiceDetails(params:any) {
+    const baseUrl = `/api/invoice/${params.payload}/`;
     return api.get(`${baseUrl}`,{});
 }
 

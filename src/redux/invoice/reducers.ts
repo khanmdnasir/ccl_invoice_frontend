@@ -52,7 +52,7 @@ const Invoice = (state = INIT_STATE, action: any) => {
             return {
                 ...state,
                 loading: false,
-                invoice_details: action.data.results,
+                invoice_details: action.data.result,
                 previous: action.data.previous,
                 next: action.data.next,
                 current_page: action.data.current_page,
