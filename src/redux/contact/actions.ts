@@ -18,6 +18,11 @@ export const getContact = (limit:number,page:number) => ({
     payload: {limit,page},
 });
 
+export const getContactDetails = (id:number) => ({
+    type: type.GET_CONTACT_DETAILS_REQUESTED,
+    payload: id,
+});
+
 export const getAllContact = () => ({
     type: type.GET_ALLCONTACT_REQUESTED,
     payload: {},

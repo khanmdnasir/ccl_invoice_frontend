@@ -4,6 +4,7 @@ import { SagaIterator } from '@redux-saga/core';
 // helpers
 import {
     getContact as getContactApi,
+    getContactDetails as getContactDetailsApi,
     getAllContact as getAllContactApi,
     addContact as addContactApi,
     deleteContact as deleteContactApi
@@ -35,6 +36,18 @@ function* getContact({ payload: {limit,page}}:ContactData):SagaIterator {
         yield put({type: 'GET_CONTACT_SUCCESS' , data: data});
     } catch (error) {
         yield put({type: 'GET_CONTACT_FAILED', error: error});
+        
+    }
+}
+
+
+function* getContactDetails({ payload }:ContactData):SagaIterator {
+    try {
+        const response = yield call(getContactDetailsApi,{payload});
+        const data = response.data;
+        yield put({type: 'GET_CONTACT_DETAILS_SUCCESS' , data: data});
+    } catch (error) {
+        yield put({type: 'GET_CONTACT_DETAILS_FAILED', error: error});
         
     }
 }
@@ -91,6 +104,12 @@ export function* watchGetContact() {
     yield takeEvery('GET_CONTACT_REQUESTED', getContact);
 }
 
+
+export function* watchGetContactDetails() {
+    yield takeEvery('GET_CONTACT_DETAILS_REQUESTED', getContactDetails);
+}
+
+
 export function* watchGetAllContact() {
     yield takeEvery('GET_ALLCONTACT_REQUESTED', getAllContact);
 }
@@ -108,7 +127,7 @@ export function* watchDeleteContact() {
 
 
 function* contactSaga() {
-    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchDeleteContact),fork(watchGetAllContact)]);
+    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactDetails)]);
 }
 
 export default contactSaga;
