@@ -20,7 +20,7 @@ interface SubMenus {
 
 const MenuItemWithChildren = ({ item, linkClassName, subMenuClassNames, activeMenuItems, toggleMenu }: SubMenus) => {
     const [open, setOpen] = useState<boolean>(activeMenuItems!.includes(item.key));
-    
+    const user_permissions = useSelector((state:RootState)=> state.Role.user_role);
     useEffect(() => {
         setOpen(activeMenuItems!.includes(item.key));
     }, [activeMenuItems, item]);
@@ -32,7 +32,7 @@ const MenuItemWithChildren = ({ item, linkClassName, subMenuClassNames, activeMe
         if (toggleMenu) toggleMenu(item, status);
         return false;
     };
-
+    
     return (
         <>
             <li className={classNames('nav-item', { 'menuitem-active': open })}>
@@ -61,6 +61,7 @@ const MenuItemWithChildren = ({ item, linkClassName, subMenuClassNames, activeMe
                                 return (
                                     <React.Fragment key={i}>
                                         {child.children ? (
+                                            
                                             <>
                                                 {/* parent */}
                                                 <MenuItemWithChildren
@@ -72,9 +73,10 @@ const MenuItemWithChildren = ({ item, linkClassName, subMenuClassNames, activeMe
                                                 />
                                             </>
                                         ) : (
-                                            
+                                            user_permissions.includes(child.key) &&
                                             <>
                                                 {/* child */}
+                                                
                                                 <MenuItem
                                                     item={child}
                                                     className={
@@ -152,6 +154,7 @@ const MainMenu = ({ menuItems, toggleMenu, activeMenuItems }: MainMenuProps) => 
                                                     return (
                                                         <React.Fragment key={idx}>
                                                             {item.children ? (
+                                                                
                                                                 <MenuItemWithChildren
                                                                     item={item}
                                                                     toggleMenu={toggleMenu}
@@ -160,7 +163,8 @@ const MainMenu = ({ menuItems, toggleMenu, activeMenuItems }: MainMenuProps) => 
                                                                     linkClassName="side-nav-link"
                                                                 />
                                                             ) : (
-                                                                user_permissions.includes(item.key) &&
+                                                                (user_permissions.includes(item.key) || item.key ==='dashboards') &&
+                                                                <>
                                                                 <MenuItem
                                                                     item={item}
                                                                     linkClassName="side-nav-link"
@@ -170,6 +174,7 @@ const MainMenu = ({ menuItems, toggleMenu, activeMenuItems }: MainMenuProps) => 
                                                                             : ''
                                                                     }
                                                                 />
+                                                                </>
                                                             )}
                                                         </React.Fragment>
                                                     );

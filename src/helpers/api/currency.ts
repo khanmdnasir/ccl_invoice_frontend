@@ -3,15 +3,10 @@ import { APICore } from './apiCore';
 const api = new APICore();
 
 
-function getCurrency(params: {limit: number,page:number}) {
+function getCurrency() {
     const baseUrl = '/api/currency/';
-    return api.get(`${baseUrl}`,params);
-}
-
-function addCurrency(params: { prefix: string; short_key: string;is_active: boolean }) {
-    const baseUrl = '/api/currency/';
-    return api.create(`${baseUrl}`,params);
+    return api.get(`${baseUrl}`,{});
 }
 
 
-export { getCurrency, addCurrency };
+export { getCurrency };
