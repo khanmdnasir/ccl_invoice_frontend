@@ -46,7 +46,23 @@ const MENU_ITEMS: MenuItemTypes[] = [
         label: 'Invoice',
         isTitle: false,
         icon: 'invoice',
-        url: '/app/invoice',
+        children: [ 
+            {
+                key: 'view_invoice',
+                label: 'Invoice',
+                url: '/app/invoice',
+                parentKey: 'dashboards',
+            },
+            {
+                key: 'view_invoice',
+                label: 'Repeating Invoice',
+                url: '/app/repeating_invoice',
+                parentKey: 'dashboards',
+            },
+            
+            
+        ],
+        
         
     },
     {
@@ -103,8 +119,24 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         key: 'dashboards',
         label: 'Invoice',
         isTitle: false,
-        icon: 'file-text',
-        url: '/app/invoice',
+        icon: 'invoice',
+        children: [ 
+            {
+                key: 'view_invoice',
+                label: 'Invoice',
+                url: '/app/invoice',
+                parentKey: 'dashboards',
+            },
+            {
+                key: 'view_invoice',
+                label: 'Repeating Invoice',
+                url: '/app/repeating_invoice',
+                parentKey: 'dashboards',
+            },
+            
+            
+        ],
+        
         
     },
     {
@@ -161,8 +193,24 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
         key: 'dashboards',
         label: 'Invoice',
         isTitle: false,
-        icon: 'file-text',
-        url: '/app/invoice',
+        icon: 'invoice',
+        children: [ 
+            {
+                key: 'view_invoice',
+                label: 'Invoice',
+                url: '/app/invoice',
+                parentKey: 'dashboards',
+            },
+            {
+                key: 'view_invoice',
+                label: 'Repeating Invoice',
+                url: '/app/repeating_invoice',
+                parentKey: 'dashboards',
+            },
+            
+            
+        ],
+        
         
     },
     {

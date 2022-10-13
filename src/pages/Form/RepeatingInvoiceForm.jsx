@@ -16,7 +16,7 @@ const api = new APICore()
 
 
 
-const InvoiceForm = () => {
+const RepeatingInvoiceForm = () => {
     const location = useLocation();
 
     const dispatch = useDispatch();
@@ -898,4 +898,4 @@ const InvoiceForm = () => {
     );
 };
 
-export default InvoiceForm;
+export default RepeatingInvoiceForm;

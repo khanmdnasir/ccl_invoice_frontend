@@ -16,6 +16,8 @@ import ContactCard from '../pages/app/ContactCard';
 import Invoice from '../pages/app/invoice';
 import InvoiceForm from '../pages/Form/InvoiceForm';
 import InvoiceDetails from '../pages/app/InvoiceDetails';
+import RepeatingInvoiceForm from '../pages/Form/RepeatingInvoiceForm';
+import RepeatingInvoice from '../pages/app/RepeatingInvoice';
 
 // lazy load all the views
 
@@ -145,6 +147,18 @@ const AppRoutes = {
             path: '/app/invoice_form',
             name: 'Invoice Form',
             component: InvoiceForm,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/repeating_invoice',
+            name: 'Repeating Invoice',
+            component: RepeatingInvoice,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/repeating_invoice_form',
+            name: 'Repeating Invoice Form',
+            component: RepeatingInvoiceForm,
             route: PrivateRoute,
         },
         {
