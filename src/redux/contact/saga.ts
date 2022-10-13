@@ -5,6 +5,8 @@ import { SagaIterator } from '@redux-saga/core';
 import {
     getContact as getContactApi,
     getContactInvoice as getContactInvoiceApi,
+    getContactInvoiceSetting as getContactInvoiceSettingApi,
+    getContactDetails as getContactDetailsApi,
     getAllContact as getAllContactApi,
     addContact as addContactApi,
     deleteContact as deleteContactApi
@@ -41,16 +43,44 @@ function* getContact({ payload: {limit,page}}:ContactData):SagaIterator {
 }
 
 
-function* getContactInvoice({ payload }:ContactData):SagaIterator {
+function* getContactInvoice({ payload:id }:ContactData):SagaIterator {
     try {
-        const response = yield call(getContactInvoiceApi,{payload});
+        const response = yield call(getContactInvoiceApi,{id});
         const data = response.data;
+        // console.log("data",data)
+
         yield put({type: 'GET_CONTACT_INVOICE_SUCCESS' , data: data});
     } catch (error) {
         yield put({type: 'GET_CONTACT_INVOICE_FAILED', error: error});
         
     }
 }
+
+
+function* getContactInvoiceSetting({ payload }:ContactData):SagaIterator {
+    try {
+        const response = yield call(getContactInvoiceSettingApi,{payload});
+        const data = response.data;
+        yield put({type: 'GET_CONTACT_INVOICE_SETTING_SUCCESS' , data: data});
+    } catch (error) {
+        yield put({type: 'GET_CONTACT_INVOICE_SETTING_FAILED', error: error});
+        
+    }
+}
+
+
+function* getContactDetails({ payload }:ContactData):SagaIterator {
+    try {
+        const response = yield call(getContactDetailsApi,{payload});
+        const data = response.data;
+        yield put({type: 'GET_CONTACT_DETAILS_SUCCESS' , data: data});
+    } catch (error) {
+        yield put({type: 'GET_CONTACT_DETAILS_FAILED', error: error});
+        
+    }
+}
+
+
 
 function* getAllContact():SagaIterator {
     try {
@@ -109,6 +139,14 @@ export function* watchGetContactInvoice() {
     yield takeEvery('GET_CONTACT_INVOICE_REQUESTED', getContactInvoice);
 }
 
+export function* watchGetContactInvoiceSetting() {
+    yield takeEvery('GET_CONTACT_INVOICE_SETTING_REQUESTED', getContactInvoiceSetting);
+}
+
+export function* watchGetContactDetails() {
+    yield takeEvery('GET_CONTACT_DETAILS_REQUESTED', getContactDetails);
+}
+
 
 export function* watchGetAllContact() {
     yield takeEvery('GET_ALLCONTACT_REQUESTED', getAllContact);
@@ -127,7 +165,7 @@ export function* watchDeleteContact() {
 
 
 function* contactSaga() {
-    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactInvoice)]);
+    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactInvoice), fork(watchGetContactDetails), fork(watchGetContactInvoiceSetting)]);
 }
 
 export default contactSaga;

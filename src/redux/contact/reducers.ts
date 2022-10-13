@@ -3,6 +3,8 @@ import * as type from './types';
 const INIT_STATE = {
     contact: [],
     invoice_list: [],
+    invoice_setting: [],
+    contact_details: [],
     all_contact: [],
     previous: '',
     next: '',
@@ -57,6 +59,50 @@ const Contact = (state = INIT_STATE, action: any) => {
             };
         }
         case type.GET_CONTACT_INVOICE_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+            };
+        }
+
+
+        case type.GET_CONTACT_INVOICE_SETTING_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.GET_CONTACT_INVOICE_SETTING_SUCCESS: {
+            return {
+                ...state,
+                loading: false,
+                invoice_setting: action.data.results,
+            };
+        }
+        case type.GET_CONTACT_INVOICE_SETTING_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+            };
+        }
+
+
+        case type.GET_CONTACT_DETAILS_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.GET_CONTACT_DETAILS_SUCCESS: {
+            return {
+                ...state,
+                loading: false,
+                contact_details: action.data,
+            };
+        }
+        case type.GET_CONTACT_DETAILS_FAILED: {
             return {
                 ...state,
                 loading: false,

@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getContactInvoice } from '../../redux/actions';
+import { getContactInvoice, getContactDetails, getContactInvoiceSetting } from '../../redux/actions';
 
 
 const api = new APICore()
@@ -18,16 +18,25 @@ const ContactDetails = () => {
     const dispatch = useDispatch();
     const [contactId, setContactId] = useState();
     const invoice_list = useSelector(state => state.Contact.invoice_list);
+    const contact_details = useSelector(state => state.Contact.contact_details);
+    const invoice_setting = useSelector(state => state.Contact.invoice_setting);
     // const loading = useSelector(state => state.Invoice.loading);
 
     useEffect(() => {
         const state = location.state
-        setContactId(state);
+        if(state){
+            setContactId(parseInt(state));
+        }
     }, [])
 
     // console.log("invoice_list", invoice_list)
+    // console.log("contact_details", contact_details)
+    // console.log("invoice_setting", invoice_setting)
+
     useEffect(() => {
         dispatch(getContactInvoice(contactId))
+        dispatch(getContactDetails(contactId))
+        dispatch(getContactInvoiceSetting(contactId))
     }, [contactId])
     return (
         <>

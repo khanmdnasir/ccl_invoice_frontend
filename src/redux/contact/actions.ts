@@ -23,6 +23,18 @@ export const getContactInvoice = (id:number) => ({
     payload: id,
 });
 
+export const getContactInvoiceSetting = (id:number) => ({
+    type: type.GET_CONTACT_INVOICE_SETTING_REQUESTED,
+    payload: id,
+});
+
+export const getContactDetails = (id:number) =>{ 
+    return ({
+    type: type.GET_CONTACT_DETAILS_REQUESTED,
+    payload: id,
+});}
+
+
 export const getAllContact = () => ({
     type: type.GET_ALLCONTACT_REQUESTED,
     payload: {},
