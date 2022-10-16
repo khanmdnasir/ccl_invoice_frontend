@@ -19,7 +19,19 @@ const ContactDetails = () => {
     const dispatch = useDispatch();
     const [contactId, setContactId] = useState();
     const [pageSize, setPageSize] = useState(50);
-    const [invoiceSetting, setInvoiceSetting] = useState({});
+    const [invoiceSetting, setInvoiceSetting] = useState({
+        "auto_approve": false,
+        "auto_invoice_send": false,
+        "reminder_service": false,
+        "contact_id": contactId,
+        "reminder_settings": {
+            "is_include_public_link": false,
+            "is_include_pdf_link": false,
+            "minimum_invoice_amount": false,
+            "reminder_type": "",
+            "days": []
+        }
+    });
     const invoice_list = useSelector(state => state.Contact.invoice_list);
     const contact_details = useSelector(state => state.Contact.contact_details);
     const invoice_setting = useSelector(state => state.Contact.invoice_setting);
@@ -34,11 +46,10 @@ const ContactDetails = () => {
 
     // console.log("invoice_list", invoice_list)
     // console.log("contact_details", contact_details)
-    console.log("invoice_setting", invoice_setting)
+    // console.log("due_in", invoiceSetting?.reminder_settings?.reminder_type === "due_in")
+    console.log("over_due", invoiceSetting?.reminder_settings)
 
-    const invoiceSettingChange = (e) =>{
-        
-    }
+    // const outerArrayOfSetting = ['auto_approve', 'auto_invoice_send', 'reminder_service']
 
 
 
@@ -108,6 +119,49 @@ const ContactDetails = () => {
 
     ];
 
+
+    const mystyle = {
+        width: "12rem"
+    };
+
+    const invoiceSettingChange = (e) => {
+        const data = { ...invoiceSetting }
+        const target = e.target.name;
+        const value = e.target.checked;
+        data[target] = value;
+        // console.log('target, value', target, value)
+
+        if (target === "reminder_service" && value === false) {
+            data['reminder_settings'] = {
+                "is_include_public_link": false,
+                "is_include_pdf_link": false,
+                "minimum_invoice_amount": false,
+                "reminder_type": "",
+                "days": []
+            }
+        }
+        setInvoiceSetting(data);
+    }
+
+    const invoiceReminderSettingChange = (e) => {
+        const reminder_settings = { ...invoiceSetting.reminder_settings }
+        const target = e.target.name;
+        let value = null;
+        if (target !== "minimum_invoice_amount" || target !== 'days') {
+            value = e.target.value;
+        }
+        else {
+            value = e.target.checked;
+        }
+
+        reminder_settings[target] = value;
+        const data = invoiceSetting;
+        data['reminder_settings'] = reminder_settings;
+        // console.log('target, value', target, e.target.value)
+
+        setInvoiceSetting(data);
+    }
+
     return (
         <>
 
@@ -120,55 +174,55 @@ const ContactDetails = () => {
             />
             <Row>
 
-                <Col md={9} xl={9}>
+                <Col md={8} xl={8}>
                     <Card>
                         <Card.Header>
                             <p>Personal Details</p>
                         </Card.Header>
                         <Card.Body>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-sm">
+                            <div className="container">
+                                <div className="row mb-4">
+                                    <div className="col-sm">
                                         <h5>Name: </h5>
                                         <p>{contact_details?.name}</p>
                                     </div>
-                                    <div class="col-sm">
-                                        <h5 class='me-2'>Contact ID:</h5>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Contact ID:</h5>
                                         <p>{contact_details?.client_id}</p>
                                     </div>
-                                    <div class="col-sm">
-                                        <h5 class='me-2'>Contact Type:</h5>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Contact Type:</h5>
                                         <p>{contact_details?.contact_type}</p>
 
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <h5 class='me-2'>Contact Person:</h5>
+                                <div className="row mb-4">
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Contact Person:</h5>
                                         <p>{contact_details?.contact_person}</p>
                                     </div>
-                                    <div class="col-sm">
-                                        <h5 class='me-2'>Phone:</h5>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Phone:</h5>
                                         <p>{contact_details?.phone}</p>
                                     </div>
-                                    <div class="col-sm">
-                                        <h5 class='me-2'>Email:</h5>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Email:</h5>
                                         <p>{contact_details?.email}</p>
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <h5 class='me-2'>Country:</h5>
+                                <div className="row mb-4">
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Country:</h5>
                                         <p>{contact_details?.country}</p>
                                     </div>
-                                    <div class="col-sm">
-                                        <h5 class='me-2'>City:</h5>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>City:</h5>
                                         <p>{contact_details?.city}</p>
                                     </div>
-                                    <div class="col-sm">
-                                        <h5 class='me-2'>Billing Address:</h5>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Billing Address:</h5>
                                         <p>{contact_details?.billing_address}</p>
                                     </div>
                                 </div>
@@ -176,33 +230,7 @@ const ContactDetails = () => {
 
                         </Card.Body>
                     </Card>
-                </Col>
-                <Col md={3} xl={3}>
-                    <Card>
-                        <Card.Header>
-                            <p>Invoice Setting</p>
-                        </Card.Header>
-                        <Card.Body>
 
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text>
-                                    Auto Invoice Send</InputGroup.Text>
-                                <InputGroup.Checkbox name="auto_invoice_send" onClick={(e) => { console.log(e.target.name) }} aria-label="Checkbox for following text input" />
-                            </InputGroup>
-
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text>
-                                    Reminder Service</InputGroup.Text>
-                                <InputGroup.Checkbox name="reminder_service" checked={invoice_setting?.reminder_service} onClick={(e) => { console.log(e.target.name) }} aria-label="Checkbox for following text input" />
-                            </InputGroup>
-                        </Card.Body>
-                    </Card>
-                </Col>
-
-            </Row>
-
-            <Row>
-                <Col>
                     <Card>
                         <Card.Header>
                             <p style={{ marginBottom: '0px !important' }}>Invoice List</p>
@@ -226,7 +254,81 @@ const ContactDetails = () => {
                                 'No data available!'}
                         </Card.Body>
                     </Card>
+
                 </Col>
+                <Col md={4} xl={4}>
+                    <Card>
+                        <Card.Header>
+                            <p>Invoice Setting</p>
+                        </Card.Header>
+                        <Card.Body>
+
+                            <InputGroup className="mb-3">
+                                <InputGroup.Text style={mystyle}>
+                                    Auto Invoice Send</InputGroup.Text>
+                                <InputGroup.Checkbox name="auto_invoice_send" onChange={(e) => invoiceSettingChange(e)} />
+                            </InputGroup>
+
+                            <InputGroup className="mb-3">
+                                <InputGroup.Text style={mystyle}>
+                                    Reminder Service</InputGroup.Text>
+                                <InputGroup.Checkbox name="reminder_service" checked={invoiceSetting?.reminder_service} onChange={(e) => invoiceSettingChange(e)} />
+                            </InputGroup>
+
+                            {invoiceSetting?.reminder_service ?
+                                (
+                                    <div style={{ marginLeft: "1rem" }}>
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text style={mystyle}>
+                                                Is Inclued Public Link</InputGroup.Text>
+                                            <InputGroup.Checkbox name="is_include_public_link" checked={invoiceSetting?.reminder_settings?.is_include_public_link} onChange={(e) => invoiceReminderSettingChange(e)} />
+                                        </InputGroup>
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text style={mystyle}>
+                                                Is Inclued Pdf Link</InputGroup.Text>
+                                            <InputGroup.Checkbox name="is_include_pdf_link" checked={invoiceSetting?.reminder_settings?.is_include_pdf_link==true} onChange={(e) => invoiceReminderSettingChange(e)} />
+                                        </InputGroup>
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text style={mystyle}>
+                                                Reminder Type</InputGroup.Text>
+                                            <Form.Check
+                                                type="radio"
+                                                name="reminder_type" checked={invoiceSetting?.reminder_settings?.reminder_type==="due_in"} onChange={(e) => invoiceReminderSettingChange(e)}
+                                                label="due_in"
+                                                value="due_in"
+                                                style={{ "marginRight": "1rem", "marginLeft": "1rem", marginTop: "0.5rem" }}
+                                            />
+                                            <Form.Check
+                                                type="radio"
+                                                name="reminder_type" checked={invoiceSetting?.reminder_settings?.reminder_type === "over_due"} onChange={(e) => invoiceReminderSettingChange(e)}
+                                                label="over_due"
+                                                value="over_due"
+                                                style={{ "marginRight": "1rem", marginTop: "0.5rem" }}
+                                            />
+                                        </InputGroup>
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text style={mystyle}>
+                                                Minimum Invoice Amount</InputGroup.Text>
+                                            <Form.Control type="number" name="minimum_invoice_amount" value={invoiceSetting?.reminder_settings?.minimum_invoice_amount
+} onChange={(e) => invoiceReminderSettingChange(e)} />
+                                        </InputGroup>
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text style={mystyle}>
+                                                Days</InputGroup.Text>
+                                            <Form.Control type="number" name="days" value={invoiceSetting?.reminder_service?.days} onChange={(e) => invoiceReminderSettingChange(e)} />
+                                        </InputGroup>
+                                    </div>
+                                ) :
+                                <></>
+                            }
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+            </Row>
+
+            <Row>
+
             </Row>
 
 
