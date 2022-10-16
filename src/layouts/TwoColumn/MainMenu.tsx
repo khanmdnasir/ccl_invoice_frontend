@@ -151,6 +151,7 @@ const MainMenu = ({ menuItems, toggleMenu, activeMenuItems }: MainMenuProps) => 
                                             {menuItem.isTitle && <h5 className="menu-title">{menuItem.label}</h5>}
                                             <ul className="nav flex-column">
                                                 {(menuItem.children || []).map((item, idx) => {
+                                                    if(['dashboards','invoice','settings'].includes(item.key) || user_permissions.includes(item.key))
                                                     return (
                                                         <React.Fragment key={idx}>
                                                             {item.children ? (
@@ -163,8 +164,7 @@ const MainMenu = ({ menuItems, toggleMenu, activeMenuItems }: MainMenuProps) => 
                                                                     linkClassName="side-nav-link"
                                                                 />
                                                             ) : (
-                                                                (user_permissions.includes(item.key) || item.key ==='dashboards') &&
-                                                                <>
+                                                                
                                                                 <MenuItem
                                                                     item={item}
                                                                     linkClassName="side-nav-link"
@@ -174,7 +174,7 @@ const MainMenu = ({ menuItems, toggleMenu, activeMenuItems }: MainMenuProps) => 
                                                                             : ''
                                                                     }
                                                                 />
-                                                                </>
+                                                                
                                                             )}
                                                         </React.Fragment>
                                                     );

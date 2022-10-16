@@ -8,7 +8,7 @@ import Table from '../../components/Table';
 import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getInvoice } from '../../redux/actions';
+import { getRepeatingInvoice } from '../../redux/actions';
 import Pagination from '../../components/CustomPagination';
 
 
@@ -46,9 +46,9 @@ const ActionColumn = withSwal(({ row, swal }) => {
             .then(function(result){
                 if(result.value){
                     // dispatch(deleteContact(row.original.id))
-                    api.delete(`/api/invoice/${row.original.id}/`)
+                    api.delete(`/api/repeating-invoice/${row.original.id}/`)
                 .then(res=>{
-                    dispatch(getInvoice(10,1));
+                    dispatch(getRepeatingInvoice(10,1));
                     swal.fire(
                         'Deleted!',
                         'Invoice has been deleted.',
@@ -73,7 +73,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
                 <i className="mdi mdi-eye"></i>
             </Link>
 
-            { user_role.includes('change_invoice') ?
+            { user_role.includes('change_repeatinginvoice') ?
                 <Link to={{pathname: '/app/invoice_form',state: row.original.id}} className="action-icon" >
                     <i className="mdi mdi-square-edit-outline"></i>
                 </Link>:
@@ -82,7 +82,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
                 </Link>
             }
             
-            { user_role.includes('delete_invoice') ?
+            { user_role.includes('delete_repeatinginvoice') ?
                 <Link to="#" className="action-icon" onClick={()=>onDelete()}>
                     <i className="mdi mdi-delete"></i>
                 </Link>:
@@ -150,15 +150,15 @@ const columns = [
 const RepeatingInvoice = () => {
     const dispatch = useDispatch();
     const [filteredIncoices,setFilteredInvoices] = useState([]);
-    const invoices = useSelector(state => state.Invoice.invoices);
-    const previous = useSelector(state => state.Invoice.previous);
-    const next = useSelector(state => state.Invoice.next);
-    const current_page = useSelector(state => state.Invoice.current_page);
-    const total_page = useSelector(state => state.Invoice.total_page);
-    const active = useSelector(state => state.Invoice.active);
+    const invoices = useSelector(state => state.RepeatingInvoice.repeating_invoices);
+    const previous = useSelector(state => state.RepeatingInvoice.previous);
+    const next = useSelector(state => state.RepeatingInvoice.next);
+    const current_page = useSelector(state => state.RepeatingInvoice.current_page);
+    const total_page = useSelector(state => state.RepeatingInvoice.total_page);
+    const active = useSelector(state => state.RepeatingInvoice.active);
     const user_role = useSelector((state)=> state.Role.user_role);
-    const loading = useSelector(state => state.Invoice.loading);
-    const error = useSelector(state => state.Invoice.error);
+    const loading = useSelector(state => state.RepeatingInvoice.loading);
+    const error = useSelector(state => state.RepeatingInvoice.error);
     const [pageSize,setPageSize] = useState(10);
     /*
      *   modal handeling
@@ -166,15 +166,15 @@ const RepeatingInvoice = () => {
   
 
     const visitPage = (page) => {
-        dispatch(getInvoice(pageSize,page));
+        dispatch(getRepeatingInvoice(pageSize,page));
     };
 
     const previous_number = () => {
-        dispatch(getInvoice(pageSize,previous));
+        dispatch(getRepeatingInvoice(pageSize,previous));
     };
 
     const next_number = () => {
-        dispatch(getInvoice(pageSize,next));
+        dispatch(getRepeatingInvoice(pageSize,next));
     };
 
     /*
@@ -201,7 +201,7 @@ const RepeatingInvoice = () => {
     }
 
     useEffect(()=>{ 
-        dispatch(getInvoice(pageSize,1));   
+        dispatch(getRepeatingInvoice(pageSize,1));   
     },[pageSize])
 
     useEffect(()=>{
@@ -259,7 +259,7 @@ const RepeatingInvoice = () => {
                                 <Col sm={4}>
                                     <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
                                         <span className='me-2'>Show:</span>
-                                        <Form.Select style={{width: '40%'}} onChange={(e)=>{setPageSize(e.target.value);getInvoice(pageSize,1)}}>
+                                        <Form.Select style={{width: '40%'}} onChange={(e)=>{setPageSize(e.target.value);getRepeatingInvoice(pageSize,1)}}>
                                             <option value='10'>10</option>
                                             <option value='15'>20</option>
                                             <option value='20'>30</option>
@@ -269,8 +269,8 @@ const RepeatingInvoice = () => {
 
                                 <Col sm={8}>
                                     <div className="text-sm-end mt-2 mt-sm-0">
-                                        { user_role.includes('add_invoice') ?
-                                            <Link className="btn btn-success mb-2 me-1" to='/app/invoice_form'>
+                                        { user_role.includes('add_repeatinginvoice') ?
+                                            <Link className="btn btn-success mb-2 me-1" to='/app/repeating_invoice_form'>
                                             <i className="mdi mdi-plus-circle me-1"></i> Add
                                             </Link>:
                                             <>

@@ -3,12 +3,11 @@ import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom'; 
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
-import { format } from 'date-fns'
 // components
 import PageTitle from '../../components/PageTitle';
 import { useSelector,useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact, getChartAccount, getContactService, getInvoiceDetails } from '../../redux/actions';
+import { getAllContact, getChartAccount, getContactService, getRepeatingInvoiceDetails } from '../../redux/actions';
 
 
 const api = new APICore()
@@ -17,8 +16,8 @@ const api = new APICore()
 
 
 const RepeatingInvoiceForm = () => {
-    const location = useLocation();
 
+    const location = useLocation();
     const dispatch = useDispatch();
     const contacts = useSelector((state) => state.Contact.all_contact);
     const accounts = useSelector((state) => state.ChartAccount.accounts);
@@ -27,16 +26,15 @@ const RepeatingInvoiceForm = () => {
     const [rloading,setRloading] = useState(false);
     const [error,setError] = useState(null);
     const [success,setSuccess] = useState(null);
-
-
     const [oldItems,setOldItems] = useState([]);
-    const invoice_details = useSelector((state) => state.Invoice.invoice_details);
+    const invoice_details = useSelector((state) => state.RepeatingInvoice.repeating_invoice_details);
     const contact_services = useSelector((state) => state.Service.contact_services);
     const [contactId,setContactId] = useState('');
     const [invoiceNo,setInvoiceNo] = useState('');
     const [invoiceId,setInvoiceId] = useState(null);
     const [date,setDate] = useState('');
     const [due_date,setDueDate] = useState('');
+    const [repeat_date,setRepeatDate] = useState('');
     const [reference,setReference] = useState('');
     const [currency,setCurrency] = useState('1');
     const [tax_type,setTaxType] = useState('inclusive');
@@ -145,7 +143,6 @@ const RepeatingInvoiceForm = () => {
         setOldItems(items);
     }
 
-    const [itemTotalTax,setItemTotalTax] = useState([]);
     useEffect(()=>{
         let total_discount = 0
         let total_subTotal = 0
@@ -154,7 +151,7 @@ const RepeatingInvoiceForm = () => {
             total_discount += ((item.sub_total / 100) * item.discount);
             total_subTotal += item.total_amount;
             total_taxAmount += item.tax_amount;
-            // let fitems = newItems.filter((i)=> item.tax_rate === i.tax_rate);
+            
 
 
         })
@@ -175,7 +172,7 @@ const RepeatingInvoiceForm = () => {
         dispatch(getAllContact());     
         dispatch(getChartAccount());
         if(state){
-            dispatch(getInvoiceDetails(state));
+            dispatch(getRepeatingInvoiceDetails(state));
             setInvoiceId(state);
             setNewItems([]);
             
@@ -195,6 +192,7 @@ const RepeatingInvoiceForm = () => {
             setTaxType(invoice_details?.tax_type);
             setDate(invoice_details?.date);
             setDueDate(invoice_details?.due_date);
+            setRepeatDate(invoice_details?.repeat_date);
             setReference(invoice_details?.reference);
             setStatus(invoice_details?.status);
             if(invoice_details?.items?.length > 0){
@@ -219,15 +217,12 @@ const RepeatingInvoiceForm = () => {
         }
         
     },[invoice_details])
-    
-    console.log(newItems)
-    console.log(oldItems)
+ 
     const onSubmit = (e) =>{
         e.preventDefault();
         setRloading(true);
-        let formatDate = format(new Date(date),'yyyy-MM-dd');
-        let formatDueDate = format(new Date(due_date),'yyyy-MM-dd');
-        api.create(`/api/invoice/`,{'invoice_no':invoiceNo,'contact_id':contactId,'date':formatDate,'due_date':formatDueDate,'reference':reference,'currency':currency,'tax_type':tax_type,'sub_total':sub_total,'discount':discount,'total_tax':total_tax,'status':status,'total_amount':total_amount,'items':newItems})
+        
+        api.create(`/api/repeating-invoice/`,{'invoice_no':invoiceNo,'contact_id':contactId,'date':date,'due_date':due_date,'repeat_date':repeat_date,'reference':reference,'currency':currency,'tax_type':tax_type,'sub_total':sub_total,'discount':discount,'total_tax':total_tax,'status':status,'total_amount':total_amount,'items':newItems})
             .then(res=>{
                 
                 if(res.data.success){
@@ -247,9 +242,7 @@ const RepeatingInvoiceForm = () => {
     const onUpdate = (e) =>{
         e.preventDefault();
         setRloading(true);
-        let formatDate = format(new Date(date),'yyyy-MM-dd');
-        let formatDueDate = format(new Date(due_date),'yyyy-MM-dd');
-        api.updatePatch(`/api/invoice/${invoiceId}/`,{'invoice_no':invoiceNo,'contact_id':contactId,'date':formatDate,'due_date':formatDueDate,'reference':reference,'currency':currency,'tax_type':tax_type,'sub_total':sub_total,'discount':discount,'total_tax':total_tax,'status':status,'total_amount':total_amount,'items': oldItems,'new_items':newItems,'deleted_items':deletedItems})
+        api.updatePatch(`/api/repeating-invoice/${invoiceId}/`,{'invoice_no':invoiceNo,'contact_id':contactId,'date':date,'due_date':due_date,'repeat_date':repeat_date,'reference':reference,'currency':currency,'tax_type':tax_type,'sub_total':sub_total,'discount':discount,'total_tax':total_tax,'status':status,'total_amount':total_amount,'items': oldItems,'new_items':newItems,'deleted_items':deletedItems})
             .then(res=>{
                 
                 if(res.data.success){
@@ -272,10 +265,10 @@ const RepeatingInvoiceForm = () => {
             
             <PageTitle
                 breadCrumbItems={[
-                    { label: 'Invoice', path: '/app/invoice', active: false },
-                    { label: 'Invoice Form', path: '/app/invoice_form', active: true },
+                    { label: 'Repeating Invoice', path: '/app/repeating_invoice', active: false },
+                    { label: 'Repeating Invoice Form', path: '/app/repeating_invoice_form', active: true },
                 ]}
-                title={'Invoice Form'}
+                title={'Repeating Invoice Form'}
             />
             <Row>
                 <Col>
@@ -335,7 +328,7 @@ const RepeatingInvoiceForm = () => {
                                     <Form.Group as={Col}>
                                     <Form.Label >Date</Form.Label>
                                         <Form.Control
-                                            type='date'
+                                            type='number'
                                             required
                                             name='date'
                                             onChange={(e)=>setDate(e.target.value)}
@@ -347,11 +340,23 @@ const RepeatingInvoiceForm = () => {
                                     <Form.Group as={Col}>
                                     <Form.Label >Due Date</Form.Label>
                                         <Form.Control
-                                            type='date'
+                                            type='number'
                                             required
                                             name='due_date'
                                             onChange={(e)=>setDueDate(e.target.value)}
                                             defaultValue={invoiceId && invoice_details?.due_date}
+                                        >
+
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group as={Col}>
+                                    <Form.Label >Repeat Date</Form.Label>
+                                        <Form.Control
+                                            type='number'
+                                            required
+                                            name='repeat_date'
+                                            onChange={(e)=>setRepeatDate(e.target.value)}
+                                            defaultValue={invoiceId && invoice_details?.repeat_date}
                                         >
 
                                         </Form.Control>

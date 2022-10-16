@@ -220,8 +220,7 @@ const InvoiceForm = () => {
         
     },[invoice_details])
     
-    console.log(newItems)
-    console.log(oldItems)
+ 
     const onSubmit = (e) =>{
         e.preventDefault();
         setRloading(true);
