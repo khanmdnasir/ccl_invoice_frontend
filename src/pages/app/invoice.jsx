@@ -21,7 +21,7 @@ const api = new APICore();
 
 
 // // action column render
-const ActionColumn = withSwal(({ row, swal }) => {
+export const ActionColumn = withSwal(({ row, swal }) => {
     /*
      *   modal handeling
      */
