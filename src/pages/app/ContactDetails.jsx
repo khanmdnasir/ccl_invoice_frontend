@@ -34,9 +34,11 @@ const ContactDetails = () => {
     // console.log("invoice_setting", invoice_setting)
 
     useEffect(() => {
-        dispatch(getContactInvoice(contactId))
-        dispatch(getContactDetails(contactId))
-        dispatch(getContactInvoiceSetting(contactId))
+        if (contactId!==undefined){
+            dispatch(getContactInvoice(contactId))
+            dispatch(getContactDetails(contactId))
+            dispatch(getContactInvoiceSetting(contactId))
+        }
     }, [contactId])
     return (
         <>
