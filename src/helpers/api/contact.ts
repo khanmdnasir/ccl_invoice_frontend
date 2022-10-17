@@ -23,6 +23,11 @@ function getContactInvoiceSetting(params:any) {
     return api.get(`${baseUrl}`,null);
 }
 
+function updateContactInvoiceSetting(params:any) {
+    const baseUrl = `/api/invoice-setting/`;
+    return api.create(`${baseUrl}`,params.payload);
+}
+
 function getAllContact() {
     const baseUrl = '/api/contact/';
     return api.get(`${baseUrl}`,{});
@@ -39,4 +44,4 @@ function deleteContact(id:number) {
 }
 
 
-export { getContact, addContact,deleteContact,getAllContact, getContactInvoice, getContactDetails, getContactInvoiceSetting };
+export { getContact, addContact,deleteContact,getAllContact, getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting };

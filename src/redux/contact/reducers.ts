@@ -89,6 +89,29 @@ const Contact = (state = INIT_STATE, action: any) => {
         }
 
 
+
+        case type.UPDATE_CONTACT_INVOICE_SETTING_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.UPDATE_CONTACT_INVOICE_SETTING_SUCCESS: {
+            return {
+                ...state,
+                loading: false,
+                invoice_setting: action.data,
+            };
+        }
+        case type.UPDATE_CONTACT_INVOICE_SETTING_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+            };
+        }
+
+
         case type.GET_CONTACT_DETAILS_REQUESTED: {
             return {
                 ...state,

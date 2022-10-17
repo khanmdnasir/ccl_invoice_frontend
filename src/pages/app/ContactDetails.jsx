@@ -8,7 +8,7 @@ import { ActionColumn } from './invoice'
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getContactInvoice, getContactDetails, getContactInvoiceSetting } from '../../redux/actions';
+import { getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting } from '../../redux/actions';
 
 
 const api = new APICore()
@@ -27,7 +27,7 @@ const ContactDetails = () => {
         "reminder_settings": {
             "is_include_public_link": false,
             "is_include_pdf_link": false,
-            "minimum_invoice_amount": false,
+            "minimum_invoice_amount": 0,
             "reminder_type": "",
             "days": []
         }
@@ -142,9 +142,10 @@ const ContactDetails = () => {
 
         if (target === "reminder_service" && value === false) {
             data['reminder_settings'] = {
+                "contact_id": contactId,
                 "is_include_public_link": false,
                 "is_include_pdf_link": false,
-                "minimum_invoice_amount": false,
+                "minimum_invoice_amount": 0,
                 "reminder_type": "",
                 "days": []
             }
@@ -178,12 +179,37 @@ const ContactDetails = () => {
     const [inputDate, setInputDate] = useState("");
 
 
-    const daySubmit = ()=>{
-        console.log("inputDate", inputDate)
+    const daySubmit = () => {
+        if (inputDate !== "" && parseInt(inputDate) > 0) {
+            const reminder_settings = { ...invoiceSetting.reminder_settings }
+            const days = reminder_settings?.days 
+
+            let newDays = []
+            if (days!== undefined){
+                newDays = [...days]
+            }
+            if (!newDays.includes(inputDate)) {
+                newDays.push(inputDate)
+            }
+            reminder_settings["days"] = newDays;
+            const data = { ...invoiceSetting }
+            data['reminder_settings'] = reminder_settings;
+            setInvoiceSetting(data);
+
+
+            setInputDate("")
+            setShow(false);
+        }
+
     }
 
-    const finalSubmit = ()=>{
-        console.log("data", invoiceSetting)
+    const finalSubmit = () => {
+        // console.log("data", invoiceSetting)
+        // console.log("length", Object.keys(invoiceSetting?.reminder_settings).length)
+        const newData = {...invoiceSetting}
+        newData["contact_id"] = contactId;
+        newData['reminder_settings']["contact_id"] = contactId;
+        dispatch(updateContactInvoiceSetting(newData))
     }
 
 
@@ -292,7 +318,7 @@ const ContactDetails = () => {
                             <InputGroup className="mb-3">
                                 <InputGroup.Text style={mystyle}>
                                     Auto Invoice Send</InputGroup.Text>
-                                <InputGroup.Checkbox name="auto_invoice_send" onChange={(e) => invoiceSettingChange(e)} />
+                                <InputGroup.Checkbox checked={invoiceSetting?.auto_invoice_send} name="auto_invoice_send" onChange={(e) => invoiceSettingChange(e)} />
                             </InputGroup>
 
                             <InputGroup className="mb-3">
@@ -320,14 +346,14 @@ const ContactDetails = () => {
                                             <Form.Check
                                                 type="radio"
                                                 name="reminder_type" checked={invoiceSetting?.reminder_settings?.reminder_type === "due_in"} onChange={(e) => invoiceReminderSettingChange(e)}
-                                                label="due_in"
+                                                label="Due In"
                                                 value="due_in"
                                                 style={{ "marginRight": "1rem", "marginLeft": "1rem", marginTop: "0.5rem" }}
                                             />
                                             <Form.Check
                                                 type="radio"
                                                 name="reminder_type" checked={invoiceSetting?.reminder_settings?.reminder_type === "over_due"} onChange={(e) => invoiceReminderSettingChange(e)}
-                                                label="over_due"
+                                                label="Over Due"
                                                 value="over_due"
                                                 style={{ "marginRight": "1rem", marginTop: "0.5rem" }}
                                             />
@@ -341,9 +367,9 @@ const ContactDetails = () => {
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text style={{ width: '6rem' }}>
                                                 Days</InputGroup.Text>
-                                            {invoiceSetting?.reminder_settings?.days.map(day => (
+                                            {invoiceSetting?.reminder_settings?.days?.map(day => (
 
-                                                <div>
+                                                <div style={{ "margin": "0 5px" }}>
                                                     <div>
                                                         <InputGroup.Text style={{ width: '5rem' }}>
                                                             {day} days
@@ -364,12 +390,12 @@ const ContactDetails = () => {
                                                 /> */}
 
                                                 <Modal show={show}
-                                                    
+
                                                     size="sm"
                                                     aria-labelledby="contained-modal-title-vcenter"
                                                     centered
                                                 >
-                                                    <Modal.Header closeButton>
+                                                    <Modal.Header>
                                                         <Modal.Title id="contained-modal-title-vcenter">
                                                             Add Reminder Days
                                                         </Modal.Title>
@@ -379,9 +405,8 @@ const ContactDetails = () => {
                                                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                                                 <Form.Label>Reminder Type</Form.Label>
                                                                 <Form.Select disabled aria-label="Default select example">
-                                                                    <option selected value={invoiceSetting?.reminder_settings?.reminder_type}>{invoiceSetting?.reminder_settings?.reminder_type} </option>
-                                                                    <option value="due_in">Due In</option>
-                                                                    <option value="over_due">Over Due</option>
+                                                                    <option selected={invoiceSetting?.reminder_settings?.reminder_type === "due_in"} value="due_in">Due In</option>
+                                                                    <option selected={invoiceSetting?.reminder_settings?.reminder_type === "over_due"} value="over_due">Over Due</option>
                                                                 </Form.Select>
                                                             </Form.Group>
                                                             <Form.Group
@@ -410,7 +435,7 @@ const ContactDetails = () => {
                                 <></>
                             }
 
-                            <Button variant="primary" onClick={()=>finalSubmit()}>
+                            <Button variant="primary" onClick={() => finalSubmit()}>
                                 Submit
                             </Button>
                         </Card.Body>

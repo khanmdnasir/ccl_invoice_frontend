@@ -35,6 +35,12 @@ export const getContactDetails = (id:number) =>{
 });}
 
 
+export const updateContactInvoiceSetting = (data: any) => ({
+    type: type.UPDATE_CONTACT_INVOICE_SETTING_REQUESTED,
+    payload: data,
+});
+
+
 export const getAllContact = () => ({
     type: type.GET_ALLCONTACT_REQUESTED,
     payload: {},
