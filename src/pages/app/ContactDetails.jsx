@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import Table from '../../components/Table';
 import { useLocation } from 'react-router-dom';
 import { ActionColumn } from './invoice'
+import classNames from 'classnames';
+import FeatherIcon from 'feather-icons-react';
 // components
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
@@ -138,18 +140,19 @@ const ContactDetails = () => {
         const target = e.target.name;
         const value = e.target.checked;
         data[target] = value;
-        // console.log('target, value', target, value)
 
-        if (target === "reminder_service" && value === false) {
-            data['reminder_settings'] = {
-                "contact_id": contactId,
-                "is_include_public_link": false,
-                "is_include_pdf_link": false,
-                "minimum_invoice_amount": 0,
-                "reminder_type": "",
-                "days": []
-            }
-        }
+        // if (target === "reminder_service" && value === false) {
+            // const id = invoiceSetting?.reminder_settings?.id;
+            // data['reminder_settings'] = {
+            //     "id":id,
+            //     "contact_id": contactId,
+            //     "is_include_public_link": false,
+            //     "is_include_pdf_link": false,
+            //     "minimum_invoice_amount": 0,
+            //     "reminder_type": "",
+            //     "days": []
+            // }
+        // }
         setInvoiceSetting(data);
     }
 
@@ -200,6 +203,28 @@ const ContactDetails = () => {
             setInputDate("")
             setShow(false);
         }
+
+    }
+
+    
+    const deleteDay = (value) => {
+        const reminder_settings = { ...invoiceSetting.reminder_settings }
+        const days = reminder_settings?.days 
+        
+        let newDays = [...days]
+        if (days !== undefined && newDays.includes(value)){
+            const index = newDays.indexOf(value);
+
+            if (index !== -1) {
+                newDays.splice(index, 1);
+            }
+        }
+
+        reminder_settings["days"] = newDays;
+        const data = { ...invoiceSetting }
+        data['reminder_settings'] = reminder_settings;
+        console.log(data['reminder_settings'])
+        setInvoiceSetting(data);
 
     }
 
@@ -369,11 +394,12 @@ const ContactDetails = () => {
                                                 Days</InputGroup.Text>
                                             {invoiceSetting?.reminder_settings?.days?.map(day => (
 
-                                                <div style={{ "margin": "0 5px" }}>
+                                                <div key={day} style={{ "margin": "0 5px" }}>
                                                     <div>
-                                                        <InputGroup.Text style={{ width: '5rem' }}>
-                                                            {day} days
+                                                        <InputGroup.Text style={{ width: '6rem' }}>
+                                                            {day} days <i onClick={()=>deleteDay(day)} style={{marginLeft:".8rem", color:"red", cursor:"pointer"}} className="fe-delete"></i>
                                                         </InputGroup.Text>
+                                                        
                                                     </div>
                                                 </div>
 
