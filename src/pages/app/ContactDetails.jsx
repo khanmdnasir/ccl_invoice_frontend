@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Button, Form, Alert, InputGroup } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form, Alert, InputGroup, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Table from '../../components/Table';
 import { useLocation } from 'react-router-dom';
@@ -30,7 +30,8 @@ const ContactDetails = () => {
             "minimum_invoice_amount": false,
             "reminder_type": "",
             "days": []
-        }});
+        }
+    });
     const invoice_list = useSelector(state => state.Contact.invoice_list);
     const contact_details = useSelector(state => state.Contact.contact_details);
     const invoice_setting = useSelector(state => state.Contact.invoice_setting);
@@ -46,11 +47,6 @@ const ContactDetails = () => {
     // console.log("invoice_list", invoice_list)
     // console.log("contact_details", contact_details)
     // console.log("due_in", invoiceSetting?.reminder_settings?.reminder_type === "due_in")
-    console.log("data", invoiceSetting)
-
-    // const outerArrayOfSetting = ['auto_approve', 'auto_invoice_send', 'reminder_service']
-
-
 
     useEffect(() => {
         if (contactId !== undefined) {
@@ -123,6 +119,20 @@ const ContactDetails = () => {
         width: "12rem"
     };
 
+    // const myDayStyle = {
+    //     "display": "inline-block",
+    //     "width": "5rem",
+    //     "margin": "0 10px 10px",
+    //     "boxSizing": "border-box",
+    //     "border": "1px solid #ddd",
+    //     "borderBottomColor": "#d1d1d1",
+    //     "borderRadius": "3px",
+    //     "textAlign": "center",
+    //     "backgroundColor": "#fff",
+    //     "transition": "all .25s",
+    //     "cursor": "pointer"
+    // };
+
     const invoiceSettingChange = (e) => {
         const data = { ...invoiceSetting }
         const target = e.target.name;
@@ -149,10 +159,6 @@ const ContactDetails = () => {
         if (target === "minimum_invoice_amount" || target === "reminder_type") {
             value = e.target.value;
         }
-        else if (target === 'days') {
-            value = e.target.value;
-            // console.log('value', value)
-        }
 
         else {
             value = e.target.checked;
@@ -164,6 +170,22 @@ const ContactDetails = () => {
 
         setInvoiceSetting(data);
     }
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [inputDate, setInputDate] = useState("");
+
+
+    const daySubmit = ()=>{
+        console.log("inputDate", inputDate)
+    }
+
+    const finalSubmit = ()=>{
+        console.log("data", invoiceSetting)
+    }
+
 
 
     return (
@@ -317,14 +339,80 @@ const ContactDetails = () => {
                                             } onChange={(e) => invoiceReminderSettingChange(e)} />
                                         </InputGroup>
                                         <InputGroup className="mb-3">
-                                            <InputGroup.Text style={mystyle}>
+                                            <InputGroup.Text style={{ width: '6rem' }}>
                                                 Days</InputGroup.Text>
-                                            <Form.Control type="number" name="days" value={invoiceSetting?.reminder_service?.days} onChange={(e) => invoiceReminderSettingChange(e)} />
+                                            {invoiceSetting?.reminder_settings?.days.map(day => (
+
+                                                <div>
+                                                    <div>
+                                                        <InputGroup.Text style={{ width: '5rem' }}>
+                                                            {day} days
+                                                        </InputGroup.Text>
+                                                    </div>
+                                                </div>
+
+                                            ))}
+                                            <>
+
+                                                <Button variant="primary" onClick={handleShow}>
+                                                    Add
+                                                </Button>
+
+                                                {/* <MyVerticallyCenteredModal
+                                                    show={show}
+                                                    onHide={handleClose}
+                                                /> */}
+
+                                                <Modal show={show}
+                                                    
+                                                    size="sm"
+                                                    aria-labelledby="contained-modal-title-vcenter"
+                                                    centered
+                                                >
+                                                    <Modal.Header closeButton>
+                                                        <Modal.Title id="contained-modal-title-vcenter">
+                                                            Add Reminder Days
+                                                        </Modal.Title>
+                                                    </Modal.Header>
+                                                    <Modal.Body>
+                                                        <Form>
+                                                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                                                <Form.Label>Reminder Type</Form.Label>
+                                                                <Form.Select disabled aria-label="Default select example">
+                                                                    <option selected value={invoiceSetting?.reminder_settings?.reminder_type}>{invoiceSetting?.reminder_settings?.reminder_type} </option>
+                                                                    <option value="due_in">Due In</option>
+                                                                    <option value="over_due">Over Due</option>
+                                                                </Form.Select>
+                                                            </Form.Group>
+                                                            <Form.Group
+                                                                className="mb-3"
+                                                                controlId="exampleForm.ControlTextarea1"
+                                                            >
+                                                                <Form.Label>Day</Form.Label>
+                                                                <Form.Control onChange={(e) => { setInputDate(e.target.value) }} type="number" />
+                                                            </Form.Group>
+                                                        </Form>
+                                                    </Modal.Body>
+                                                    <Modal.Footer>
+                                                        <Button variant="secondary" onClick={handleClose}>
+                                                            Close
+                                                        </Button>
+                                                        <Button variant="primary" onClick={() => daySubmit()}>
+                                                            Submit
+                                                        </Button>
+                                                    </Modal.Footer>
+                                                </Modal>
+
+                                            </>
                                         </InputGroup>
                                     </div>
                                 ) :
                                 <></>
                             }
+
+                            <Button variant="primary" onClick={()=>finalSubmit()}>
+                                Submit
+                            </Button>
                         </Card.Body>
                     </Card>
                 </Col>
