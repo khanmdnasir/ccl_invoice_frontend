@@ -30,8 +30,7 @@ const ContactDetails = () => {
             "minimum_invoice_amount": false,
             "reminder_type": "",
             "days": []
-        }
-    });
+        }});
     const invoice_list = useSelector(state => state.Contact.invoice_list);
     const contact_details = useSelector(state => state.Contact.contact_details);
     const invoice_setting = useSelector(state => state.Contact.invoice_setting);
@@ -47,7 +46,7 @@ const ContactDetails = () => {
     // console.log("invoice_list", invoice_list)
     // console.log("contact_details", contact_details)
     // console.log("due_in", invoiceSetting?.reminder_settings?.reminder_type === "due_in")
-    console.log("over_due", invoiceSetting?.reminder_settings)
+    console.log("data", invoiceSetting)
 
     // const outerArrayOfSetting = ['auto_approve', 'auto_invoice_send', 'reminder_service']
 
@@ -147,20 +146,25 @@ const ContactDetails = () => {
         const reminder_settings = { ...invoiceSetting.reminder_settings }
         const target = e.target.name;
         let value = null;
-        if (target !== "minimum_invoice_amount" || target !== 'days') {
+        if (target === "minimum_invoice_amount" || target === "reminder_type") {
             value = e.target.value;
         }
+        else if (target === 'days') {
+            value = e.target.value;
+            // console.log('value', value)
+        }
+
         else {
             value = e.target.checked;
         }
 
         reminder_settings[target] = value;
-        const data = invoiceSetting;
+        const data = { ...invoiceSetting }
         data['reminder_settings'] = reminder_settings;
-        // console.log('target, value', target, e.target.value)
 
         setInvoiceSetting(data);
     }
+
 
     return (
         <>
@@ -286,14 +290,14 @@ const ContactDetails = () => {
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text style={mystyle}>
                                                 Is Inclued Pdf Link</InputGroup.Text>
-                                            <InputGroup.Checkbox name="is_include_pdf_link" checked={invoiceSetting?.reminder_settings?.is_include_pdf_link==true} onChange={(e) => invoiceReminderSettingChange(e)} />
+                                            <InputGroup.Checkbox name="is_include_pdf_link" checked={invoiceSetting?.reminder_settings?.is_include_pdf_link} onChange={(e) => invoiceReminderSettingChange(e)} />
                                         </InputGroup>
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text style={mystyle}>
                                                 Reminder Type</InputGroup.Text>
                                             <Form.Check
                                                 type="radio"
-                                                name="reminder_type" checked={invoiceSetting?.reminder_settings?.reminder_type==="due_in"} onChange={(e) => invoiceReminderSettingChange(e)}
+                                                name="reminder_type" checked={invoiceSetting?.reminder_settings?.reminder_type === "due_in"} onChange={(e) => invoiceReminderSettingChange(e)}
                                                 label="due_in"
                                                 value="due_in"
                                                 style={{ "marginRight": "1rem", "marginLeft": "1rem", marginTop: "0.5rem" }}
@@ -310,7 +314,7 @@ const ContactDetails = () => {
                                             <InputGroup.Text style={mystyle}>
                                                 Minimum Invoice Amount</InputGroup.Text>
                                             <Form.Control type="number" name="minimum_invoice_amount" value={invoiceSetting?.reminder_settings?.minimum_invoice_amount
-} onChange={(e) => invoiceReminderSettingChange(e)} />
+                                            } onChange={(e) => invoiceReminderSettingChange(e)} />
                                         </InputGroup>
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text style={mystyle}>
