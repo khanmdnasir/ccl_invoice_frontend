@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Table from '../../components/Table';
 import { useLocation } from 'react-router-dom';
 import { ActionColumn } from './invoice'
+import Pagination from '../../components/CustomPagination';
 import classNames from 'classnames';
 import FeatherIcon from 'feather-icons-react';
 // components
@@ -20,7 +21,7 @@ const ContactDetails = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const [contactId, setContactId] = useState();
-    const [pageSize, setPageSize] = useState(50);
+    const [pageSize, setPageSize] = useState(10);
     const [invoiceSetting, setInvoiceSetting] = useState({
         "auto_approve": false,
         "auto_invoice_send": false,
@@ -35,6 +36,7 @@ const ContactDetails = () => {
         }
     });
     const invoice_list = useSelector(state => state.Contact.invoice_list);
+    const invoice_list_pagination_data = useSelector(state => state.Contact.invoice_list_pagination_data);
     const contact_details = useSelector(state => state.Contact.contact_details);
     const invoice_setting = useSelector(state => state.Contact.invoice_setting);
     const loading = useSelector(state => state.Contact.loading);
@@ -49,13 +51,27 @@ const ContactDetails = () => {
         }
     }, [])
 
+
+    const visitPage = (page) => {
+        dispatch(getContactInvoice(contactId, page));
+    };
+
+    const previous_number = () => {
+        dispatch(getContactInvoice(contactId, invoice_list_pagination_data.previous));
+    };
+
+    const next_number = () => {
+        dispatch(getContactInvoice(contactId, invoice_list_pagination_data.next));
+    };
+
+    console.log("invoice_list_pagination_data", invoice_list_pagination_data)
     // console.log("invoice_list", invoice_list)
     // console.log("contact_details", contact_details)
     // console.log("due_in", invoiceSetting)
 
     useEffect(() => {
         if (contactId !== undefined) {
-            dispatch(getContactInvoice(contactId))
+            dispatch(getContactInvoice(contactId, 1))
             dispatch(getContactDetails(contactId))
             dispatch(getContactInvoiceSetting(contactId))
         }
@@ -319,6 +335,7 @@ const ContactDetails = () => {
                         <Card.Body>
 
                             {invoice_list.length > 0 ?
+                            <>
                                 <Table
                                     columns={columns}
                                     data={invoice_list}
@@ -329,7 +346,8 @@ const ContactDetails = () => {
                                     tableClass="table-nowrap table-hover"
                                     searchBoxClass=""
                                 />
-
+                                    <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={invoice_list_pagination_data.total_page} current_page={invoice_list_pagination_data.current_page} active={invoice_list_pagination_data.active}/>
+                            </>
                                 :
                                 'No data available!'}
                         </Card.Body>

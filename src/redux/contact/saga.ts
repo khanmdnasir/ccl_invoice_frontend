@@ -44,9 +44,9 @@ function* getContact({ payload: {limit,page}}:ContactData):SagaIterator {
 }
 
 
-function* getContactInvoice({ payload:id }:ContactData):SagaIterator {
+function* getContactInvoice({ payload }:any):SagaIterator {
     try {
-        const response = yield call(getContactInvoiceApi,{id});
+        const response = yield call(getContactInvoiceApi,{...payload});
         const data = response.data;
         // console.log("data",data)
 

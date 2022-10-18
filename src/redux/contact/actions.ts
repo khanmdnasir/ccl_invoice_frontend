@@ -18,9 +18,9 @@ export const getContact = (limit:number,page:number) => ({
     payload: {limit,page},
 });
 
-export const getContactInvoice = (id:number) => ({
+export const getContactInvoice = (id:any, page:any) => ({
     type: type.GET_CONTACT_INVOICE_REQUESTED,
-    payload: id,
+    payload: {id, page},
 });
 
 export const getContactInvoiceSetting = (id:number) => ({

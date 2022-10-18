@@ -14,7 +14,7 @@ function getContactDetails(params:any) {
 }
 
 function getContactInvoice(params:any) {
-    const baseUrl = `/api/invoice?contact_id=${params.id}`;
+    const baseUrl = `/api/invoice?contact_id=${params.id}&limit=1&page=${params.page}`;
     return api.get(`${baseUrl}`,null);
 }
 
