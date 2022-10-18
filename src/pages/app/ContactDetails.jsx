@@ -37,7 +37,10 @@ const ContactDetails = () => {
     const invoice_list = useSelector(state => state.Contact.invoice_list);
     const contact_details = useSelector(state => state.Contact.contact_details);
     const invoice_setting = useSelector(state => state.Contact.invoice_setting);
-    // const loading = useSelector(state => state.Invoice.loading);
+    const loading = useSelector(state => state.Contact.loading);
+    const error = useSelector(state => state.Contact.error);
+    const success = useSelector(state => state.Contact.success);
+
 
     useEffect(() => {
         const state = location.state
@@ -142,16 +145,16 @@ const ContactDetails = () => {
         data[target] = value;
 
         // if (target === "reminder_service" && value === false) {
-            // const id = invoiceSetting?.reminder_settings?.id;
-            // data['reminder_settings'] = {
-            //     "id":id,
-            //     "contact_id": contactId,
-            //     "is_include_public_link": false,
-            //     "is_include_pdf_link": false,
-            //     "minimum_invoice_amount": 0,
-            //     "reminder_type": "",
-            //     "days": []
-            // }
+        // const id = invoiceSetting?.reminder_settings?.id;
+        // data['reminder_settings'] = {
+        //     "id":id,
+        //     "contact_id": contactId,
+        //     "is_include_public_link": false,
+        //     "is_include_pdf_link": false,
+        //     "minimum_invoice_amount": 0,
+        //     "reminder_type": "",
+        //     "days": []
+        // }
         // }
         setInvoiceSetting(data);
     }
@@ -185,10 +188,10 @@ const ContactDetails = () => {
     const daySubmit = () => {
         if (inputDate !== "" && parseInt(inputDate) > 0) {
             const reminder_settings = { ...invoiceSetting.reminder_settings }
-            const days = reminder_settings?.days 
+            const days = reminder_settings?.days
 
             let newDays = []
-            if (days!== undefined){
+            if (days !== undefined) {
                 newDays = [...days]
             }
             if (!newDays.includes(inputDate)) {
@@ -206,13 +209,13 @@ const ContactDetails = () => {
 
     }
 
-    
+
     const deleteDay = (value) => {
         const reminder_settings = { ...invoiceSetting.reminder_settings }
-        const days = reminder_settings?.days 
-        
+        const days = reminder_settings?.days
+
         let newDays = [...days]
-        if (days !== undefined && newDays.includes(value)){
+        if (days !== undefined && newDays.includes(value)) {
             const index = newDays.indexOf(value);
 
             if (index !== -1) {
@@ -231,7 +234,7 @@ const ContactDetails = () => {
     const finalSubmit = () => {
         // console.log("data", invoiceSetting)
         // console.log("length", Object.keys(invoiceSetting?.reminder_settings).length)
-        const newData = {...invoiceSetting}
+        const newData = { ...invoiceSetting }
         newData["contact_id"] = contactId;
         newData['reminder_settings']["contact_id"] = contactId;
         dispatch(updateContactInvoiceSetting(newData))
@@ -339,7 +342,17 @@ const ContactDetails = () => {
                             <p>Invoice Setting</p>
                         </Card.Header>
                         <Card.Body>
+                            {!loading && error && !success && (
+                                <Alert variant="danger" className="my-2">
+                                    {error}
+                                </Alert>
+                            )}
 
+                            {!loading && success && !error && (
+                                <Alert variant="success" className="my-2">
+                                    {success}
+                                </Alert>
+                            )}
                             <InputGroup className="mb-3">
                                 <InputGroup.Text style={mystyle}>
                                     Auto Invoice Send</InputGroup.Text>
@@ -397,9 +410,9 @@ const ContactDetails = () => {
                                                 <div key={day} style={{ "margin": "0 5px" }}>
                                                     <div>
                                                         <InputGroup.Text style={{ width: '6rem' }}>
-                                                            {day} days <i onClick={()=>deleteDay(day)} style={{marginLeft:".8rem", color:"red", cursor:"pointer"}} className="fe-delete"></i>
+                                                            {day} days <i onClick={() => deleteDay(day)} style={{ marginLeft: ".8rem", color: "red", cursor: "pointer" }} className="fe-delete"></i>
                                                         </InputGroup.Text>
-                                                        
+
                                                     </div>
                                                 </div>
 

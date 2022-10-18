@@ -74,8 +74,13 @@ function* updateContactInvoiceSetting({ payload }:any):SagaIterator {
     try {
         const response = yield call(updateContactInvoiceSettingApi,{payload});
         const data = response.data;
-        yield put({type: 'UPDATE_CONTACT_INVOICE_SETTING_SUCCESS' , data: data.data});
+        if(data.success){
+            yield put({type: 'UPDATE_CONTACT_INVOICE_SETTING_SUCCESS' , data: data.data});
+        }else{
+            yield put({type: 'UPDATE_CONTACT_INVOICE_SETTING_FAILED', error: data.error});
+        }
     } catch (error) {
+        console.log("error",error)
         yield put({type: 'UPDATE_CONTACT_INVOICE_SETTING_FAILED', error: error});
         
     }
