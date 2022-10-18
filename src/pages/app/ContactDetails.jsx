@@ -38,8 +38,8 @@ const ContactDetails = () => {
     const contact_details = useSelector(state => state.Contact.contact_details);
     const invoice_setting = useSelector(state => state.Contact.invoice_setting);
     const loading = useSelector(state => state.Contact.loading);
-    const error = useSelector(state => state.Contact.error);
-    const success = useSelector(state => state.Contact.success);
+    const invoice_setting_error = useSelector(state => state.Contact.invoice_setting_error);
+    const invoice_setting_success = useSelector(state => state.Contact.invoice_setting_success);
 
 
     useEffect(() => {
@@ -51,7 +51,7 @@ const ContactDetails = () => {
 
     // console.log("invoice_list", invoice_list)
     // console.log("contact_details", contact_details)
-    // console.log("due_in", invoiceSetting?.reminder_settings?.reminder_type === "due_in")
+    // console.log("due_in", invoiceSetting)
 
     useEffect(() => {
         if (contactId !== undefined) {
@@ -295,11 +295,11 @@ const ContactDetails = () => {
                                 <div className="row mb-4">
                                     <div className="col-sm">
                                         <h5 className='me-2'>Country:</h5>
-                                        <p>{contact_details?.country}</p>
+                                        <p>{contact_details?.country?.name}</p>
                                     </div>
                                     <div className="col-sm">
                                         <h5 className='me-2'>City:</h5>
-                                        <p>{contact_details?.city}</p>
+                                        <p>{contact_details?.city?.name}</p>
                                     </div>
                                     <div className="col-sm">
                                         <h5 className='me-2'>Billing Address:</h5>
@@ -342,15 +342,15 @@ const ContactDetails = () => {
                             <p>Invoice Setting</p>
                         </Card.Header>
                         <Card.Body>
-                            {!loading && error && !success && (
+                            {!loading && invoice_setting_error && !invoice_setting_success && (
                                 <Alert variant="danger" className="my-2">
-                                    {error}
+                                    {invoice_setting_error}
                                 </Alert>
                             )}
 
-                            {!loading && success && !error && (
+                            {!loading && invoice_setting_success && !invoice_setting_error && (
                                 <Alert variant="success" className="my-2">
-                                    {success}
+                                    {invoice_setting_success}
                                 </Alert>
                             )}
                             <InputGroup className="mb-3">

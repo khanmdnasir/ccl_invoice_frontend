@@ -13,7 +13,9 @@ const INIT_STATE = {
     active: '',
     loading: false,
     error: null,
-    success:null
+    success:null,
+    invoice_setting_error: null,
+    invoice_setting_success:null,
 };
 
 
@@ -102,16 +104,16 @@ const Contact = (state = INIT_STATE, action: any) => {
                 ...state,
                 loading: false,
                 invoice_setting: action.data,
-                error: null,
-                success:"Contact Updated Successfully"
+                invoice_setting_error: null,
+                invoice_setting_success:"Contact Updated Successfully"
             };
         }
         case type.UPDATE_CONTACT_INVOICE_SETTING_FAILED: {
             return {
                 ...state,
                 loading: false,
-                error: action.error,
-                success: null,
+                invoice_setting_error: action.error,
+                invoice_setting_success: null,
             };
         }
 
