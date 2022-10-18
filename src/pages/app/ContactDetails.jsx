@@ -53,25 +53,25 @@ const ContactDetails = () => {
 
 
     const visitPage = (page) => {
-        dispatch(getContactInvoice(contactId, page));
+        dispatch(getContactInvoice(contactId, pageSize, page));
     };
 
     const previous_number = () => {
-        dispatch(getContactInvoice(contactId, invoice_list_pagination_data.previous));
+        dispatch(getContactInvoice(contactId, pageSize, invoice_list_pagination_data.previous));
     };
 
     const next_number = () => {
-        dispatch(getContactInvoice(contactId, invoice_list_pagination_data.next));
+        dispatch(getContactInvoice(contactId, pageSize, invoice_list_pagination_data.next));
     };
 
-    console.log("invoice_list_pagination_data", invoice_list_pagination_data)
+    // console.log("invoice_list_pagination_data", invoice_list_pagination_data)
     // console.log("invoice_list", invoice_list)
     // console.log("contact_details", contact_details)
     // console.log("due_in", invoiceSetting)
 
     useEffect(() => {
         if (contactId !== undefined) {
-            dispatch(getContactInvoice(contactId, 1))
+            dispatch(getContactInvoice(contactId, pageSize, 1))
             dispatch(getContactDetails(contactId))
             dispatch(getContactInvoiceSetting(contactId))
         }
