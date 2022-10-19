@@ -46,6 +46,7 @@ const InvoiceForm = () => {
     const [status,setStatus] = useState('draft');
     const [total_amount,setTotalAmount] = useState('');
     const [deletedItems,setDeletedItems] = useState([]);
+    const [taxGroup, setTaxGroup] = useState({});
     
     const [items,setItems] = useState({
         item: '',
@@ -147,6 +148,8 @@ const InvoiceForm = () => {
 
     const [itemTotalTax,setItemTotalTax] = useState([]);
     useEffect(()=>{
+        const groupOfTax = { }
+
         let total_discount = 0
         let total_subTotal = 0
         let total_taxAmount = 0
@@ -154,22 +157,34 @@ const InvoiceForm = () => {
             total_discount += ((item.sub_total / 100) * item.discount);
             total_subTotal += item.total_amount;
             total_taxAmount += item.tax_amount;
-            // let fitems = newItems.filter((i)=> item.tax_rate === i.tax_rate);
-
-
+            if ((item.tax_rate).toString() in groupOfTax) {
+                groupOfTax[(item.tax_rate).toString()] += item.tax_amount;
+            }
+            else{
+                groupOfTax[(item.tax_rate).toString()] = item.tax_amount;
+            }
+            
+            
         })
         oldItems.forEach((item)=>{
             total_discount += ((item.sub_total / 100) * item.discount);
             total_subTotal += item.total_amount;
             total_taxAmount += item.tax_amount;
+            if ((item.tax_rate).toString() in groupOfTax) {
+                groupOfTax[(item.tax_rate).toString()] += item.tax_amount;
+            }
+            else {
+                groupOfTax[(item.tax_rate).toString()] = item.tax_amount;
+            }
         })
         setDiscount(total_discount);
         setSubTotal(total_subTotal);
         setTotalTax(total_taxAmount)
         let totalAmount = parseInt(total_subTotal)+ (tax_type === 'exclusive' && parseInt(total_taxAmount))
         setTotalAmount(totalAmount)
+        setTaxGroup(groupOfTax)
     },[newItems,oldItems,tax_type])
-
+    
     useEffect(()=>{ 
         const state = location.state
         dispatch(getAllContact());     
@@ -184,7 +199,7 @@ const InvoiceForm = () => {
             setOldItems([]);
             setInvoiceId(null);
         }
-           
+
     },[])
 
     useEffect(()=>{
@@ -217,11 +232,11 @@ const InvoiceForm = () => {
             }
             
         }
-        
+
     },[invoice_details])
     
-    console.log(newItems)
-    console.log(oldItems)
+    // console.log("newItems", newItems)
+    // console.log("oldItems", oldItems)
     const onSubmit = (e) =>{
         e.preventDefault();
         setRloading(true);
@@ -265,8 +280,7 @@ const InvoiceForm = () => {
                 setError(err)
             })        
     }
-   
-    
+
     return (
         <>
             
@@ -839,7 +853,7 @@ const InvoiceForm = () => {
                                                 <p style={{fontSize: '20px'}}>Subtotal</p>
                                                 <p style={{fontSize: '20px',paddingLeft: '50px'}}>{sub_total}</p>
                                             </div>
-                                            {newItems?.map((item)=>{
+                                            {/* {newItems?.map((item)=>{
                                                 if(item.tax_rate > 0)
                                                 return(
 
@@ -848,8 +862,8 @@ const InvoiceForm = () => {
                                                     <p style={{fontSize: '20px',paddingLeft: '50px'}}>{item.tax_amount}</p>
                                                 </div>
                                                 )
-                                            })}
-                                            {oldItems?.map((item)=>{
+                                            })} */}
+                                            {/* {oldItems?.map((item)=>{
                                                 if(item.tax_rate > 0)
                                                 return (
                                                 <div className="d-flex justify-content-between" >
@@ -857,8 +871,15 @@ const InvoiceForm = () => {
                                                     <p style={{fontSize: '20px',paddingLeft: '50px'}}>{item.tax_amount}</p>
                                                 </div>
                                                 )
-                                            })}
-                                            
+                                            })} */}
+                                        {Object.entries(taxGroup).map(item => {
+                                            return (
+                                                <div className="d-flex justify-content-between" >
+                                                    <p style={{ fontSize: '20px' }}>Total Tax {item[0]}%</p>
+                                                    <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{item[1]}</p>
+
+                                                </div>)
+                                        })}
                                             <hr></hr>
                                             <div className="d-flex justify-content-between">
                                                 <p style={{fontSize: '20px'}}>Total</p>
