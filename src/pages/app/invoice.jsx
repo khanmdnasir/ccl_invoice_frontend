@@ -127,6 +127,9 @@ const columns = [
         Header: 'Discount',
         accessor: 'discount',
         sort: true,
+        Cell: (row) => {
+            return <div>{(row.row.original.discount).toFixed(2)}</div>;
+        }
     },
     {
         Header: 'Total Tax',
