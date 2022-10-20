@@ -547,7 +547,11 @@ const InvoiceForm = () => {
                                                     </td>
 
                                                     <td>
-                                                        <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => { oldItems.splice(index, 1); deletedItems.push(item.id) }}>
+                                                        <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => { 
+                                                            oldItems.splice(index, 1);
+                                                            setOldItems([...oldItems]);
+                                                            deletedItems.push(item.id) 
+                                                            }}>
                                                             <i className="mdi mdi-close"></i>
                                                         </Link>
                                                     </td>
@@ -675,7 +679,11 @@ const InvoiceForm = () => {
                                                     </td>
 
                                                     <td>
-                                                        <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => { (newItems.splice(index, 1)) }}>
+                                                        <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => { 
+                                                            newItems.splice(index, 1);
+                                                            setNewItems([...newItems])
+                                                            
+                                                            }}>
                                                             <i className="mdi mdi-close"></i>
                                                         </Link>
                                                     </td>
