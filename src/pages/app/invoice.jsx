@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { APICore } from '../../helpers/api/apiCore';
-import { Row, Col, Card, Form, Alert, Tab, Nav} from 'react-bootstrap';
+import { Row, Col, Card, Form, Alert, Tab, Nav } from 'react-bootstrap';
 import { withSwal } from 'react-sweetalert2';
 
 // components
@@ -26,76 +26,159 @@ export const ActionColumn = withSwal(({ row, swal }) => {
      *   modal handeling
      */
     const dispatch = useDispatch();
-    const user_role = useSelector((state)=> state.Role.user_role);
-    
+    const user_role = useSelector((state) => state.Role.user_role);
+
 
     /*
     handle form submission
     */
-    
+
     const onDelete = () => {
         swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#28bb4b',
-                cancelButtonColor: '#f34e4e',
-                confirmButtonText: 'Yes, delete it!',
-            })
-            .then(function(result){
-                if(result.value){
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28bb4b',
+            cancelButtonColor: '#f34e4e',
+            confirmButtonText: 'Yes, delete it!',
+        })
+            .then(function (result) {
+                if (result.value) {
                     // dispatch(deleteContact(row.original.id))
                     api.delete(`/api/invoice/${row.original.id}/`)
-                .then(res=>{
-                    dispatch(getInvoice(10,1));
-                    swal.fire(
-                        'Deleted!',
-                        'Invoice has been deleted.',
-                        'success'
-                    );            
-                })
-                .catch(err => {
-                    swal.fire({
-                        title: err,
-                    }
-                    );
-                })
-                }else if(result.dismiss === 'cancel'){
-                    
+                        .then(res => {
+                            dispatch(getInvoice(10, 1));
+                            swal.fire(
+                                'Deleted!',
+                                'Invoice has been deleted.',
+                                'success'
+                            );
+                        })
+                        .catch(err => {
+                            swal.fire({
+                                title: err,
+                            }
+                            );
+                        })
+                } else if (result.dismiss === 'cancel') {
+
                 }
-            })        
+            })
     }
 
     return (
         <>
-            <Link to={{pathname: '/app/invoice_details',state: row.original.id}} className="action-icon" >
+            <Link to={{ pathname: '/app/invoice_details', state: row.original.id }} className="action-icon" >
                 <i className="mdi mdi-eye"></i>
             </Link>
 
-            { user_role.includes('change_invoice') ?
-                <Link to={{pathname: '/app/invoice_form',state: row.original.id}} className="action-icon" >
+            {user_role.includes('change_invoice') ?
+                <Link to={{ pathname: '/app/invoice_form', state: row.original.id }} className="action-icon" >
                     <i className="mdi mdi-square-edit-outline"></i>
-                </Link>:
-                <Link to="#" className="action-icon"  style={{pointerEvents: 'none'}}>
+                </Link> :
+                <Link to="#" className="action-icon" style={{ pointerEvents: 'none' }}>
                     <i className="mdi mdi-square-edit-outline"></i>
                 </Link>
             }
-            
-            { user_role.includes('delete_invoice') ?
-                <Link to="#" className="action-icon" onClick={()=>onDelete()}>
+
+            {user_role.includes('delete_invoice') ?
+                <Link to="#" className="action-icon" onClick={() => onDelete()}>
                     <i className="mdi mdi-delete"></i>
-                </Link>:
-                <Link to="#" className="action-icon" style={{pointerEvents: 'none'}}>
+                </Link> :
+                <Link to="#" className="action-icon" style={{ pointerEvents: 'none' }}>
                     <i className="mdi mdi-delete"></i>
                 </Link>
             }
 
-            
-            
+
+
         </>
     );
 });
+
+export const StatusColumn = withSwal(({ row, swal }) => {
+    /*
+     *   modal handeling
+     */
+    const dispatch = useDispatch();
+    const user_role = useSelector((state) => state.Role.user_role);
+
+    /*
+    handle form submission
+    */
+    const draftsOptions =
+        <>
+            <option selected={row.original.status === 'draft'} value='draft'>Draft</option>
+            <option selected={row.original.status === 'waiting'} value='waiting'>Waiting</option>
+        </>
+
+    const waitingsOptions =
+        <>
+            <option selected={row.original.status === 'waiting'} value='waiting'>Waiting</option>
+            <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
+        </>
+    
+    const approvesOptions =
+        <>
+            <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
+            <option selected={row.original.status === 'paid'} value='paid'>Paid</option>
+        </>
+
+    const handleShow = (row, e) => {
+        const value = e.target.value;
+        const data = {
+            "status":value
+        }
+        swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28bb4b',
+            cancelButtonColor: '#f34e4e',
+            confirmButtonText: 'Yes, change it!',
+        })
+            .then(function (result) {
+
+                if (result.value) {
+                    // dispatch(deleteContact(row.original.id))
+                    api.update(`/api/change-invoice-status/${row.id}/`, data)
+                        .then(res => {
+                            dispatch(getInvoice(10, 1));
+                            swal.fire(
+                                'Updated!',
+                                'Invoice Status has been Updated.',
+                                'success'
+                            );
+                        })
+                        .catch(err => {
+                            // console.log('err',err)
+                            swal.fire({
+                                title: err,
+                            }
+                            );
+                        })
+                } else if (result.dismiss === 'cancel') {
+                    dispatch(getInvoice(10, 1));
+                }
+            })
+    };
+
+    return (
+        <>
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Form.Select style={{ width: '70%' }} onChange={(e) => handleShow(row.original, e)}>
+                    {row.original.status === "draft" ? (draftsOptions):null}
+                    {row.original.status === "waiting" ? (waitingsOptions):null}
+                    {row.original.status === "approve" ? (approvesOptions):null}
+                </Form.Select>
+            </div>
+
+        </>
+    );
+});
+
 
 const columns = [
     {
@@ -142,74 +225,86 @@ const columns = [
         sort: true,
     },
     {
+        Header: 'Status',
+        accessor: 'status',
+        sort: true,
+        Cell: StatusColumn,
+    },
+    {
         Header: 'Action',
         accessor: 'action',
         sort: false,
         Cell: ActionColumn,
-    },
-    
+    }
+
 ];
+
 
 const Invoice = () => {
     const dispatch = useDispatch();
-    const [filteredIncoices,setFilteredInvoices] = useState([]);
+    const [filteredIncoices, setFilteredInvoices] = useState([]);
     const invoices = useSelector(state => state.Invoice.invoices);
     const previous = useSelector(state => state.Invoice.previous);
     const next = useSelector(state => state.Invoice.next);
     const current_page = useSelector(state => state.Invoice.current_page);
     const total_page = useSelector(state => state.Invoice.total_page);
     const active = useSelector(state => state.Invoice.active);
-    const user_role = useSelector((state)=> state.Role.user_role);
+    const user_role = useSelector((state) => state.Role.user_role);
     const loading = useSelector(state => state.Invoice.loading);
     const error = useSelector(state => state.Invoice.error);
-    const [pageSize,setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(10);
     /*
      *   modal handeling
      */
-  
+
 
     const visitPage = (page) => {
-        dispatch(getInvoice(pageSize,page));
+        dispatch(getInvoice(pageSize, page));
     };
 
     const previous_number = () => {
-        dispatch(getInvoice(pageSize,previous));
+        dispatch(getInvoice(pageSize, previous));
     };
 
     const next_number = () => {
-        dispatch(getInvoice(pageSize,next));
+        dispatch(getInvoice(pageSize, next));
     };
 
     /*
     handle form submission
     */
-    
-    const onClickEvent = (value) =>{
-        if(value === 'all'){
+
+    const onClickEvent = (value) => {
+        if (value === 'all') {
             setFilteredInvoices(invoices)
-        }else if(value === 'draft'){
-            setFilteredInvoices(invoices.filter((item)=>item.status === 'draft'))
-        
-        }else if(value === 'approval'){
-            setFilteredInvoices(invoices.filter((item)=>item.status === 'approve'))
-        
-        }else if(value === 'paid'){
-            setFilteredInvoices(invoices.filter((item)=>item.status === 'paid'))
-        
-        }else if(value === 'repeating'){
-            setFilteredInvoices(invoices)
-        }else{
+        } else if (value === 'draft') {
+            setFilteredInvoices(invoices.filter((item) => item.status === 'draft'))
+
+        } else if (value === 'approval') {
+            setFilteredInvoices(invoices.filter((item) => item.status === 'waiting'))
+
+        } else if (value === 'approve') {
+            setFilteredInvoices(invoices.filter((item) => item.status === 'approve'))
+
+        } else if (value === 'paid') {
+            setFilteredInvoices(invoices.filter((item) => item.status === 'paid'))
+
+        }
+        // else if(value === 'repeating'){
+        //     setFilteredInvoices(invoices)
+        // }
+        else {
             setFilteredInvoices(invoices)
         }
     }
 
-    useEffect(()=>{ 
-        dispatch(getInvoice(pageSize,1));   
-    },[pageSize])
+    useEffect(() => {
+        dispatch(getInvoice(pageSize, 1));
+    }, [pageSize])
 
-    useEffect(()=>{
+    useEffect(() => {
         setFilteredInvoices(invoices);
-    },[invoices])
+    }, [invoices])
     return (
         <>
             <PageTitle
@@ -219,32 +314,37 @@ const Invoice = () => {
                 title={`Invoice`}
             />
             <Tab.Container defaultActiveKey="all">
-                <Nav as="ul" variant="tabs">                    
+                <Nav as="ul" variant="tabs">
                     <Nav.Item as="li" key='all'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='all'  onClick={()=>onClickEvent('all')}>
+                        <Nav.Link className="cursor-pointer" href="#" eventKey='all' onClick={() => onClickEvent('all')}>
                             All
                         </Nav.Link>
-                    </Nav.Item>                        
+                    </Nav.Item>
                     <Nav.Item as="li" key='draft'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='draft' onClick={()=>onClickEvent('draft')}>
+                        <Nav.Link className="cursor-pointer" href="#" eventKey='draft' onClick={() => onClickEvent('draft')}>
                             Draft
                         </Nav.Link>
-                    </Nav.Item>                        
+                    </Nav.Item>
                     <Nav.Item as="li" key='approval'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='approval' onClick={()=>onClickEvent('approval')}>
+                        <Nav.Link className="cursor-pointer" href="#" eventKey='approval' onClick={() => onClickEvent('approval')}>
                             Awaiting Approval
                         </Nav.Link>
-                    </Nav.Item>                        
-                    <Nav.Item as="li" key='paid'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='paid' onClick={()=>onClickEvent('paid')}>
-                           Paid
+                    </Nav.Item>
+                    <Nav.Item as="li" key='approved'>
+                        <Nav.Link className="cursor-pointer" href="#" eventKey='approved' onClick={() => onClickEvent('approve')}>
+                            Awaiting Payment
                         </Nav.Link>
-                    </Nav.Item>                        
-                    <Nav.Item as="li" key='repeating'>
+                    </Nav.Item>
+                    <Nav.Item as="li" key='paid'>
+                        <Nav.Link className="cursor-pointer" href="#" eventKey='paid' onClick={() => onClickEvent('paid')}>
+                            Paid
+                        </Nav.Link>
+                    </Nav.Item>
+                    {/* <Nav.Item as="li" key='repeating'>
                         <Nav.Link className="cursor-pointer" href="#" eventKey='repeating' onClick={()=>onClickEvent('repeating')}>
                            Repeating
                         </Nav.Link>
-                    </Nav.Item>                        
+                    </Nav.Item>                         */}
                 </Nav>
 
                 {/* <Tab.Content>
@@ -266,16 +366,16 @@ const Invoice = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                        {!loading && error && (
-                            <Alert variant="danger" className="my-2">
-                                {error}
-                            </Alert>
-                        )}
+                            {!loading && error && (
+                                <Alert variant="danger" className="my-2">
+                                    {error}
+                                </Alert>
+                            )}
                             <Row className="mb-2">
                                 <Col sm={4}>
-                                    <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
+                                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                         <span className='me-2'>Show:</span>
-                                        <Form.Select style={{width: '40%'}} onChange={(e)=>{setPageSize(e.target.value);getInvoice(pageSize,1)}}>
+                                        <Form.Select style={{ width: '40%' }} onChange={(e) => { setPageSize(e.target.value); getInvoice(pageSize, 1) }}>
                                             <option value='10'>10</option>
                                             <option value='15'>20</option>
                                             <option value='20'>30</option>
@@ -285,14 +385,14 @@ const Invoice = () => {
 
                                 <Col sm={8}>
                                     <div className="text-sm-end mt-2 mt-sm-0">
-                                        { user_role.includes('add_invoice') ?
+                                        {user_role.includes('add_invoice') ?
                                             <Link className="btn btn-success mb-2 me-1" to='/app/invoice_form'>
-                                            <i className="mdi mdi-plus-circle me-1"></i> Add
-                                            </Link>:
+                                                <i className="mdi mdi-plus-circle me-1"></i> Add
+                                            </Link> :
                                             <>
                                             </>
                                         }
-                                        
+
                                         {/* <ExcelFile element={<Button className="btn btn-light mb-2">Export</Button>}>
                                             <ExcelSheet data={users} name="Users">
                                                 <ExcelColumn label="Name" value="name"/>
@@ -301,41 +401,41 @@ const Invoice = () => {
                                                 <ExcelColumn label="Role" value={(col)=> col.groups[0].name}/>                                            
                                             </ExcelSheet>
                                         </ExcelFile> */}
-  
+
                                     </div>
                                 </Col>
                             </Row>
-                            
-                            {loading ? <p>Loading...</p>:
-                            <>
-                            {filteredIncoices.length > 0 ?
-                            <>
-                            <Table
-                                columns={columns}
-                                data={filteredIncoices}
-                                pageSize={pageSize}
-                                isSortable={true}
-                                pagination={false}
-                                isSearchable={true}
-                                tableClass="table-nowrap table-hover"
-                                searchBoxClass=""
-                            />
-                            <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={total_page} current_page={current_page} active={active}/>
-                            </>
-                            :
-                            'No data available!'}</>}
-                            
+
+                            {loading ? <p>Loading...</p> :
+                                <>
+                                    {filteredIncoices.length > 0 ?
+                                        <>
+                                            <Table
+                                                columns={columns}
+                                                data={filteredIncoices}
+                                                pageSize={pageSize}
+                                                isSortable={true}
+                                                pagination={false}
+                                                isSearchable={true}
+                                                tableClass="table-nowrap table-hover"
+                                                searchBoxClass=""
+                                            />
+                                            <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={total_page} current_page={current_page} active={active} />
+                                        </>
+                                        :
+                                        'No data available!'}</>}
+
                         </Card.Body>
                     </Card>
                 </Col>
             </Row>
 
             {/* add contact modal */}
-            
-            
-            
-            
-            
+
+
+
+
+
         </>
     );
 };
