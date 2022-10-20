@@ -8,6 +8,26 @@ function getContact(params: {limit: number,page:number}) {
     return api.get(`${baseUrl}`,params);
 }
 
+function getContactDetails(params:any) {
+    const baseUrl = `/api/contact/${params.payload}`;
+    return api.get(`${baseUrl}`,null);
+}
+
+function getContactInvoice(params:any) {
+    const baseUrl = `/api/invoice?contact_id=${params.id}&limit=${params.limit}&page=${params.page}`;
+    return api.get(`${baseUrl}`,null);
+}
+
+function getContactInvoiceSetting(params:any) {
+    const baseUrl = `/api/invoice-setting?contact_id=${params.payload}`;
+    return api.get(`${baseUrl}`,null);
+}
+
+function updateContactInvoiceSetting(params:any) {
+    const baseUrl = `/api/invoice-setting/`;
+    return api.create(`${baseUrl}`,params.payload);
+}
+
 function getAllContact() {
     const baseUrl = '/api/contact/';
     return api.get(`${baseUrl}`,{});
@@ -24,4 +44,4 @@ function deleteContact(id:number) {
 }
 
 
-export { getContact, addContact,deleteContact,getAllContact };
+export { getContact, addContact,deleteContact,getAllContact, getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting };

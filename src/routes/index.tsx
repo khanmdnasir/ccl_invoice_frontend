@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, RouteProps } from 'react-router-dom';
 import Contact from '../pages/app/Contact';
+import ContactDetails from '../pages/app/ContactDetails';
 
 import ChangePassword from '../pages/app/user-management/ChangePassword';
 import RoleForm from '../pages/Form/RoleForm';
@@ -117,6 +118,12 @@ const AppRoutes = {
             path: '/app/contact',
             name: 'Contact',
             component: Contact,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/contact_details',
+            name: 'Contact Details',
+            component: ContactDetails,
             route: PrivateRoute,
         },
         {
