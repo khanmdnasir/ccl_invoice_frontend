@@ -19,6 +19,9 @@ import Pagination from '../../components/CustomPagination';
 
 const api = new APICore();
 
+const refreshPage = () => {
+    window.location.reload();
+}
 
 // // action column render
 export const ActionColumn = withSwal(({ row, swal }) => {
@@ -118,17 +121,31 @@ export const StatusColumn = withSwal(({ row, swal }) => {
             <option selected={row.original.status === 'waiting'} value='waiting'>Waiting</option>
             <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
         </>
-    
+
     const approvesOptions =
         <>
             <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
             <option selected={row.original.status === 'paid'} value='paid'>Paid</option>
         </>
 
+    const paidsOptions =
+        <>
+            <option disabled selected={row.original.status === 'paid'} value='paid'>Paid</option>
+        </>
+
+    var dropDown = (<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+        <Form.Select style={{ width: '70%' }} onChange={(e) => handleShow(row, e)}>
+            {row.original.status === "draft" ? (draftsOptions) : null}
+            {row.original.status === "waiting" ? (waitingsOptions) : null}
+            {row.original.status === "approve" ? (approvesOptions) : null}
+            {row.original.status === "paid" ? (paidsOptions) : null}
+        </Form.Select>
+    </div>)
+
     const handleShow = (row, e) => {
         const value = e.target.value;
         const data = {
-            "status":value
+            "status": value
         }
         swal.fire({
             title: 'Are you sure?',
@@ -142,18 +159,30 @@ export const StatusColumn = withSwal(({ row, swal }) => {
             .then(function (result) {
 
                 if (result.value) {
-                    // dispatch(deleteContact(row.original.id))
-                    api.update(`/api/change-invoice-status/${row.id}/`, data)
+                    api.update(`/api/change-invoice-status/?id=${row.original.id}`, data)
                         .then(res => {
+                            if(res){
+                                swal.fire(
+                                    'Updated!',
+                                    'Invoice Status has been Updated.',
+                                    'success'
+                                );
+                            }
+                            else{
+                                swal.fire(
+                                    'Updated!',
+                                    'Invoice Status has not Updated.',
+                                    'warning'
+                                );
+                            }
+                            // setTimeout(() => {
+                            //     refreshPage();
+                            // }, 600);
                             dispatch(getInvoice(10, 1));
-                            swal.fire(
-                                'Updated!',
-                                'Invoice Status has been Updated.',
-                                'success'
-                            );
                         })
                         .catch(err => {
-                            // console.log('err',err)
+                            console.log('err', err)
+                            dispatch(getInvoice(10, 1));
                             swal.fire({
                                 title: err,
                             }
@@ -163,17 +192,14 @@ export const StatusColumn = withSwal(({ row, swal }) => {
                     dispatch(getInvoice(10, 1));
                 }
             })
+            .catch(err => {
+                console.log('swal fire err', err)
+            })
     };
 
     return (
         <>
-            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Form.Select style={{ width: '70%' }} onChange={(e) => handleShow(row.original, e)}>
-                    {row.original.status === "draft" ? (draftsOptions):null}
-                    {row.original.status === "waiting" ? (waitingsOptions):null}
-                    {row.original.status === "approve" ? (approvesOptions):null}
-                </Form.Select>
-            </div>
+            {dropDown}
 
         </>
     );
@@ -253,10 +279,10 @@ const Invoice = () => {
     const loading = useSelector(state => state.Invoice.loading);
     const error = useSelector(state => state.Invoice.error);
     const [pageSize, setPageSize] = useState(10);
+    const [activePage, setActivePage] = useState('all');
     /*
      *   modal handeling
      */
-
 
     const visitPage = (page) => {
         dispatch(getInvoice(pageSize, page));
@@ -276,17 +302,22 @@ const Invoice = () => {
 
     const onClickEvent = (value) => {
         if (value === 'all') {
+            setActivePage('all');
             setFilteredInvoices(invoices)
         } else if (value === 'draft') {
+            setActivePage('draft');
             setFilteredInvoices(invoices.filter((item) => item.status === 'draft'))
-
+            
         } else if (value === 'approval') {
+            setActivePage('approval');
             setFilteredInvoices(invoices.filter((item) => item.status === 'waiting'))
-
+            
         } else if (value === 'approve') {
+            setActivePage('approve');
             setFilteredInvoices(invoices.filter((item) => item.status === 'approve'))
-
+            
         } else if (value === 'paid') {
+            setActivePage('paid');
             setFilteredInvoices(invoices.filter((item) => item.status === 'paid'))
 
         }
@@ -298,12 +329,14 @@ const Invoice = () => {
         }
     }
 
+    
     useEffect(() => {
         dispatch(getInvoice(pageSize, 1));
     }, [pageSize])
-
+    
     useEffect(() => {
         setFilteredInvoices(invoices);
+        setActivePage('all');
     }, [invoices])
     return (
         <>
@@ -313,30 +346,30 @@ const Invoice = () => {
                 ]}
                 title={`Invoice`}
             />
-            <Tab.Container defaultActiveKey="all">
+            <Tab.Container>
                 <Nav as="ul" variant="tabs">
                     <Nav.Item as="li" key='all'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='all' onClick={() => onClickEvent('all')}>
+                        <Nav.Link active={activePage==="all"} className="cursor-pointer" href="#" eventKey='all' onClick={() => onClickEvent('all')}>
                             All
                         </Nav.Link>
                     </Nav.Item>
                     <Nav.Item as="li" key='draft'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='draft' onClick={() => onClickEvent('draft')}>
+                        <Nav.Link active={activePage === "draft"} className="cursor-pointer" href="#" eventKey='draft' onClick={() => onClickEvent('draft')}>
                             Draft
                         </Nav.Link>
                     </Nav.Item>
                     <Nav.Item as="li" key='approval'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='approval' onClick={() => onClickEvent('approval')}>
+                        <Nav.Link active={activePage === "approval"} className="cursor-pointer" href="#" eventKey='approval' onClick={() => onClickEvent('approval')}>
                             Awaiting Approval
                         </Nav.Link>
                     </Nav.Item>
-                    <Nav.Item as="li" key='approved'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='approved' onClick={() => onClickEvent('approve')}>
+                    <Nav.Item as="li" key='approve'>
+                        <Nav.Link active={activePage === "approve"} className="cursor-pointer" href="#" eventKey='approve' onClick={() => onClickEvent('approve')}>
                             Awaiting Payment
                         </Nav.Link>
                     </Nav.Item>
                     <Nav.Item as="li" key='paid'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='paid' onClick={() => onClickEvent('paid')}>
+                        <Nav.Link active={activePage === "paid"} className="cursor-pointer" href="#" eventKey='paid' onClick={() => onClickEvent('paid')}>
                             Paid
                         </Nav.Link>
                     </Nav.Item>
