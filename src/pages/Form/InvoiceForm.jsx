@@ -146,7 +146,6 @@ const InvoiceForm = () => {
 
             item['total_amount'] = parseFloat((item['sub_total']))
         }
-        console.log(item)
         items[index] = item;
         setOldItems(items);
     }
@@ -162,27 +161,25 @@ const InvoiceForm = () => {
             total_taxAmount += parseFloat(item.tax_amount);
 
             if ((item.tax_rate).toString() in groupOfTax) {
-                groupOfTax[(item.tax_rate).toString()] += item.tax_amount;
+                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = item.tax_amount;
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));;
             }
         })
         
-        // console.log("total_subTotal 2", total_subTotal, typeof (total_subTotal))
         
         oldItems.forEach((item) => {
             total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
             total_taxAmount += parseFloat(item.tax_amount);
             if ((item.tax_rate).toString() in groupOfTax) {
-                groupOfTax[(item.tax_rate).toString()] += item.tax_amount;
+                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = item.tax_amount;
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));;
             }
         })
-        console.log("total_subTotal 2", parseFloat(total_taxAmount).toFixed(2), typeof (parseFloat(parseFloat(total_taxAmount).toFixed(2))))
         setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
         setSubTotal(parseFloat(parseFloat(total_subTotal).toFixed(2)));
         setTotalTax(parseFloat(parseFloat(total_taxAmount).toFixed(2)));
