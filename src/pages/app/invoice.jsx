@@ -114,6 +114,7 @@ export const StatusColumn = withSwal(({ row, swal }) => {
         <>
             <option selected={row.original.status === 'draft'} value='draft'>Draft</option>
             <option selected={row.original.status === 'waiting'} value='waiting'>Waiting</option>
+            <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
         </>
 
     const waitingsOptions =
@@ -161,14 +162,14 @@ export const StatusColumn = withSwal(({ row, swal }) => {
                 if (result.value) {
                     api.update(`/api/change-invoice-status/?id=${row.original.id}`, data)
                         .then(res => {
-                            if(res){
+                            if (res) {
                                 swal.fire(
                                     'Updated!',
                                     'Invoice Status has been Updated.',
                                     'success'
                                 );
                             }
-                            else{
+                            else {
                                 swal.fire(
                                     'Updated!',
                                     'Invoice Status has not Updated.',
@@ -307,15 +308,15 @@ const Invoice = () => {
         } else if (value === 'draft') {
             setActivePage('draft');
             setFilteredInvoices(invoices.filter((item) => item.status === 'draft'))
-            
+
         } else if (value === 'approval') {
             setActivePage('approval');
             setFilteredInvoices(invoices.filter((item) => item.status === 'waiting'))
-            
+
         } else if (value === 'approve') {
             setActivePage('approve');
             setFilteredInvoices(invoices.filter((item) => item.status === 'approve'))
-            
+
         } else if (value === 'paid') {
             setActivePage('paid');
             setFilteredInvoices(invoices.filter((item) => item.status === 'paid'))
@@ -329,11 +330,11 @@ const Invoice = () => {
         }
     }
 
-    
+
     useEffect(() => {
         dispatch(getInvoice(pageSize, 1));
     }, [pageSize])
-    
+
     useEffect(() => {
         setFilteredInvoices(invoices);
         setActivePage('all');
@@ -349,7 +350,7 @@ const Invoice = () => {
             <Tab.Container>
                 <Nav as="ul" variant="tabs">
                     <Nav.Item as="li" key='all'>
-                        <Nav.Link active={activePage==="all"} className="cursor-pointer" href="#" eventKey='all' onClick={() => onClickEvent('all')}>
+                        <Nav.Link active={activePage === "all"} className="cursor-pointer" href="#" eventKey='all' onClick={() => onClickEvent('all')}>
                             All
                         </Nav.Link>
                     </Nav.Item>
