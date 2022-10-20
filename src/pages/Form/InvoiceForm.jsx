@@ -109,13 +109,13 @@ const InvoiceForm = () => {
         item[name] = e.target.value;
         if (name === 'qty' || name === 'unit_price' || name === 'discount' || name === 'tax_rate') {
 
-            item['sub_total'] = parseFloat(item['qty']) * parseFloat(item['unit_price'])
-            item['sub_total'] -= ((parseFloat(item['sub_total']) * parseFloat(item['discount'])) / 100)
+            item['sub_total'] = parseFloat(item['qty'] !== '' ? item['qty'] : 0) * parseFloat(item['unit_price'] !== '' ? item['unit_price'] : 0)
+            item['sub_total'] -= ((parseFloat(item['sub_total']) * parseFloat(item['discount'] !== '' ? item['discount'] : 0)) / 100)
 
             if (tax_type === 'inclusive') {
-                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) * parseFloat(item['tax_rate'])) / (100 + parseFloat(item['tax_rate'])))
+                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) * parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0)) / (100 + parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0)))
             } else if (tax_type === 'exclusive') {
-                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) / 100) * parseFloat(item['tax_rate']))
+                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) / 100) * parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0))
             } else {
                 item['tax_amount'] = 0
             }
@@ -133,13 +133,13 @@ const InvoiceForm = () => {
         item[name] = e.target.value;
         if (name === 'qty' || name === 'unit_price' || name === 'discount' || name === 'tax_rate') {
 
-            item['sub_total'] = parseFloat(item['qty']) * parseFloat(item['unit_price'])
-            item['sub_total'] -= ((parseFloat(item['sub_total']) * parseFloat(item['discount'])) / 100)
+            item['sub_total'] = parseFloat(item['qty'] !== '' ? item['qty'] : 0) * parseFloat(item['unit_price'] !== '' ? item['unit_price'] : 0)
+            item['sub_total'] -= ((parseFloat(item['sub_total']) * parseFloat(item['discount'] !== '' ? item['discount'] : 0)) / 100)
 
             if (tax_type === 'inclusive') {
-                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) * parseFloat(item['tax_rate'])) / (100 + parseFloat(item['tax_rate'])))
+                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) * parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0)) / (100 + parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0)))
             } else if (tax_type === 'exclusive') {
-                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) / 100) * parseFloat(item['tax_rate']))
+                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) / 100) * parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0))
             } else {
                 item['tax_amount'] = 0
             }
