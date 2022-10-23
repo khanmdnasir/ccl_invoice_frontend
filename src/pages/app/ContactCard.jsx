@@ -119,10 +119,9 @@ const ContactCard = () => {
                                 <Col key={item.id} md={6} xl={3}>
                                     <Link to={{pathname:'/app/service_by_contact',state: item}}>
                                     <Card>
-                                        <Card.Header>
-                                            <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
-                                                <p style={{marginBottom: '0px !important'}}>{item.name}</p>
-                                                <p style={{marginLeft: '10px',marginBottom: '0px !important'}}>({item.client_id})</p>
+                                        <Card.Header style={{backgroundColor:"#0c5cad",color:"white"}}>
+                                            <div style={{fontSize:"15px"}}>
+                                                <p style={{marginBottom: '0px !important',textAlign:"center",fontWeight:"bold"}}>{item.name} ({item.client_id})</p>
                                             </div> 
                                         </Card.Header>
                                         <Card.Body> 
@@ -135,7 +134,11 @@ const ContactCard = () => {
                                             <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
                                                 <h5 class='me-2'>Phone:</h5>
                                                 <p style={{marginTop: '15px',marginLeft: '20px',marginRight: '15px'}}>{item.phone}</p>
-                                                
+                                            </div>
+
+                                            <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
+                                                <h5 class='me-2'>Total Service:</h5>
+                                                <p style={{marginTop: '15px',marginLeft: '20px',marginRight: '15px'}}>5</p>
                                             </div>                         
                                                                             
                                         </Card.Body>
