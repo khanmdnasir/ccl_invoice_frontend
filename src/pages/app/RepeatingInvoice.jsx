@@ -97,6 +97,101 @@ const ActionColumn = withSwal(({ row, swal }) => {
     );
 });
 
+
+export const StatusColumn = withSwal(({ row, swal }) => {
+    /*
+     *   modal handeling
+     */
+    const dispatch = useDispatch();
+    const user_role = useSelector((state) => state.Role.user_role);
+
+    /*
+    handle form submission
+    */
+    const draftsOptions =
+        <>
+            <option selected={row.original.status === 'draft'} value='draft'>Draft</option>
+            <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
+        </>
+
+    const approvesOptions =
+        <>
+            <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
+        </>
+
+
+    var dropDown = (<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+        <Form.Select style={{ width: '70%' }} onChange={(e) => handleShow(row, e)}>
+            {row.original.status === "draft" ? (draftsOptions) : null}
+            {row.original.status === "approve" ? (approvesOptions) : null}
+        </Form.Select>
+    </div>)
+
+    const handleShow = (row, e) => {
+        const value = e.target.value;
+        const data = {
+            "status": value
+        }
+        swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28bb4b',
+            cancelButtonColor: '#f34e4e',
+            confirmButtonText: 'Yes, change it!',
+        })
+            .then(function (result) {
+
+                if (result.value) {
+                    api.update(`/api/change-repeating-invoice-status/?id=${row.original.id}`, data)
+                        .then(res => {
+                            if (res) {
+                                swal.fire(
+                                    'Updated!',
+                                    'Repeating Invoice Status has been Updated.',
+                                    'success'
+                                );
+                            }
+                            else {
+                                swal.fire(
+                                    'Updated!',
+                                    'Repeating Invoice Status has not Updated.',
+                                    'warning'
+                                );
+                            }
+                            // setTimeout(() => {
+                            //     refreshPage();
+                            // }, 600);
+                            dispatch(getRepeatingInvoice(10, 1));
+                        })
+                        .catch(err => {
+                            console.log('err', err)
+                            dispatch(getRepeatingInvoice(10, 1));
+                            swal.fire({
+                                title: err,
+                            }
+                            );
+                        })
+                } else if (result.dismiss === 'cancel') {
+                    dispatch(getRepeatingInvoice(10, 1));
+                }
+            })
+            .catch(err => {
+                console.log('swal fire err', err)
+            })
+    };
+
+    return (
+        <>
+            {dropDown}
+
+        </>
+    );
+});
+
+
+
 const columns = [
     {
         Header: 'Invoice No',
@@ -127,6 +222,9 @@ const columns = [
         Header: 'Discount',
         accessor: 'discount',
         sort: true,
+        Cell: (row) => {
+            return <div>{(row.row.original.discount).toFixed(2)}</div>;
+        }
     },
     {
         Header: 'Total Tax',
@@ -137,6 +235,12 @@ const columns = [
         Header: 'Total Amount',
         accessor: 'total_amount',
         sort: true,
+    },
+    {
+        Header: 'Status',
+        accessor: 'status',
+        sort: true,
+        Cell: StatusColumn,
     },
     {
         Header: 'Action',
@@ -160,6 +264,8 @@ const RepeatingInvoice = () => {
     const loading = useSelector(state => state.RepeatingInvoice.loading);
     const error = useSelector(state => state.RepeatingInvoice.error);
     const [pageSize,setPageSize] = useState(10);
+    const [activePage, setActivePage] = useState('all');
+
     /*
      *   modal handeling
      */
@@ -181,24 +287,23 @@ const RepeatingInvoice = () => {
     handle form submission
     */
     
-    const onClickEvent = (value) =>{
-        if(value === 'all'){
+    const onClickEvent = (value) => {
+        if (value === 'all') {
+            setActivePage('all');
             setFilteredInvoices(invoices)
-        }else if(value === 'draft'){
-            setFilteredInvoices(invoices.filter((item)=>item.status === 'draft'))
-        
-        }else if(value === 'approval'){
-            setFilteredInvoices(invoices.filter((item)=>item.status === 'approve'))
-        
-        }else if(value === 'paid'){
-            setFilteredInvoices(invoices.filter((item)=>item.status === 'paid'))
-        
-        }else if(value === 'repeating'){
-            setFilteredInvoices(invoices)
-        }else{
+        } else if (value === 'draft') {
+            setActivePage('draft');
+            setFilteredInvoices(invoices.filter((item) => item.status === 'draft'))
+
+        }else if (value === 'approve') {
+            setActivePage('approve');
+            setFilteredInvoices(invoices.filter((item) => item.status === 'approve'))
+        }
+        else {
             setFilteredInvoices(invoices)
         }
     }
+    
 
     useEffect(()=>{ 
         dispatch(getRepeatingInvoice(pageSize,1));   
@@ -206,6 +311,7 @@ const RepeatingInvoice = () => {
 
     useEffect(()=>{
         setFilteredInvoices(invoices);
+        setActivePage('all');
     },[invoices])
     return (
         <>
@@ -216,35 +322,24 @@ const RepeatingInvoice = () => {
                 title={`Repeating Invoice`}
             />
             <Tab.Container defaultActiveKey="all">
-                <Nav as="ul" variant="tabs">                    
+                <Nav as="ul" variant="tabs">
                     <Nav.Item as="li" key='all'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='all'  onClick={()=>onClickEvent('all')}>
+                        <Nav.Link active={activePage === "all"} className="cursor-pointer" href="#" eventKey='all' onClick={() => onClickEvent('all')}>
                             All
                         </Nav.Link>
-                    </Nav.Item>                        
+                    </Nav.Item>
                     <Nav.Item as="li" key='draft'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='draft' onClick={()=>onClickEvent('draft')}>
+                        <Nav.Link active={activePage === "draft"} className="cursor-pointer" href="#" eventKey='draft' onClick={() => onClickEvent('draft')}>
                             Draft
                         </Nav.Link>
-                    </Nav.Item>                        
-                    <Nav.Item as="li" key='approval'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='approval' onClick={()=>onClickEvent('approval')}>
-                            Awaiting Approval
+                    </Nav.Item>
+                    <Nav.Item as="li" key='approve'>
+                        <Nav.Link active={activePage === "approve"} className="cursor-pointer" href="#" eventKey='approve' onClick={() => onClickEvent('approve')}>
+                            Approved
                         </Nav.Link>
-                    </Nav.Item>                        
-                    <Nav.Item as="li" key='paid'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='paid' onClick={()=>onClickEvent('paid')}>
-                           Paid
-                        </Nav.Link>
-                    </Nav.Item>                        
-                    <Nav.Item as="li" key='repeating'>
-                        <Nav.Link className="cursor-pointer" href="#" eventKey='repeating' onClick={()=>onClickEvent('repeating')}>
-                           Repeating
-                        </Nav.Link>
-                    </Nav.Item>                        
+                    </Nav.Item>
                 </Nav>
 
-               
             </Tab.Container>
             <Row>
                 <Col>
