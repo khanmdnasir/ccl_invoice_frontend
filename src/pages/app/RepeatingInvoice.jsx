@@ -69,12 +69,12 @@ const ActionColumn = withSwal(({ row, swal }) => {
 
     return (
         <>
-            <Link to={{pathname: '/app/invoice_details',state: row.original.id}} className="action-icon" >
+            <Link to={{pathname: '/app/repeating_invoice_details',state: row.original.id}} className="action-icon" >
                 <i className="mdi mdi-eye"></i>
             </Link>
 
             { user_role.includes('change_repeatinginvoice') ?
-                <Link to={{pathname: '/app/invoice_form',state: row.original.id}} className="action-icon" >
+                <Link to={{ pathname: '/app/repeating_invoice_form',state: row.original.id}} className="action-icon" >
                     <i className="mdi mdi-square-edit-outline"></i>
                 </Link>:
                 <Link to="#" className="action-icon"  style={{pointerEvents: 'none'}}>

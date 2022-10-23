@@ -8,7 +8,7 @@ import { format } from 'date-fns'
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact, getChartAccount, getContactService, getInvoiceDetails } from '../../redux/actions';
+import { getAllContact, getChartAccount, getContactService, getRepeatingInvoiceDetails } from '../../redux/actions';
 
 
 const api = new APICore()
@@ -30,7 +30,7 @@ const RepeatingInvoiceForm = () => {
 
 
     const [oldItems, setOldItems] = useState([]);
-    const invoice_details = useSelector((state) => state.Invoice.invoice_details);
+    const repeating_invoice_details = useSelector((state) => state.RepeatingInvoice.repeating_invoice_details);
     const contact_services = useSelector((state) => state.Service.contact_services);
     const [contactId, setContactId] = useState('');
     const [invoiceNo, setInvoiceNo] = useState('');
@@ -194,7 +194,7 @@ const RepeatingInvoiceForm = () => {
         dispatch(getAllContact());
         dispatch(getChartAccount());
         if (state) {
-            dispatch(getInvoiceDetails(state));
+            dispatch(getRepeatingInvoiceDetails(state));
             setInvoiceId(state);
             setNewItems([]);
 
@@ -209,15 +209,16 @@ const RepeatingInvoiceForm = () => {
     useEffect(() => {
         if (invoiceId) {
             setNewItems([]);
-            setInvoiceNo(invoice_details?.invoice_no);
-            setContactId(invoice_details?.contact_id?.id);
-            setTaxType(invoice_details?.tax_type);
-            setDate(invoice_details?.date);
-            setDueDate(invoice_details?.due_date);
-            setReference(invoice_details?.reference);
-            setStatus(invoice_details?.status);
-            if (invoice_details?.items?.length > 0) {
-                const allItems = invoice_details.items.map((item) => {
+            setInvoiceNo(repeating_invoice_details?.invoice_no);
+            setContactId(repeating_invoice_details?.contact_id?.id);
+            setTaxType(repeating_invoice_details?.tax_type);
+            setDate(repeating_invoice_details?.date);
+            setDueDate(repeating_invoice_details?.due_date);
+            setRepeatDate(repeating_invoice_details?.repeat_date);
+            setReference(repeating_invoice_details?.reference);
+            setStatus(repeating_invoice_details?.status);
+            if (repeating_invoice_details?.items?.length > 0) {
+                const allItems = repeating_invoice_details.items.map((item) => {
                     return {
                         id: item.id,
                         item: item.item,
@@ -238,7 +239,7 @@ const RepeatingInvoiceForm = () => {
 
         }
 
-    }, [invoice_details])
+    }, [repeating_invoice_details])
 
 
     // console.log("newItems", newItems)
@@ -342,7 +343,7 @@ const RepeatingInvoiceForm = () => {
                                                 required
                                                 name='invoice_no'
                                                 onChange={(e) => setInvoiceNo(e.target.value)}
-                                                value={invoiceId && invoice_details?.invoice_no}
+                                                value={invoiceId && repeating_invoice_details?.invoice_no}
                                             >
 
                                             </Form.Control>
@@ -355,7 +356,7 @@ const RepeatingInvoiceForm = () => {
                                                 required
                                                 name='date'
                                                 onChange={(e) => setDate(e.target.value)}
-                                                value={invoiceId && invoice_details?.date}
+                                                value={invoiceId && repeating_invoice_details?.date}
                                             >
 
                                             </Form.Control>
@@ -367,7 +368,7 @@ const RepeatingInvoiceForm = () => {
                                                 required
                                                 name='due_date'
                                                 onChange={(e) => setDueDate(e.target.value)}
-                                                value={invoiceId && invoice_details?.due_date}
+                                                value={invoiceId && repeating_invoice_details?.due_date}
                                             >
 
 
@@ -381,7 +382,7 @@ const RepeatingInvoiceForm = () => {
                                                 required
                                                 name='repeat_date'
                                                 onChange={(e) => setRepeatDate(e.target.value)}
-                                                defaultValue={invoiceId && invoice_details?.repeat_date}
+                                                defaultValue={invoiceId && repeating_invoice_details?.repeat_date}
                                             >
 
                                             </Form.Control>
@@ -393,7 +394,7 @@ const RepeatingInvoiceForm = () => {
                                                 required
                                                 name='reference'
                                                 onChange={(e) => setReference(e.target.value)}
-                                                value={invoiceId && invoice_details?.reference}
+                                                value={invoiceId && repeating_invoice_details?.reference}
                                             >
 
                                             </Form.Control>
