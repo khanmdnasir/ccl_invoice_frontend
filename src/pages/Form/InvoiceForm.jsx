@@ -1,12 +1,12 @@
-import React,{ useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
 import { format } from 'date-fns'
 // components
 import PageTitle from '../../components/PageTitle';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
 import { getAllContact, getChartAccount, getContactService, getInvoiceDetails } from '../../redux/actions';
 
@@ -24,171 +24,189 @@ const InvoiceForm = () => {
     const accounts = useSelector((state) => state.ChartAccount.accounts);
     const cloading = useSelector((state) => state.Contact.loading);
     const chloading = useSelector((state) => state.ChartAccount.loading);
-    const [rloading,setRloading] = useState(false);
-    const [error,setError] = useState(null);
-    const [success,setSuccess] = useState(null);
+    const [rloading, setRloading] = useState(false);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
 
-    const [oldItems,setOldItems] = useState([]);
+    const [oldItems, setOldItems] = useState([]);
     const invoice_details = useSelector((state) => state.Invoice.invoice_details);
     const contact_services = useSelector((state) => state.Service.contact_services);
-    const [contactId,setContactId] = useState('');
-    const [invoiceNo,setInvoiceNo] = useState('');
-    const [invoiceId,setInvoiceId] = useState(null);
-    const [date,setDate] = useState('');
-    const [due_date,setDueDate] = useState('');
-    const [reference,setReference] = useState('');
-    const [currency,setCurrency] = useState('1');
-    const [tax_type,setTaxType] = useState('inclusive');
-    const [sub_total,setSubTotal] = useState('');
-    const [discount,setDiscount] = useState('');
-    const [total_tax,setTotalTax] = useState('');
-    const [status,setStatus] = useState('draft');
-    const [total_amount,setTotalAmount] = useState('');
-    const [deletedItems,setDeletedItems] = useState([]);
-    
-    const [items,setItems] = useState({
+    const [contactId, setContactId] = useState('');
+    const [invoiceNo, setInvoiceNo] = useState('');
+    const [invoiceId, setInvoiceId] = useState(null);
+    const [date, setDate] = useState('');
+    const [due_date, setDueDate] = useState('');
+    const [reference, setReference] = useState('');
+    const [currency, setCurrency] = useState('1');
+    const [tax_type, setTaxType] = useState('inclusive');
+    const [sub_total, setSubTotal] = useState('');
+    const [discount, setDiscount] = useState('');
+    const [total_tax, setTotalTax] = useState('');
+    const [status, setStatus] = useState('draft');
+    const [total_amount, setTotalAmount] = useState('');
+    const [deletedItems, setDeletedItems] = useState([]);
+    const [taxGroup, setTaxGroup] = useState({});
+
+    const [items, setItems] = useState({
         item: '',
         description: '',
         qty: 1,
-        unit_price: '0',
-        discount: '0',
+        unit_price: 0,
+        discount: 0,
         account_id: '',
-        tax_rate: '0',
-        tax_amount: '0',
-        sub_total: '0',
-        total_amount: '0'
+        tax_rate: 0,
+        tax_amount: 0,
+        sub_total: 0,
+        total_amount: 0
     });
-    const [newItems,setNewItems] = useState([]);
-    
+    const [newItems, setNewItems] = useState([]);
+
     const onContactChange = (e) => {
         setNewItems([])
         setContactId(e.target.value);
-        dispatch(getContactService(e.target.value)); 
+        dispatch(getContactService(e.target.value));
     }
-    useEffect(()=>{
+    useEffect(() => {
         let tempData = [];
-        if(contact_services.length > 0){
-            
-            contact_services?.forEach((item)=>{
+        if (contact_services.length > 0) {
+
+            contact_services?.forEach((item) => {
                 tempData.push(
-                {
-                    item: item.service_type,
-                    description: '0',
-                    qty: 1,
-                    unit_price: item.unit_price,
-                    discount: '0',
-                    account_id: '',
-                    tax_rate: item.tax_rate,
-                    tax_amount: (tax_type === 'inclusive' ?
-                        ((((1 * item.unit_price) * (item.tax_rate &&  parseInt(item.tax_rate))) / (100+(item.tax_rate &&  parseInt(item.tax_rate)))).toFixed(2))
-                    : tax_type === 'exclusive' ?
-                        (((1 * item.unit_price) / 100) * (item.tax_rate &&  parseInt(item.tax_rate)))
-                    : 0
-                    ),
-                    sub_total: 1*item.unit_price,
-                    total_amount: 1 * item.unit_price
-                })
-                                
-                
+                    {
+                        item: item.service_type,
+                        description: '0',
+                        qty: 1,
+                        unit_price: item.unit_price,
+                        discount: '0',
+                        account_id: '',
+                        tax_rate: item.tax_rate,
+                        tax_amount: (tax_type === 'inclusive' ?
+                            ((((1 * item.unit_price) * (item.tax_rate && parseInt(item.tax_rate))) / (100 + (item.tax_rate && parseInt(item.tax_rate)))).toFixed(2))
+                            : tax_type === 'exclusive' ?
+                                (((1 * item.unit_price) / 100) * (item.tax_rate && parseInt(item.tax_rate)))
+                                : 0
+                        ),
+                        sub_total: 1 * item.unit_price,
+                        total_amount: 1 * item.unit_price
+                    })
+
+
             })
             setNewItems(tempData);
 
-        }else{
+        } else {
             setNewItems([items])
         }
-        
-        
-    },[contact_services])
-    
-    const onNewItemsChange = (e,index) => {
+
+
+    }, [contact_services])
+
+    const onNewItemsChange = (e, index) => {
         let name = e.target.name;
         let items = [...newItems];
-        let item = {...items[index]};
+        let item = { ...items[index] };
         item[name] = e.target.value;
-        if(name === 'qty' || name === 'unit_price' || name === 'discount' || name === 'tax_rate'){
-            item['sub_total'] = item['qty'] && parseInt(item['qty']) * item['unit_price'] && parseInt(item['unit_price'])
-            if(tax_type === 'inclusive'){
-                item['tax_amount'] = parseInt(((item['sub_total'] * (item['tax_rate'] &&  parseInt(item['tax_rate']))) / (100+(item['tax_rate'] &&  parseInt(item['tax_rate'])))).toFixed(2))
-            }else if(tax_type === 'exclusive'){
-                item['tax_amount'] = parseInt((item['sub_total'] / 100) * (item['tax_rate'] &&  parseInt(item['tax_rate'])))
-            }else{
+        if (name === 'qty' || name === 'unit_price' || name === 'discount' || name === 'tax_rate') {
+
+            item['sub_total'] = parseFloat(item['qty'] !== '' ? item['qty'] : 0) * parseFloat(item['unit_price'] !== '' ? item['unit_price'] : 0)
+            item['sub_total'] -= ((parseFloat(item['sub_total']) * parseFloat(item['discount'] !== '' ? item['discount'] : 0)) / 100)
+
+            if (tax_type === 'inclusive') {
+                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) * parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0)) / (100 + parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0)))
+            } else if (tax_type === 'exclusive') {
+                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) / 100) * parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0))
+            } else {
                 item['tax_amount'] = 0
             }
-            
-            item['total_amount'] = parseInt((item['sub_total'] - ((item['sub_total'] / 100) * (item['discount'] && parseInt(item['discount'])))))
+
+            item['total_amount'] = parseFloat((item['sub_total']))
         }
         items[index] = item;
         setNewItems(items);
     }
 
-    const onOldItemsChange = (e,index) => {
+    const onOldItemsChange = (e, index) => {
         let name = e.target.name;
         let items = [...oldItems];
-        let item = {...items[index]};
+        let item = { ...items[index] };
         item[name] = e.target.value;
-        if(name === 'qty' || name === 'unit_price' || name === 'discount' || name === 'tax_rate'){
-            item['sub_total'] = item['qty'] && parseInt(item['qty']) * item['unit_price'] && parseInt(item['unit_price'])
-            if(tax_type === 'inclusive'){
-                item['tax_amount'] = parseInt(((item['sub_total'] * (item['tax_rate'] &&  parseInt(item['tax_rate']))) / (100+(item['tax_rate'] &&  parseInt(item['tax_rate'])))).toFixed(2))
-            }else if(tax_type === 'exclusive'){
-                item['tax_amount'] = parseInt((item['sub_total'] / 100) * (item['tax_rate'] &&  parseInt(item['tax_rate'])))
-            }else{
+        if (name === 'qty' || name === 'unit_price' || name === 'discount' || name === 'tax_rate') {
+
+            item['sub_total'] = parseFloat(item['qty'] !== '' ? item['qty'] : 0) * parseFloat(item['unit_price'] !== '' ? item['unit_price'] : 0)
+            item['sub_total'] -= ((parseFloat(item['sub_total']) * parseFloat(item['discount'] !== '' ? item['discount'] : 0)) / 100)
+
+            if (tax_type === 'inclusive') {
+                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) * parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0)) / (100 + parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0)))
+            } else if (tax_type === 'exclusive') {
+                item['tax_amount'] = parseFloat((parseFloat(item['sub_total']) / 100) * parseFloat(item['tax_rate'] !== '' ? item['tax_rate'] : 0))
+            } else {
                 item['tax_amount'] = 0
             }
-            
-            item['total_amount'] = parseInt((item['sub_total'] - ((item['sub_total'] / 100) * (item['discount'] && parseInt(item['discount'])))))
 
-            
+            item['total_amount'] = parseFloat((item['sub_total']))
         }
         items[index] = item;
         setOldItems(items);
     }
 
-    const [itemTotalTax,setItemTotalTax] = useState([]);
-    useEffect(()=>{
+    useEffect(() => {
+        const groupOfTax = {}
         let total_discount = 0
-        let total_subTotal = 0
+        let total_subTotal = 0.00
         let total_taxAmount = 0
-        newItems.forEach((item)=>{
-            total_discount += ((item.sub_total / 100) * item.discount);
-            total_subTotal += item.total_amount;
-            total_taxAmount += item.tax_amount;
-            // let fitems = newItems.filter((i)=> item.tax_rate === i.tax_rate);
+        newItems.forEach((item) => {
+            total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
+            total_subTotal += parseFloat(item.total_amount);
+            total_taxAmount += parseFloat(item.tax_amount);
 
-
+            if ((item.tax_rate).toString() in groupOfTax) {
+                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
+            }
+            else {
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));;
+            }
         })
-        oldItems.forEach((item)=>{
-            total_discount += ((item.sub_total / 100) * item.discount);
-            total_subTotal += item.total_amount;
-            total_taxAmount += item.tax_amount;
+        
+        
+        oldItems.forEach((item) => {
+            total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
+            total_subTotal += parseFloat(item.total_amount);
+            total_taxAmount += parseFloat(item.tax_amount);
+            if ((item.tax_rate).toString() in groupOfTax) {
+                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
+            }
+            else {
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));;
+            }
         })
-        setDiscount(total_discount);
-        setSubTotal(total_subTotal);
-        setTotalTax(total_taxAmount)
-        let totalAmount = parseInt(total_subTotal)+ (tax_type === 'exclusive' && parseInt(total_taxAmount))
+        setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
+        setSubTotal(parseFloat(parseFloat(total_subTotal).toFixed(2)));
+        setTotalTax(parseFloat(parseFloat(total_taxAmount).toFixed(2)));
+        let totalAmount = parseFloat(total_subTotal) + (tax_type === 'exclusive' && parseFloat(total_taxAmount))
         setTotalAmount(totalAmount)
-    },[newItems,oldItems,tax_type])
+        setTaxGroup(groupOfTax)
+    }, [newItems, oldItems, tax_type])
 
-    useEffect(()=>{ 
+    useEffect(() => {
         const state = location.state
-        dispatch(getAllContact());     
+        dispatch(getAllContact());
         dispatch(getChartAccount());
-        if(state){
+        if (state) {
             dispatch(getInvoiceDetails(state));
             setInvoiceId(state);
             setNewItems([]);
-            
-        }else{
+
+        } else {
             setNewItems([items]);
             setOldItems([]);
             setInvoiceId(null);
         }
-           
-    },[])
 
-    useEffect(()=>{
-        if(invoiceId){
+    }, [])
+
+    useEffect(() => {
+        if (invoiceId) {
             setNewItems([]);
             setInvoiceNo(invoice_details?.invoice_no);
             setContactId(invoice_details?.contact_id?.id);
@@ -197,9 +215,9 @@ const InvoiceForm = () => {
             setDueDate(invoice_details?.due_date);
             setReference(invoice_details?.reference);
             setStatus(invoice_details?.status);
-            if(invoice_details?.items?.length > 0){
-                invoice_details.items.map((item)=>{
-                    oldItems.push( {
+            if (invoice_details?.items?.length > 0) {
+                const allItems = invoice_details.items.map((item) => {
+                    return {
                         id: item.id,
                         item: item.item,
                         description: item.description,
@@ -211,65 +229,66 @@ const InvoiceForm = () => {
                         tax_amount: item.tax_amount,
                         sub_total: item.sub_total,
                         total_amount: item.total_amount
-                    })
-                    
-                })
+                    }
+
+                });
+                setOldItems(allItems)
             }
-            
+
         }
-        
-    },[invoice_details])
-    
-    console.log(newItems)
-    console.log(oldItems)
-    const onSubmit = (e) =>{
+
+    }, [invoice_details])
+
+
+    // console.log("newItems", newItems)
+    // console.log("oldItems", oldItems)
+    const onSubmit = (e) => {
         e.preventDefault();
         setRloading(true);
-        let formatDate = format(new Date(date),'yyyy-MM-dd');
-        let formatDueDate = format(new Date(due_date),'yyyy-MM-dd');
-        api.create(`/api/invoice/`,{'invoice_no':invoiceNo,'contact_id':contactId,'date':formatDate,'due_date':formatDueDate,'reference':reference,'currency':currency,'tax_type':tax_type,'sub_total':sub_total,'discount':discount,'total_tax':total_tax,'status':status,'total_amount':total_amount,'items':newItems})
-            .then(res=>{
-                
-                if(res.data.success){
+        let formatDate = format(new Date(date), 'yyyy-MM-dd');
+        let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
+        api.create(`/api/invoice/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
+            .then(res => {
+
+                if (res.data.success) {
                     setSuccess('Data Saved Successfully');
                     setRloading(false);
-                }else{
+                } else {
                     setError(res.data.error)
-                    
+
                 }
-                
+
             })
             .catch(err => {
                 setError(err)
-            })        
+            })
     }
 
-    const onUpdate = (e) =>{
+    const onUpdate = (e) => {
         e.preventDefault();
         setRloading(true);
-        let formatDate = format(new Date(date),'yyyy-MM-dd');
-        let formatDueDate = format(new Date(due_date),'yyyy-MM-dd');
-        api.updatePatch(`/api/invoice/${invoiceId}/`,{'invoice_no':invoiceNo,'contact_id':contactId,'date':formatDate,'due_date':formatDueDate,'reference':reference,'currency':currency,'tax_type':tax_type,'sub_total':sub_total,'discount':discount,'total_tax':total_tax,'status':status,'total_amount':total_amount,'items': oldItems,'new_items':newItems,'deleted_items':deletedItems})
-            .then(res=>{
-                
-                if(res.data.success){
+        let formatDate = format(new Date(date), 'yyyy-MM-dd');
+        let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
+        api.updatePatch(`/api/invoice/${invoiceId}/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
+            .then(res => {
+
+                if (res.data.success) {
                     setSuccess('Data Updated Successfully');
                     setRloading(false);
-                }else{
+                } else {
                     setError(res.data.error)
-                    
+
                 }
-                
+
             })
             .catch(err => {
                 setError(err)
-            })        
+            })
     }
-   
-    
+
     return (
         <>
-            
+
             <PageTitle
                 breadCrumbItems={[
                     { label: 'Invoice', path: '/app/invoice', active: false },
@@ -281,117 +300,117 @@ const InvoiceForm = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                                {!rloading && error && (
-                                    <Alert variant="danger" className="my-2" onClose={() => setError(null)} dismissible>
-                                        {error}
-                                    </Alert>
-                                )}
-                                {!rloading && success && (
-                                    <Alert variant="success" className="my-2" onClose={() => setSuccess(null)} dismissible>
-                                        {success}
-                                    </Alert>
-                                )}
-                                <Form onSubmit={(e)=>{oldItems.length > 0 ? onUpdate(e):onSubmit(e)}}>
+                            {!rloading && error && (
+                                <Alert variant="danger" className="my-2" onClose={() => setError(null)} dismissible>
+                                    {error}
+                                </Alert>
+                            )}
+                            {!rloading && success && (
+                                <Alert variant="success" className="my-2" onClose={() => setSuccess(null)} dismissible>
+                                    {success}
+                                </Alert>
+                            )}
+                            <Form onSubmit={(e) => { oldItems.length > 0 ? onUpdate(e) : onSubmit(e) }}>
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
-                                    <Form.Group as={Col}>
-                                        <Form.Label >Contact</Form.Label>
-                                        
-                                        <Form.Select
-                                            aria-label="Default select example"
-                                            disabled={invoiceId ? true : false}
-                                            required 
-                                            onChange={(e)=>onContactChange(e)}
-                                            value={contactId}                                     
-                                        >
-                                            {cloading ? <option value="" disabled>Loading...</option>: 
-                                            <>
-                                            
-                                                <option value="" disabled>Select Contact ...</option>  
-                                                {contacts.length > 0 && contacts?.map((item)=>{
-                                                    return(
-                                                        <option key={'scontact'+item.id} value={item.id} >{item.name}</option>
-                                                    )
-                                                })} 
-                                            
-                                            </>
-                                            }
-                                        </Form.Select>                                        
-                                        
-                                    </Form.Group>
-                                    <Form.Group as={Col}>
-                                    <Form.Label >Invoice No</Form.Label>
-                                        <Form.Control
-                                            type='text'
-                                            required
-                                            name='invoice_no'
-                                            onChange={(e)=>setInvoiceNo(e.target.value)}
-                                            defaultValue={invoiceId && invoice_details?.invoice_no}
-                                        >
+                                        <Form.Group as={Col}>
+                                            <Form.Label >Contact</Form.Label>
 
-                                        </Form.Control>
-                                    </Form.Group>
-                                    
-                                    <Form.Group as={Col}>
-                                    <Form.Label >Date</Form.Label>
-                                        <Form.Control
-                                            type='date'
-                                            required
-                                            name='date'
-                                            onChange={(e)=>setDate(e.target.value)}
-                                            defaultValue={invoiceId && invoice_details?.date}
-                                        >
+                                            <Form.Select
+                                                aria-label="Default select example"
+                                                disabled={invoiceId ? true : false}
+                                                required
+                                                onChange={(e) => onContactChange(e)}
+                                                value={contactId}
+                                            >
+                                                {cloading ? <option value="" disabled>Loading...</option> :
+                                                    <>
 
-                                        </Form.Control>
-                                    </Form.Group>
-                                    <Form.Group as={Col}>
-                                    <Form.Label >Due Date</Form.Label>
-                                        <Form.Control
-                                            type='date'
-                                            required
-                                            name='due_date'
-                                            onChange={(e)=>setDueDate(e.target.value)}
-                                            defaultValue={invoiceId && invoice_details?.due_date}
-                                        >
+                                                        <option value="" disabled>Select Contact ...</option>
+                                                        {contacts.length > 0 && contacts?.map((item) => {
+                                                            return (
+                                                                <option key={'scontact' + item.id} value={item.id} >{item.name}</option>
+                                                            )
+                                                        })}
 
-                                        </Form.Control>
-                                    </Form.Group>
-                                    <Form.Group as={Col}>
-                                    <Form.Label >Reference</Form.Label>
-                                        <Form.Control
-                                            type='text'
-                                            required
-                                            name='reference'
-                                            onChange={(e)=>setReference(e.target.value)}
-                                            defaultValue={invoiceId && invoice_details?.reference}
-                                        >
+                                                    </>
+                                                }
+                                            </Form.Select>
 
-                                        </Form.Control>
-                                    </Form.Group>
-                                    <Form.Group as={Col}>
-                                        <Form.Label >Tax Type</Form.Label>
-                                        
-                                        <Form.Select
-                                            aria-label="Default select example"
-                                            required 
-                                            onChange={(e)=>setTaxType(e.target.value)}
-                                            value={tax_type}                                     
-                                        >                                                                                        
-                                            <option value="inclusive">Inclusive</option>  
-                                            <option value="exclusive">Exclusive</option>  
-                                            <option value="no_tax">No Tax</option>  
-                                        </Form.Select>                                        
-                                        
-                                    </Form.Group>
+                                        </Form.Group>
+                                        <Form.Group as={Col}>
+                                            <Form.Label >Invoice No</Form.Label>
+                                            <Form.Control
+                                                type='text'
+                                                required
+                                                name='invoice_no'
+                                                onChange={(e) => setInvoiceNo(e.target.value)}
+                                                value={invoiceId && invoice_details?.invoice_no}
+                                            >
+
+                                            </Form.Control>
+                                        </Form.Group>
+
+                                        <Form.Group as={Col}>
+                                            <Form.Label >Date</Form.Label>
+                                            <Form.Control
+                                                type='date'
+                                                required
+                                                name='date'
+                                                onChange={(e) => setDate(e.target.value)}
+                                                value={invoiceId && invoice_details?.date}
+                                            >
+
+                                            </Form.Control>
+                                        </Form.Group>
+                                        <Form.Group as={Col}>
+                                            <Form.Label >Due Date</Form.Label>
+                                            <Form.Control
+                                                type='date'
+                                                required
+                                                name='due_date'
+                                                onChange={(e) => setDueDate(e.target.value)}
+                                                value={invoiceId && invoice_details?.due_date}
+                                            >
+
+                                            </Form.Control>
+                                        </Form.Group>
+                                        <Form.Group as={Col}>
+                                            <Form.Label >Reference</Form.Label>
+                                            <Form.Control
+                                                type='text'
+                                                required
+                                                name='reference'
+                                                onChange={(e) => setReference(e.target.value)}
+                                                value={invoiceId && invoice_details?.reference}
+                                            >
+
+                                            </Form.Control>
+                                        </Form.Group>
+                                        <Form.Group as={Col}>
+                                            <Form.Label >Tax Type</Form.Label>
+
+                                            <Form.Select
+                                                aria-label="Default select example"
+                                                required
+                                                onChange={(e) => setTaxType(e.target.value)}
+                                                value={tax_type}
+                                            >
+                                                <option value="inclusive">Inclusive</option>
+                                                <option value="exclusive">Exclusive</option>
+                                                <option value="no_tax">No Tax</option>
+                                            </Form.Select>
+
+                                        </Form.Group>
                                     </Row>
 
-                                    
 
-                                    </div>
-                                    <Form.Label>Items:</Form.Label>
-                                    <Table striped bordered hover>
-                                        <thead>
-                                            <tr>
+
+                                </div>
+                                <Form.Label>Items:</Form.Label>
+                                <Table striped bordered hover>
+                                    <thead>
+                                        <tr>
                                             <th>Item</th>
                                             <th>Description</th>
                                             <th>Quantity</th>
@@ -399,274 +418,282 @@ const InvoiceForm = () => {
                                             <th>Discount %</th>
                                             <th>Account</th>
                                             <th>Tax Rate %</th>
-                                            
+
                                             <th>Total</th>
-                                            
+
                                             <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {oldItems && oldItems.length > 0 && oldItems.map((item,index)=>{
-                                                return (
-                                                <tr key={'tr'+index}>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            type='text'
-                                                            required
-                                                            name='item'
-                                                            onChange={(e)=>onOldItemsChange(e,index)}
-                                                            defaultValue={item?.item}
-                                                        >
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {oldItems && oldItems.length > 0 && oldItems.map((item, index) => {
+                                            return (
+                                                <tr key={'tr' + index}>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='text'
+                                                                required
+                                                                name='item'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.item}
+                                                            >
 
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            as='textarea'
-                                                            rows='1'
-                                                            required
-                                                            name='description'
-                                                            onChange={(e)=>onOldItemsChange(e,index)}
-                                                            defaultValue={item?.description}
-                                                        >
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                as='textarea'
+                                                                rows='1'
+                                                                required
+                                                                name='description'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.description}
+                                                            >
 
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            type='text'
-                                                            required
-                                                            name='qty'
-                                                            onChange={(e)=>onOldItemsChange(e,index)}
-                                                            defaultValue={item?.qty}
-                                                        >
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='qty'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.qty}
+                                                            >
 
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            type='text'
-                                                            required
-                                                            name='unit_price'
-                                                            onChange={(e)=>onOldItemsChange(e,index)}
-                                                            defaultValue={item?.unit_price}
-                                                        >
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='unit_price'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.unit_price}
+                                                            >
 
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            type='text'
-                                                            required
-                                                            name='discount'
-                                                            onChange={(e)=>onOldItemsChange(e,index)}
-                                                            defaultValue={item?.discount}
-                                                        >
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='discount'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.discount}
+                                                            >
 
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group as={Col}>
-                                                        
-                                                        
-                                                        <Form.Select
-                                                            aria-label="Default select example"
-                                                            required 
-                                                            name='account_id'
-                                                            onChange={(e)=>onOldItemsChange(e,index)}
-                                                            defaultValue={item?.account_id}                 
-                                                        >
-                                                            {chloading ? <option value="" disabled>Loading...</option>: 
-                                                            <>
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group as={Col}>
+
+
+                                                            <Form.Select
+                                                                aria-label="Default select example"
+                                                                required
+                                                                name='account_id'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.account_id}
+                                                            >
+                                                                {chloading ? <option value="" disabled>Loading...</option> :
+                                                                    <>
+
+                                                                        <option value="" disabled>Select Chart Account ...</option>
+                                                                        {accounts.length > 0 && accounts?.map((item) => {
+                                                                            return (
+                                                                                <option key={'aco' + item.id} value={item.id} >{item.account_name}</option>
+                                                                            )
+                                                                        })}
+
+                                                                    </>
+                                                                }
+                                                            </Form.Select>
+
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='tax_rate'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.tax_rate}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                readOnly={true}
+                                                                value={item?.total_amount}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+
+                                                    <td>
+                                                        <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => { 
+                                                            oldItems.splice(index, 1);
+                                                            setOldItems([...oldItems]);
+                                                            deletedItems.push(item.id) 
+                                                            }}>
+                                                            <i className="mdi mdi-close"></i>
+                                                        </Link>
+                                                    </td>
+                                                </tr>)
+                                        })}
+                                        {newItems.length > 0 && newItems.map((item, index) => {
+                                            return (
+                                                <tr key={'tr' + index}>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='text'
+                                                                required
+                                                                name='item'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.item}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                as='textarea'
+                                                                rows='1'
+                                                                required
+                                                                name='description'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.description}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='qty'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.qty}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='unit_price'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.unit_price}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='discount'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.discount}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group as={Col}>
+
+
+                                                            <Form.Select
+                                                                aria-label="Default select example"
+                                                                required
+                                                                name='account_id'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value=''
+                                                            >
+                                                                {chloading ? <option value="" disabled>Loading...</option> :
+                                                                    <>
+
+                                                                        <option value="" disabled>Select Chart Account ...</option>
+                                                                        {accounts.length > 0 && accounts?.map((item) => {
+                                                                            return (
+                                                                                <option key={'acn' + item.id} value={item.id} >{item.account_name}</option>
+                                                                            )
+                                                                        })}
+
+                                                                    </>
+                                                                }
+                                                            </Form.Select>
+
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='tax_rate'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.tax_rate}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                readOnly={true}
+                                                                value={item?.total_amount}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+
+                                                    <td>
+                                                        <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => { 
+                                                            newItems.splice(index, 1);
+                                                            setNewItems([...newItems])
                                                             
-                                                                <option value="" disabled>Select Chart Account ...</option>  
-                                                                {accounts.length > 0 && accounts?.map((item)=>{
-                                                                    return(
-                                                                        <option key={'aco'+item.id} value={item.id} >{item.account_name}</option>
-                                                                    )
-                                                                })} 
-                                                            
-                                                            </>
-                                                            }
-                                                        </Form.Select>                                        
-                                                        
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            type='text'
-                                                            required
-                                                            name='tax_rate'
-                                                            onChange={(e)=>onOldItemsChange(e,index)}
-                                                            defaultValue={item?.tax_rate}
-                                                        >
+                                                            }}>
+                                                            <i className="mdi mdi-close"></i>
+                                                        </Link>
+                                                    </td>
+                                                </tr>)
+                                        })}
 
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                               
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            readOnly={true}
-                                                            defaultValue={item?.total_amount}
-                                                        >
 
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                               
-                                                <td>
-                                                <Link to="#" className="d-flex justify-content-center align-items-center " style={{backgroundColor: '#1299dd',color: '#fff',height:'30px'}} onClick={()=>{oldItems.splice(index,1);deletedItems.push(item.id)}}>
-                                                    <i className="mdi mdi-close"></i>
-                                                </Link>
-                                                </td>
-                                            </tr>)
-                                            })}
-                                            {newItems.length > 0 && newItems.map((item,index)=>{
-                                                return (
-                                                <tr key={'tr'+index}>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            type='text'
-                                                            required
-                                                            name='item'
-                                                            onChange={(e)=>onNewItemsChange(e,index)}
-                                                            defaultValue={item?.item}
-                                                        >
-
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            as='textarea'
-                                                            rows='1'
-                                                            required
-                                                            name='description'
-                                                            onChange={(e)=>onNewItemsChange(e,index)}
-                                                            defaultValue={item?.description}
-                                                        >
-
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            type='text'
-                                                            required
-                                                            name='qty'
-                                                            onChange={(e)=>onNewItemsChange(e,index)}
-                                                            defaultValue={item?.qty}
-                                                        >
-
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            type='text'
-                                                            required
-                                                            name='unit_price'
-                                                            onChange={(e)=>onNewItemsChange(e,index)}
-                                                            defaultValue={item?.unit_price}
-                                                        >
-
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            type='text'
-                                                            required
-                                                            name='discount'
-                                                            onChange={(e)=>onNewItemsChange(e,index)}
-                                                            defaultValue={item?.discount}
-                                                        >
-
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group as={Col}>
-                                                        
-                                                        
-                                                        <Form.Select
-                                                            aria-label="Default select example"
-                                                            required
-                                                            name='account_id' 
-                                                            onChange={(e)=>onNewItemsChange(e,index)}
-                                                            defaultValue=''                               
-                                                        >
-                                                            {chloading ? <option value="" disabled>Loading...</option>: 
-                                                            <>
-                                                            
-                                                                <option value="" disabled>Select Chart Account ...</option>  
-                                                                {accounts.length > 0 && accounts?.map((item)=>{
-                                                                    return(
-                                                                        <option key={'acn'+item.id} value={item.id} >{item.account_name}</option>
-                                                                    )
-                                                                })} 
-                                                            
-                                                            </>
-                                                            }
-                                                        </Form.Select>                                        
-                                                        
-                                                    </Form.Group>
-                                                </td>
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            type='text'
-                                                            required
-                                                            name='tax_rate'
-                                                            onChange={(e)=>onNewItemsChange(e,index)}
-                                                            defaultValue={item?.tax_rate}
-                                                        >
-
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                                
-                                                <td>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            readOnly={true}
-                                                            value={item?.total_amount}
-                                                        >
-
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </td>
-                                               
-                                                <td>
-                                                <Link to="#" className="d-flex justify-content-center align-items-center " style={{backgroundColor: '#1299dd',color: '#fff',height:'30px'}} onClick={()=>{newItems.splice(index,1)}}>
-                                                    <i className="mdi mdi-close"></i>
-                                                </Link>
-                                                </td>
-                                            </tr>)
-                                            })}
-                                            
-                                            
-                                        </tbody>
-                                    </Table>    
-                                    {/* <Card key={'tr2'+index}>
+                                    </tbody>
+                                </Table>
+                                {/* <Card key={'tr2'+index}>
                                         <Card.Header>
                                             <div className='d-flex justify-content-between'>
                                                 <p>item: {++itemCount}</p>
@@ -829,17 +856,17 @@ const InvoiceForm = () => {
                                         
                                         
                                     </Card>                                    */}
-                                    <div className="d-flex justify-content-between">
+                                <div className="d-flex justify-content-between">
 
-                                        <Link to="#" className="btn-primary waves-effect waves-light" onClick={()=>setNewItems([...newItems,items])} style={{maxHeight: '25px',padding: '3px'}}>
-                                            Add a new line
-                                        </Link>
-                                        <div >
-                                            <div className="d-flex justify-content-between">
-                                                <p style={{fontSize: '20px'}}>Subtotal</p>
-                                                <p style={{fontSize: '20px',paddingLeft: '50px'}}>{sub_total}</p>
-                                            </div>
-                                            {newItems?.map((item)=>{
+                                    <Link to="#" className="btn-primary waves-effect waves-light" onClick={() => setNewItems([...newItems, items])} style={{ maxHeight: '25px', padding: '3px' }}>
+                                        Add a new line
+                                    </Link>
+                                    <div >
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Subtotal</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{sub_total}</p>
+                                        </div>
+                                        {/* {newItems?.map((item)=>{
                                                 if(item.tax_rate > 0)
                                                 return(
 
@@ -848,8 +875,8 @@ const InvoiceForm = () => {
                                                     <p style={{fontSize: '20px',paddingLeft: '50px'}}>{item.tax_amount}</p>
                                                 </div>
                                                 )
-                                            })}
-                                            {oldItems?.map((item)=>{
+                                            })} */}
+                                        {/* {oldItems?.map((item)=>{
                                                 if(item.tax_rate > 0)
                                                 return (
                                                 <div className="d-flex justify-content-between" >
@@ -857,24 +884,33 @@ const InvoiceForm = () => {
                                                     <p style={{fontSize: '20px',paddingLeft: '50px'}}>{item.tax_amount}</p>
                                                 </div>
                                                 )
-                                            })}
-                                            
-                                            <hr></hr>
-                                            <div className="d-flex justify-content-between">
-                                                <p style={{fontSize: '20px'}}>Total</p>
-                                                <p style={{fontSize: '20px',paddingLeft: '50px'}}>{total_amount}</p>
-                                            </div>
-                                            <hr></hr><hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="d-flex justify-content-between">
+                                            })} */}
+                                        {Object.entries(taxGroup).map(item => {
+                                            if (item[0] > 0) {
+                                                return (
+                                                    <div className="d-flex justify-content-between" >
+                                                        <p style={{ fontSize: '20px' }}>Total Tax {item[0]}%</p>
+                                                        <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{item[1]}</p>
 
-                                        <Button variant="info" type="submit" className="waves-effect waves-light me-1" >
-                                            Save
-                                        </Button>
-                                        <div>
-                                        <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading} onClick={()=>setStatus('approve')}>
-                                            {rloading ? 'Loaidng...': 'Approve'}
+                                                    </div>)
+                                            }
+                                        })}
+                                        <hr></hr>
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Total</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{total_amount}</p>
+                                        </div>
+                                        <hr></hr><hr></hr>
+                                    </div>
+                                </div>
+                                <div className="d-flex justify-content-between">
+
+                                    <Button variant="info" type="submit" className="waves-effect waves-light me-1" >
+                                        Save
+                                    </Button>
+                                    <div>
+                                        <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading} onClick={() => setStatus('approve')}>
+                                            {rloading ? 'Loaidng...' : 'Approve'}
                                         </Button>
                                         <Link
                                             to='/app/service'
@@ -882,14 +918,14 @@ const InvoiceForm = () => {
                                         >
                                             Cancel
                                         </Link>
-                                        </div>
                                     </div>
-                                    
+                                </div>
 
-                                </Form>
-                                    
-                                    
-                                                           
+
+                            </Form>
+
+
+
                         </Card.Body>
                     </Card>
                 </Col>
