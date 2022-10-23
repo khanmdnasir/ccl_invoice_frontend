@@ -133,7 +133,7 @@ const ContactCard = () => {
                                             </div>                         
                                             <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
                                                 <h5 class='me-2'>Phone:</h5>
-                                                <p style={{marginTop: '15px',marginLeft: '20px',marginRight: '15px'}}>{item.phone}</p>
+                                                <p style={{ marginTop: '15px', marginLeft: '20px', marginRight: '15px' }}>{item.phone ? item.phone : "Not Set Yet"}</p>
                                             </div>
 
                                             <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
