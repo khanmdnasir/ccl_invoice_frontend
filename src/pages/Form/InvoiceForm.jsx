@@ -54,7 +54,7 @@ const InvoiceForm = () => {
         qty: 1,
         unit_price: 0,
         discount: 0,
-        account_id: '',
+        account_id: null,
         tax_rate: 0,
         tax_amount: 0,
         sub_total: 0,
@@ -177,13 +177,13 @@ const InvoiceForm = () => {
                 groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));;
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));
             }
         })
         setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
         setSubTotal(parseFloat(parseFloat(total_subTotal).toFixed(2)));
         setTotalTax(parseFloat(parseFloat(total_taxAmount).toFixed(2)));
-        let totalAmount = parseFloat(total_subTotal) + (tax_type === 'exclusive' && parseFloat(total_taxAmount))
+        let totalAmount = parseFloat(parseFloat(parseFloat(total_subTotal) + (tax_type === 'exclusive' && parseFloat(total_taxAmount))).toFixed(2));
         setTotalAmount(totalAmount)
         setTaxGroup(groupOfTax)
     }, [newItems, oldItems, tax_type])
@@ -635,12 +635,12 @@ const InvoiceForm = () => {
                                                                 required
                                                                 name='account_id'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
-                                                                value=''
+                                                                value={item?.account_id}
                                                             >
                                                                 {chloading ? <option value="" disabled>Loading...</option> :
                                                                     <>
 
-                                                                        <option value="" disabled>Select Chart Account ...</option>
+                                                                        <option value="">Select Chart Account ...</option>
                                                                         {accounts.length > 0 && accounts?.map((item) => {
                                                                             return (
                                                                                 <option key={'acn' + item.id} value={item.id} >{item.account_name}</option>

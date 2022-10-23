@@ -13,4 +13,4 @@ function getRepeatingInvoiceDetails(params:any) {
     return api.get(`${baseUrl}`,{});
 }
 
-export { getRepeatingInvoice,getRepeatingInvoiceDetails };
+export { getRepeatingInvoice, getRepeatingInvoiceDetails };
