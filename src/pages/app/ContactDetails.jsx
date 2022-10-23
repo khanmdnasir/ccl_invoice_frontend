@@ -115,6 +115,9 @@ const ContactDetails = () => {
             Header: 'Discount',
             accessor: 'discount',
             sort: true,
+            Cell: (row) => {
+                return <div>{(row.row.original.discount).toFixed(2)}</div>;
+            }
         },
         {
             Header: 'Total Tax',
@@ -335,19 +338,19 @@ const ContactDetails = () => {
                         <Card.Body>
 
                             {invoice_list.length > 0 ?
-                            <>
-                                <Table
-                                    columns={columns}
-                                    data={invoice_list}
-                                    pageSize={pageSize}
-                                    isSortable={true}
-                                    pagination={false}
-                                    isSearchable={true}
-                                    tableClass="table-nowrap table-hover"
-                                    searchBoxClass=""
-                                />
-                                    <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={invoice_list_pagination_data.total_page} current_page={invoice_list_pagination_data.current_page} active={invoice_list_pagination_data.active}/>
-                            </>
+                                <>
+                                    <Table
+                                        columns={columns}
+                                        data={invoice_list}
+                                        pageSize={pageSize}
+                                        isSortable={true}
+                                        pagination={false}
+                                        isSearchable={true}
+                                        tableClass="table-nowrap table-hover"
+                                        searchBoxClass=""
+                                    />
+                                    <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={invoice_list_pagination_data.total_page} current_page={invoice_list_pagination_data.current_page} active={invoice_list_pagination_data.active} />
+                                </>
                                 :
                                 'No data available!'}
                         </Card.Body>

@@ -128,7 +128,7 @@ const ContactCard = () => {
                                                                     
                                             <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
                                                 <h5>Email: </h5>
-                                                <p style={{marginTop: '15px',marginLeft: '20px',marginRight: '15px'}}>{item.email}</p>
+                                                <p style={{ marginTop: '15px', marginLeft: '20px', marginRight: '15px' }}>{item.email ? item.email: "Not Set Yet"}</p>
                                                 
                                             </div>                         
                                             <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
