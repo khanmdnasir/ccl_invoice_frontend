@@ -321,8 +321,8 @@ const RepeatingInvoice = () => {
                 ]}
                 title={`Repeating Invoice`}
             />
-            <Tab.Container defaultActiveKey="all">
-                <Nav as="ul" variant="tabs">
+            {/* <Tab.Container defaultActiveKey="all">
+                <Nav as="ul" variant="tabs">                    
                     <Nav.Item as="li" key='all'>
                         <Nav.Link active={activePage === "all"} className="cursor-pointer" href="#" eventKey='all' onClick={() => onClickEvent('all')}>
                             All
@@ -340,7 +340,8 @@ const RepeatingInvoice = () => {
                     </Nav.Item>
                 </Nav>
 
-            </Tab.Container>
+               
+            </Tab.Container> */}
             <Row>
                 <Col>
                     <Card>

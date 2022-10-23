@@ -18,6 +18,29 @@ export const getContact = (limit:number,page:number) => ({
     payload: {limit,page},
 });
 
+export const getContactInvoice = (id:any, limit:any, page:any) => ({
+    type: type.GET_CONTACT_INVOICE_REQUESTED,
+    payload: {id, limit, page},
+});
+
+export const getContactInvoiceSetting = (id:number) => ({
+    type: type.GET_CONTACT_INVOICE_SETTING_REQUESTED,
+    payload: id,
+});
+
+export const getContactDetails = (id:number) =>{ 
+    return ({
+    type: type.GET_CONTACT_DETAILS_REQUESTED,
+    payload: id,
+});}
+
+
+export const updateContactInvoiceSetting = (data: any) => ({
+    type: type.UPDATE_CONTACT_INVOICE_SETTING_REQUESTED,
+    payload: data,
+});
+
+
 export const getAllContact = () => ({
     type: type.GET_ALLCONTACT_REQUESTED,
     payload: {},
