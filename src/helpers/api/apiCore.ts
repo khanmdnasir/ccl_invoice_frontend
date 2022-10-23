@@ -82,7 +82,7 @@ axios.interceptors.response.use(
     }
 );
 
-const AUTH_TOKEN_KEY = 'itracker_user';
+const AUTH_TOKEN_KEY = 'ccl_user';
 
 
 /**
@@ -112,7 +112,7 @@ class APICore {
                 : '';
             response = axios.get(`${url}?${queryString}`, params);
         } else {
-            response = axios.get(`${url}`, params);
+            response = axios.get(`${url}`);
         }
         return response;
     };
