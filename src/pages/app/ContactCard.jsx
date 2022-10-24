@@ -29,6 +29,7 @@ const ContactCard = () => {
     const next = useSelector(state => state.Contact.next);
     const current_page = useSelector(state => state.Contact.current_page);
     const total_page = useSelector(state => state.Contact.total_page);
+    const total_object = useSelector(state => state.Contact.total_object);
     const active = useSelector(state => state.Contact.active);
     const user_role = useSelector((state)=> state.Role.user_role);
     const loading = useSelector(state => state.Contact.loading);
@@ -138,7 +139,7 @@ const ContactCard = () => {
 
                                             <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
                                                 <h5 class='me-2'>Total Service:</h5>
-                                                <p style={{marginTop: '15px',marginLeft: '20px',marginRight: '15px'}}>5</p>
+                                                <p style={{ marginTop: '15px', marginLeft: '20px', marginRight: '15px' }}>{total_object}</p>
                                             </div>                         
                                                                             
                                         </Card.Body>

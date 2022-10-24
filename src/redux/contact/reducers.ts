@@ -10,6 +10,7 @@ const INIT_STATE = {
     previous: '',
     next: '',
     current_page: '',
+    total_object: '',
     total_page: '',
     active: '',
     loading: false,
@@ -37,6 +38,7 @@ const Contact = (state = INIT_STATE, action: any) => {
                 previous: action.data.previous,
                 next: action.data.next,
                 current_page: action.data.current_page,
+                total_object: action.data.total_object,
                 total_page: action.data.total_page,
                 active: action.data.current_page,
             };

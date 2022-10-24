@@ -280,14 +280,14 @@ const Users = () => {
                                             </>
                                         }
                                         
-                                        <ExcelFile element={<Button className="btn btn-light mb-2">Export</Button>}>
+                                        {/* <ExcelFile element={<Button className="btn btn-light mb-2">Export</Button>}>
                                             <ExcelSheet data={users} name="Users">
                                                 <ExcelColumn label="Name" value="name"/>
                                                 <ExcelColumn label="Phone" value="phone"/>
                                                 <ExcelColumn label="Email" value="email"/>
                                                 <ExcelColumn label="Role" value={(col)=> col.groups[0].name}/>                                            
                                             </ExcelSheet>
-                                        </ExcelFile>
+                                        </ExcelFile> */}
   
                                     </div>
                                 </Col>
