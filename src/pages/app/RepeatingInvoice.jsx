@@ -111,12 +111,12 @@ export const StatusColumn = withSwal(({ row, swal }) => {
     const draftsOptions =
         <>
             <option selected={row.original.status === 'draft'} value='draft'>Draft</option>
-            <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
+            <option selected={row.original.status === 'approve'} value='approve'>Approved</option>
         </>
 
     const approvesOptions =
         <>
-            <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
+            <option selected={row.original.status === 'approve'} value='approve'>Approved</option>
         </>
 
 
