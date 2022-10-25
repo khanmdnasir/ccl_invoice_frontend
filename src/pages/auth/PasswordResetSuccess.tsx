@@ -33,7 +33,7 @@ const PasswordResetSuccess = (state:any) => {
                     <h3>{t('Success !')}</h3>
                     <p className="text-muted font-14 mt-2">
                         {t('Password has been Reseted Successfully')}
-                        <b>{state.location.state.email} </b>
+                        {/* <b>{state.location.state.email} </b> */}
                     </p>
                     <Link to="/auth/login" className="btn w-100 btn-primary waves-effect waves-light mt-3">
                         {t('Back to Home')}{' '}
