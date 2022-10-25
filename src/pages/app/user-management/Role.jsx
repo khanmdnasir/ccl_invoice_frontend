@@ -134,7 +134,7 @@ const Role = () => {
     };
 
     useEffect(()=>{
-        dispatch(getRoles(10,1));       
+        // dispatch(getRoles(10,1));       
         
     },[])
     return (

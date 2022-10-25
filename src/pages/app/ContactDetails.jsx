@@ -377,6 +377,12 @@ const ContactDetails = () => {
                             <InputGroup className="mb-3">
                                 <InputGroup.Text style={mystyle}>
                                     Auto Invoice Send</InputGroup.Text>
+                                <InputGroup.Checkbox checked={invoiceSetting?.auto_approve} name="auto_approve" onChange={(e) => invoiceSettingChange(e)} />
+                            </InputGroup>
+
+                            <InputGroup className="mb-3">
+                                <InputGroup.Text style={mystyle}>
+                                    Auto Invoice Send</InputGroup.Text>
                                 <InputGroup.Checkbox checked={invoiceSetting?.auto_invoice_send} name="auto_invoice_send" onChange={(e) => invoiceSettingChange(e)} />
                             </InputGroup>
 
