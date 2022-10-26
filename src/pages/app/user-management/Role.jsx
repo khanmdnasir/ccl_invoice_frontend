@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { APICore } from '../../../helpers/api/apiCore';
-import { Row, Col, Card, Button, Alert } from 'react-bootstrap';
+import { Row, Col, Card, Button, Alert, Form } from 'react-bootstrap';
 import { withSwal } from 'react-sweetalert2';
 // components
 
@@ -70,7 +70,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
     return (
         <>
             { user_role.includes('change_group') ?
-                <Link to={{pathname: '/app/add_role',state: row.original }} className="action-icon" >
+                <Link to={{pathname: '/app/add_role', state: row.original }} className="action-icon" >
                     <i className="mdi mdi-square-edit-outline"></i>
                 </Link>:
                 <Link to="#" className="action-icon" style={{pointerEvents: 'none'}}>
@@ -121,22 +121,24 @@ const Role = () => {
     const error = useSelector(state => state.Role.error);
     const user_role = useSelector((state)=> state.Role.user_role);
 
+    const [pageSize, setPageSize] = useState(6);
+
     const visitPage = (page) => {
-        dispatch(getRoles(10,page));
+        dispatch(getRoles(pageSize,page));
     };
 
     const previous_number = () => {
-        dispatch(getRoles(10,previous));
+        dispatch(getRoles(pageSize,previous));
     };
 
     const next_number = () => {
-        dispatch(getRoles(10,next));
+        dispatch(getRoles(pageSize,next));
     };
 
     useEffect(()=>{
-        // dispatch(getRoles(10,1));       
+        dispatch(getRoles(pageSize,1));       
         
-    },[])
+    }, [pageSize])
     return (
         <>
             <PageTitle
@@ -158,13 +160,13 @@ const Role = () => {
                             <Row className="mb-2">
                                 <Col sm={4}>
                                     <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
-                                        {/* <span className='me-2'>Short By:</span>
+                                        <span className='me-2'>Short By:</span>
                                         <Form.Select style={{width: '40%'}} onChange={(e)=>setPageSize(e.target.value)}>
                                             <option value='6'>6</option>
                                             <option value='10'>10</option>
                                             <option value='15'>15</option>
                                             <option value='20'>20</option>
-                                        </Form.Select> */}
+                                        </Form.Select>
                                     </div>
                                 </Col>
 
@@ -189,7 +191,7 @@ const Role = () => {
                             <Table
                                 columns={columns}
                                 data={roles}
-                                pageSize={6}
+                                pageSize={pageSize}
                                 isSortable={true}
                                 pagination={false}
                                 isSearchable={true}

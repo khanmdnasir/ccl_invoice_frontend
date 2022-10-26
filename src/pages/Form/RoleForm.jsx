@@ -20,8 +20,8 @@ const RoleForm = () => {
     const role = location.state;
     const[permission,setPermission] = useState([]);
     const[error,setError] = useState(null);
-    const[role_name,setRoleName] = useState(role ? role.group.name:'');
-    const[role_permission,setRolePermission] = useState(role ? role.group.permissions:[]);
+    const[role_name,setRoleName] = useState('');
+    const[role_permission,setRolePermission] = useState([]);
     const history = useHistory();
 
     const handleSubmit = (e) =>{
@@ -82,6 +82,11 @@ const RoleForm = () => {
         .then(res=>{
             setPermission(res.data)
         })
+        if (role){
+            console.log('role', role)
+            setRoleName(role?.name)
+            setRolePermission(role?.permissions) //id gulo store hobe
+        }
         
         
     },[])
