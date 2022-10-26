@@ -27,7 +27,7 @@ const RoleForm = () => {
     const handleSubmit = (e) =>{
         e.preventDefault();
         if(role){
-            api.update(`/api/groups/${role.id}/`,{'name':role_name,'permissions':role_permission})
+            api.updatePatch(`/api/groups/${role.id}/`,{'name':role_name,'permissions':role_permission})
             .then(res=>{
                 
                 if(res.data.success){
@@ -66,13 +66,12 @@ const RoleForm = () => {
         const isChecked = e.target.checked;
         
         if(isChecked){
-            
             setRolePermission([...role_permission,parseInt(e.target.value)  ]);
             
         }else{
             let index = role_permission.findIndex((x) => parseInt(x) === parseInt(e.target.value))
-            console.log(index)
             role_permission.splice(index,1)
+            setRolePermission([...role_permission])
             
         }
     }
@@ -83,9 +82,12 @@ const RoleForm = () => {
             setPermission(res.data)
         })
         if (role){
-            console.log('role', role)
             setRoleName(role?.name)
-            setRolePermission(role?.permissions) //id gulo store hobe
+            const permissions = role?.permissions;
+            const permissionsId = permissions.map(permission=>{
+                return permission.id
+            })
+            setRolePermission(permissionsId)
         }
         
         
@@ -105,6 +107,8 @@ const RoleForm = () => {
             <Card>
                 <Card.Body>
                     
+                    
+                    
                         <Form onSubmit={handleSubmit}>
                         {error && (
                             <Alert variant="danger" className="my-2">
@@ -121,9 +125,9 @@ const RoleForm = () => {
                             <Row>
                                 {permission.map((item)=>{
                                     return(
-                                        <Form.Group as={Col} sm={3} className="mb-3" key={item.id} onChange={handleChange}> 
+                                        <Form.Group as={Col} sm={3} className="mb-3" key={item.id} onChange={(e)=>handleChange(e)}> 
                                                                        
-                                            <Form.Check label={item.name} value={item.id}  defaultChecked={role && role_permission.includes(item.id) ? true:false} />                              
+                                            <Form.Check label={item.name} value={item.id} checked={role_permission.includes(item.id)} />                              
                                                                           
                                         </Form.Group>
                                     )
