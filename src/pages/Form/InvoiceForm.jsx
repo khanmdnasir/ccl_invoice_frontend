@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
 import { format } from 'date-fns'
@@ -18,6 +18,7 @@ const api = new APICore()
 
 const InvoiceForm = () => {
     const location = useLocation();
+    const history = useHistory();
 
     const dispatch = useDispatch();
     const contacts = useSelector((state) => state.Contact.all_contact);
@@ -252,7 +253,10 @@ const InvoiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Saved Successfully');
-                    setRloading(false);
+                    setRloading(true);
+                    setTimeout(() => {
+                        history.goBack()
+                    }, 1000);
                 } else {
                     setError(res.data.error)
 
@@ -274,7 +278,10 @@ const InvoiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
-                    setRloading(false);
+                    setRloading(true);
+                    setTimeout(() => {
+                        history.goBack()
+                    }, 1000);
                 } else {
                     setError(res.data.error)
 
@@ -300,12 +307,12 @@ const InvoiceForm = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                            {!rloading && error && (
+                            {error && (
                                 <Alert variant="danger" className="my-2" onClose={() => setError(null)} dismissible>
                                     {error}
                                 </Alert>
                             )}
-                            {!rloading && success && (
+                            {success && (
                                 <Alert variant="success" className="my-2" onClose={() => setSuccess(null)} dismissible>
                                     {success}
                                 </Alert>

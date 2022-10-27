@@ -282,7 +282,6 @@ const ContactDetails = () => {
         reminder_settings["days"] = newDays;
         const data = { ...invoiceSetting }
         data['reminder_settings'] = reminder_settings;
-        console.log(data['reminder_settings'])
         setInvoiceSetting(data);
 
     }
@@ -309,8 +308,7 @@ const ContactDetails = () => {
                 title={'Contact Report'}
             />
             <Row>
-
-                <Col md={8} xl={8}>
+                <Col md={4} xl={4}>
                     <Card>
                         <Card.Header>
                             <p>Personal Details</p>
@@ -366,32 +364,9 @@ const ContactDetails = () => {
 
                         </Card.Body>
                     </Card>
+                </Col>
 
-                    <Card>
-                        <Card.Header>
-                            <p style={{ marginBottom: '0px !important' }}>Invoice List</p>
-                        </Card.Header>
-
-                        <Card.Body>
-
-                            {invoice_list.length > 0 ?
-                                <>
-                                    <Table
-                                        columns={invoicesColumns}
-                                        data={invoice_list}
-                                        pageSize={pageSize}
-                                        isSortable={true}
-                                        pagination={false}
-                                        isSearchable={true}
-                                        tableClass="table-nowrap table-hover"
-                                        searchBoxClass=""
-                                    />
-                                    <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={invoice_list_pagination_data.total_page} current_page={invoice_list_pagination_data.current_page} active={invoice_list_pagination_data.active} />
-                                </>
-                                :
-                                'No data available!'}
-                        </Card.Body>
-                    </Card>
+                <Col md={8} xl={8}>
                     <Card>
                         <Card.Header>
                             <p style={{ marginBottom: '0px !important' }}>Services List</p>
@@ -425,6 +400,10 @@ const ContactDetails = () => {
                     </Card>
 
                 </Col>
+
+            </Row>
+
+            <Row>
                 <Col md={4} xl={4}>
                     <Card>
                         <Card.Header>
@@ -575,11 +554,35 @@ const ContactDetails = () => {
                         </Card.Body>
                     </Card>
                 </Col>
+                <Col md={8} xl={8}>
 
-            </Row>
+                    <Card>
+                        <Card.Header>
+                            <p style={{ marginBottom: '0px !important' }}>Invoice List</p>
+                        </Card.Header>
 
-            <Row>
+                        <Card.Body>
 
+                            {invoice_list.length > 0 ?
+                                <>
+                                    <Table
+                                        columns={invoicesColumns}
+                                        data={invoice_list}
+                                        pageSize={pageSize}
+                                        isSortable={true}
+                                        pagination={false}
+                                        isSearchable={true}
+                                        tableClass="table-nowrap table-hover"
+                                        searchBoxClass=""
+                                    />
+                                    <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={invoice_list_pagination_data.total_page} current_page={invoice_list_pagination_data.current_page} active={invoice_list_pagination_data.active} />
+                                </>
+                                :
+                                'No data available!'}
+                        </Card.Body>
+                    </Card>
+
+                </Col>
             </Row>
 
 

@@ -105,7 +105,10 @@ const ServiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Saved Successfully');
-                    setRloading(false);
+                    setRloading(true);
+                    setTimeout(() => {
+                        history.goBack()
+                    }, 1000);
                 } else {
                     setError(res.data.error)
 
@@ -125,7 +128,10 @@ const ServiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
-                    setRloading(false);
+                    setRloading(true);
+                    setTimeout(() => {
+                        history.goBack()
+                    }, 1000);
                 } else {
                     setError(res.data.error)
 
@@ -153,12 +159,12 @@ const ServiceForm = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                            {!rloading && error && (
+                            {error && (
                                 <Alert variant="danger" className="my-2" onClose={() => setError(null)} dismissible>
                                     {error}
                                 </Alert>
                             )}
-                            {!rloading && success && (
+                            {success && (
                                 <Alert variant="success" className="my-2" onClose={() => setSuccess(null)} dismissible>
                                     {success}
                                 </Alert>
@@ -402,7 +408,7 @@ const ServiceForm = () => {
                                             {rloading ? 'Loaidng...' : 'Save'}
                                         </Button>
                                         <Link
-                                            to='/'
+                                            to='/app/'
                                             onClick={() => history.goBack()}
                                             className=" btn waves-effect waves-light"
                                         >
