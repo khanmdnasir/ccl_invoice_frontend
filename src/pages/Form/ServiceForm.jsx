@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 // components
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,14 +16,16 @@ const api = new APICore()
 
 const ServiceForm = () => {
     const location = useLocation();
+    const history = useHistory();
     const [oldItems, setOldItems] = useState([]);
     const [contactId, setContactId] = useState(null);
     const [deletedItems, setDeletedItems] = useState([]);
     // const[isEdit,setIsEdit] = useState(false);
     // const user_role = useSelector((state:RootState)=> state.Role.user_role);
     // const { user } = useSelector((state: RootState) => ({
-    //     user: state.Auth.user,
-    // }));
+        //     user: state.Auth.user,
+        // }));
+        
 
     const [items, setItems] = useState({
         contact_id: contactId ? contactId : '',
@@ -237,15 +239,19 @@ const ServiceForm = () => {
                                                     </td>
                                                     <td>
                                                         <Form.Group>
-                                                            <Form.Control
-                                                                type='text'
+                                                            <Form.Select
+                                                                aria-label="Default select example"
                                                                 required
                                                                 name='contact_mode'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.contact_mode}
                                                             >
 
-                                                            </Form.Control>
+                                                                <option value="" disabled>Select Contact Mode ...</option>
+                                                                <option value="pre-paid" >Pre-Paid</option>
+                                                                <option value="post-paid" >Post-Paid</option>
+
+                                                            </Form.Select>
                                                         </Form.Group>
                                                     </td>
                                                     <td>
@@ -316,15 +322,19 @@ const ServiceForm = () => {
                                                     </td>
                                                     <td>
                                                         <Form.Group>
-                                                            <Form.Control
-                                                                type='text'
+                                                            <Form.Select
+                                                                aria-label="Default select example"
                                                                 required
                                                                 name='contact_mode'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
-                                                                value={item.contact_mode}
+                                                                value={item?.contact_mode}
                                                             >
 
-                                                            </Form.Control>
+                                                                <option value="" disabled>Select Contact Mode ...</option>
+                                                                <option value="pre-paid" >Pre-Paid</option>
+                                                                <option value="post-paid" >Post-Paid</option>
+
+                                                            </Form.Select>
                                                         </Form.Group>
                                                     </td>
                                                     <td>
@@ -392,7 +402,8 @@ const ServiceForm = () => {
                                             {rloading ? 'Loaidng...' : 'Save'}
                                         </Button>
                                         <Link
-                                            to='/app/service'
+                                            to='/'
+                                            onClick={() => history.goBack()}
                                             className=" btn waves-effect waves-light"
                                         >
                                             Cancel

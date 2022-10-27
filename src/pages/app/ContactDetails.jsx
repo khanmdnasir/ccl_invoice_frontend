@@ -11,10 +11,99 @@ import FeatherIcon from 'feather-icons-react';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting } from '../../redux/actions';
+import { getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getContactService } from '../../redux/actions';
 
 
 const api = new APICore()
+
+
+const invoicesColumns = [
+    {
+        Header: 'Invoice No',
+        accessor: 'invoice_no',
+        sort: true,
+    },
+    {
+        Header: 'Contact',
+        accessor: 'contact_id.name',
+        sort: true,
+    },
+    {
+        Header: 'Date',
+        accessor: 'date',
+        sort: true,
+    },
+    {
+        Header: 'Tax Type',
+        accessor: 'tax_type',
+        sort: true,
+    },
+    {
+        Header: 'Sub Total',
+        accessor: 'sub_total',
+        sort: true,
+    },
+    {
+        Header: 'Discount',
+        accessor: 'discount',
+        sort: true,
+        Cell: (row) => {
+            return <div>{(row.row.original.discount).toFixed(2)}</div>;
+        }
+    },
+    {
+        Header: 'Total Tax',
+        accessor: 'total_tax',
+        sort: true,
+    },
+    {
+        Header: 'Total Amount',
+        accessor: 'total_amount',
+        sort: true,
+    },
+    {
+        Header: 'Action',
+        accessor: 'action',
+        sort: false,
+        Cell: ActionColumn,
+    },
+
+];
+
+const servicesColumns = [
+
+    {
+        Header: 'Contact',
+        accessor: 'contact_id.name',
+        sort: true,
+    },
+    {
+        Header: 'Service Type',
+        accessor: 'service_type',
+        sort: true,
+    },
+    {
+        Header: 'Contact Mode',
+        accessor: 'contact_mode',
+        sort: true,
+    },
+    {
+        Header: 'Payment Terms',
+        accessor: 'payment_terms',
+        sort: true,
+    },
+    {
+        Header: 'Tax Rate',
+        accessor: 'tax_rate',
+        sort: true,
+    },
+    {
+        Header: 'Unit Price',
+        accessor: 'unit_price',
+        sort: true,
+    },
+
+];
 
 
 const ContactDetails = () => {
@@ -42,6 +131,7 @@ const ContactDetails = () => {
     const loading = useSelector(state => state.Contact.loading);
     const invoice_setting_error = useSelector(state => state.Contact.invoice_setting_error);
     const invoice_setting_success = useSelector(state => state.Contact.invoice_setting_success);
+    const services = useSelector(state => state.Service.contact_services);
 
 
     useEffect(() => {
@@ -70,10 +160,11 @@ const ContactDetails = () => {
     // console.log("due_in", invoiceSetting)
 
     useEffect(() => {
-        if (contactId !== undefined) {
+        if (contactId !== undefined && contactId !== null) {
             dispatch(getContactInvoice(contactId, pageSize, 1))
             dispatch(getContactDetails(contactId))
             dispatch(getContactInvoiceSetting(contactId))
+            dispatch(getContactService(contactId)); 
         }
     }, [contactId])
 
@@ -83,60 +174,6 @@ const ContactDetails = () => {
             setInvoiceSetting(invoice_setting)
         }
     }, [invoice_setting])
-
-
-    const columns = [
-        {
-            Header: 'Invoice No',
-            accessor: 'invoice_no',
-            sort: true,
-        },
-        {
-            Header: 'Contact',
-            accessor: 'contact_id.name',
-            sort: true,
-        },
-        {
-            Header: 'Date',
-            accessor: 'date',
-            sort: true,
-        },
-        {
-            Header: 'Tax Type',
-            accessor: 'tax_type',
-            sort: true,
-        },
-        {
-            Header: 'Sub Total',
-            accessor: 'sub_total',
-            sort: true,
-        },
-        {
-            Header: 'Discount',
-            accessor: 'discount',
-            sort: true,
-            Cell: (row) => {
-                return <div>{(row.row.original.discount).toFixed(2)}</div>;
-            }
-        },
-        {
-            Header: 'Total Tax',
-            accessor: 'total_tax',
-            sort: true,
-        },
-        {
-            Header: 'Total Amount',
-            accessor: 'total_amount',
-            sort: true,
-        },
-        {
-            Header: 'Action',
-            accessor: 'action',
-            sort: false,
-            Cell: ActionColumn,
-        },
-
-    ];
 
 
     const mystyle = {
@@ -340,7 +377,7 @@ const ContactDetails = () => {
                             {invoice_list.length > 0 ?
                                 <>
                                     <Table
-                                        columns={columns}
+                                        columns={invoicesColumns}
                                         data={invoice_list}
                                         pageSize={pageSize}
                                         isSortable={true}
@@ -350,6 +387,37 @@ const ContactDetails = () => {
                                         searchBoxClass=""
                                     />
                                     <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={invoice_list_pagination_data.total_page} current_page={invoice_list_pagination_data.current_page} active={invoice_list_pagination_data.active} />
+                                </>
+                                :
+                                'No data available!'}
+                        </Card.Body>
+                    </Card>
+                    <Card>
+                        <Card.Header>
+                            <p style={{ marginBottom: '0px !important' }}>Services List</p>
+                        </Card.Header>
+
+                        <Card.Body>
+                            <div className="text-sm-end mt-2 mt-sm-0">
+                                <Link className="btn btn-info mb-2 me-1" to={{ pathname: '/app/service_form', state: { 'services': services, 'contactId': contactId } }}>
+                                    <i className="mdi mdi-pencil me-1"></i> Edit
+                                </Link>
+
+                            </div>
+
+                            {services.length > 0 ?
+                                <>
+                                    <Table
+                                        columns={servicesColumns}
+                                        data={services}
+                                        pageSize={pageSize}
+                                        isSortable={true}
+                                        pagination={false}
+                                        isSearchable={true}
+                                        tableClass="table-nowrap table-hover"
+                                        searchBoxClass=""
+                                    />
+                                    {/* <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={invoice_list_pagination_data.total_page} current_page={invoice_list_pagination_data.current_page} active={invoice_list_pagination_data.active} /> */}
                                 </>
                                 :
                                 'No data available!'}
