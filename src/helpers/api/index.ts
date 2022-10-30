@@ -5,8 +5,9 @@ import { getContact,getAllContact,addContact,deleteContact, getContactInvoice, g
 import { getCountry,getCity } from './location';
 import { getService,getContactService, addService } from './service';
 import { getInvoice,getInvoiceDetails } from './invoice';
+import { getRepeatingInvoice, getRepeatingInvoiceDetails } from './repeating_invoice';
 import { getCurrency } from './currency';
 import { getChartAccount } from './chart_account';
 
 
-export { login, signup, updateProfile, updateProfileImage,getUser,addUser,getRole,getUserRole,getContact,getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getAllContact,addContact,deleteContact,getCountry,getCity,getService,getContactService,addService,getInvoice,getInvoiceDetails,getCurrency,getChartAccount};
+export { login, signup, updateProfile, updateProfileImage,getUser,addUser,getRole,getUserRole,getContact,getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getAllContact,addContact,deleteContact,getCountry,getCity,getService,getContactService,addService,getInvoice,getInvoiceDetails,getCurrency,getChartAccount, getRepeatingInvoice, getRepeatingInvoiceDetails};

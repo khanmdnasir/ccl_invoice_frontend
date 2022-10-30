@@ -17,6 +17,7 @@ import ContactCard from '../pages/app/ContactCard';
 import Invoice from '../pages/app/invoice';
 import InvoiceForm from '../pages/Form/InvoiceForm';
 import InvoiceDetails from '../pages/app/InvoiceDetails';
+import RepeatingInvoiceDetails from '../pages/app/RepeatingInvoiceDetails';
 import RepeatingInvoiceForm from '../pages/Form/RepeatingInvoiceForm';
 import RepeatingInvoice from '../pages/app/RepeatingInvoice';
 
@@ -129,7 +130,7 @@ const AppRoutes = {
         {
             path: '/app/service',
             name: 'Service',
-            component: ContactCard,
+            component: ServiceForm,
             route: PrivateRoute,
         },
         {
@@ -172,6 +173,13 @@ const AppRoutes = {
             path: '/app/invoice_details',
             name: 'Invoice Details',
             component: InvoiceDetails,
+            route: PrivateRoute,
+        },
+        
+        {
+            path: '/app/repeating_invoice_details',
+            name: 'Repeating Invoice Details',
+            component: RepeatingInvoiceDetails,
             route: PrivateRoute,
         },
         

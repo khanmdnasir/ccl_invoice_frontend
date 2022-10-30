@@ -4,7 +4,7 @@ const api = new APICore();
 
 
 function getRole(params: {limit: number,page:number}) {
-    const baseUrl = '/api/groups/';
+    const baseUrl = '/api/groups';
     return api.get(`${baseUrl}`,params);
 }
 

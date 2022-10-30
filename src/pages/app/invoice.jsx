@@ -70,6 +70,46 @@ export const ActionColumn = withSwal(({ row, swal }) => {
             })
     }
 
+    const sendEmail = () => {
+        const data = {
+            "contact_id":row.original?.contact_id?.id,
+            "invoice_id":row.original.id,
+        }
+        swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28bb4b',
+            cancelButtonColor: '#f34e4e',
+            confirmButtonText: 'Yes, Send email!',
+        })
+            .then(function (result) {
+                if (result.value) {
+                    // dispatch(deleteContact(row.original.id))
+                    api.create(`/api/send-email/`, data)
+                        .then(res => {
+                            // dispatch(getInvoice(10, 1));
+                            swal.fire(
+                                'Sent!',
+                                'Email has been Sent.',
+                                'success'
+                            );
+                        })
+                        .catch(err => {
+                            swal.fire({
+                                title: err,
+                            }
+                            );
+                        })
+                } else if (result.dismiss === 'cancel') {
+
+                }
+            })
+    }
+
+    // console.log('row', row.original)
+
     return (
         <>
             <Link to={{ pathname: '/app/invoice_details', state: row.original.id }} className="action-icon" >
@@ -94,6 +134,13 @@ export const ActionColumn = withSwal(({ row, swal }) => {
                 </Link>
             }
 
+            {row.original.status === "approve" ?
+                <Link to="#" className="action-icon" onClick={() => sendEmail()}>
+                    <i className="mdi mdi-email"></i>
+                </Link> :
+                null
+            }
+
 
 
         </>
@@ -114,18 +161,18 @@ export const StatusColumn = withSwal(({ row, swal }) => {
         <>
             <option selected={row.original.status === 'draft'} value='draft'>Draft</option>
             <option selected={row.original.status === 'waiting'} value='waiting'>Waiting</option>
-            <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
+            <option selected={row.original.status === 'approve'} value='approve'>Approved</option>
         </>
 
     const waitingsOptions =
         <>
             <option selected={row.original.status === 'waiting'} value='waiting'>Waiting</option>
-            <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
+            <option selected={row.original.status === 'approve'} value='approve'>Approved</option>
         </>
 
     const approvesOptions =
         <>
-            <option selected={row.original.status === 'approve'} value='approve'>Approve</option>
+            <option selected={row.original.status === 'approve'} value='approve'>Approved</option>
             <option selected={row.original.status === 'paid'} value='paid'>Paid</option>
         </>
 
