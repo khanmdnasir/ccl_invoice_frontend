@@ -64,7 +64,9 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
 
 
     useEffect(()=>{
-        console.log("contact", contact)
+        if(contact?.country){
+            dispatch(getCity(contact?.country?.id))
+        }
     },[contact])
    
     return (
@@ -106,7 +108,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                 containerClass={'mb-3'} 
                                 register={register}
                                 errors={errors}
-                                control={control} 
+                                control={control}
                                 defaultValue={contact ? contact.contact_type : ''}
                                 >    
                                     <option value="" disabled>Select Contact Type ...</option>                         
@@ -174,17 +176,16 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     <Form.Label >City</Form.Label>
 
                                     <Form.Select
-                                
                                         aria-label="Default select example"
                                         isInvalid={errors && errors['city'] ? true : false}
                                         {...register('city')}
-                                        
+                                        defaultValue={contact ? contact?.city?.id : ''}
                                         
                                     >
                                         <option value="">Select City ...</option>                         
                                             {cities?.map((item:any)=>{
                                                 return(
-                                                    <option key={'ci'+item.id} value={item.id} >{item.name}</option>
+                                                    <option selected={contact?.city?.id===item.id} key={'ci'+item.id} value={item.id} >{item.name}</option>
                                                 )
                                             })} 
                                     </Form.Select>
