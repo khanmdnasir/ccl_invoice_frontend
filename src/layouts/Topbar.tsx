@@ -209,14 +209,14 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                                 userTitle={'Founder'}
                             />
                         </li>
-                        <li className="dropdown notification-list">
+                        {/* <li className="dropdown notification-list">
                             <button
                                 className="nav-link dropdown-toggle right-bar-toggle waves-effect waves-light btn btn-link shadow-none"
                                 onClick={handleRightSideBar}
                             >
                                 <i className="fe-settings noti-icon"></i>
                             </button>
-                        </li>
+                        </li> */}
                     </ul>
 
                     <ul className="list-unstyled topnav-menu topnav-menu-left m-0">

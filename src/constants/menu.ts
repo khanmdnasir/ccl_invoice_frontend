@@ -26,7 +26,7 @@ const MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
-        key: 'dashboards',
+        key: 'view_contact',
         label: 'Contact',
         isTitle: false,
         icon: 'clipboard',
@@ -34,15 +34,15 @@ const MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
-        key: 'dashboards',
-        label: 'Service',
+        key: 'view_service',
+        label: 'Add Service',
         isTitle: false,
         icon: 'service',
         url: '/app/service',
         
     },
     {
-        key: 'dashboards',
+        key: 'invoice',
         label: 'Invoice',
         isTitle: false,
         icon: 'invoice',
@@ -54,7 +54,7 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'dashboards',
             },
             {
-                key: 'view_invoice',
+                key: 'view_repeatinginvoice',
                 label: 'Repeating Invoice',
                 url: '/app/repeating_invoice',
                 parentKey: 'dashboards',
@@ -100,23 +100,23 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
-        key: 'dashboards',
+        key: 'view_contact',
         label: 'Contact',
         isTitle: false,
         icon: 'clipboard',
         url: '/app/contact',
         
-    },   
+    },
     {
-        key: 'dashboards',
-        label: 'Service',
+        key: 'view_service',
+        label: 'Add Service',
         isTitle: false,
-        icon: 'phone',
+        icon: 'service',
         url: '/app/service',
         
-    }, 
+    },
     {
-        key: 'dashboards',
+        key: 'invoice',
         label: 'Invoice',
         isTitle: false,
         icon: 'invoice',
@@ -125,13 +125,13 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_invoice',
                 label: 'Invoice',
                 url: '/app/invoice',
-                parentKey: 'dashboards',
+                parentKey: 'invoice',
             },
             {
-                key: 'view_invoice',
+                key: 'view_repeatinginvoice',
                 label: 'Repeating Invoice',
                 url: '/app/repeating_invoice',
-                parentKey: 'dashboards',
+                parentKey: 'invoice',
             },
             
             
@@ -174,23 +174,23 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
-        key: 'dashboards',
+        key: 'view_contact',
         label: 'Contact',
         isTitle: false,
         icon: 'clipboard',
         url: '/app/contact',
         
-    },   
+    },
     {
-        key: 'dashboards',
-        label: 'Service',
+        key: 'view_service',
+        label: 'Add Service',
         isTitle: false,
-        icon: 'phone',
+        icon: 'service',
         url: '/app/service',
         
-    }, 
+    },
     {
-        key: 'dashboards',
+        key: 'invoice',
         label: 'Invoice',
         isTitle: false,
         icon: 'invoice',
@@ -202,7 +202,7 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'dashboards',
             },
             {
-                key: 'view_invoice',
+                key: 'view_repeatinginvoice',
                 label: 'Repeating Invoice',
                 url: '/app/repeating_invoice',
                 parentKey: 'dashboards',
@@ -218,7 +218,7 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
         label: 'Settings',
         isTitle: false,
         icon: 'settings',
-        children: [
+        children: [ 
             {
                 key: 'view_group',
                 label: 'Roles',

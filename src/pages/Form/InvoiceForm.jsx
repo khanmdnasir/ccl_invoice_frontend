@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
 import { format } from 'date-fns'
@@ -18,6 +18,7 @@ const api = new APICore()
 
 const InvoiceForm = () => {
     const location = useLocation();
+    const history = useHistory();
 
     const dispatch = useDispatch();
     const contacts = useSelector((state) => state.Contact.all_contact);
@@ -54,7 +55,7 @@ const InvoiceForm = () => {
         qty: 1,
         unit_price: 0,
         discount: 0,
-        account_id: '',
+        account_id: null,
         tax_rate: 0,
         tax_amount: 0,
         sub_total: 0,
@@ -177,13 +178,13 @@ const InvoiceForm = () => {
                 groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));;
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));
             }
         })
         setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
         setSubTotal(parseFloat(parseFloat(total_subTotal).toFixed(2)));
         setTotalTax(parseFloat(parseFloat(total_taxAmount).toFixed(2)));
-        let totalAmount = parseFloat(total_subTotal) + (tax_type === 'exclusive' && parseFloat(total_taxAmount))
+        let totalAmount = parseFloat(parseFloat(parseFloat(total_subTotal) + (tax_type === 'exclusive' && parseFloat(total_taxAmount))).toFixed(2));
         setTotalAmount(totalAmount)
         setTaxGroup(groupOfTax)
     }, [newItems, oldItems, tax_type])
@@ -252,7 +253,10 @@ const InvoiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Saved Successfully');
-                    setRloading(false);
+                    setRloading(true);
+                    setTimeout(() => {
+                        history.goBack()
+                    }, 1000);
                 } else {
                     setError(res.data.error)
 
@@ -274,7 +278,10 @@ const InvoiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
-                    setRloading(false);
+                    setRloading(true);
+                    setTimeout(() => {
+                        history.goBack()
+                    }, 1000);
                 } else {
                     setError(res.data.error)
 
@@ -300,12 +307,12 @@ const InvoiceForm = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                            {!rloading && error && (
+                            {error && (
                                 <Alert variant="danger" className="my-2" onClose={() => setError(null)} dismissible>
                                     {error}
                                 </Alert>
                             )}
-                            {!rloading && success && (
+                            {success && (
                                 <Alert variant="success" className="my-2" onClose={() => setSuccess(null)} dismissible>
                                     {success}
                                 </Alert>
@@ -635,12 +642,12 @@ const InvoiceForm = () => {
                                                                 required
                                                                 name='account_id'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
-                                                                value=''
+                                                                value={item?.account_id}
                                                             >
                                                                 {chloading ? <option value="" disabled>Loading...</option> :
                                                                     <>
 
-                                                                        <option value="" disabled>Select Chart Account ...</option>
+                                                                        <option value="">Select Chart Account ...</option>
                                                                         {accounts.length > 0 && accounts?.map((item) => {
                                                                             return (
                                                                                 <option key={'acn' + item.id} value={item.id} >{item.account_name}</option>

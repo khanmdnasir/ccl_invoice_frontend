@@ -55,7 +55,7 @@ const ForgetPassword = () => {
      */
     const onSubmit = (formData: UserData) => {
         try{
-            api.create(`/api/password_reset/`,{})
+            api.create(`/api/password_reset/`,{email:formData['email']})
             .then((res:any)=>{
                   
                 history.push({pathname:'/auth/confirm',state:{email:formData['email']}});        
