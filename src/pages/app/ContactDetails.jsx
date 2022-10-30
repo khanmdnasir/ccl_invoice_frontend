@@ -373,12 +373,12 @@ const ContactDetails = () => {
                         </Card.Header>
 
                         <Card.Body>
-                            <div className="text-sm-end mt-2 mt-sm-0">
+                            <span className="text-sm mt-2 mt-sm-0">
                                 <Link className="btn btn-info mb-2 me-1" to={{ pathname: '/app/service_form', state: { 'services': services, 'contactId': contactId } }}>
                                     <i className="mdi mdi-pencil me-1"></i> Edit
                                 </Link>
 
-                            </div>
+                            </span>
 
                             {services.length > 0 ?
                                 <>

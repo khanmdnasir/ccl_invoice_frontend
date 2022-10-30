@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button,Form,Row,Col } from 'react-bootstrap';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -51,7 +51,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
     );
 
     const methods = useForm<Partial<FormData>>({
-        defaultValues: {name:contact?.name,client_id:contact?.client_id,contact_person:contact?.contact_person,phone:contact?.phone,email:contact?.email,city:contact?.city,country:contact?.country,billing_address:contact?.billing_address},
+        defaultValues: {name:contact?.name,client_id:contact?.client_id,contact_person:contact?.contact_person,phone:contact?.phone,email:contact?.email,city:contact?.city?.id,country:contact?.country?.id,billing_address:contact?.billing_address},
         resolver: schemaResolver,
     });
     const {
@@ -62,6 +62,10 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
         formState: { errors },
     } = methods;
 
+
+    useEffect(()=>{
+        console.log("contact", contact)
+    },[contact])
    
     return (
         <>
@@ -158,7 +162,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                 onChange={(e:any) => {dispatch(getCity(e.target.value))}}
                                 defaultValue={contact ? contact?.country?.id : ''}
                                 >    
-                                    <option value="" disabled>Select Country ...</option> 
+                                    <option value="">Select Country ...</option> 
                                     {countries?.map((item:any)=>{
                                         return(
                                             <option key={'co'+item.id} value={item.id} >{item.name}</option>
@@ -177,7 +181,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                         
                                         
                                     >
-                                        <option value="" disabled>Select City ...</option>                         
+                                        <option value="">Select City ...</option>                         
                                             {cities?.map((item:any)=>{
                                                 return(
                                                     <option key={'ci'+item.id} value={item.id} >{item.name}</option>

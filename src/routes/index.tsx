@@ -130,7 +130,7 @@ const AppRoutes = {
         {
             path: '/app/service',
             name: 'Service',
-            component: ContactCard,
+            component: ServiceForm,
             route: PrivateRoute,
         },
         {

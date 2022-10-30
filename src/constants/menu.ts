@@ -35,7 +35,7 @@ const MENU_ITEMS: MenuItemTypes[] = [
     },
     {
         key: 'view_service',
-        label: 'Service',
+        label: 'Add Service',
         isTitle: false,
         icon: 'service',
         url: '/app/service',
@@ -109,7 +109,7 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
     },
     {
         key: 'view_service',
-        label: 'Service',
+        label: 'Add Service',
         isTitle: false,
         icon: 'service',
         url: '/app/service',
@@ -183,7 +183,7 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
     },
     {
         key: 'view_service',
-        label: 'Service',
+        label: 'Add Service',
         isTitle: false,
         icon: 'service',
         url: '/app/service',
