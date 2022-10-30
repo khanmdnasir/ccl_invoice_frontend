@@ -11,7 +11,7 @@ interface LocationData {
     payload: {
         id: number;
         name: string;
-        country: number;
+        country: any;
     };
     type: string;
 }
@@ -28,11 +28,15 @@ function* getCountry({ payload: {}}:LocationData):SagaIterator {
 }
 
 function* getCity({ payload: {country}}:LocationData):SagaIterator {
-    
     try {
-        const response = yield call(getCityApi,{country});
-        const data = response.data;
-        yield put({type: 'GET_CITY_SUCCESS' , data: data});
+        if (country!=='' && country!==null){
+            const response = yield call(getCityApi,{country});
+            const data = response.data;
+            yield put({type: 'GET_CITY_SUCCESS' , data: data});
+        }
+        else{
+            yield put({type: 'GET_CITY_FAILED', error: "No country selected"});
+        }
     } catch (error) {
         yield put({type: 'GET_CITY_FAILED', error: error});
         
