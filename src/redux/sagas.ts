@@ -8,11 +8,12 @@ import contactSaga from './contact/saga';
 import locationSaga from './location/saga';
 import serviceSaga from './service/saga';
 import invoiceSaga from './invoice/saga';
+import repeatingInvoiceSaga from './repeating-invoice/saga';
 import currencySaga from './currency/saga';
 import chartAccountSaga from './chart-account/saga';
 
 
 
 export default function* rootSaga() {
-    yield all([authSaga(), layoutSaga(), userSaga(),roleSaga(),contactSaga(),locationSaga(),serviceSaga(),invoiceSaga(),currencySaga(),chartAccountSaga()]);
+    yield all([authSaga(), layoutSaga(), userSaga(),roleSaga(),contactSaga(),locationSaga(),serviceSaga(),invoiceSaga(),currencySaga(),chartAccountSaga(),repeatingInvoiceSaga()]);
 }

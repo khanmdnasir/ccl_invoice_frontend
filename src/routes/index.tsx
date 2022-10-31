@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, RouteProps } from 'react-router-dom';
 import Contact from '../pages/app/Contact';
+import ContactDetails from '../pages/app/ContactDetails';
 
 import ChangePassword from '../pages/app/user-management/ChangePassword';
 import RoleForm from '../pages/Form/RoleForm';
@@ -16,6 +17,7 @@ import ContactCard from '../pages/app/ContactCard';
 import Invoice from '../pages/app/invoice';
 import InvoiceForm from '../pages/Form/InvoiceForm';
 import InvoiceDetails from '../pages/app/InvoiceDetails';
+import RepeatingInvoiceDetails from '../pages/app/RepeatingInvoiceDetails';
 import RepeatingInvoiceForm from '../pages/Form/RepeatingInvoiceForm';
 import RepeatingInvoice from '../pages/app/RepeatingInvoice';
 
@@ -120,9 +122,15 @@ const AppRoutes = {
             route: PrivateRoute,
         },
         {
+            path: '/app/contact_details',
+            name: 'Contact Details',
+            component: ContactDetails,
+            route: PrivateRoute,
+        },
+        {
             path: '/app/service',
             name: 'Service',
-            component: ContactCard,
+            component: ServiceForm,
             route: PrivateRoute,
         },
         {
@@ -165,6 +173,13 @@ const AppRoutes = {
             path: '/app/invoice_details',
             name: 'Invoice Details',
             component: InvoiceDetails,
+            route: PrivateRoute,
+        },
+        
+        {
+            path: '/app/repeating_invoice_details',
+            name: 'Repeating Invoice Details',
+            component: RepeatingInvoiceDetails,
             route: PrivateRoute,
         },
         

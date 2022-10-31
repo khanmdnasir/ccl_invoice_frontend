@@ -177,6 +177,7 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
         <>
             <ul className="side-menu" ref={menuRef} id="main-side-menu">
                 {(menuItems || []).map((item, idx) => {
+                    if(['dashboards','invoice','settings'].includes(item.key) || user_permissions.includes(item.key))
                     return (
                         <React.Fragment key={idx}>
                             {item.isTitle ? (
@@ -198,7 +199,7 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
                                             linkClassName="side-nav-link"
                                         />
                                     ) : (
-                                        (user_permissions.includes(item.key) || item.key === 'dashboards') &&
+                                        
                                         <MenuItem
                                             item={item}
                                             linkClassName="side-nav-link"
