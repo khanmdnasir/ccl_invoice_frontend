@@ -49,6 +49,7 @@ const Location = (state = INIT_STATE, action: any) => {
             return {
                 ...state,
                 loading: false,
+                city: [],
                 error: action.error,
             };
         }

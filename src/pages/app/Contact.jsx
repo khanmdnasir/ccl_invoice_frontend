@@ -117,7 +117,11 @@ const ActionColumn = withSwal(({ row, swal }) => {
                     <i className="mdi mdi-delete"></i>
                 </Link>
             }
-            <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} contact={row.original} countries={country}/>
+            {
+                show?
+                <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} contact={row.original} countries={country}/>
+                :null
+            }
         </>
     );
 });
