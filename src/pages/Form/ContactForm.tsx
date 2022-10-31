@@ -58,6 +58,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
         handleSubmit,
         register,
         reset,
+        setValue,
         control,
         formState: { errors },
     } = methods;
@@ -161,8 +162,8 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                 register={register}
                                 errors={errors}
                                 control={control} 
-                                onChange={(e:any) => {dispatch(getCity(e.target.value))}}
                                 defaultValue={contact ? contact?.country?.id : ''}
+                                onChange={(e:any) => {dispatch(getCity(e.target.value));if(!e.target.value){setValue('city','')}}}
                                 >    
                                     <option value="">Select Country ...</option> 
                                     {countries?.map((item:any)=>{

@@ -34,6 +34,11 @@ const invoicesColumns = [
         sort: true,
     },
     {
+        Header: 'Due Date',
+        accessor: 'due_date',
+        sort: true,
+    },
+    {
         Header: 'Tax Type',
         accessor: 'tax_type',
         sort: true,
@@ -59,6 +64,11 @@ const invoicesColumns = [
     {
         Header: 'Total Amount',
         accessor: 'total_amount',
+        sort: true,
+    },
+    {
+        Header: 'Status',
+        accessor: 'status',
         sort: true,
     },
     {
@@ -423,7 +433,7 @@ const ContactDetails = () => {
                             )}
                             <InputGroup className="mb-3">
                                 <InputGroup.Text style={mystyle}>
-                                    Auto Invoice Send</InputGroup.Text>
+                                    Auto Approve</InputGroup.Text>
                                 <InputGroup.Checkbox checked={invoiceSetting?.auto_approve} name="auto_approve" onChange={(e) => invoiceSettingChange(e)} />
                             </InputGroup>
 
