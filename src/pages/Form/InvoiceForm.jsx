@@ -366,7 +366,7 @@ const InvoiceForm = () => {
                                                 required
                                                 name='invoice_no'
                                                 onChange={(e) => setInvoiceNo(e.target.value)}
-                                                value={invoiceId && invoice_details?.invoice_no}
+                                                defaultValue={invoiceId && invoice_details?.invoice_no}
                                             >
 
                                             </Form.Control>
@@ -379,7 +379,7 @@ const InvoiceForm = () => {
                                                 required
                                                 name='date'
                                                 onChange={(e) => setDate(e.target.value)}
-                                                value={invoiceId && invoice_details?.date}
+                                                defaultValue={invoiceId && invoice_details?.date}
                                             >
 
                                             </Form.Control>
@@ -391,7 +391,7 @@ const InvoiceForm = () => {
                                                 required
                                                 name='due_date'
                                                 onChange={(e) => setDueDate(e.target.value)}
-                                                value={invoiceId && invoice_details?.due_date}
+                                                defaultValue={invoiceId && invoice_details?.due_date}
                                             >
 
                                             </Form.Control>
@@ -403,7 +403,7 @@ const InvoiceForm = () => {
                                                 required
                                                 name='reference'
                                                 onChange={(e) => setReference(e.target.value)}
-                                                value={invoiceId && invoice_details?.reference}
+                                                defaultValue={invoiceId && invoice_details?.reference}
                                             >
 
                                             </Form.Control>
