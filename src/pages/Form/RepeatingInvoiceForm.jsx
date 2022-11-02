@@ -350,7 +350,7 @@ const RepeatingInvoiceForm = () => {
                                         </Form.Group>
 
                                         <Form.Group as={Col}>
-                                            <Form.Label >Date</Form.Label>
+                                            <Form.Label >Day</Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
@@ -362,7 +362,7 @@ const RepeatingInvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Due Date</Form.Label>
+                                            <Form.Label >Due Day</Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
@@ -376,7 +376,7 @@ const RepeatingInvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Repeat Date</Form.Label>
+                                            <Form.Label >Repeat Day</Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required

@@ -203,7 +203,7 @@ const ServiceForm = () => {
                                             {cloading ? <option value="" disabled>Loading...</option> :
                                                 <>
 
-                                                    <option value="" disabled>Select Contact ...</option>
+                                                    <option value="" >Select Contact ...</option>
                                                     {contacts.length > 0 && contacts?.map((item) => {
                                                         return (
                                                             <option key={'scontact' + item.id} value={item.id} >{item.name}</option>
