@@ -105,13 +105,13 @@ const ServiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Saved Successfully');
-                    setRloading(true);
+                    setRloading(false);
                     setTimeout(() => {
                         history.goBack()
                     }, 1000);
                 } else {
                     setError(res.data.error)
-
+                    setRloading(false);
                 }
 
             })
@@ -128,13 +128,13 @@ const ServiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
-                    setRloading(true);
+                    setRloading(false);
                     setTimeout(() => {
                         history.goBack()
                     }, 1000);
                 } else {
                     setError(res.data.error)
-
+                    setRloading(false);
                 }
 
             })
@@ -218,11 +218,11 @@ const ServiceForm = () => {
                                 <Table striped bordered hover>
                                     <thead>
                                         <tr>
-                                            <th>Service Type</th>
-                                            <th>Contact Mode</th>
-                                            <th>Payment Terms</th>
-                                            <th>Govt VAT (5%)</th>
-                                            <th>Total</th>
+                                            <th className='required'>Service Type</th>
+                                            <th className='required'>Contact Mode</th>
+                                            <th className='required'>Payment Terms</th>
+                                            <th className='required'>Govt VAT (5%)</th>
+                                            <th className='required'>Total</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
