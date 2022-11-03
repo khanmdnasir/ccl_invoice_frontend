@@ -129,6 +129,11 @@ const ActionColumn = withSwal(({ row, swal }) => {
 const columns = [
     
     {
+        Header: 'Name',
+        accessor: 'name',
+        sort: true,
+    },
+    {
         Header: 'Client Id',
         accessor: 'client_id',
         sort: true,
@@ -136,11 +141,6 @@ const columns = [
     {
         Header: 'Contact Type',
         accessor: 'contact_type',
-        sort: true,
-    },
-    {
-        Header: 'Name',
-        accessor: 'name',
         sort: true,
     },
     {

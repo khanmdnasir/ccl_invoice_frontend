@@ -204,8 +204,18 @@ const columns = [
         sort: true,
     },
     {
-        Header: 'Date',
+        Header: 'Day',
         accessor: 'date',
+        sort: true,
+    },
+    {
+        Header: 'Due Day',
+        accessor: 'due_date',
+        sort: true,
+    },
+    {
+        Header: 'Repeat Day',
+        accessor: 'repeat_date',
         sort: true,
     },
     {
