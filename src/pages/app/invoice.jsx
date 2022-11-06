@@ -271,6 +271,11 @@ const columns = [
         sort: true,
     },
     {
+        Header: 'Due Date',
+        accessor: 'due_date',
+        sort: true,
+    },
+    {
         Header: 'Tax Type',
         accessor: 'tax_type',
         sort: true,
