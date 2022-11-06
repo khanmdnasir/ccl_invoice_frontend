@@ -237,7 +237,7 @@ const Users = () => {
 
     useEffect(()=>{ 
         dispatch(getUser(pageSize,1));   
-        dispatch(getRoles(0,1));
+        // dispatch(getRoles(10,1));
     },[pageSize])
     return (
         <>
