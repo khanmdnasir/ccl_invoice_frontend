@@ -16,9 +16,9 @@ const Footer = () => {
 
                         <Col md={6}>
                             <div className="text-md-end footer-links d-none d-sm-block">
-                                <Link to="#">About Us</Link>
+                                {/* <Link to="#">About Us</Link>
                                 <Link to="#">Help</Link>
-                                <Link to="#">Contact Us</Link>
+                                <Link to="#">Contact Us</Link> */}
                             </div>
                         </Col>
                     </Row>

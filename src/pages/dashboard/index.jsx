@@ -2,11 +2,9 @@ import { Button,Row, Col, Form } from 'react-bootstrap';
 
 // components
 
-import DashboardWatchList from './DashboardWatchList';
+
 import AssetTypeChart from './AssetTypeChart';
-import IndustryChart from './IndustryChart';
-import CountryChart from './CountryChart';
-import DashboardUpcomingEvents from './DashboardUpcomingEvents';
+
 import { ReactSortable } from 'react-sortablejs';
 import { useEffect, useState } from 'react';
 
@@ -24,28 +22,22 @@ const Dashboard = () => {
         },
         {
             id: 2,
-            component: IndustryChart,
+            component: AssetTypeChart,
+            
+            
+        },
+        {
+            id: 3,
+            component: AssetTypeChart,
             
             
         },
         {
             id: 4,
-            component: CountryChart,
+            component: AssetTypeChart,
             
             
-        },
-        {
-            id: 5,
-            component: DashboardWatchList,
-            
-            
-        },
-        {
-            id: 6,
-            component: DashboardUpcomingEvents,
-            
-            
-        },
+        }
     ])
     const [items, setItems] = useState([]);
     useEffect(()=>{
@@ -75,17 +67,7 @@ const Dashboard = () => {
                     id: 4,
                     show: true
                     
-                },
-                {
-                    id: 5,
-                    show: true
-                    
-                },
-                {
-                    id: 6,
-                    show: true
-                    
-                },
+                }
             ]
         }
         setItems(dashboard_items);
@@ -110,7 +92,7 @@ const Dashboard = () => {
         <>
             <Row>
                 <Col>
-                    <div className="page-title-box">
+                    {/* <div className="page-title-box">
                         <div className="page-title-right">
                             {editDashboard ?
                             <>
@@ -127,13 +109,13 @@ const Dashboard = () => {
                             }
                         </div>
                         <h4 className="page-title">Dashboard</h4>
-                    </div>
+                    </div> */}
                 </Col>
             </Row>
 
 
-            
-            { editDashboard ?
+            <h5>Coming soon...</h5>
+            {/* { editDashboard ?
             <ReactSortable className="row" list={items} setList={setItems}>
                 {(items || []).map((item, idx) => {
                     return (
@@ -203,8 +185,8 @@ const Dashboard = () => {
                         
                     );
                 })}
-            </ReactSortable>
-            }
+            </ReactSortable>} */}
+            
         </>
     );
 };

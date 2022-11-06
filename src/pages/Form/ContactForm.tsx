@@ -58,6 +58,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
         handleSubmit,
         register,
         reset,
+        setValue,
         control,
         formState: { errors },
     } = methods;
@@ -84,6 +85,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     label="Name"
                                     type="text"
                                     name="name"
+                                    labelClassName='required'
                                     placeholder="Enter Name"
                                     containerClass={'mb-3'}
                                     register={register}
@@ -94,6 +96,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     label="Client Id"
                                     type="text"
                                     name="client_id"
+                                    labelClassName='required'
                                     placeholder="Enter Client Id"
                                     containerClass={'mb-3'}
                                     register={register}
@@ -105,6 +108,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                 label="Contact Type"
                                 type="select"
                                 name="contact_type"
+                                labelClassName='required'
                                 containerClass={'mb-3'} 
                                 register={register}
                                 errors={errors}
@@ -121,6 +125,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     label="Contact Person"
                                     type="text"
                                     name="contact_person"
+                                    labelClassName='required'
                                     placeholder="Enter Contact Person"
                                     containerClass={'mb-3'}
                                     register={register}
@@ -132,6 +137,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     label="Phone"
                                     type="text"
                                     name="phone"
+                                    labelClassName='required'
                                     placeholder="Enter Phone"
                                     containerClass={'mb-3'}
                                     register={register}
@@ -161,8 +167,8 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                 register={register}
                                 errors={errors}
                                 control={control} 
-                                onChange={(e:any) => {dispatch(getCity(e.target.value))}}
                                 defaultValue={contact ? contact?.country?.id : ''}
+                                onChange={(e:any) => {dispatch(getCity(e.target.value));if(!e.target.value){setValue('city','')}}}
                                 >    
                                     <option value="">Select Country ...</option> 
                                     {countries?.map((item:any)=>{
