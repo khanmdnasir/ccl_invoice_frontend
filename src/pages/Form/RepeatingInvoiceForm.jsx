@@ -159,13 +159,22 @@ const RepeatingInvoiceForm = () => {
         newItems.forEach((item) => {
             total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
-            total_taxAmount += parseFloat(item.tax_amount);
+
+            var item_tax_amount = 0;
+            if (tax_type === 'inclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)) / (100 + parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)))
+            } else if (tax_type === 'exclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0))
+            } else {
+                item_tax_amount = 0
+            }
+            total_taxAmount += parseFloat(item_tax_amount);
 
             if ((item.tax_rate).toString() in groupOfTax) {
-                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item_tax_amount).toFixed(2));
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));;
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item_tax_amount).toFixed(2));;
             }
         })
 
@@ -173,13 +182,24 @@ const RepeatingInvoiceForm = () => {
         oldItems.forEach((item) => {
             total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
-            total_taxAmount += parseFloat(item.tax_amount);
+
+            var item_tax_amount = 0;
+            if (tax_type === 'inclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)) / (100 + parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)))
+            } else if (tax_type === 'exclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0))
+            } else {
+                item_tax_amount = 0
+            }
+            total_taxAmount += parseFloat(item_tax_amount);
             if ((item.tax_rate).toString() in groupOfTax) {
-                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item_tax_amount).toFixed(2));
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item_tax_amount).toFixed(2));
             }
+
+
         })
         setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
         setSubTotal(parseFloat(parseFloat(total_subTotal).toFixed(2)));
@@ -261,6 +281,7 @@ const RepeatingInvoiceForm = () => {
             })
             .catch(err => {
                 setError(err)
+                setRloading(false);
             })
     }
 
@@ -312,7 +333,7 @@ const RepeatingInvoiceForm = () => {
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Contact</Form.Label>
+                                            <Form.Label className='required'>Contact</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -337,38 +358,42 @@ const RepeatingInvoiceForm = () => {
 
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Invoice No</Form.Label>
+                                            <Form.Label className='required'>Invoice No</Form.Label>
                                             <Form.Control
                                                 type='text'
                                                 required
                                                 name='invoice_no'
                                                 onChange={(e) => setInvoiceNo(e.target.value)}
-                                                value={invoiceId && repeating_invoice_details?.invoice_no}
+                                                defaultValue={invoiceId && repeating_invoice_details?.invoice_no}
                                             >
 
                                             </Form.Control>
                                         </Form.Group>
 
                                         <Form.Group as={Col}>
-                                            <Form.Label >Date</Form.Label>
+                                            <Form.Label className='required'>Day</Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
                                                 name='date'
+                                                max='31'
+                                                min='1'
                                                 onChange={(e) => setDate(e.target.value)}
-                                                value={invoiceId && repeating_invoice_details?.date}
+                                                defaultValue={invoiceId && repeating_invoice_details?.date}
                                             >
 
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Due Date</Form.Label>
+                                            <Form.Label className='required'>Due Day</Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
+                                                max='31'
+                                                min='1'
                                                 name='due_date'
                                                 onChange={(e) => setDueDate(e.target.value)}
-                                                value={invoiceId && repeating_invoice_details?.due_date}
+                                                defaultValue={invoiceId && repeating_invoice_details?.due_date}
                                             >
 
 
@@ -376,10 +401,12 @@ const RepeatingInvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Repeat Date</Form.Label>
+                                            <Form.Label className='required'>Repeat Day</Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
+                                                max='31'
+                                                min='1'
                                                 name='repeat_date'
                                                 onChange={(e) => setRepeatDate(e.target.value)}
                                                 defaultValue={invoiceId && repeating_invoice_details?.repeat_date}
@@ -391,16 +418,16 @@ const RepeatingInvoiceForm = () => {
                                             <Form.Label >Reference</Form.Label>
                                             <Form.Control
                                                 type='text'
-                                                required
+                                                
                                                 name='reference'
                                                 onChange={(e) => setReference(e.target.value)}
-                                                value={invoiceId && repeating_invoice_details?.reference}
+                                                defaultValue={invoiceId && repeating_invoice_details?.reference}
                                             >
 
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Tax Type</Form.Label>
+                                            <Form.Label className='required'>Tax Type</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -423,12 +450,12 @@ const RepeatingInvoiceForm = () => {
                                 <Table striped bordered hover>
                                     <thead>
                                         <tr>
-                                            <th>Item</th>
+                                            <th className='required'>Item</th>
                                             <th>Description</th>
-                                            <th>Quantity</th>
-                                            <th>Unit Price</th>
+                                            <th className='required'>Quantity</th>
+                                            <th className='required'>Unit Price</th>
                                             <th>Discount %</th>
-                                            <th>Account</th>
+                                            <th className='required'>Account</th>
                                             <th>Tax Rate %</th>
 
                                             <th>Total</th>
@@ -458,7 +485,7 @@ const RepeatingInvoiceForm = () => {
                                                             <Form.Control
                                                                 as='textarea'
                                                                 rows='1'
-                                                                required
+                                                                
                                                                 name='description'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.description}
@@ -497,7 +524,7 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='discount'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.discount}
@@ -537,7 +564,7 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='tax_rate'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.tax_rate}
@@ -590,7 +617,7 @@ const RepeatingInvoiceForm = () => {
                                                             <Form.Control
                                                                 as='textarea'
                                                                 rows='1'
-                                                                required
+                                                                
                                                                 name='description'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.description}
@@ -629,7 +656,7 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='discount'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.discount}
@@ -669,7 +696,7 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='tax_rate'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.tax_rate}

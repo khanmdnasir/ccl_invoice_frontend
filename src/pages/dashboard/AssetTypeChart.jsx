@@ -23,7 +23,7 @@ const AssetTypeChart = ({ isEdit }) => {
     //     chart.data=res.data;
     // }) 
   
-
+  
   chart.dataSource.url = "pie_chart_data.json";
   let pieSeries = chart.series.push(new am4charts.PieSeries());   
   pieSeries.dataFields.value = "amount";
@@ -58,9 +58,10 @@ const AssetTypeChart = ({ isEdit }) => {
               
           </Dropdown>
 
-          <h4 className="header-title mb-0">Asset Types</h4>
+          <h4 className="header-title mb-0">Upcoming</h4>
           
           <div id="assetTypeChart" style={{ width: "100%", height: "350px" }}></div>
+          
           {/* {!asset_type.length > 0 &&
           <p>No asset type available</p>} */}
          

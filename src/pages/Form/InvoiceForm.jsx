@@ -68,35 +68,32 @@ const InvoiceForm = () => {
         setContactId(e.target.value);
         dispatch(getContactService(e.target.value));
     }
+
     useEffect(() => {
-        let tempData = [];
         if (contact_services.length > 0) {
+            const allItems = contact_services.map((item) => {
+                return {
+                    item: item.service_type,
+                    description: '',
+                    qty: 1,
+                    unit_price: item.unit_price,
+                    discount: '0',
+                    account_id: '',
+                    tax_rate: item.tax_rate,
+                    tax_amount: (tax_type === 'inclusive' ?
+                        ((((1 * item.unit_price) * (item.tax_rate && parseInt(item.tax_rate))) / (100 + (item.tax_rate && parseInt(item.tax_rate)))).toFixed(2))
+                        : tax_type === 'exclusive' ?
+                            (((1 * item.unit_price) / 100) * (item.tax_rate && parseInt(item.tax_rate)))
+                            : 0
+                    ),
+                    sub_total: 1 * item.unit_price,
+                    total_amount: 1 * item.unit_price
+                }
+            });
 
-            contact_services?.forEach((item) => {
-                tempData.push(
-                    {
-                        item: item.service_type,
-                        description: '0',
-                        qty: 1,
-                        unit_price: item.unit_price,
-                        discount: '0',
-                        account_id: '',
-                        tax_rate: item.tax_rate,
-                        tax_amount: (tax_type === 'inclusive' ?
-                            ((((1 * item.unit_price) * (item.tax_rate && parseInt(item.tax_rate))) / (100 + (item.tax_rate && parseInt(item.tax_rate)))).toFixed(2))
-                            : tax_type === 'exclusive' ?
-                                (((1 * item.unit_price) / 100) * (item.tax_rate && parseInt(item.tax_rate)))
-                                : 0
-                        ),
-                        sub_total: 1 * item.unit_price,
-                        total_amount: 1 * item.unit_price
-                    })
-
-
-            })
-            setNewItems(tempData);
-
-        } else {
+            setNewItems(allItems);
+        }
+        else {
             setNewItems([items])
         }
 
@@ -159,26 +156,43 @@ const InvoiceForm = () => {
         newItems.forEach((item) => {
             total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
-            total_taxAmount += parseFloat(item.tax_amount);
+            var item_tax_amount = 0;
+            if (tax_type === 'inclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)) / (100 + parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)))
+            } else if (tax_type === 'exclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0))
+            } else {
+                item_tax_amount = 0
+            }
+            total_taxAmount += parseFloat(item_tax_amount);
 
             if ((item.tax_rate).toString() in groupOfTax) {
-                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item_tax_amount).toFixed(2));
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));;
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item_tax_amount).toFixed(2));;
             }
         })
-        
-        
+
+
         oldItems.forEach((item) => {
             total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
-            total_taxAmount += parseFloat(item.tax_amount);
+
+            var item_tax_amount = 0;
+            if (tax_type === 'inclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)) / (100 + parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)))
+            } else if (tax_type === 'exclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0))
+            } else {
+                item_tax_amount = 0
+            }
+            total_taxAmount += parseFloat(item_tax_amount);
             if ((item.tax_rate).toString() in groupOfTax) {
-                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item_tax_amount).toFixed(2));
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item_tax_amount).toFixed(2));
             }
         })
         setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
@@ -253,12 +267,13 @@ const InvoiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Saved Successfully');
-                    setRloading(true);
+                    setRloading(false);
                     setTimeout(() => {
                         history.goBack()
                     }, 1000);
                 } else {
                     setError(res.data.error)
+                    setRloading(false);
 
                 }
 
@@ -278,13 +293,13 @@ const InvoiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
-                    setRloading(true);
+                    setRloading(false);
                     setTimeout(() => {
                         history.goBack()
                     }, 1000);
                 } else {
                     setError(res.data.error)
-
+                    setRloading(false);
                 }
 
             })
@@ -321,7 +336,7 @@ const InvoiceForm = () => {
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Contact</Form.Label>
+                                            <Form.Label className='required'>Contact</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -346,38 +361,38 @@ const InvoiceForm = () => {
 
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Invoice No</Form.Label>
+                                            <Form.Label className='required'>Invoice No</Form.Label>
                                             <Form.Control
                                                 type='text'
                                                 required
                                                 name='invoice_no'
                                                 onChange={(e) => setInvoiceNo(e.target.value)}
-                                                value={invoiceId && invoice_details?.invoice_no}
+                                                defaultValue={invoiceId && invoice_details?.invoice_no}
                                             >
 
                                             </Form.Control>
                                         </Form.Group>
 
                                         <Form.Group as={Col}>
-                                            <Form.Label >Date</Form.Label>
+                                            <Form.Label className='required'>Date</Form.Label>
                                             <Form.Control
                                                 type='date'
                                                 required
                                                 name='date'
                                                 onChange={(e) => setDate(e.target.value)}
-                                                value={invoiceId && invoice_details?.date}
+                                                defaultValue={invoiceId && invoice_details?.date}
                                             >
 
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Due Date</Form.Label>
+                                            <Form.Label className='required'>Due Date</Form.Label>
                                             <Form.Control
                                                 type='date'
                                                 required
                                                 name='due_date'
                                                 onChange={(e) => setDueDate(e.target.value)}
-                                                value={invoiceId && invoice_details?.due_date}
+                                                defaultValue={invoiceId && invoice_details?.due_date}
                                             >
 
                                             </Form.Control>
@@ -386,16 +401,16 @@ const InvoiceForm = () => {
                                             <Form.Label >Reference</Form.Label>
                                             <Form.Control
                                                 type='text'
-                                                required
+                                                
                                                 name='reference'
                                                 onChange={(e) => setReference(e.target.value)}
-                                                value={invoiceId && invoice_details?.reference}
+                                                defaultValue={invoiceId && invoice_details?.reference}
                                             >
 
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Tax Type</Form.Label>
+                                            <Form.Label className='required'>Tax Type</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -418,15 +433,15 @@ const InvoiceForm = () => {
                                 <Table striped bordered hover>
                                     <thead>
                                         <tr>
-                                            <th>Item</th>
-                                            <th>Description</th>
-                                            <th>Quantity</th>
-                                            <th>Unit Price</th>
-                                            <th>Discount %</th>
-                                            <th>Account</th>
-                                            <th>Tax Rate %</th>
+                                            <th className='required'>Item</th>
+                                            <th >Description</th>
+                                            <th className='required'>Quantity</th>
+                                            <th className='required'>Unit Price</th>
+                                            <th >Discount %</th>
+                                            <th className='required'>Account</th>
+                                            <th >Tax Rate %</th>
 
-                                            <th>Total</th>
+                                            <th >Total</th>
 
                                             <th>Action</th>
                                         </tr>
@@ -453,7 +468,6 @@ const InvoiceForm = () => {
                                                             <Form.Control
                                                                 as='textarea'
                                                                 rows='1'
-                                                                required
                                                                 name='description'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.description}
@@ -492,7 +506,7 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                            
                                                                 name='discount'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.discount}
@@ -532,7 +546,7 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='tax_rate'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.tax_rate}
@@ -554,11 +568,11 @@ const InvoiceForm = () => {
                                                     </td>
 
                                                     <td>
-                                                        <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => { 
+                                                        <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => {
                                                             oldItems.splice(index, 1);
                                                             setOldItems([...oldItems]);
-                                                            deletedItems.push(item.id) 
-                                                            }}>
+                                                            deletedItems.push(item.id)
+                                                        }}>
                                                             <i className="mdi mdi-close"></i>
                                                         </Link>
                                                     </td>
@@ -585,7 +599,7 @@ const InvoiceForm = () => {
                                                             <Form.Control
                                                                 as='textarea'
                                                                 rows='1'
-                                                                required
+                                                                
                                                                 name='description'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.description}
@@ -624,7 +638,7 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='discount'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.discount}
@@ -664,7 +678,7 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='tax_rate'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.tax_rate}
@@ -686,11 +700,11 @@ const InvoiceForm = () => {
                                                     </td>
 
                                                     <td>
-                                                        <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => { 
+                                                        <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => {
                                                             newItems.splice(index, 1);
                                                             setNewItems([...newItems])
-                                                            
-                                                            }}>
+
+                                                        }}>
                                                             <i className="mdi mdi-close"></i>
                                                         </Link>
                                                     </td>
