@@ -159,13 +159,22 @@ const RepeatingInvoiceForm = () => {
         newItems.forEach((item) => {
             total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
-            total_taxAmount += parseFloat(item.tax_amount);
+
+            var item_tax_amount = 0;
+            if (tax_type === 'inclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)) / (100 + parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)))
+            } else if (tax_type === 'exclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0))
+            } else {
+                item_tax_amount = 0
+            }
+            total_taxAmount += parseFloat(item_tax_amount);
 
             if ((item.tax_rate).toString() in groupOfTax) {
-                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item_tax_amount).toFixed(2));
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));;
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item_tax_amount).toFixed(2));;
             }
         })
 
@@ -173,13 +182,24 @@ const RepeatingInvoiceForm = () => {
         oldItems.forEach((item) => {
             total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
-            total_taxAmount += parseFloat(item.tax_amount);
+
+            var item_tax_amount = 0;
+            if (tax_type === 'inclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)) / (100 + parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)))
+            } else if (tax_type === 'exclusive') {
+                item_tax_amount = parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0))
+            } else {
+                item_tax_amount = 0
+            }
+            total_taxAmount += parseFloat(item_tax_amount);
             if ((item.tax_rate).toString() in groupOfTax) {
-                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item.tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item_tax_amount).toFixed(2));
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item.tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item_tax_amount).toFixed(2));
             }
+
+
         })
         setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
         setSubTotal(parseFloat(parseFloat(total_subTotal).toFixed(2)));
@@ -344,32 +364,36 @@ const RepeatingInvoiceForm = () => {
                                                 required
                                                 name='invoice_no'
                                                 onChange={(e) => setInvoiceNo(e.target.value)}
-                                                value={invoiceId && repeating_invoice_details?.invoice_no}
+                                                defaultValue={invoiceId && repeating_invoice_details?.invoice_no}
                                             >
 
                                             </Form.Control>
                                         </Form.Group>
 
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Date</Form.Label>
+                                            <Form.Label className='required'>Day</Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
                                                 name='date'
+                                                max='31'
+                                                min='1'
                                                 onChange={(e) => setDate(e.target.value)}
-                                                value={invoiceId && repeating_invoice_details?.date}
+                                                defaultValue={invoiceId && repeating_invoice_details?.date}
                                             >
 
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Due Date</Form.Label>
+                                            <Form.Label className='required'>Due Day</Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
+                                                max='31'
+                                                min='1'
                                                 name='due_date'
                                                 onChange={(e) => setDueDate(e.target.value)}
-                                                value={invoiceId && repeating_invoice_details?.due_date}
+                                                defaultValue={invoiceId && repeating_invoice_details?.due_date}
                                             >
 
 
@@ -377,10 +401,12 @@ const RepeatingInvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Repeat Date</Form.Label>
+                                            <Form.Label className='required'>Repeat Day</Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
+                                                max='31'
+                                                min='1'
                                                 name='repeat_date'
                                                 onChange={(e) => setRepeatDate(e.target.value)}
                                                 defaultValue={invoiceId && repeating_invoice_details?.repeat_date}
@@ -395,7 +421,7 @@ const RepeatingInvoiceForm = () => {
                                                 
                                                 name='reference'
                                                 onChange={(e) => setReference(e.target.value)}
-                                                value={invoiceId && repeating_invoice_details?.reference}
+                                                defaultValue={invoiceId && repeating_invoice_details?.reference}
                                             >
 
                                             </Form.Control>

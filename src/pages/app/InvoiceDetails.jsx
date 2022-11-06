@@ -232,7 +232,7 @@ const InvoiceDetails = () => {
                                         </div>
 
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Total Tax 0%</p>
+                                            <p style={{ fontSize: '20px' }}>Total Tax</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{invoiceDetails?.total_tax}</p>
                                         </div>
 
