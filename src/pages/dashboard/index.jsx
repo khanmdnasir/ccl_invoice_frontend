@@ -92,7 +92,7 @@ const Dashboard = () => {
         <>
             <Row>
                 <Col>
-                    <div className="page-title-box">
+                    {/* <div className="page-title-box">
                         <div className="page-title-right">
                             {editDashboard ?
                             <>
@@ -109,13 +109,13 @@ const Dashboard = () => {
                             }
                         </div>
                         <h4 className="page-title">Dashboard</h4>
-                    </div>
+                    </div> */}
                 </Col>
             </Row>
 
 
-            
-            { editDashboard ?
+            <h5>Coming soon...</h5>
+            {/* { editDashboard ?
             <ReactSortable className="row" list={items} setList={setItems}>
                 {(items || []).map((item, idx) => {
                     return (
@@ -185,8 +185,8 @@ const Dashboard = () => {
                         
                     );
                 })}
-            </ReactSortable>
-            }
+            </ReactSortable>} */}
+            
         </>
     );
 };
