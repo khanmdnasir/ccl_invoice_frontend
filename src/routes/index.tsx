@@ -20,6 +20,7 @@ import InvoiceDetails from '../pages/app/InvoiceDetails';
 import RepeatingInvoiceDetails from '../pages/app/RepeatingInvoiceDetails';
 import RepeatingInvoiceForm from '../pages/Form/RepeatingInvoiceForm';
 import RepeatingInvoice from '../pages/app/RepeatingInvoice';
+import PublicInvoice from '../pages/app/PublicInvoice';
 
 // lazy load all the views
 
@@ -210,7 +211,7 @@ const extrapagesRoutes = {
             name: 'Error - 500',
             component: Error500Two,
             route: PrivateRoute,
-        },
+        }
     ],
 };
 
@@ -221,6 +222,12 @@ const authRoutes: RoutesProps[] = [
         path: '/auth/login',
         name: 'Login',
         component: Login,
+        route: Route,
+    },
+    {
+        path: '/public_invoice',
+        name: 'public invoice',
+        component: PublicInvoice,
         route: Route,
     },
     {

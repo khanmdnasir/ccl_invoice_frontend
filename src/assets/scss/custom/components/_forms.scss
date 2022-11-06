@@ -13,7 +13,11 @@
     border-color: $input-light-bg !important;
 }
 
-
+.required:after {
+    content:" *";
+    color: red;
+  }
+  
 // Form elements (Color and Range)
 input.form-control[type="color"],
 input.form-control[type="range"] {
