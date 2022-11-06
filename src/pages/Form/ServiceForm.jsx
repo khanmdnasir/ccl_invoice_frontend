@@ -18,7 +18,7 @@ const ServiceForm = () => {
     const location = useLocation();
     const history = useHistory();
     const [oldItems, setOldItems] = useState([]);
-    const [contactId, setContactId] = useState(null);
+    const [contactId, setContactId] = useState('');
     const [deletedItems, setDeletedItems] = useState([]);
     // const[isEdit,setIsEdit] = useState(false);
     // const user_role = useSelector((state:RootState)=> state.Role.user_role);
@@ -199,6 +199,7 @@ const ServiceForm = () => {
                                             aria-label="Default select example"
                                             required
                                             onChange={(e) => ContactChange(e)}
+                                            defaultValue=""
                                         >
                                             {cloading ? <option value="" disabled>Loading...</option> :
                                                 <>
