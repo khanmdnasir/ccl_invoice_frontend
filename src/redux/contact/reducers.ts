@@ -41,6 +41,7 @@ const Contact = (state = INIT_STATE, action: any) => {
                 total_object: action.data.total_object,
                 total_page: action.data.total_page,
                 active: action.data.current_page,
+                
             };
         }
         case type.GET_CONTACT_FAILED: {
@@ -185,7 +186,8 @@ const Contact = (state = INIT_STATE, action: any) => {
             return {
                 ...state,
                 loading: false,
-                contact: [action.contact,...state.contact]
+                contact: [action.contact,...state.contact],
+                success:'Contact Created Successfully'
                 
             };
         }

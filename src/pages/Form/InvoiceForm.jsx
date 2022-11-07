@@ -168,9 +168,11 @@ const InvoiceForm = () => {
 
             if ((item.tax_rate).toString() in groupOfTax) {
                 groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item_tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(groupOfTax[(item.tax_rate).toString()]).toFixed(2))
             }
             else {
-                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item_tax_amount).toFixed(2));;
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item_tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(groupOfTax[(item.tax_rate).toString()]).toFixed(2))
             }
         })
 
@@ -188,11 +190,14 @@ const InvoiceForm = () => {
                 item_tax_amount = 0
             }
             total_taxAmount += parseFloat(item_tax_amount);
+
             if ((item.tax_rate).toString() in groupOfTax) {
                 groupOfTax[(item.tax_rate).toString()] += parseFloat(parseFloat(item_tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(groupOfTax[(item.tax_rate).toString()]).toFixed(2))
             }
             else {
                 groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(item_tax_amount).toFixed(2));
+                groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(groupOfTax[(item.tax_rate).toString()]).toFixed(2))
             }
         })
         setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
