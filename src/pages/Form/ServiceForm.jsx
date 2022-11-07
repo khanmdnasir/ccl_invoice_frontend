@@ -222,7 +222,7 @@ const ServiceForm = () => {
                                             <th className='required'>Service Type</th>
                                             <th className='required'>Contact Mode</th>
                                             <th className='required'>Payment Terms</th>
-                                            <th className='required'>Govt VAT (5%)</th>
+                                            <th className='required'>Govt VAT (%)</th>
                                             <th className='required'>Total</th>
                                             <th>Action</th>
                                         </tr>
@@ -277,7 +277,7 @@ const ServiceForm = () => {
                                                     <td>
                                                         <Form.Group>
                                                             <Form.Control
-                                                                type='text'
+                                                                type='number'
                                                                 required
                                                                 name='tax_rate'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
@@ -290,7 +290,7 @@ const ServiceForm = () => {
                                                     <td>
                                                         <Form.Group>
                                                             <Form.Control
-                                                                type='text'
+                                                                type='number'
                                                                 required
                                                                 name='unit_price'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
@@ -361,7 +361,7 @@ const ServiceForm = () => {
                                                     <td>
                                                         <Form.Group>
                                                             <Form.Control
-                                                                type='text'
+                                                                type='number'
                                                                 required
                                                                 name='tax_rate'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
@@ -374,7 +374,7 @@ const ServiceForm = () => {
                                                     <td>
                                                         <Form.Group>
                                                             <Form.Control
-                                                                type='text'
+                                                                type='number'
                                                                 required
                                                                 name='unit_price'
                                                                 onChange={(e) => onNewItemsChange(e, index)}

@@ -129,6 +129,11 @@ const ActionColumn = withSwal(({ row, swal }) => {
 const columns = [
     
     {
+        Header: 'Name',
+        accessor: 'name',
+        sort: true,
+    },
+    {
         Header: 'Client Id',
         accessor: 'client_id',
         sort: true,
@@ -136,11 +141,6 @@ const columns = [
     {
         Header: 'Contact Type',
         accessor: 'contact_type',
-        sort: true,
-    },
-    {
-        Header: 'Name',
-        accessor: 'name',
         sort: true,
     },
     {
@@ -189,7 +189,9 @@ const Contact = () => {
     const user_role = useSelector((state)=> state.Role.user_role);
     const loading = useSelector(state => state.Contact.loading);
     const error = useSelector(state => state.Contact.error);
+    const success = useSelector(state => state.Contact.success);
     const [pageSize,setPageSize] = useState(10);
+    const [alertShow, setAlertShow] = useState(true);
     /*
      *   modal handeling
      */
@@ -236,9 +238,14 @@ const Contact = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                        {!loading && error && (
-                            <Alert variant="danger" className="my-2">
+                            {!loading && alertShow && error && (
+                            <Alert variant="danger" className="my-2" onClose={()=>setAlertShow(false)} dismissible>
                                 {error}
+                            </Alert>
+                        )}
+                            {!loading && alertShow && success !== null && (
+                                <Alert variant="success" className="my-2" onClose={() => setAlertShow(false)} dismissible>
+                                {success}
                             </Alert>
                         )}
                             <Row className="mb-2">
