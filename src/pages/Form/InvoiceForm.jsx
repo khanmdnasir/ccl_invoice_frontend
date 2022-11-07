@@ -272,12 +272,13 @@ const InvoiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Saved Successfully');
-                    setRloading(true);
+                    setRloading(false);
                     setTimeout(() => {
                         history.goBack()
                     }, 1000);
                 } else {
                     setError(res.data.error)
+                    setRloading(false);
 
                 }
 
@@ -297,13 +298,13 @@ const InvoiceForm = () => {
 
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
-                    setRloading(true);
+                    setRloading(false);
                     setTimeout(() => {
                         history.goBack()
                     }, 1000);
                 } else {
                     setError(res.data.error)
-
+                    setRloading(false);
                 }
 
             })
@@ -340,7 +341,7 @@ const InvoiceForm = () => {
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Contact</Form.Label>
+                                            <Form.Label className='required'>Contact</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -365,7 +366,7 @@ const InvoiceForm = () => {
 
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Invoice No</Form.Label>
+                                            <Form.Label className='required'>Invoice No</Form.Label>
                                             <Form.Control
                                                 type='text'
                                                 required
@@ -378,7 +379,7 @@ const InvoiceForm = () => {
                                         </Form.Group>
 
                                         <Form.Group as={Col}>
-                                            <Form.Label >Date</Form.Label>
+                                            <Form.Label className='required'>Date</Form.Label>
                                             <Form.Control
                                                 type='date'
                                                 required
@@ -390,7 +391,7 @@ const InvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Due Date</Form.Label>
+                                            <Form.Label className='required'>Due Date</Form.Label>
                                             <Form.Control
                                                 type='date'
                                                 required
@@ -405,7 +406,7 @@ const InvoiceForm = () => {
                                             <Form.Label >Reference</Form.Label>
                                             <Form.Control
                                                 type='text'
-                                                required
+                                                
                                                 name='reference'
                                                 onChange={(e) => setReference(e.target.value)}
                                                 defaultValue={invoiceId && invoice_details?.reference}
@@ -414,7 +415,7 @@ const InvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Tax Type</Form.Label>
+                                            <Form.Label className='required'>Tax Type</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -437,15 +438,15 @@ const InvoiceForm = () => {
                                 <Table striped bordered hover>
                                     <thead>
                                         <tr>
-                                            <th>Item</th>
-                                            <th>Description</th>
-                                            <th>Quantity</th>
-                                            <th>Unit Price</th>
-                                            <th>Discount %</th>
-                                            <th>Account</th>
-                                            <th>Tax Rate %</th>
+                                            <th className='required'>Item</th>
+                                            <th >Description</th>
+                                            <th className='required'>Quantity</th>
+                                            <th className='required'>Unit Price</th>
+                                            <th >Discount %</th>
+                                            <th className='required'>Account</th>
+                                            <th >Tax Rate %</th>
 
-                                            <th>Total</th>
+                                            <th >Total</th>
 
                                             <th>Action</th>
                                         </tr>
@@ -472,7 +473,6 @@ const InvoiceForm = () => {
                                                             <Form.Control
                                                                 as='textarea'
                                                                 rows='1'
-                                                                required
                                                                 name='description'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.description}
@@ -511,7 +511,7 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                            
                                                                 name='discount'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.discount}
@@ -551,7 +551,7 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='tax_rate'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.tax_rate}
@@ -604,7 +604,7 @@ const InvoiceForm = () => {
                                                             <Form.Control
                                                                 as='textarea'
                                                                 rows='1'
-                                                                required
+                                                                
                                                                 name='description'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.description}
@@ -643,7 +643,7 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='discount'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.discount}
@@ -683,7 +683,7 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='tax_rate'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.tax_rate}

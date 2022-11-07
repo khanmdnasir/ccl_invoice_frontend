@@ -13,9 +13,9 @@ import { RootState, AppDispatch } from '../redux/store';
 import { LayoutTypes, SideBarTypes } from '../constants/layout';
 
 // components
-import TopbarSearch from '../components/TopbarSearch';
+// import TopbarSearch from '../components/TopbarSearch';
 import MaximizeScreen from '../components/MaximizeScreen';
-import SearchDropdown from '../components/SearchDropdown';
+// import SearchDropdown from '../components/SearchDropdown';
 import ProfileDropdown from '../components/ProfileDropdown';
 import CCL_Logo from '../assets/images/ccl.jpg';
 import NoImage from '../assets/images/no_image.jpg';
@@ -188,13 +188,13 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                     )}
 
                     <ul className="list-unstyled topnav-menu float-end mb-0">
-                        <li className="d-none d-lg-block">
+                        {/* <li className="d-none d-lg-block">
                             <TopbarSearch items={SearchResults} />
-                        </li>
+                        </li> */}
 
-                        <li className="dropdown d-inline-block d-lg-none">
+                        {/* <li className="dropdown d-inline-block d-lg-none">
                             <SearchDropdown />
-                        </li>
+                        </li> */}
                         <li className="dropdown d-none d-lg-inline-block">
                             <MaximizeScreen />
                         </li>

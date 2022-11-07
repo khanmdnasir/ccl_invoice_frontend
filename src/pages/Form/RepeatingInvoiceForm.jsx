@@ -287,6 +287,7 @@ const RepeatingInvoiceForm = () => {
             })
             .catch(err => {
                 setError(err)
+                setRloading(false);
             })
     }
 
@@ -338,7 +339,7 @@ const RepeatingInvoiceForm = () => {
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Contact</Form.Label>
+                                            <Form.Label className='required'>Contact</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -363,7 +364,7 @@ const RepeatingInvoiceForm = () => {
 
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Invoice No</Form.Label>
+                                            <Form.Label className='required'>Invoice No</Form.Label>
                                             <Form.Control
                                                 type='text'
                                                 required
@@ -423,7 +424,7 @@ const RepeatingInvoiceForm = () => {
                                             <Form.Label >Reference</Form.Label>
                                             <Form.Control
                                                 type='text'
-                                                required
+                                                
                                                 name='reference'
                                                 onChange={(e) => setReference(e.target.value)}
                                                 defaultValue={invoiceId && repeating_invoice_details?.reference}
@@ -432,7 +433,7 @@ const RepeatingInvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Tax Type</Form.Label>
+                                            <Form.Label className='required'>Tax Type</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -455,12 +456,12 @@ const RepeatingInvoiceForm = () => {
                                 <Table striped bordered hover>
                                     <thead>
                                         <tr>
-                                            <th>Item</th>
+                                            <th className='required'>Item</th>
                                             <th>Description</th>
-                                            <th>Quantity</th>
-                                            <th>Unit Price</th>
+                                            <th className='required'>Quantity</th>
+                                            <th className='required'>Unit Price</th>
                                             <th>Discount %</th>
-                                            <th>Account</th>
+                                            <th className='required'>Account</th>
                                             <th>Tax Rate %</th>
 
                                             <th>Total</th>
@@ -490,7 +491,7 @@ const RepeatingInvoiceForm = () => {
                                                             <Form.Control
                                                                 as='textarea'
                                                                 rows='1'
-                                                                required
+                                                                
                                                                 name='description'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.description}
@@ -529,7 +530,7 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='discount'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.discount}
@@ -569,7 +570,7 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='tax_rate'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.tax_rate}
@@ -622,7 +623,7 @@ const RepeatingInvoiceForm = () => {
                                                             <Form.Control
                                                                 as='textarea'
                                                                 rows='1'
-                                                                required
+                                                                
                                                                 name='description'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.description}
@@ -661,7 +662,7 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='discount'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.discount}
@@ -701,7 +702,7 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                required
+                                                                
                                                                 name='tax_rate'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.tax_rate}

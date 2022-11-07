@@ -109,7 +109,7 @@ const FormInput = ({
                                 {label ? (
                                     <>
                                         {' '}
-                                        <Form.Label className={labelClassName}>{label}</Form.Label> {children}{' '}
+                                        <Form.Label className={labelClassName} >{label}</Form.Label> {children}{' '}
                                     </>
                                 ) : null}
                                 <PasswordInput
