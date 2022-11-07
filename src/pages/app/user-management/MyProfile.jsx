@@ -16,8 +16,11 @@ const MyProfile = () => {
     const dispatch = useDispatch();
     const[isEdit,setIsEdit] = useState(false);
     const[isImageEdit,setIsImageEdit] = useState(false);
-    const { user } = useSelector((state) => ({
+    const { user, error, loading, success } = useSelector((state) => ({
         user: state.Auth.user,
+        error: state.Auth.error,
+        loading: state.Auth.loading,
+        success: state.Auth.success,
     }));
 
    const[first_name,setFirstName] = useState(user.first_name);
@@ -49,6 +52,16 @@ const MyProfile = () => {
                 <Col>
                     <Card>
                         <Card.Body>
+                        {!loading && error && (
+                                <Alert variant="danger" className="my-2">
+                                    {error}
+                                </Alert>
+                            )}
+                        {!loading && success && (
+                            <Alert variant="success" className="my-2">
+                                {success}
+                            </Alert>
+                        )}
                             <Row>
                                 <Col sm={2}>
                                     <Link to='/app/my-profile'>

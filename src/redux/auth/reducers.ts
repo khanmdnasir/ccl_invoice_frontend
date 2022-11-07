@@ -34,6 +34,7 @@ interface AuthActionType {
         data?: UserData | {};
         key?: any;
         error?: string;
+        success?: string;
     };
 }
 
@@ -76,6 +77,7 @@ const Auth = (state: State = INIT_STATE, action: AuthActionType): any => {
                         ...state,
                         user: api.getLoggedInUser(),
                         loading: false,
+                        success: "Profile Updated Successfully"
                     };
                 }
                 case AuthActionTypes.UPDATE_PROFILE_IMAGE: {
