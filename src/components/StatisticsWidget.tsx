@@ -19,26 +19,21 @@ const Image = styled.img`
 const StatisticsWidget = (props: StatisticsWidgetProps) => {
     return (
         <>
-            <Card className="widget-rounded-circle" style={{backgroundColor: props['color']}}>
+            <Card className="widget-rounded-circle" style={{backgroundColor: props['color'], borderRadius:"0.8rem"}}>
                 <Card.Body>
                     <Row>
                         <Col >
                             <div className="text-center">
-                                <Image src={props['image']} />
-                                <p className="text-white mt-1 text-truncate">{props['description']}</p>
                                 
-                                { parseInt(props['stats']) < 0 ?
-                                <h3 className="text-danger mt-1">
-                                    <span>
-                                        <CountUp duration={1} end={props['stats']} {...props['counterOptions']} />
-                                    </span>
-                                </h3>:
-                                <h3 className="text-white mt-1">
+                                <p className="text-cyans mt-1 text-truncate">{props['description']}</p>
+                                
+                                
+                                <h3 className="text-blue mt-1">
                                     <span>
                                         <CountUp duration={1} end={props['stats']} {...props['counterOptions']} />
                                     </span>
                                 </h3>
-                                }
+                                
                                 
                             </div>
                         </Col>
