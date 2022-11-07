@@ -220,7 +220,6 @@ const Contact = () => {
         
     };
 
-    console.log('success', success)
 
     useEffect(()=>{ 
         dispatch(getContact(pageSize,1));
