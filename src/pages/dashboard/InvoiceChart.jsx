@@ -9,14 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
 const api = new APICore();
 
 
-const AssetTypeChart = ({ isEdit }) => {
+const InvoiceChart = ({ isEdit }) => {
   const dispatch = useDispatch();
   // const asset_type = useSelector((state)=> state.AssetType.asset_types);
   
   useLayoutEffect(() => {
     
     am4core.addLicense("ch-custom-attribution");
-    let chart = am4core.create("assetTypeChart", am4charts.PieChart);
+    let chart = am4core.create("invoiceChart", am4charts.PieChart);
     
     // api.get(`/api/asset_type_graph`,{})
     // .then(res=>{
@@ -79,9 +79,9 @@ const AssetTypeChart = ({ isEdit }) => {
               
           </Dropdown>
 
-          <h4 className="header-title mb-0">Service</h4>
+          <h4 className="header-title mb-0">Invoice</h4>
           
-          <div id="assetTypeChart" style={{ width: "100%", height: "350px" }}></div>
+          <div id="invoiceChart" style={{ width: "100%", height: "350px" }}></div>
           
           {/* {!asset_type.length > 0 &&
           <p>No asset type available</p>} */}
@@ -92,4 +92,4 @@ const AssetTypeChart = ({ isEdit }) => {
   )
 }
 
-export default AssetTypeChart
+export default InvoiceChart
