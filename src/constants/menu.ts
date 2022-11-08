@@ -83,6 +83,12 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 url: '/app/users',
                 parentKey: 'settings',
             },
+            {
+                key: 'view_companystaticfile',
+                label: 'Company Settings',
+                url: '/app/company_settings',
+                parentKey: 'settings',
+            },
             
             
         ],
@@ -157,6 +163,12 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 url: '/app/users',
                 parentKey: 'settings',
             },
+            {
+                key: 'view_companystaticfile',
+                label: 'Company Settings',
+                url: '/app/company_settings',
+                parentKey: 'settings',
+            },
             
             
         ],
@@ -229,6 +241,12 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_user',
                 label: 'Users',
                 url: '/app/users',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_companystaticfile',
+                label: 'Company Settings',
+                url: '/app/company_settings',
                 parentKey: 'settings',
             },
             
