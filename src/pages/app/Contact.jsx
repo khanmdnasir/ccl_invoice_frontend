@@ -191,7 +191,7 @@ const Contact = () => {
     const error = useSelector(state => state.Contact.error);
     const success = useSelector(state => state.Contact.success);
     const [pageSize,setPageSize] = useState(10);
-    const [alertShow, setAlertShow] = useState(true);
+    const [alertShow, setAlertShow] = useState(false);
     /*
      *   modal handeling
      */
@@ -216,6 +216,11 @@ const Contact = () => {
     */
     const onSubmit = (formData) => {
         dispatch(addContact(formData));
+        setAlertShow(true);
+        setInterval(()=>{
+            setAlertShow(false);
+        },5000)
+        
         onCloseModal();
         
     };
