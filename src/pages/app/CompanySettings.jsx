@@ -177,7 +177,7 @@ const columns = [
     },
 ];
 
-const Contact = () => {
+const CompanySettings = () => {
     const dispatch = useDispatch();
     const contact = useSelector(state => state.Contact.contact);
     const country = useSelector(state => state.Location.country);
@@ -191,7 +191,7 @@ const Contact = () => {
     const error = useSelector(state => state.Contact.error);
     const success = useSelector(state => state.Contact.success);
     const [pageSize,setPageSize] = useState(10);
-    const [alertShow, setAlertShow] = useState(false);
+    const [alertShow, setAlertShow] = useState(true);
     /*
      *   modal handeling
      */
@@ -216,11 +216,6 @@ const Contact = () => {
     */
     const onSubmit = (formData) => {
         dispatch(addContact(formData));
-        setAlertShow(true);
-        setInterval(()=>{
-            setAlertShow(false);
-        },5000)
-        
         onCloseModal();
         
     };
@@ -322,4 +317,4 @@ const Contact = () => {
     );
 };
 
-export default Contact;
+export default CompanySettings;
