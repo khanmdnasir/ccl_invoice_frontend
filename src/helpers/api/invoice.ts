@@ -10,7 +10,7 @@ function getInvoice(params: {limit: number,page:number}) {
 
 function getInvoiceDetails(params:any) {
     const baseUrl = `/api/invoice/${params.payload}/`;
-    return api.get(`${baseUrl}`,{});
+    return api.get(`${baseUrl}`,null);
 }
 
 export { getInvoice,getInvoiceDetails };
