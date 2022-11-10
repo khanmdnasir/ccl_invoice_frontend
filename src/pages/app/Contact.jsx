@@ -76,11 +76,21 @@ const ActionColumn = withSwal(({ row, swal }) => {
                     api.delete(`/api/contact/${row.original.id}/`)
                 .then(res=>{
                     dispatch(getContact(10,1))
-                    swal.fire(
-                        'Deleted!',
-                        'Account has been deleted.',
-                        'success'
-                    );            
+                    if(res.data.success){
+                        swal.fire(
+                            'Deleted!',
+                            'Account has been deleted.',
+                            'success'
+                        ); 
+                    }else{
+                        swal.fire(
+                            'Error',
+                            res.data.error,
+                            'warning'
+                        
+                        );
+                    }
+                               
                 })
                 .catch(err => {
                     swal.fire({

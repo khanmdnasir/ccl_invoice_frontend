@@ -8,6 +8,7 @@ import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
 import { getInvoiceDetails } from '../../redux/actions';
+import { isNumber } from '@amcharts/amcharts4/core';
 
 
 const api = new APICore()
@@ -24,13 +25,21 @@ const InvoiceDetails = () => {
 
     useEffect(() => {
         const state = location.state
-        setInvoiceId(state);
+        
+        setInvoiceId(parseInt(state));
+        
+        
     }, [])
 
-    useEffect(() => {
-        dispatch(getInvoiceDetails(invoiceId))
-    }, [invoiceId])
+    
 
+    useEffect(() => {
+        if(isNumber(invoiceId)){
+            dispatch(getInvoiceDetails(invoiceId))
+        }
+        
+    }, [invoiceId])
+    
     return (
         <>
 
@@ -45,7 +54,7 @@ const InvoiceDetails = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-
+                            {loading ? <p>Loading...</p> :
                             <Form>
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
@@ -128,15 +137,15 @@ const InvoiceDetails = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {invoiceDetails && invoiceDetails.items ?  <>
-                                            {invoiceDetails.items.map((item, index)=>{
-                                                return (<>
+                                        
+                                            { invoiceDetails?.items?.length > 0 && invoiceDetails.items.map((item, index)=>{
+                                                return (
                                                     <tr key={'tr'+ index}>
                                                         <td>
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.item}
+                                                                    value={item.item}
                                                                 >
 
                                                                 </Form.Control>
@@ -146,7 +155,7 @@ const InvoiceDetails = () => {
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.description}
+                                                                    value={item.description}
                                                                 >
 
                                                                 </Form.Control>
@@ -156,7 +165,7 @@ const InvoiceDetails = () => {
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.qty}
+                                                                    value={item.qty}
                                                                 >
 
                                                                 </Form.Control>
@@ -166,7 +175,7 @@ const InvoiceDetails = () => {
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.unit_price}
+                                                                    value={item.unit_price}
                                                                 >
 
                                                                 </Form.Control>
@@ -176,7 +185,7 @@ const InvoiceDetails = () => {
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.discount}
+                                                                    value={item.discount}
                                                                 >
 
                                                                 </Form.Control>
@@ -187,7 +196,7 @@ const InvoiceDetails = () => {
 
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.account_id.account_name}
+                                                                    value={item.account_id.account_name}
                                                                 >
 
                                                                 </Form.Control>
@@ -198,7 +207,7 @@ const InvoiceDetails = () => {
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.tax_rate}
+                                                                    value={item.tax_rate}
                                                                 >
 
                                                                 </Form.Control>
@@ -217,9 +226,9 @@ const InvoiceDetails = () => {
                                                         </td>
                                                     </tr>
 
-                                                </>)
+                                                )
                                             })}
-                                        </>: null}
+                                        
 
                                     </tbody>
                                 </Table>
@@ -246,7 +255,7 @@ const InvoiceDetails = () => {
                                 </div>
 
                             </Form>
-
+                          }
 
 
                         </Card.Body>
