@@ -30,7 +30,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
     handle form submission
     */
     const onSubmit = (formData) => {
-        api.update(`/api/users/${row.original.id}/`,{'first_name':formData['first_name'],'last_name':formData['last_name'],'email':formData['email'],'password':formData['password'],'phone':formData['phone'],'groups':[parseInt(formData['groups'])],'is_active':formData['is_active']})
+        api.updatePatch(`/api/account/${row.original.id}/`,{'account_name':formData['account_name'],'code':formData['code'],'account_type':formData['account_type'],'details':formData['details'],'transaction_type':formData['transaction_type']})
         .then(res=>{
             
             if(res.data.success){
@@ -63,7 +63,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
             })
             .then(function(result){
                 if(result.value){
-                    api.delete(`/api/users/${row.original.id}/`)
+                    api.delete(`/api/account/${row.original.id}/`)
                 .then(res=>{
                     dispatch(getChartAccount(6,1));
                     swal.fire(
