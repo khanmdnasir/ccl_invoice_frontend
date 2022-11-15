@@ -8,5 +8,10 @@ function getChartAccount() {
     return api.get(`${baseUrl}`,{});
 }
 
+function addChartOfAccount(params:any) {
+    const baseUrl = '/api/account/';
+    return api.create(`${baseUrl}`,params);
+}
 
-export { getChartAccount };
+
+export { getChartAccount, addChartOfAccount };

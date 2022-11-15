@@ -188,7 +188,6 @@ const ChartOfAccounts = () => {
 
     useEffect(()=>{ 
         dispatch(getChartAccount(pageSize,1));   
-        // dispatch(getRoles(10,1));
     },[pageSize])
     return (
         <>

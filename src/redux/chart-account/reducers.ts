@@ -40,6 +40,28 @@ const ChartAccount = (state = INIT_STATE, action: any) => {
                 error: action.error,
             };
         }
+        case type.ADD_CHART_OF_ACCOUNT_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.ADD_CHART_OF_ACCOUNT_SUCCESS: {
+            return {
+                ...state,
+                loading: false,
+                contact: [action.account,...state.accounts],
+                success:'Chart Of Account Created Successfully'
+                
+            };
+        }
+        case type.ADD_CHART_OF_ACCOUNT_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+            };
+        }
         
         
 

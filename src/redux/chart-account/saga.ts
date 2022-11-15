@@ -4,6 +4,7 @@ import { SagaIterator } from '@redux-saga/core';
 // helpers
 import {
     getChartAccount as getChartAccountApi,        
+    addChartOfAccount as addChartOfAccountApi,        
 } from '../../helpers';
 
 
@@ -23,17 +24,17 @@ function* getChartAccount():SagaIterator {
 function* addChartOfAccount({ payload: {account_name,code,account_type,details,transaction_type} }: any):SagaIterator {
     
     try {
-        const response = yield call(getChartAccountApi);
+        const response = yield call(addChartOfAccountApi,{account_name,code,account_type,details,transaction_type});
         const result = response.data;
         
         if(result.success){
-            yield put({type: 'ADD_USER_SUCCESS' , user: result.data});
+            yield put({type: 'ADD_CHART_OF_ACCOUNT_SUCCESS' , account: result.data});
         }else{
-            yield put({type: 'ADD_USER_FAILED', error: result.error});
+            yield put({type: 'ADD_CHART_OF_ACCOUNT_FAILED', error: result.error});
         }
         
     } catch (error) {
-        yield put({type: 'ADD_USER_FAILED', error: error});
+        yield put({type: 'ADD_CHART_OF_ACCOUNT_FAILED', error: error});
         
     }
 }

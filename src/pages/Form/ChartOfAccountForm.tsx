@@ -15,14 +15,14 @@ interface FormData {
 
 
 
-interface AddContactsProps {
+interface AddChartOfAccountProps {
     show: boolean;
     onHide: () => void;
     chartOfAccount: FormData;
     onSubmit: (value: any) => void;
 }
 
-const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddContactsProps) => {
+const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddChartOfAccountProps) => {
     
     /*
     form validation schema
@@ -35,6 +35,8 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddConta
             transaction_type: yup.string().required('Please select transaction type')        
         })
     );
+
+    
     
     
     return (
@@ -51,7 +53,6 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddConta
                             name="account_name"
                             placeholder="Enter account name"
                             containerClass={'mb-3'}
-                            required
                         />
                         <FormInput
                             label="Code"
@@ -59,7 +60,6 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddConta
                             name="code"
                             placeholder="Enter Code"
                             containerClass={'mb-3'}
-                            required
                         />
 
                         <FormInput
@@ -81,11 +81,11 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddConta
                         <FormInput
                             label="Transaction Type"
                             type="select"
-                            name="groups"
+                            name="transaction_type"
                             containerClass={'mb-3'}  
                             defaultValue={chartOfAccount && chartOfAccount.transaction_type!=='' ? chartOfAccount.transaction_type : ''}
                         >    
-                            <option value="">Select Transaction Type
+                            <option value="" disabled>Select Transaction Type
                             </option>                         
                             <option value="expense">Expense</option>                         
                             <option value="non-expense">Non-Expense</option>                         
