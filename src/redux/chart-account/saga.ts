@@ -9,9 +9,9 @@ import {
 
 
 
-function* getChartAccount():SagaIterator {
+function* getChartAccount({ payload: {limit,page}}:any):SagaIterator {
     try {
-        const response = yield call(getChartAccountApi);
+        const response = yield call(getChartAccountApi,{limit,page});
         const data = response.data;
         yield put({type: 'GET_CHARTACCOUNT_SUCCESS' , data: data});
     } catch (error) {

@@ -147,14 +147,14 @@ const columns = [
 const ChartOfAccounts = () => {
     const dispatch = useDispatch();
     const accounts = useSelector(state => state.ChartAccount.accounts);
-    const previous = useSelector(state => state.User.previous);
-    const next = useSelector(state => state.User.next);
-    const current_page = useSelector(state => state.User.current_page);
-    const total_page = useSelector(state => state.User.total_page);
-    const active = useSelector(state => state.User.active);
+    const previous = useSelector(state => state.ChartAccount.previous);
+    const next = useSelector(state => state.ChartAccount.next);
+    const current_page = useSelector(state => state.ChartAccount.current_page);
+    const total_page = useSelector(state => state.ChartAccount.total_page);
+    const active = useSelector(state => state.ChartAccount.active);
     const user_role = useSelector((state)=> state.Role.user_role);
-    const loading = useSelector(state => state.User.loading);
-    const error = useSelector(state => state.User.error);
+    const loading = useSelector(state => state.ChartAccount.loading);
+    const error = useSelector(state => state.ChartAccount.error);
     const [pageSize,setPageSize] = useState(6);
     /*
      *   modal handeling
@@ -249,7 +249,7 @@ const ChartOfAccounts = () => {
                                 searchBoxClass=""
                             />
                             :
-                            'No user available!'}</>}
+                            'No Chart Of Account available!'}</>}
                             <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={total_page} current_page={current_page} active={active}/>
                         </Card.Body>
                     </Card>
