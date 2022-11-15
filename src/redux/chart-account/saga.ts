@@ -20,6 +20,26 @@ function* getChartAccount():SagaIterator {
 }
 
 
+function* addChartOfAccount({ payload: {account_name,code,account_type,details,transaction_type} }: any):SagaIterator {
+    
+    try {
+        const response = yield call(getChartAccountApi);
+        const result = response.data;
+        
+        if(result.success){
+            yield put({type: 'ADD_USER_SUCCESS' , user: result.data});
+        }else{
+            yield put({type: 'ADD_USER_FAILED', error: result.error});
+        }
+        
+    } catch (error) {
+        yield put({type: 'ADD_USER_FAILED', error: error});
+        
+    }
+}
+
+
+
 
 
 export function* watchGetChartAccount() {
@@ -27,11 +47,14 @@ export function* watchGetChartAccount() {
 }
 
 
+export function* watchAddChartOfAccount() {
+    yield takeEvery('ADD_CHART_OF_ACCOUNT_REQUESTED', addChartOfAccount);
+}
 
 
 
 function* charAccountSaga() {
-    yield all([fork(watchGetChartAccount)]);
+    yield all([fork(watchGetChartAccount), fork(watchAddChartOfAccount)]);
 }
 
 export default charAccountSaga;

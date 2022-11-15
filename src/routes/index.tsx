@@ -22,6 +22,7 @@ import RepeatingInvoiceForm from '../pages/Form/RepeatingInvoiceForm';
 import RepeatingInvoice from '../pages/app/RepeatingInvoice';
 import PublicInvoice from '../pages/app/PublicInvoice';
 import CompanySettings from '../pages/app/CompanySettings';
+import ChartOfAccount from '../pages/app/ChartOfAccount';
 
 // lazy load all the views
 
@@ -188,6 +189,12 @@ const AppRoutes = {
             path: '/app/company_settings',
             name: 'Company Settings',
             component: CompanySettings,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/chart_of_accounts',
+            name: 'Chart Of Account',
+            component: ChartOfAccount,
             route: PrivateRoute,
         },
         
