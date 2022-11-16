@@ -1,10 +1,11 @@
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Alert } from 'react-bootstrap';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+import { useDispatch, useSelector } from 'react-redux';
 // components
 import { VerticalForm, FormInput } from '../../components';
-
+import { RootState } from '../../redux/store';
+import { setChartOfAccountErrorAlert } from '../../redux/actions';
 interface FormData {
     id: any;
     code: string;
@@ -36,6 +37,11 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddChart
             transaction_type: yup.string().required('Please select transaction type')        
         })
     );
+
+    const dispatch = useDispatch();
+
+    const loading = useSelector((state:RootState) => state.ChartAccount.loading);
+    const error = useSelector((state:RootState) => state.ChartAccount.error);
     
     return (
         <>
@@ -44,6 +50,11 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddChart
                     <Modal.Title className="m-0">{chartOfAccount?.id ? "Edit Chart Of Account": "Add Chart Of Account" }</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
+                    {!loading  && error && (
+                        <Alert variant="danger" className="my-2" onClose={()=>dispatch(setChartOfAccountErrorAlert(''))} dismissible>
+                            {error}
+                        </Alert>
+                    )}
                     <VerticalForm onSubmit={onSubmit} resolver={schemaResolver} defaultValues={{code:chartOfAccount?.code,account_name:chartOfAccount?.account_name,account_type:chartOfAccount?.account_type,details:chartOfAccount?.details}}>
                         <FormInput
                             label="Account Name"

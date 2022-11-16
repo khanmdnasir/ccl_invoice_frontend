@@ -9,7 +9,7 @@ import Table from '../../components/Table';
 import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { addChartOfAccount, getChartAccount } from '../../redux/actions';
+import { addChartOfAccount, getChartAccount, setChartOfAccountErrorAlert, setChartOfAccountSuccessAlert } from '../../redux/actions';
 import Pagination from '../../components/CustomPagination';
 
 const api = new APICore();
@@ -24,7 +24,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
     const user_role = useSelector((state)=> state.Role.user_role);
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
-    const onOpenModal = () => setShow(true);
+    const onOpenModal = () => { dispatch(setChartOfAccountErrorAlert('')); setShow(true) };
 
     /*
     handle form submission
@@ -35,20 +35,20 @@ const ActionColumn = withSwal(({ row, swal }) => {
             
             if(res.data.success){
                 dispatch(getChartAccount(6,1));
-            }else{
-                swal.fire({
-                    title: res.data.error,
-                }) 
-                
+                dispatch(setChartOfAccountSuccessAlert('User Updated Successfully'));
+                onCloseModal()
+                setTimeout(() => {
+                    dispatch(setChartOfAccountSuccessAlert(''));
+                }, 2000)
+            } else {
+
+                dispatch(setChartOfAccountErrorAlert(res.data.error));
             }
             
         })
         .catch(err => {
-            swal.fire({
-                title: err,
-            })
+            dispatch(setChartOfAccountErrorAlert(err));
         })
-        onCloseModal()
     };
 
     const onDelete = () => {
@@ -164,13 +164,14 @@ const ChartOfAccounts = () => {
     const user_role = useSelector((state)=> state.Role.user_role);
     const loading = useSelector(state => state.ChartAccount.loading);
     const error = useSelector(state => state.ChartAccount.error);
+    const success = useSelector(state => state.ChartAccount.success);
     const [pageSize,setPageSize] = useState(6);
     /*
      *   modal handeling
      */
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
-    const onOpenModal = () => setShow(true);
+    const onOpenModal = () => { dispatch(setChartOfAccountErrorAlert('')); setShow(true) };
 
     const visitPage = (page) => {
         dispatch(getChartAccount(pageSize,page));
@@ -184,14 +185,21 @@ const ChartOfAccounts = () => {
         dispatch(getChartAccount(pageSize,next));
     };
 
+    useEffect(() => {
+        if (success!==''){
+            onCloseModal();
+            dispatch(getChartAccount(pageSize, 1));
+            setTimeout(() => {
+                dispatch(setChartOfAccountSuccessAlert(''));
+            }, 2000)
+        }
+    }, [success])
+
     /*
     handle form submission
     */
     const onSubmit = (formData) => {
         dispatch(addChartOfAccount({'account_name':formData['account_name'],'code':formData['code'],'account_type':formData['account_type'],'details':formData['details'],'transaction_type':formData['transaction_type']}));
-        dispatch(getChartAccount(pageSize,1));
-        onCloseModal();
-        
     };
 
 
@@ -211,10 +219,10 @@ const ChartOfAccounts = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                        {!loading && error && (
-                            <Alert variant="danger" className="my-2">
-                                {error}
-                            </Alert>
+                        {!loading && success && (
+                            <Alert variant="success" className="my-2" onClose={() => dispatch(setChartOfAccountSuccessAlert(''))} dismissible>
+                            {success}
+                        </Alert>
                         )}
                             <Row className="mb-2">
                                 <Col sm={4}>

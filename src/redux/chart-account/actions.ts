@@ -12,3 +12,14 @@ export const addChartOfAccount  = (formData: any) => ({
     payload: formData,
 });
 
+
+export const setChartOfAccountSuccessAlert = (msg:string) => ({
+    type: type.SET_CHART_OF_ACCOUNT_SUCCESS_ALERT,
+    payload: msg,
+});
+
+
+export const setChartOfAccountErrorAlert = (msg:string) => ({
+    type: type.SET_CHART_OF_ACCOUNT_ERROR_ALERT,
+    payload: msg,
+});

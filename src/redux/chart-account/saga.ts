@@ -39,6 +39,17 @@ function* addChartOfAccount({ payload: {account_name,code,account_type,details,t
     }
 }
 
+function* setChartOfAccountSuccessAlert( msg:string) {
+
+    put({type: 'SET_USER_SUCCESS_ALERT',success: msg});
+}
+
+function* setChartOfAccountErrorAlert(msg:string) {
+
+    put({type: 'SET_USER_ERROR_ALERT',error: msg});
+}
+
+
 
 
 
@@ -55,7 +66,7 @@ export function* watchAddChartOfAccount() {
 
 
 function* charAccountSaga() {
-    yield all([fork(watchGetChartAccount), fork(watchAddChartOfAccount)]);
+    yield all([fork(watchGetChartAccount), fork(watchAddChartOfAccount), setChartOfAccountSuccessAlert, setChartOfAccountErrorAlert]);
 }
 
 export default charAccountSaga;
