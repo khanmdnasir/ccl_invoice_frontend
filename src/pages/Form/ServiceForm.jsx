@@ -73,6 +73,7 @@ const ServiceForm = () => {
 
     useEffect(() => {
         const state = location.state
+        
         if (state) {
             setContactId(state.contactId);
             const allItems = state.services.map((item) => {
@@ -96,19 +97,22 @@ const ServiceForm = () => {
         dispatch(getAllContact());
     }, [])
 
-
+    
     const onSubmit = (e) => {
         e.preventDefault();
         setRloading(true);
-        api.create(`/api/service/`, newItems)
+        setError(null);
+        setSuccess(null);
+        if(newItems.length > 0){
+            api.create(`/api/service/`, newItems)
             .then(res => {
 
                 if (res.data.success) {
                     setSuccess('Data Saved Successfully');
                     setRloading(false);
-                    // setTimeout(() => {
-                    //     history.goBack()
-                    // }, 1000);
+                    setTimeout(() => {
+                        history.push('/app/service')
+                    }, 1000);
                 } else {
                     setError(res.data.error)
                     setRloading(false);
@@ -118,12 +122,19 @@ const ServiceForm = () => {
             .catch(err => {
                 setError(err)
             })
+        }else{
+            setError('Please add at least one item');
+        }
+        
     }
 
     const onUpdate = (e) => {
         e.preventDefault();
         setRloading(true);
-        api.updatePatch(`/api/service/`, { 'updated_items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
+        setError(null);
+        setSuccess(null);
+        if(oldItems.length > 0 || newItems.length > 0){
+            api.updatePatch(`/api/service/`, { 'updated_items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
             .then(res => {
 
                 if (res.data.success) {
@@ -141,6 +152,11 @@ const ServiceForm = () => {
             .catch(err => {
                 setError(err)
             })
+        }else{
+            setRloading(false)
+            setError('You have to add at least one item');
+        }
+        
     }
 
 
@@ -169,7 +185,7 @@ const ServiceForm = () => {
                                     {success}
                                 </Alert>
                             )}
-                            <Form onSubmit={(e) => { oldItems ? onUpdate(e) : onSubmit(e) }}>
+                            <Form onSubmit={(e) => { oldItems.length > 0 ? onUpdate(e) : onSubmit(e) }}>
 
                                 <Form.Group className='mb-3' style={{ width: '20%' }}>
                                     <Form.Label >Contact</Form.Label>
@@ -406,10 +422,10 @@ const ServiceForm = () => {
                                     </Button>
                                     <div>
                                         <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading}>
-                                            {rloading ? 'Loaidng...' : 'Save'}
+                                            {rloading ? 'Loading...' : 'Save'}
                                         </Button>
                                         <Link
-                                            to='/app/'
+                                            to='#'
                                             onClick={() => history.goBack()}
                                             className=" btn waves-effect waves-light"
                                         >

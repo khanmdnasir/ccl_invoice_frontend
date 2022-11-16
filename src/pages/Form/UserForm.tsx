@@ -1,9 +1,15 @@
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Alert } from 'react-bootstrap';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // components
 import { VerticalForm, FormInput } from '../../components';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { setUserErrorAlert } from '../../redux/actions';
+
+
+
 
 interface FormData {
     first_name: string;
@@ -20,8 +26,9 @@ interface FormData {
 interface AddContactsProps {
     show: boolean;
     onHide: () => void;
-    user: FormData;
+    user?: FormData;
     cgroups: any;
+    
     onSubmit: (value: any) => void;
 }
 
@@ -30,6 +37,10 @@ const UserForm = ({ show, onHide, onSubmit, user, cgroups }: AddContactsProps) =
     /*
     form validation schema
     */
+    const dispatch = useDispatch();
+
+    const loading = useSelector((state:RootState) => state.User.loading);
+    const error = useSelector((state:RootState) => state.User.error);
     const schemaResolver = yupResolver(
         yup.object().shape({
             first_name: yup.string().required('Please enter first name'),
@@ -51,7 +62,13 @@ const UserForm = ({ show, onHide, onSubmit, user, cgroups }: AddContactsProps) =
                     <Modal.Title className="m-0">Add User</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
+                {!loading  && error && (
+                    <Alert variant="danger" className="my-2" onClose={()=>dispatch(setUserErrorAlert(''))} dismissible>
+                        {error}
+                    </Alert>
+                )}
                     <VerticalForm onSubmit={onSubmit} resolver={schemaResolver} defaultValues={{first_name:user?.first_name,last_name:user?.last_name,email:user?.email,phone:user?.phone,is_active:user?.is_active}}>
+                        
                         <FormInput
                             label="First Name"
                             type="text"
@@ -78,6 +95,7 @@ const UserForm = ({ show, onHide, onSubmit, user, cgroups }: AddContactsProps) =
                             label="Password"
                             type="password"
                             name="password"
+                            required
                             placeholder="Enter Password"
                             containerClass={'mb-3'}
                         />

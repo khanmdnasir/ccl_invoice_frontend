@@ -3,11 +3,6 @@ import { Row, Col } from 'react-bootstrap';
 
 // componets
 import StatisticsWidget from '../../components/StatisticsWidget';
-import AvailableBalanceImage from '../../assets/images/dashboard/Available Balance.svg';
-import TotalInvestmentImage from '../../assets/images/dashboard/total-investment.svg';
-import GainLossImage from '../../assets/images/dashboard/Gain(LOSS).svg';
-import MarketValueImage from '../../assets/images/dashboard/Market Value of Investment.svg';
-import TotalCashInjectionImage from '../../assets/images/dashboard/Total Cash Injection.svg';
 import { APICore } from '../../helpers/api/apiCore';
 import { useSelector } from 'react-redux';
 
@@ -54,7 +49,7 @@ const Statistics = () => {
                         variant="success"
                         description="Draft (5)"
                         counterOptions={{
-                            prefix: '৳',
+                            prefix: scurrency? scurrency.symbol : '',
                             decimals: 2,
                         }}
                         stats={statistics.draft_amount}
@@ -66,7 +61,7 @@ const Statistics = () => {
                         variant="info"
                         description="Awaiting Approval (33)"
                         counterOptions={{
-                            prefix: '৳',
+                            prefix: scurrency? scurrency.symbol : '',
                             decimals: 2,
                         }}
                         stats={statistics.awaiting_approval_amount}
@@ -78,7 +73,7 @@ const Statistics = () => {
                         variant="warning" 
                         description="Awaiting Payment (25)" 
                         counterOptions={{
-                            prefix: '৳',
+                            prefix: scurrency? scurrency.symbol : '',
                             decimals: 2,
                         }}
                         stats={statistics.awaiting_payment_amount} 
@@ -90,7 +85,7 @@ const Statistics = () => {
                     variant="warning" 
                     description="Paid (18)" 
                     counterOptions={{
-                        prefix: '৳',
+                        prefix: scurrency? scurrency.symbol : '',
                         decimals: 2,
                     }}
                     stats={statistics.paid_amount} 

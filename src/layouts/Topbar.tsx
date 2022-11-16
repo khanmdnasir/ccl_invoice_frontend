@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { Form } from 'react-bootstrap';
 // actions
-import { showRightSidebar, changeSidebarType, getUserRole } from '../redux/actions';
+import { showRightSidebar, changeSidebarType, getUserRole, getCurrency } from '../redux/actions';
 
 // store
 import { RootState, AppDispatch } from '../redux/store';
@@ -72,7 +72,7 @@ const ProfileMenus = [
     {
         label: 'Logout',
         icon: 'fe-log-out',
-        redirectTo: '/auth/logout',
+        redirectTo: '/auth/login',
     },
 ];
 
@@ -151,7 +151,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
             
     useEffect(()=>{
         dispatch(getUserRole());
-        
+        dispatch(getCurrency());
     },[])
    
     return (

@@ -23,129 +23,7 @@ const refreshPage = () => {
     window.location.reload();
 }
 
-// // action column render
-export const ActionColumn = withSwal(({ row, swal }) => {
-    /*
-     *   modal handeling
-     */
-    const dispatch = useDispatch();
-    const user_role = useSelector((state) => state.Role.user_role);
 
-
-    /*
-    handle form submission
-    */
-
-    const onDelete = () => {
-        swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#28bb4b',
-            cancelButtonColor: '#f34e4e',
-            confirmButtonText: 'Yes, delete it!',
-        })
-            .then(function (result) {
-                if (result.value) {
-                    // dispatch(deleteContact(row.original.id))
-                    api.delete(`/api/invoice/${row.original.id}/`)
-                        .then(res => {
-                            dispatch(getInvoice(10, 1));
-                            swal.fire(
-                                'Deleted!',
-                                'Invoice has been deleted.',
-                                'success'
-                            );
-                        })
-                        .catch(err => {
-                            swal.fire({
-                                title: err,
-                            }
-                            );
-                        })
-                } else if (result.dismiss === 'cancel') {
-
-                }
-            })
-    }
-
-    const sendEmail = () => {
-        const data = {
-            "contact_id":row.original?.contact_id?.id,
-            "invoice_id":row.original.id,
-        }
-        swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#28bb4b',
-            cancelButtonColor: '#f34e4e',
-            confirmButtonText: 'Yes, Send email!',
-        })
-            .then(function (result) {
-                if (result.value) {
-                    // dispatch(deleteContact(row.original.id))
-                    api.create(`/api/send-email/`, data)
-                        .then(res => {
-                            // dispatch(getInvoice(10, 1));
-                            swal.fire(
-                                'Sent!',
-                                'Email has been Sent.',
-                                'success'
-                            );
-                        })
-                        .catch(err => {
-                            swal.fire({
-                                title: err,
-                            }
-                            );
-                        })
-                } else if (result.dismiss === 'cancel') {
-
-                }
-            })
-    }
-
-    // console.log('row', row.original)
-
-    return (
-        <>
-            <Link to={{ pathname: '/app/invoice_details', state: row.original.id }} className="action-icon" >
-                <i className="mdi mdi-eye"></i>
-            </Link>
-
-            {user_role.includes('change_invoice') ?
-                <Link to={{ pathname: '/app/invoice_form', state: row.original.id }} className="action-icon" >
-                    <i className="mdi mdi-square-edit-outline"></i>
-                </Link> :
-                <Link to="#" className="action-icon" style={{ pointerEvents: 'none' }}>
-                    <i className="mdi mdi-square-edit-outline"></i>
-                </Link>
-            }
-
-            {user_role.includes('delete_invoice') ?
-                <Link to="#" className="action-icon" onClick={() => onDelete()}>
-                    <i className="mdi mdi-delete"></i>
-                </Link> :
-                <Link to="#" className="action-icon" style={{ pointerEvents: 'none' }}>
-                    <i className="mdi mdi-delete"></i>
-                </Link>
-            }
-
-            {row.original.status === "approve" ?
-                <Link to="#" className="action-icon" onClick={() => sendEmail()}>
-                    <i className="mdi mdi-email"></i>
-                </Link> :
-                null
-            }
-
-
-
-        </>
-    );
-});
 
 export const StatusColumn = withSwal(({ row, swal }) => {
     /*
@@ -191,6 +69,7 @@ export const StatusColumn = withSwal(({ row, swal }) => {
     </div>)
 
     const handleShow = (row, e) => {
+        
         const value = e.target.value;
         const data = {
             "status": value
@@ -309,12 +188,7 @@ const columns = [
         sort: true,
         Cell: StatusColumn,
     },
-    {
-        Header: 'Action',
-        accessor: 'action',
-        sort: false,
-        Cell: ActionColumn,
-    }
+    
 
 ];
 
@@ -501,6 +375,8 @@ const Invoice = () => {
                                                 data={filteredIncoices}
                                                 pageSize={pageSize}
                                                 isSortable={true}
+                                                isDetails = {true}
+                                                pathName = '/app/invoice_details'
                                                 pagination={false}
                                                 isSearchable={true}
                                                 tableClass="table-nowrap table-hover"

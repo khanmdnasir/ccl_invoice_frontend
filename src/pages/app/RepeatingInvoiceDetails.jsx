@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
 // components
@@ -8,19 +8,57 @@ import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
 import { getRepeatingInvoiceDetails } from '../../redux/actions';
-
+import { withSwal } from 'react-sweetalert2';
 
 const api = new APICore()
 
 
 
 
-const RepeatingInvoiceDetails = () => {
+const RepeatingInvoiceDetails = withSwal(({ swal }) => {
     const location = useLocation();
     const dispatch = useDispatch();
+    const history = useHistory();
     const [invoiceId, setInvoiceId] = useState({});
+    const user_role = useSelector((state) => state.Role.user_role);
     const repeating_invoice_details = useSelector((state) => state.RepeatingInvoice.repeating_invoice_details);
     const loading = useSelector(state => state.Invoice.loading);
+
+
+
+    const onDelete = () => {
+        swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28bb4b',
+            cancelButtonColor: '#f34e4e',
+            confirmButtonText: 'Yes, delete it!',
+        })
+            .then(function (result) {
+                if (result.value) {
+                    // dispatch(deleteContact(row.original.id))
+                    api.delete(`/api/repeating_invoice/${invoiceId}/`)
+                        .then(res => {
+                            history.push('/app/repeating_invoice');
+                            swal.fire(
+                                'Deleted!',
+                                'Invoice has been deleted.',
+                                'success'
+                            );
+                        })
+                        .catch(err => {
+                            swal.fire({
+                                title: err,
+                            }
+                            );
+                        })
+                } else if (result.dismiss === 'cancel') {
+
+                }
+            })
+    }
 
     useEffect(() => {
         const state = location.state
@@ -36,8 +74,8 @@ const RepeatingInvoiceDetails = () => {
 
             <PageTitle
                 breadCrumbItems={[
-                    { label: 'Invoice', path: '/app/invoice', active: false },
-                    { label: 'Invoice Details', path: '/app/invoice_details', active: true },
+                    { label: 'Repeating Invoice', path: '/app/repeating_invoice', active: false },
+                    { label: 'Repeating Invoice Details', path: '/app/repeating_invoice_details', active: true },
                 ]}
                 title={'Repeating Invoice Details'}
             />
@@ -45,7 +83,33 @@ const RepeatingInvoiceDetails = () => {
                 <Col>
                     <Card>
                         <Card.Body>
+                            <Row className="mb-2">
+                                <Col sm={4}>
+                                    
+                                </Col>
 
+                                <Col sm={8}>
+                                    <div className="text-sm-end mt-2 mt-sm-0">
+                                        {user_role.includes('change_repeatinginvoice') ?
+                                            repeating_invoice_details?.status !== 'approve' &&
+                                            <Link to={{ pathname: '/app/repeating_invoice_form', state: invoiceId }} className="btn btn-success me-2" >
+                                                <i className="mdi mdi-square-edit-outline me-1"></i>Edit
+                                            </Link> :
+                                            ''
+                                        }
+
+                                        {user_role.includes('delete_repeatinginvoice') ?
+                                        repeating_invoice_details?.status !== 'approve' &&
+                                            <Link to="#" className="btn btn-danger me-2" onClick={() => onDelete()}>
+                                                <i className="mdi mdi-delete me-1"></i>Delete
+                                            </Link> :
+                                            ''
+                                        }
+
+                                        
+                                    </div>
+                                </Col>
+                            </Row>
                             <Form>
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
@@ -264,5 +328,5 @@ const RepeatingInvoiceDetails = () => {
             </Row>
         </>
     );
-};
+});
 export default RepeatingInvoiceDetails;

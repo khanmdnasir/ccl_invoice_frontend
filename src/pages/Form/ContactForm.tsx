@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button,Form,Row,Col } from 'react-bootstrap';
+import { Modal, Button,Form,Row,Col,Alert} from 'react-bootstrap';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -9,6 +9,7 @@ import { FormInput } from '../../components';
 import { APICore } from '../../helpers/api/apiCore';
 import { useDispatch,useSelector } from 'react-redux';
 import { getCity } from '../../redux/location/actions';
+import { setContactErrorAlert } from '../../redux/actions';
 
 const api = new APICore();
 
@@ -38,6 +39,8 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
     */
    
     const dispatch = useDispatch<AppDispatch>();
+    const error = useSelector((state:RootState) => state.Contact.error);
+    const loading = useSelector((state:RootState) => state.Contact.loading);
     const cities = useSelector((state:RootState) => state.Location.city);
     const schemaResolver = yupResolver(
         yup.object().shape({
@@ -77,6 +80,11 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                     <Modal.Title className="m-0">Add Contact</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
+                {!loading  && error && (
+                    <Alert variant="danger" className="my-2" onClose={()=>dispatch(setContactErrorAlert(''))} dismissible>
+                        {error}
+                    </Alert>
+                )}
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <Row>
                             <Col>
