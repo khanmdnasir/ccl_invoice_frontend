@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { VerticalForm, FormInput } from '../../components';
 
 interface FormData {
+    id: any;
     code: string;
     account_name: string;
     account_type: string;
@@ -35,15 +36,12 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddChart
             transaction_type: yup.string().required('Please select transaction type')        
         })
     );
-
-    
-    
     
     return (
         <>
             <Modal show={show} onHide={onHide} aria-labelledby="contained-modal-title-vcenter" centered>
                 <Modal.Header className="bg-light" onHide={onHide} closeButton>
-                    <Modal.Title className="m-0">Chart Of Account</Modal.Title>
+                    <Modal.Title className="m-0">{chartOfAccount?.id ? "Edit Chart Of Account": "Add Chart Of Account" }</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
                     <VerticalForm onSubmit={onSubmit} resolver={schemaResolver} defaultValues={{code:chartOfAccount?.code,account_name:chartOfAccount?.account_name,account_type:chartOfAccount?.account_type,details:chartOfAccount?.details}}>

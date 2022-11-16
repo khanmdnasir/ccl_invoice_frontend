@@ -64,25 +64,34 @@ const ActionColumn = withSwal(({ row, swal }) => {
             .then(function(result){
                 if(result.value){
                     api.delete(`/api/account/${row.original.id}/`)
-                .then(res=>{
-                    dispatch(getChartAccount(6,1));
-                    swal.fire(
-                        'Deleted!',
-                        'Account has been deleted.',
-                        'success'
-                    );            
-                })
-                .catch(err => {
-                    swal.fire({
-                        title: err,
+                    .then(res=>{
+                        if (res?.data?.success){
+                            dispatch(getChartAccount(6,1));
+                            swal.fire(
+                                'Deleted!',
+                                'Account has been deleted.',
+                                'success'
+                            );            
+                        }
+                        else{
+                            swal.fire(
+                                'Delete Unsuccessful!',
+                                res?.data?.error,
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(err => {
+                        swal.fire({
+                            title: err,
+                        }
+                        );
+                    })
+                    }else if(result.dismiss === 'cancel'){
+                        console.log('cancel')
                     }
-                    );
-                })
-                }else if(result.dismiss === 'cancel'){
-                    console.log('cancel')
-                }
-            })        
-    }
+                })        
+            }
 
     return (
         <>
