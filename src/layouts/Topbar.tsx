@@ -17,7 +17,7 @@ import { LayoutTypes, SideBarTypes } from '../constants/layout';
 import MaximizeScreen from '../components/MaximizeScreen';
 // import SearchDropdown from '../components/SearchDropdown';
 import ProfileDropdown from '../components/ProfileDropdown';
-import CCL_Logo from '../assets/images/ccl.jpg';
+import CCL_Logo from '../assets/images/ccl_logo.png';
 import NoImage from '../assets/images/no_image.jpg';
 
 
