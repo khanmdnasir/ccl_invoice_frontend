@@ -24,6 +24,7 @@ const InvoiceDetails = withSwal(({swal}) => {
     const invoiceDetails = useSelector(state => state.Invoice.invoice_details);
     const loading = useSelector(state => state.Invoice.loading);
     const user_role = useSelector((state) => state.Role.user_role);
+    const scurrency = useSelector(state => state.Currency.selectedCurrency);
 
     useEffect(() => {
         const state = location.state
@@ -343,19 +344,19 @@ const InvoiceDetails = withSwal(({swal}) => {
                                     <div></div>
                                     <div >
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Subtotal (discount {invoiceDetails?.discount} )</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{invoiceDetails?.sub_total}</p>
+                                            <p style={{ fontSize: '20px' }}>Subtotal (discount {scurrency?.symbol} {invoiceDetails?.discount} )</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.sub_total}</p>
                                         </div>
 
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total Tax</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{invoiceDetails?.total_tax}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.total_tax}</p>
                                         </div>
 
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{invoiceDetails?.total_amount}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.total_amount}</p>
                                         </div>
                                         <hr></hr><hr></hr>
                                     </div>

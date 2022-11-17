@@ -311,6 +311,9 @@ const InvoiceForm = () => {
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
                     setRloading(false);
+                    setTimeout(() => {
+                        history.push('/app/invoice')
+                    }, 2000);
                     
                 } else {
                     setError(res.data.error)
