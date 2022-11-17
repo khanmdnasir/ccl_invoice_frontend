@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
 // components
@@ -9,19 +9,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
 import { getInvoiceDetails } from '../../redux/actions';
 import { isNumber } from '@amcharts/amcharts4/core';
-
+import { withSwal } from 'react-sweetalert2';
 
 const api = new APICore()
 
 
 
 
-const InvoiceDetails = () => {
+const InvoiceDetails = withSwal(({swal}) => {
     const location = useLocation();
+    const history = useHistory();
     const dispatch = useDispatch();
     const [invoiceId, setInvoiceId] = useState({});
     const invoiceDetails = useSelector(state => state.Invoice.invoice_details);
     const loading = useSelector(state => state.Invoice.loading);
+    const user_role = useSelector((state) => state.Role.user_role);
 
     useEffect(() => {
         const state = location.state
@@ -39,6 +41,78 @@ const InvoiceDetails = () => {
         }
         
     }, [invoiceId])
+
+    const onDelete = () => {
+        swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28bb4b',
+            cancelButtonColor: '#f34e4e',
+            confirmButtonText: 'Yes, delete it!',
+        })
+            .then(function (result) {
+                if (result.value) {
+                    // dispatch(deleteContact(row.original.id))
+                    api.delete(`/api/invoice/${invoiceId}/`)
+                        .then(res => {
+                            history.push('/app/invoice');
+                            swal.fire(
+                                'Deleted!',
+                                'Invoice has been deleted.',
+                                'success'
+                            );
+                        })
+                        .catch(err => {
+                            swal.fire({
+                                title: err,
+                            }
+                            );
+                        })
+                } else if (result.dismiss === 'cancel') {
+
+                }
+            })
+    }
+
+    const sendEmail = () => {
+        const data = {
+            "contact_id":invoiceDetails?.contact_id?.id,
+            "invoice_id":invoiceId,
+        }
+        swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28bb4b',
+            cancelButtonColor: '#f34e4e',
+            confirmButtonText: 'Yes, Send email!',
+        })
+            .then(function (result) {
+                if (result.value) {
+                    // dispatch(deleteContact(row.original.id))
+                    api.create(`/api/send-email/`, data)
+                        .then(res => {
+                            // dispatch(getInvoice(10, 1));
+                            swal.fire(
+                                'Sent!',
+                                'Email has been Sent.',
+                                'success'
+                            );
+                        })
+                        .catch(err => {
+                            swal.fire({
+                                title: err,
+                            }
+                            );
+                        })
+                } else if (result.dismiss === 'cancel') {
+
+                }
+            })
+    }
     
     return (
         <>
@@ -55,6 +129,39 @@ const InvoiceDetails = () => {
                     <Card>
                         <Card.Body>
                             {loading ? <p>Loading...</p> :
+                            <>
+                            <Row className="mb-2">
+                                <Col sm={4}>
+                                    
+                                </Col>
+
+                                <Col sm={8}>
+                                    <div className="text-sm-end mt-2 mt-sm-0">
+                                        {user_role.includes('change_invoice') ?
+                                            invoiceDetails?.status !== 'approve' &&
+                                            <Link to={{ pathname: '/app/invoice_form', state: invoiceId }} className="btn btn-success me-2" >
+                                                <i className="mdi mdi-square-edit-outline me-1"></i>Edit
+                                            </Link> :
+                                            ''
+                                        }
+
+                                        {user_role.includes('delete_invoice') ?
+                                            invoiceDetails?.status !== 'approve' &&
+                                            <Link to="#" className="btn btn-danger me-2" onClick={() => onDelete()}>
+                                                <i className="mdi mdi-delete me-1"></i>Delete
+                                            </Link> :
+                                            ''
+                                        }
+
+                                        {invoiceDetails?.status === "approve" ?
+                                            <Link to="#" className="btn btn-info me-2" onClick={() => sendEmail()}>
+                                                <i className="mdi mdi-email me-1"></i>Mail
+                                            </Link> :
+                                            ''
+                                        }
+                                    </div>
+                                </Col>
+                            </Row>
                             <Form>
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
@@ -255,6 +362,7 @@ const InvoiceDetails = () => {
                                 </div>
 
                             </Form>
+                            </>
                           }
 
 
@@ -264,5 +372,5 @@ const InvoiceDetails = () => {
             </Row>
         </>
     );
-};
+});
 export default InvoiceDetails;

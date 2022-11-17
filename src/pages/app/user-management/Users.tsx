@@ -11,22 +11,28 @@ import PageTitle from '../../../components/PageTitle';
 import NoImage from '../../../assets/images/no_image.jpg';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { addUser, getRoles, getUser } from '../../../redux/actions';
-import ReactExport from "react-export-excel";
+import { addUser, getRoles, getUser, setUserErrorAlert, setUserSuccessAlert } from '../../../redux/actions';
+import { RootState } from '../../../redux/store';
 import Pagination from '../../../components/CustomPagination';
 
 
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+
 
 const api = new APICore();
 
-
+interface FormData {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    phone: string;
+    groups: any;
+    is_active: boolean;
+}
 
 
 // basic info column render
-const BasicInfoColumn = ({ row }) => {
+const BasicInfoColumn = ({ row }:any) => {
     return (
         <>
             {row.original.profile_image !== null ?
@@ -40,7 +46,7 @@ const BasicInfoColumn = ({ row }) => {
 };
 
 /* status column render */
-const StatusColumn = ({ row }) => {
+const StatusColumn = ({ row }:any) => {
     return (
         <React.Fragment>
             <span
@@ -61,40 +67,44 @@ const StatusColumn = ({ row }) => {
 
 
 // action column render
-const ActionColumn = withSwal(({ row, swal }) => {
+const ActionColumn = withSwal(({ row, swal }:any) => {
     /*
      *   modal handeling
      */
     const dispatch = useDispatch();
-    const user_role = useSelector((state)=> state.Role.user_role);
-    const roles = useSelector(state => state.Role.roles);
+    const user_role = useSelector((state:RootState)=> state.Role.user_role);
+    const roles = useSelector((state:RootState) => state.Role.roles);
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
-    const onOpenModal = () => setShow(true);
+    const onOpenModal = () => {dispatch(setUserErrorAlert(''));setShow(true)};
 
     /*
     handle form submission
     */
-    const onSubmit = (formData) => {
-        api.update(`/api/users/${row.original.id}/`,{'first_name':formData['first_name'],'last_name':formData['last_name'],'email':formData['email'],'password':formData['password'],'phone':formData['phone'],'groups':[parseInt(formData['groups'])],'is_active':formData['is_active']})
+    const onSubmit = (formData:FormData) => {
+        api.updatePatch(`/api/users/${row.original.id}/`,{'first_name':formData['first_name'],'last_name':formData['last_name'],'email':formData['email'],'phone':formData['phone'],'groups':[parseInt(formData['groups'])],'is_active':formData['is_active']})
         .then(res=>{
-            
+            console.log(res.data.error)
             if(res.data.success){
-                dispatch(getUser(6,1));
+                
+                dispatch(setUserSuccessAlert('User Updated Successfully'));
+                onCloseModal()
+                setTimeout(()=>{
+                    dispatch(setUserSuccessAlert(''));
+                },2000)
             }else{
-                swal.fire({
-                    title: res.data.error,
-                }) 
+                
+                dispatch(setUserErrorAlert(res.data.error));
+                
                 
             }
             
         })
         .catch(err => {
-            swal.fire({
-                title: err,
-            })
+            dispatch(setUserErrorAlert(err));
+            
         })
-        onCloseModal()
+       
     };
 
     const onDelete = () => {
@@ -107,7 +117,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
                 cancelButtonColor: '#f34e4e',
                 confirmButtonText: 'Yes, delete it!',
             })
-            .then(function(result){
+            .then(function(result:any){
                 if(result.value){
                     api.delete(`/api/users/${row.original.id}/`)
                 .then(res=>{
@@ -194,25 +204,29 @@ const columns = [
 
 const Users = () => {
     const dispatch = useDispatch();
-    const users = useSelector(state => state.User.users);
-    const previous = useSelector(state => state.User.previous);
-    const next = useSelector(state => state.User.next);
-    const current_page = useSelector(state => state.User.current_page);
-    const total_page = useSelector(state => state.User.total_page);
-    const active = useSelector(state => state.User.active);
-    const roles = useSelector(state => state.Role.roles);
-    const user_role = useSelector((state)=> state.Role.user_role);
-    const loading = useSelector(state => state.User.loading);
-    const error = useSelector(state => state.User.error);
+    const users = useSelector((state:RootState) => state.User.users);
+    const previous = useSelector((state:RootState) => state.User.previous);
+    const next = useSelector((state:RootState) => state.User.next);
+    const current_page = useSelector((state:RootState) => state.User.current_page);
+    const total_page = useSelector((state:RootState) => state.User.total_page);
+    const active = useSelector((state:RootState) => state.User.active);
+    const roles = useSelector((state:RootState) => state.Role.roles);
+    const user_role = useSelector((state:RootState)=> state.Role.user_role);
+    const loading = useSelector((state:RootState) => state.User.loading);
+    const success = useSelector((state:RootState) => state.User.success);
+    
+
     const [pageSize,setPageSize] = useState(6);
+  
+
     /*
      *   modal handeling
      */
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
-    const onOpenModal = () => setShow(true);
+    const onOpenModal = () => {dispatch(setUserErrorAlert(''));setShow(true)};
 
-    const visitPage = (page) => {
+    const visitPage = (page:number) => {
         dispatch(getUser(pageSize,page));
     };
 
@@ -227,17 +241,26 @@ const Users = () => {
     /*
     handle form submission
     */
-    const onSubmit = (formData) => {
+
+    useEffect(()=>{
+        onCloseModal();
+        setTimeout(()=>{
+            dispatch(setUserSuccessAlert(''));
+        },2000)
+    },[success])
+    
+    const onSubmit = (formData:FormData) => {
+
         dispatch(addUser({'first_name':formData['first_name'],'last_name':formData['last_name'],'email':formData['email'],'password':formData['password'],'phone':formData['phone'],'groups':[parseInt(formData['groups'])],'is_active':formData['is_active']}));
         dispatch(getUser(pageSize,1));
-        onCloseModal();
+        
         
     };
 
 
     useEffect(()=>{ 
         dispatch(getUser(pageSize,1));   
-        // dispatch(getRoles(10,1));
+        dispatch(getRoles(null,null));
     },[pageSize])
     return (
         <>
@@ -252,16 +275,16 @@ const Users = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                        {!loading && error && (
-                            <Alert variant="danger" className="my-2">
-                                {error}
+                        {!loading  && success && (
+                            <Alert variant="success" className="my-2" onClose={()=>dispatch(setUserSuccessAlert(''))}  dismissible>
+                                {success}
                             </Alert>
                         )}
                             <Row className="mb-2">
                                 <Col sm={4}>
                                     <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
                                         <span className='me-2'>Show:</span>
-                                        <Form.Select style={{width: '40%'}} onChange={(e)=>{setPageSize(e.target.value);dispatch(getUser(e.target.value,current_page))}}>
+                                        <Form.Select style={{width: '40%'}} onChange={(e:any)=>{setPageSize(e.target.value);dispatch(getUser(e.target.value,current_page))}}>
                                             <option value='6'>6</option>
                                             <option value='10'>10</option>
                                             <option value='15'>15</option>
@@ -279,15 +302,7 @@ const Users = () => {
                                             <>
                                             </>
                                         }
-                                        
-                                        {/* <ExcelFile element={<Button className="btn btn-light mb-2">Export</Button>}>
-                                            <ExcelSheet data={users} name="Users">
-                                                <ExcelColumn label="Name" value="name"/>
-                                                <ExcelColumn label="Phone" value="phone"/>
-                                                <ExcelColumn label="Email" value="email"/>
-                                                <ExcelColumn label="Role" value={(col)=> col.groups[0].name}/>                                            
-                                            </ExcelSheet>
-                                        </ExcelFile> */}
+                                      
   
                                     </div>
                                 </Col>
@@ -316,7 +331,7 @@ const Users = () => {
 
             {/* add contact modal */}
             
-            <UserForm show={show} onHide={onCloseModal} onSubmit={onSubmit} cgroups={roles}/>
+            <UserForm show={show} onHide={onCloseModal} onSubmit={onSubmit} cgroups={roles} />
             
             
             

@@ -222,7 +222,23 @@ const Contact = (state = INIT_STATE, action: any) => {
             };
         }
        
-                
+           
+        case type.SET_CONTACT_SUCCESS_ALERT: {
+            
+            return {
+                ...state,
+                success: action.payload,
+            };
+        }
+
+        case type.SET_CONTACT_ERROR_ALERT: {
+            
+            return {
+                ...state,
+                error: action.payload,
+            };
+        }
+
         default:
             return state;
     }

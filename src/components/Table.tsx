@@ -13,6 +13,7 @@ import classNames from 'classnames';
 
 // components
 import Pagination from './Pagination';
+import { Redirect, useHistory } from 'react-router-dom';
 
 interface GlobalFilterProps {
     preGlobalFilteredRows: any;
@@ -76,6 +77,8 @@ const IndeterminateCheckbox = forwardRef<HTMLInputElement, IndeterminateCheckbox
 interface TableProps {
     isSearchable?: boolean;
     isSortable?: boolean;
+    isDetails?: boolean;
+    pathName?: string;
     pagination?: boolean;
     isSelectable?: boolean;
     isExpandable?: boolean;
@@ -100,10 +103,12 @@ interface TableProps {
 
 const Table = (props: TableProps) => {
 
-     
+     const history = useHistory();
 
     const isSearchable = props['isSearchable'] || false;
     const isSortable = props['isSortable'] || false;
+    const isDetails = props['isDetails'] || false;
+    const pathName = props['pathName'] || '';
     const pagination = props['pagination'] || false;
     const isSelectable = props['isSelectable'] || false;
     const isExpandable = props['isExpandable'] || false;
@@ -195,7 +200,20 @@ const Table = (props: TableProps) => {
     );
 
     let rows = pagination ? dataTable.page : dataTable.rows;
+    
+    const handleClick = (id:any) => {
+        if(isDetails){
+            history.push({
+                pathname: pathName,
+                state: id
+            })
+            
 
+            
+        }
+    
+        
+    }
     return (
         <>
             <div>
@@ -237,8 +255,9 @@ const Table = (props: TableProps) => {
                         {(rows || []).map((row: any, i: number) => {
                             dataTable.prepareRow(row);
                             return (
-                                <tr {...row.getRowProps()}>
+                                <tr {...row.getRowProps()} >
                                     {(row.cells || []).map((cell: any) => {
+                                        
                                         return (
                                             <td
                                                 {...cell.getCellProps([
@@ -246,6 +265,7 @@ const Table = (props: TableProps) => {
                                                         className: cell.column.className,
                                                     },
                                                 ])}
+                                                onClick={()=> { cell.column.Header !== 'Status' && handleClick(row.original.id)}}
                                             >
                                                 {cell.render('Cell')}
                                             </td>

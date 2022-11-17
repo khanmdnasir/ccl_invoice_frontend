@@ -84,6 +84,12 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'settings',
             },
             {
+                key: 'view_currency',
+                label: 'Currency',
+                url: '/app/currency',
+                parentKey: 'settings',
+            },
+            {
                 key: 'view_companystaticfile',
                 label: 'Company Settings',
                 url: '/app/company_settings',
@@ -164,6 +170,12 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'settings',
             },
             {
+                key: 'view_currency',
+                label: 'Currency',
+                url: '/app/currency',
+                parentKey: 'settings',
+            },
+            {
                 key: 'view_companystaticfile',
                 label: 'Company Settings',
                 url: '/app/company_settings',
@@ -241,6 +253,12 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_user',
                 label: 'Users',
                 url: '/app/users',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_currency',
+                label: 'Currency',
+                url: '/app/currency',
                 parentKey: 'settings',
             },
             {
