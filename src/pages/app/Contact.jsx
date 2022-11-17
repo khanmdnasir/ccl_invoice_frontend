@@ -9,7 +9,7 @@ import Table from '../../components/Table';
 import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact,deleteContact,getContact } from '../../redux/actions';
+import { addContact,deleteContact,getContact, setContactErrorAlert, setContactSuccessAlert } from '../../redux/actions';
 import ReactExport from "react-export-excel";
 import Pagination from '../../components/CustomPagination';
 import { getCountry } from '../../redux/location/actions';
@@ -76,11 +76,21 @@ const ActionColumn = withSwal(({ row, swal }) => {
                     api.delete(`/api/contact/${row.original.id}/`)
                 .then(res=>{
                     dispatch(getContact(10,1))
-                    swal.fire(
-                        'Deleted!',
-                        'Account has been deleted.',
-                        'success'
-                    );            
+                    if(res.data.success){
+                        swal.fire(
+                            'Deleted!',
+                            'Account has been deleted.',
+                            'success'
+                        ); 
+                    }else{
+                        swal.fire(
+                            'Error',
+                            res.data.error,
+                            'warning'
+                        
+                        );
+                    }
+                               
                 })
                 .catch(err => {
                     swal.fire({
@@ -188,16 +198,15 @@ const Contact = () => {
     const active = useSelector(state => state.Contact.active);
     const user_role = useSelector((state)=> state.Role.user_role);
     const loading = useSelector(state => state.Contact.loading);
-    const error = useSelector(state => state.Contact.error);
     const success = useSelector(state => state.Contact.success);
     const [pageSize,setPageSize] = useState(10);
-    const [alertShow, setAlertShow] = useState(false);
+
     /*
      *   modal handeling
      */
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
-    const onOpenModal = () => setShow(true);
+    const onOpenModal = () => {dispatch(setContactErrorAlert(''));setShow(true)};
 
     const visitPage = (page) => {
         dispatch(getContact(pageSize,page));
@@ -214,14 +223,16 @@ const Contact = () => {
     /*
     handle form submission
     */
+
+    useEffect(()=>{
+        onCloseModal();
+        setTimeout(()=>{
+            dispatch(setContactSuccessAlert(''));
+        },2000)
+    },[success])
+
     const onSubmit = (formData) => {
         dispatch(addContact(formData));
-        setAlertShow(true);
-        setInterval(()=>{
-            setAlertShow(false);
-        },5000)
-        
-        onCloseModal();
         
     };
 
@@ -243,16 +254,12 @@ const Contact = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                            {!loading && alertShow && error && (
-                            <Alert variant="danger" className="my-2" onClose={()=>setAlertShow(false)} dismissible>
-                                {error}
-                            </Alert>
-                        )}
-                            {!loading && alertShow && success !== null && (
-                                <Alert variant="success" className="my-2" onClose={() => setAlertShow(false)} dismissible>
+                            
+                            {!loading  && success && (
+                                <Alert variant="success" className="my-2" onClose={() => dispatch(setContactSuccessAlert(''))} dismissible>
                                 {success}
                             </Alert>
-                        )}
+                            )}
                             <Row className="mb-2">
                                 <Col sm={4}>
                                     <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>

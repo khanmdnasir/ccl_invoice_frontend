@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
 import { format } from 'date-fns'
@@ -18,7 +18,7 @@ const api = new APICore()
 
 const RepeatingInvoiceForm = () => {
     const location = useLocation();
-
+    const history = useHistory();
     const dispatch = useDispatch();
     const contacts = useSelector((state) => state.Contact.all_contact);
     const accounts = useSelector((state) => state.ChartAccount.accounts);
@@ -40,6 +40,7 @@ const RepeatingInvoiceForm = () => {
     const [repeat_date, setRepeatDate] = useState('');
     const [reference, setReference] = useState('');
     const [currency, setCurrency] = useState('1');
+    const scurrency = useSelector(state => state.Currency.selectedCurrency);
     const [tax_type, setTaxType] = useState('inclusive');
     const [sub_total, setSubTotal] = useState('');
     const [discount, setDiscount] = useState('');
@@ -273,12 +274,18 @@ const RepeatingInvoiceForm = () => {
     const onSubmit = (e) => {
         e.preventDefault();
         setRloading(true);
-        api.create(`/api/repeating-invoice/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': date, 'due_date': due_date, 'repeat_date': repeat_date, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
+        setError(null);
+        setSuccess(null);
+        if(newItems.length > 0){
+            api.create(`/api/repeating-invoice/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': date, 'due_date': due_date, 'repeat_date': repeat_date, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
             .then(res => {
 
                 if (res.data.success) {
                     setSuccess('Data Saved Successfully');
                     setRloading(false);
+                    setTimeout(() => {
+                        history.push('/app/repeating_invoice')
+                    }, 2000);
                 } else {
                     setError(res.data.error)
 
@@ -289,26 +296,41 @@ const RepeatingInvoiceForm = () => {
                 setError(err)
                 setRloading(false);
             })
+        }else{
+            setError('Please add at least one service');
+        }
+        
     }
 
     const onUpdate = (e) => {
         e.preventDefault();
         setRloading(true);
-        api.updatePatch(`/api/repeating-invoice/${invoiceId}/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': date, 'due_date': due_date, 'repeat_date': repeat_date, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
+        setError(null);
+        setSuccess(null);
+        if(newItems.length > 0 || oldItems.length > 0){
+            api.updatePatch(`/api/repeating-invoice/${invoiceId}/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': date, 'due_date': due_date, 'repeat_date': repeat_date, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
             .then(res => {
 
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
                     setRloading(false);
+                    setTimeout(() => {
+                        history.push('/app/repeating_invoice')
+                    }, 2000);
                 } else {
                     setError(res.data.error)
-
+                    setRloading(false)
                 }
 
             })
             .catch(err => {
                 setError(err)
             })
+        }else{
+            setRloading(false)
+            setError('You have to add at least one service');
+        }
+        
     }
 
     return (
@@ -909,7 +931,7 @@ const RepeatingInvoiceForm = () => {
                                     <div >
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Subtotal</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{sub_total}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {sub_total}</p>
                                         </div>
                                         {/* {newItems?.map((item)=>{
                                                 if(item.tax_rate > 0)
@@ -935,7 +957,7 @@ const RepeatingInvoiceForm = () => {
                                                 return (
                                                     <div className="d-flex justify-content-between" >
                                                         <p style={{ fontSize: '20px' }}>Total Tax {item[0]}%</p>
-                                                        <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{item[1]}</p>
+                                                        <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {item[1]}</p>
 
                                                     </div>)
                                             }
@@ -943,7 +965,7 @@ const RepeatingInvoiceForm = () => {
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{total_amount}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {total_amount}</p>
                                         </div>
                                         <hr></hr><hr></hr>
                                     </div>
@@ -955,10 +977,11 @@ const RepeatingInvoiceForm = () => {
                                     </Button>
                                     <div>
                                         <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading} onClick={() => setStatus('approve')}>
-                                            {rloading ? 'Loaidng...' : 'Approve'}
+                                            {rloading ? 'Loading...' : 'Approve'}
                                         </Button>
                                         <Link
-                                            to='/app/service'
+                                            to='#'
+                                            onClick={() => history.goBack()}
                                             className=" btn btn-secondary waves-effect waves-light"
                                         >
                                             Cancel

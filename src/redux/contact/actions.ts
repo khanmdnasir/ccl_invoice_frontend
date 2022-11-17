@@ -55,3 +55,14 @@ export const deleteContact = (id: number) => ({
     type: type.DELETE_CONTACT_REQUESTED,
     payload: id,
 });
+
+
+export const setContactSuccessAlert = (msg:string) => ({
+    type: type.SET_CONTACT_SUCCESS_ALERT,
+    payload: msg,
+});
+
+export const setContactErrorAlert = (msg:string) => ({
+    type: type.SET_CONTACT_ERROR_ALERT,
+    payload: msg,
+});

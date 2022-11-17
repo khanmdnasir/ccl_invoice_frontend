@@ -2,6 +2,7 @@ import * as type from './types';
 
 const INIT_STATE = {
     currencies: [],
+    selectedCurrency: {},
     previous: '',
     next: '',
     current_page: '',
@@ -26,6 +27,7 @@ const Currency = (state = INIT_STATE, action: any) => {
                 ...state,
                 loading: false,
                 currencies: action.data,
+                selectedCurrency: action.data[0],
                 previous: action.data.previous,
                 next: action.data.next,
                 current_page: action.data.current_page,

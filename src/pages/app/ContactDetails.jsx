@@ -3,7 +3,7 @@ import { Row, Col, Card, Button, Form, Alert, InputGroup, Modal } from 'react-bo
 import { Link } from 'react-router-dom';
 import Table from '../../components/Table';
 import { useLocation } from 'react-router-dom';
-import { ActionColumn } from './invoice'
+
 import Pagination from '../../components/CustomPagination';
 import classNames from 'classnames';
 import FeatherIcon from 'feather-icons-react';
@@ -71,12 +71,7 @@ const invoicesColumns = [
         accessor: 'status',
         sort: true,
     },
-    {
-        Header: 'Action',
-        accessor: 'action',
-        sort: false,
-        Cell: ActionColumn,
-    },
+    
 
 ];
 
@@ -324,6 +319,7 @@ const ContactDetails = () => {
                             <p>Personal Details</p>
                         </Card.Header>
                         <Card.Body>
+                            
                             <div className="container">
                                 <div className="row mb-4">
                                     <div className="col-sm">

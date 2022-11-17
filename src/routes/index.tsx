@@ -22,12 +22,13 @@ import RepeatingInvoiceForm from '../pages/Form/RepeatingInvoiceForm';
 import RepeatingInvoice from '../pages/app/RepeatingInvoice';
 import PublicInvoice from '../pages/app/PublicInvoice';
 import CompanySettings from '../pages/app/CompanySettings';
+import ChartOfAccount from '../pages/app/ChartOfAccount';
+import Currency from '../pages/app/Currency';
 
 // lazy load all the views
 
 // auth
 const Login = React.lazy(() => import('../pages/auth/Login'));
-const Logout = React.lazy(() => import('../pages/auth/Logout'));
 const Confirm = React.lazy(() => import('../pages/auth/Confirm'));
 const ForgetPassword = React.lazy(() => import('../pages/auth/ForgetPassword'));
 const Register = React.lazy(() => import('../pages/auth/Register'));
@@ -190,6 +191,18 @@ const AppRoutes = {
             component: CompanySettings,
             route: PrivateRoute,
         },
+        {
+            path: '/app/chart_of_accounts',
+            name: 'Chart Of Account',
+            component: ChartOfAccount,
+            route: PrivateRoute,
+         },
+         {
+            path: '/app/currency',
+            name: 'Currency',
+            component: Currency,
+            route: PrivateRoute,
+        },
         
         
     ],
@@ -267,12 +280,7 @@ const authRoutes: RoutesProps[] = [
         component: PasswordResetSuccess,
         route: Route,
     },
-    {
-        path: '/auth/logout',
-        name: 'Logout',
-        component: Logout,
-        route: Route,
-    },
+    
     
 ];
 

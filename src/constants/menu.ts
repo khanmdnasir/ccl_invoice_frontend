@@ -84,9 +84,21 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'settings',
             },
             {
+                key: 'view_currency',
+                label: 'Currency',
+                url: '/app/currency',
+                parentKey: 'settings',
+            },
+            {
                 key: 'view_companystaticfile',
                 label: 'Company Settings',
                 url: '/app/company_settings',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_chartofaccount',
+                label: 'Chart Of Accounts',
+                url: '/app/chart_of_accounts',
                 parentKey: 'settings',
             },
             
@@ -164,9 +176,21 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'settings',
             },
             {
+                key: 'view_currency',
+                label: 'Currency',
+                url: '/app/currency',
+                parentKey: 'settings',
+            },
+            {
                 key: 'view_companystaticfile',
                 label: 'Company Settings',
                 url: '/app/company_settings',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_chartofaccount',
+                label: 'Chart Of Accounts',
+                url: '/app/chart_of_accounts',
                 parentKey: 'settings',
             },
             
@@ -244,9 +268,21 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'settings',
             },
             {
+                key: 'view_currency',
+                label: 'Currency',
+                url: '/app/currency',
+                parentKey: 'settings',
+            },
+            {
                 key: 'view_companystaticfile',
                 label: 'Company Settings',
                 url: '/app/company_settings',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_chartofaccount',
+                label: 'Chart Of Accounts',
+                url: '/app/chart_of_accounts',
                 parentKey: 'settings',
             },
             

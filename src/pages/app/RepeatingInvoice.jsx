@@ -20,82 +20,6 @@ import Pagination from '../../components/CustomPagination';
 const api = new APICore();
 
 
-// // action column render
-const ActionColumn = withSwal(({ row, swal }) => {
-    /*
-     *   modal handeling
-     */
-    const dispatch = useDispatch();
-    const user_role = useSelector((state)=> state.Role.user_role);
-    
-
-    /*
-    handle form submission
-    */
-    
-    const onDelete = () => {
-        swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#28bb4b',
-                cancelButtonColor: '#f34e4e',
-                confirmButtonText: 'Yes, delete it!',
-            })
-            .then(function(result){
-                if(result.value){
-                    // dispatch(deleteContact(row.original.id))
-                    api.delete(`/api/repeating-invoice/${row.original.id}/`)
-                .then(res=>{
-                    dispatch(getRepeatingInvoice(10,1));
-                    swal.fire(
-                        'Deleted!',
-                        'Invoice has been deleted.',
-                        'success'
-                    );            
-                })
-                .catch(err => {
-                    swal.fire({
-                        title: err,
-                    }
-                    );
-                })
-                }else if(result.dismiss === 'cancel'){
-                    
-                }
-            })        
-    }
-
-    return (
-        <>
-            <Link to={{pathname: '/app/repeating_invoice_details',state: row.original.id}} className="action-icon" >
-                <i className="mdi mdi-eye"></i>
-            </Link>
-
-            { user_role.includes('change_repeatinginvoice') ?
-                <Link to={{ pathname: '/app/repeating_invoice_form',state: row.original.id}} className="action-icon" >
-                    <i className="mdi mdi-square-edit-outline"></i>
-                </Link>:
-                <Link to="#" className="action-icon"  style={{pointerEvents: 'none'}}>
-                    <i className="mdi mdi-square-edit-outline"></i>
-                </Link>
-            }
-            
-            { user_role.includes('delete_repeatinginvoice') ?
-                <Link to="#" className="action-icon" onClick={()=>onDelete()}>
-                    <i className="mdi mdi-delete"></i>
-                </Link>:
-                <Link to="#" className="action-icon" style={{pointerEvents: 'none'}}>
-                    <i className="mdi mdi-delete"></i>
-                </Link>
-            }
-
-            
-            
-        </>
-    );
-});
 
 
 export const StatusColumn = withSwal(({ row, swal }) => {
@@ -252,12 +176,7 @@ const columns = [
         sort: true,
         Cell: StatusColumn,
     },
-    {
-        Header: 'Action',
-        accessor: 'action',
-        sort: false,
-        Cell: ActionColumn,
-    },
+    
     
 ];
 
@@ -383,14 +302,7 @@ const RepeatingInvoice = () => {
                                             </>
                                         }
                                         
-                                        {/* <ExcelFile element={<Button className="btn btn-light mb-2">Export</Button>}>
-                                            <ExcelSheet data={users} name="Users">
-                                                <ExcelColumn label="Name" value="name"/>
-                                                <ExcelColumn label="Phone" value="phone"/>
-                                                <ExcelColumn label="Email" value="email"/>
-                                                <ExcelColumn label="Role" value={(col)=> col.groups[0].name}/>                                            
-                                            </ExcelSheet>
-                                        </ExcelFile> */}
+                                        
   
                                     </div>
                                 </Col>
@@ -405,6 +317,8 @@ const RepeatingInvoice = () => {
                                 data={filteredIncoices}
                                 pageSize={pageSize}
                                 isSortable={true}
+                                isDetails = {true}
+                                pathName = '/app/repeating_invoice_details'
                                 pagination={false}
                                 isSearchable={true}
                                 tableClass="table-nowrap table-hover"

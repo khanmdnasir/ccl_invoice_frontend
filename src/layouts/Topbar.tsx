@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { Form } from 'react-bootstrap';
 // actions
-import { showRightSidebar, changeSidebarType, getUserRole } from '../redux/actions';
+import { showRightSidebar, changeSidebarType, getUserRole, getCurrency } from '../redux/actions';
 
 // store
 import { RootState, AppDispatch } from '../redux/store';
@@ -17,7 +17,7 @@ import { LayoutTypes, SideBarTypes } from '../constants/layout';
 import MaximizeScreen from '../components/MaximizeScreen';
 // import SearchDropdown from '../components/SearchDropdown';
 import ProfileDropdown from '../components/ProfileDropdown';
-import CCL_Logo from '../assets/images/ccl.jpg';
+import CCL_Logo from '../assets/images/ccl_logo.png';
 import NoImage from '../assets/images/no_image.jpg';
 
 
@@ -72,7 +72,7 @@ const ProfileMenus = [
     {
         label: 'Logout',
         icon: 'fe-log-out',
-        redirectTo: '/auth/logout',
+        redirectTo: '/auth/login',
     },
 ];
 
@@ -151,7 +151,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
             
     useEffect(()=>{
         dispatch(getUserRole());
-        
+        dispatch(getCurrency());
     },[])
    
     return (

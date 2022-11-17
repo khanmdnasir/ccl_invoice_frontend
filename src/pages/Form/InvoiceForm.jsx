@@ -19,6 +19,7 @@ const api = new APICore()
 const InvoiceForm = () => {
     const location = useLocation();
     const history = useHistory();
+    const scurrency = useSelector(state => state.Currency.selectedCurrency)
 
     const dispatch = useDispatch();
     const contacts = useSelector((state) => state.Contact.all_contact);
@@ -265,17 +266,20 @@ const InvoiceForm = () => {
     const onSubmit = (e) => {
         e.preventDefault();
         setRloading(true);
+        setError(null);
+        setSuccess(null);
         let formatDate = format(new Date(date), 'yyyy-MM-dd');
         let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
-        api.create(`/api/invoice/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
+        if(newItems.length > 0){
+            api.create(`/api/invoice/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
             .then(res => {
 
                 if (res.data.success) {
                     setSuccess('Data Saved Successfully');
                     setRloading(false);
                     setTimeout(() => {
-                        history.goBack()
-                    }, 1000);
+                        history.push('/app/invoice')
+                    }, 2000);
                 } else {
                     setError(res.data.error)
                     setRloading(false);
@@ -286,22 +290,31 @@ const InvoiceForm = () => {
             .catch(err => {
                 setError(err)
             })
+        }else{
+            setError("Please add at least one service")
+        }
+        
     }
 
     const onUpdate = (e) => {
         e.preventDefault();
         setRloading(true);
+        setError(null);
+        setSuccess(null);
         let formatDate = format(new Date(date), 'yyyy-MM-dd');
         let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
-        api.updatePatch(`/api/invoice/${invoiceId}/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
+
+        if(oldItems.length > 0){
+            api.updatePatch(`/api/invoice/${invoiceId}/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
             .then(res => {
 
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
                     setRloading(false);
                     setTimeout(() => {
-                        history.goBack()
-                    }, 1000);
+                        history.push('/app/invoice')
+                    }, 2000);
+                    
                 } else {
                     setError(res.data.error)
                     setRloading(false);
@@ -311,6 +324,11 @@ const InvoiceForm = () => {
             .catch(err => {
                 setError(err)
             })
+        }else{
+            setRloading(false)
+            setError("You have to add at least one service")
+        }
+        
     }
 
     return (
@@ -890,7 +908,7 @@ const InvoiceForm = () => {
                                     <div >
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Subtotal</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{sub_total}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {sub_total}</p>
                                         </div>
                                         {/* {newItems?.map((item)=>{
                                                 if(item.tax_rate > 0)
@@ -916,7 +934,7 @@ const InvoiceForm = () => {
                                                 return (
                                                     <div className="d-flex justify-content-between" >
                                                         <p style={{ fontSize: '20px' }}>Total Tax {item[0]}%</p>
-                                                        <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{item[1]}</p>
+                                                        <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {item[1]}</p>
 
                                                     </div>)
                                             }
@@ -924,7 +942,7 @@ const InvoiceForm = () => {
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{total_amount}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {total_amount}</p>
                                         </div>
                                         <hr></hr><hr></hr>
                                     </div>
@@ -936,10 +954,11 @@ const InvoiceForm = () => {
                                     </Button>
                                     <div>
                                         <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading} onClick={() => setStatus('approve')}>
-                                            {rloading ? 'Loaidng...' : 'Approve'}
+                                            {rloading ? 'Loading...' : 'Approve'}
                                         </Button>
                                         <Link
-                                            to='/app/service'
+                                            to='#'
+                                            onClick={() => history.goBack()}
                                             className=" btn btn-secondary waves-effect waves-light"
                                         >
                                             Cancel
