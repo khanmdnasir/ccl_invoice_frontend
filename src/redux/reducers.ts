@@ -24,6 +24,7 @@ export default combineReducers({
     Invoice,
     RepeatingInvoice,
     Currency,
-    ChartAccount
+    ChartAccount,
+
     
 });

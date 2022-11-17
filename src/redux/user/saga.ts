@@ -10,7 +10,6 @@ import {
 
 interface UserData {
     payload: {
-        id: number;
         first_name: string;
         last_name: string;
         email: string;
@@ -20,6 +19,7 @@ interface UserData {
         is_active: boolean;
         limit: number;
         page: number;
+        msg: string;
     };
     type: string;
 }
@@ -35,6 +35,7 @@ function* getUser({ payload: {limit,page}}:UserData):SagaIterator {
     }
 }
 
+
 function* addUser({ payload: {first_name,last_name,email,password,phone,groups,is_active} }: UserData):SagaIterator {
     
     try {
@@ -48,10 +49,20 @@ function* addUser({ payload: {first_name,last_name,email,password,phone,groups,i
         }
         
     } catch (error) {
-        yield put({type: 'ADD_USER_FAILED', error: error});
-        
+        yield put({type: 'ADD_USER_FAILED', error: error});        
     }
 }
+
+function* setUserSuccessAlert( msg:string) {
+
+    put({type: 'SET_USER_SUCCESS_ALERT',success: msg});
+}
+
+function* setUserErrorAlert(msg:string) {
+
+    put({type: 'SET_USER_ERROR_ALERT',error: msg});
+}
+
 
 
 export function* watchGetUser() {
@@ -64,8 +75,9 @@ export function* watchAddUser() {
 
 
 
+
 function* userSaga() {
-    yield all([fork(watchGetUser),fork(watchAddUser)]);
+    yield all([fork(watchGetUser),fork(watchAddUser),setUserSuccessAlert,setUserErrorAlert]);
 }
 
 export default userSaga;

@@ -9,6 +9,7 @@ const INIT_STATE = {
     active: '',
     loading: false,
     error: null,
+    success: null
 };
 
 
@@ -39,7 +40,7 @@ const User = (state = INIT_STATE, action: any) => {
             return {
                 ...state,
                 loading: false,
-                error: action.error,
+                error: action.error
             };
         }
 
@@ -53,6 +54,7 @@ const User = (state = INIT_STATE, action: any) => {
             return {
                 ...state,
                 loading: false,
+                success: 'User created successfully',
                 users: [...state.users,action.user]
                 
             };
@@ -62,6 +64,22 @@ const User = (state = INIT_STATE, action: any) => {
                 ...state,
                 loading: false,
                 error: action.error,
+            };
+        }
+
+        case type.SET_USER_SUCCESS_ALERT: {
+            console.log('reducer',action)
+            return {
+                ...state,
+                success: action.payload,
+            };
+        }
+
+        case type.SET_USER_ERROR_ALERT: {
+            console.log('reducer error',action)
+            return {
+                ...state,
+                error: action.payload,
             };
         }
         

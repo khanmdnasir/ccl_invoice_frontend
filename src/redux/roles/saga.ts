@@ -10,8 +10,8 @@ import {
 
 interface RoleData {
     payload: {
-        limit: number;
-        page: number;
+        limit: any;
+        page: any;
     };
     type: string;
 }

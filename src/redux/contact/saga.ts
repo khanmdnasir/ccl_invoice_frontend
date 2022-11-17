@@ -148,6 +148,17 @@ function* deleteContact({ payload: {id} }: ContactData):SagaIterator {
 }
 
 
+function* setContactSuccessAlert( msg:string) {
+
+    put({type: 'SET_CONTACT_SUCCESS_ALERT',success: msg});
+}
+
+function* setContactErrorAlert(msg:string) {
+
+    put({type: 'SET_CONTACT_ERROR_ALERT',error: msg});
+}
+
+
 export function* watchGetContact() {
     yield takeEvery('GET_CONTACT_REQUESTED', getContact);
 }
@@ -187,7 +198,7 @@ export function* watchDeleteContact() {
 
 
 function* contactSaga() {
-    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactInvoice), fork(watchGetContactDetails), fork(watchGetContactInvoiceSetting), fork(watchUpdateContactInvoiceSetting)]);
+    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactInvoice), fork(watchGetContactDetails), fork(watchGetContactInvoiceSetting), fork(watchUpdateContactInvoiceSetting),setContactSuccessAlert,setContactErrorAlert]);
 }
 
 export default contactSaga;

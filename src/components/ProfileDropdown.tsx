@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import classNames from 'classnames';
+import { logoutUser,resetAuth } from '../redux/actions';
+import { useDispatch } from 'react-redux';
 
 interface ProfileMenuItem {
     label: string;
@@ -19,13 +21,18 @@ interface ProfileDropdownProps {
 const ProfileDropdown = (props: ProfileDropdownProps) => {
     const profilePic = props['profilePic'] || null;
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-
+    const dispatch = useDispatch();
     /*
      * toggle profile-dropdown
      */
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
     };
+
+    const handleLogout = () => {
+        dispatch(resetAuth());
+        dispatch(logoutUser());
+    }
 
     return (
         <Dropdown show={dropdownOpen} onToggle={toggleDropdown}>
@@ -51,6 +58,7 @@ const ProfileDropdown = (props: ProfileDropdownProps) => {
                                 {i === props['menuItems'].length - 1 && <div className="dropdown-divider"></div>}
                                 <Link
                                     to={item.redirectTo}
+                                    onClick={()=>{item.label === 'Logout' && handleLogout()}}
                                     className="dropdown-item notify-item"
                                     key={i + '-profile-menu'}
                                 >
