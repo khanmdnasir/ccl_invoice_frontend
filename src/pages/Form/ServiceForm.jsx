@@ -106,9 +106,9 @@ const ServiceForm = () => {
                 if (res.data.success) {
                     setSuccess('Data Saved Successfully');
                     setRloading(false);
-                    setTimeout(() => {
-                        history.goBack()
-                    }, 1000);
+                    // setTimeout(() => {
+                    //     history.goBack()
+                    // }, 1000);
                 } else {
                     setError(res.data.error)
                     setRloading(false);
@@ -129,9 +129,9 @@ const ServiceForm = () => {
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
                     setRloading(false);
-                    setTimeout(() => {
-                        history.goBack()
-                    }, 1000);
+                    // setTimeout(() => {
+                    //     history.goBack()
+                    // }, 1000);
                 } else {
                     setError(res.data.error)
                     setRloading(false);
