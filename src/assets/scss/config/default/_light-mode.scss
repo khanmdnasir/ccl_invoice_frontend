@@ -287,9 +287,9 @@
 
     //Menu item
     --#{$variable-prefix}menu-item:                                       #6e768e;
-    --#{$variable-prefix}menu-item-hover:                                 #00acc1;
-    --#{$variable-prefix}menu-item-active:                                #00acc1;
-    --#{$variable-prefix}menu-sub-item-active:                            #00acc1;
+    --#{$variable-prefix}menu-item-hover:                                 #1203e4;
+    --#{$variable-prefix}menu-item-active:                                #1203e4;
+    --#{$variable-prefix}menu-sub-item-active:                            #1203e4;
 
     --#{$variable-prefix}menuitem-active-bg:                              #{rgba(#00acc1, 0.07)};
 
@@ -301,7 +301,7 @@
 
     //Topbar Background
     --#{$variable-prefix}bg-topbar-light:                                 #{$white};
-    --#{$variable-prefix}bg-topbar-dark:                                  #0c5cad;
+    --#{$variable-prefix}bg-topbar-dark:                                  #{$white};
 
     // Leftbar item shadow (Condensed item)
     --#{$variable-prefix}box-shadow-condensed:                            3px 5px 10px 0 #{rgba(154,161,171,.2)}; 

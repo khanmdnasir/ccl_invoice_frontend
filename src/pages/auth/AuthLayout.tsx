@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 
-import CCL_Logo from '../../assets/images/ccl.jpg';
+import CCL_Logo from '../../assets/images/Qorum-v2.svg';
 
 
 

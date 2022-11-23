@@ -11,7 +11,7 @@ const Footer = () => {
                 <div className="container-fluid">
                     <Row>
                         <Col md={6}>
-                            {currentYear} &copy; CCL by <Link to="#">ASL Systems</Link>
+                            {currentYear} &copy; Qorum by <Link to="#" style={{color:"#00a551"}}>ASL Systems</Link>
                         </Col>
 
                         <Col md={6}>

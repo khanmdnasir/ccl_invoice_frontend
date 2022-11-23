@@ -27,7 +27,7 @@ body[data-layout-mode="horizontal"] {
 }
 
 .topnav {
-    background: $bg-topbar-light;
+    background: $qorum;
     box-shadow: $box-shadow;
     margin-top: $topbar-height;
     padding: 0 calc(#{$grid-gutter-width} * 0.5);
@@ -47,7 +47,7 @@ body[data-layout-mode="horizontal"] {
             position: relative;
             line-height: 22px;
             padding: calc(#{$topnav-height - 22px} * 0.5) 1.1rem;
-            color: $hori-menu-item-color;
+            color: $white;
             font-family: $font-family-secondary;
 
             i {
