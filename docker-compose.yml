@@ -6,8 +6,6 @@ services:
     command: npx serve -s build
     expose:
       - 3000
-    volumes:
-      - ./build:/frontend/build
     networks:
       - frontend_network
 
