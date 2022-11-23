@@ -15,20 +15,20 @@ const RevenueChart = () => {
         datasets: [
             {
                 label: 'Current Week',
-                backgroundColor: '#009ADC',
-                borderColor: '#009ADC',
+                backgroundColor: '#00a551',
+                borderColor: '#00a551',
                 data: [32, 42, 42, 62, 52, 75, 62],
                 tension: 0.4,
                 fill: {
                     target: 'origin',
-                    above: 'rgb(0, 154, 220, 0.3)',
+                    above: 'rgb(0, 165, 81, 0.3)',
                 },
             },
             {
                 label: 'Previous Week',
                 fill: true,
                 backgroundColor: 'transparent',
-                borderColor: '#009ADC',
+                borderColor: '#00a551',
                 borderDash: [5, 5],
                 data: [42, 58, 66, 93, 82, 105, 92],
                 tension: 0.4,

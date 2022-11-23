@@ -314,6 +314,9 @@ const RepeatingInvoiceForm = () => {
                 if (res.data.success) {
                     setSuccess('Data Updated Successfully');
                     setRloading(false);
+                    setTimeout(() => {
+                        history.push('/app/repeating_invoice')
+                    }, 2000);
                 } else {
                     setError(res.data.error)
                     setRloading(false)
@@ -396,7 +399,7 @@ const RepeatingInvoiceForm = () => {
                                         </Form.Group>
 
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Day</Form.Label>
+                                            <Form.Label className='required'>Day<small style={{fontSize:"10px", color:"grey"}}> (Every Month)</small> </Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
@@ -410,7 +413,7 @@ const RepeatingInvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Due Day</Form.Label>
+                                            <Form.Label className='required'>Due Day<small style={{ fontSize: "10px", color: "grey" }}> (Every Month)</small> </Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
@@ -426,7 +429,7 @@ const RepeatingInvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Repeat Day</Form.Label>
+                                            <Form.Label className='required'>Repeat Day <small style={{ fontSize: "10px", color: "grey" }}> (Every Month)</small> </Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required

@@ -23,7 +23,7 @@ const RepeatingInvoiceDetails = withSwal(({ swal }) => {
     const user_role = useSelector((state) => state.Role.user_role);
     const repeating_invoice_details = useSelector((state) => state.RepeatingInvoice.repeating_invoice_details);
     const loading = useSelector(state => state.Invoice.loading);
-
+    const scurrency = useSelector(state => state.Currency.selectedCurrency);
 
 
     const onDelete = () => {
@@ -300,19 +300,19 @@ const RepeatingInvoiceDetails = withSwal(({ swal }) => {
                                     <div></div>
                                     <div >
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Subtotal (discount {repeating_invoice_details?.discount} )</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{repeating_invoice_details?.sub_total}</p>
+                                            <p style={{ fontSize: '20px' }}>Subtotal (discount {scurrency?.symbol} {repeating_invoice_details?.discount} )</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.sub_total}</p>
                                         </div>
 
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total Tax</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{repeating_invoice_details?.total_tax}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.total_tax}</p>
                                         </div>
 
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{repeating_invoice_details?.total_amount}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.total_amount}</p>
                                         </div>
                                         <hr></hr><hr></hr>
                                     </div>

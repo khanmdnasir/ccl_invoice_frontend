@@ -460,6 +460,12 @@ const ContactDetails = () => {
                                         </InputGroup>
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text style={mystyle}>
+                                                Minimum Invoice Amount</InputGroup.Text>
+                                            <Form.Control type="number" name="minimum_invoice_amount" value={invoiceSetting?.reminder_settings?.minimum_invoice_amount
+                                            } onChange={(e) => invoiceReminderSettingChange(e)} />
+                                        </InputGroup>
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text style={mystyle}>
                                                 Reminder Type</InputGroup.Text>
                                             <Form.Check
                                                 type="radio"
@@ -475,12 +481,6 @@ const ContactDetails = () => {
                                                 value="over_due"
                                                 style={{ "marginRight": "1rem", marginTop: "0.5rem" }}
                                             />
-                                        </InputGroup>
-                                        <InputGroup className="mb-3">
-                                            <InputGroup.Text style={mystyle}>
-                                                Minimum Invoice Amount</InputGroup.Text>
-                                            <Form.Control type="number" name="minimum_invoice_amount" value={invoiceSetting?.reminder_settings?.minimum_invoice_amount
-                                            } onChange={(e) => invoiceReminderSettingChange(e)} />
                                         </InputGroup>
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text style={{ width: '6rem' }}>

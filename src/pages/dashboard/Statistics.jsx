@@ -34,7 +34,7 @@ const Statistics = () => {
             <Row >
                 <Col  >
                     <StatisticsWidget
-                        variant="primary"
+                        variant="text-secondary"
                         counterOptions={{
                             prefix: '',
                             decimals: 0,
@@ -46,7 +46,7 @@ const Statistics = () => {
                 </Col>
                 <Col  >
                     <StatisticsWidget
-                        variant="success"
+                        variant="text-muted"
                         description="Draft (5)"
                         counterOptions={{
                             prefix: scurrency? scurrency.symbol : '',
@@ -58,7 +58,7 @@ const Statistics = () => {
                 </Col>
                 <Col  >
                     <StatisticsWidget
-                        variant="info"
+                        variant="text-info"
                         description="Awaiting Approval (33)"
                         counterOptions={{
                             prefix: scurrency? scurrency.symbol : '',
@@ -70,7 +70,7 @@ const Statistics = () => {
                 </Col>
                 <Col  >
                     <StatisticsWidget 
-                        variant="warning" 
+                        variant="text-warning" 
                         description="Awaiting Payment (25)" 
                         counterOptions={{
                             prefix: scurrency? scurrency.symbol : '',
@@ -82,7 +82,7 @@ const Statistics = () => {
                 </Col>
                 <Col  >
                 <StatisticsWidget 
-                    variant="warning" 
+                    variant="text-success" 
                     description="Paid (18)" 
                     counterOptions={{
                         prefix: scurrency? scurrency.symbol : '',

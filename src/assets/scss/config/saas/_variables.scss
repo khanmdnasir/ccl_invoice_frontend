@@ -46,11 +46,13 @@ $yellow:     #fdc45e;
 $green:      #5ad092;
 $teal:       #02a8b5;
 $cyan:       #4fc6e1;
+$qorum:      #00a551;
 // scss-docs-end color-variables
 
 // scss-docs-start colors-map
 $colors: (
   "blue":       $blue,
+  "qorum":       $qorum,
   "indigo":     $indigo,
   "purple":     $purple,
   "pink":       $pink,
@@ -89,7 +91,8 @@ $theme-colors: (
   "light":      $light,
   "dark":       $dark,
   "pink":       $pink,
-  "blue":       $blue
+  "blue":       $blue,
+  "qorum":      $qorum,
 );
 // scss-docs-end theme-colors-map
 
@@ -111,6 +114,16 @@ $blue-600: shade-color($blue, 20%);
 $blue-700: shade-color($blue, 40%);
 $blue-800: shade-color($blue, 60%);
 $blue-900: shade-color($blue, 80%);
+
+$qorum-100: tint-color($qorum, 80%);
+$qorum-200: tint-color($qorum, 60%);
+$qorum-300: tint-color($qorum, 40%);
+$qorum-400: tint-color($qorum, 20%);
+$qorum-500: $qorum;
+$qorum-600: shade-color($qorum, 20%);
+$qorum-700: shade-color($qorum, 40%);
+$qorum-800: shade-color($qorum, 60%);
+$qorum-900: shade-color($qorum, 80%);
 
 $indigo-100: tint-color($indigo, 80%);
 $indigo-200: tint-color($indigo, 60%);
@@ -212,6 +225,18 @@ $blues: (
   "blue-700": $blue-700,
   "blue-800": $blue-800,
   "blue-900": $blue-900
+);
+
+$qorum: (
+  "qorum-100": $qorum-100,
+  "qorum-200": $qorum-200,
+  "qorum-300": $qorum-300,
+  "qorum-400": $qorum-400,
+  "qorum-500": $qorum-500,
+  "qorum-600": $qorum-600,
+  "qorum-700": $qorum-700,
+  "qorum-800": $qorum-800,
+  "qorum-900": $qorum-900
 );
 
 $indigos: (

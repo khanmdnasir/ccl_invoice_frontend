@@ -75,6 +75,7 @@ const UserForm = ({ show, onHide, onSubmit, user, cgroups }: AddContactsProps) =
                             name="first_name"
                             placeholder="Enter first name"
                             containerClass={'mb-3'}
+                            labelClassName='required'
                         />
                         <FormInput
                             label="Last Name"
@@ -82,6 +83,7 @@ const UserForm = ({ show, onHide, onSubmit, user, cgroups }: AddContactsProps) =
                             name="last_name"
                             placeholder="Enter last name"
                             containerClass={'mb-3'}
+                            labelClassName='required'
                         />
                         <FormInput
                             label="Email address"
@@ -89,6 +91,7 @@ const UserForm = ({ show, onHide, onSubmit, user, cgroups }: AddContactsProps) =
                             name="email"
                             placeholder="Enter email"
                             containerClass={'mb-3'}
+                            labelClassName='required'
                         />
                         {!user &&
                         <FormInput
@@ -98,6 +101,7 @@ const UserForm = ({ show, onHide, onSubmit, user, cgroups }: AddContactsProps) =
                             required
                             placeholder="Enter Password"
                             containerClass={'mb-3'}
+                            labelClassName='required'
                         />
                         }
                         <FormInput
@@ -106,12 +110,14 @@ const UserForm = ({ show, onHide, onSubmit, user, cgroups }: AddContactsProps) =
                             name="phone"
                             placeholder="Enter phone number"
                             containerClass={'mb-3'}
+                            labelClassName='required'
                         />
                         <FormInput
                           label="Role"
                           type="select"
                           name="groups"
-                          containerClass={'mb-3'}  
+                          containerClass={'mb-3'}
+                          labelClassName='required'  
                           defaultValue={user && user.groups ? user.groups[0]?.id : ''}
                         >    
                            <option value="" disabled>Select Role ...</option>                         
