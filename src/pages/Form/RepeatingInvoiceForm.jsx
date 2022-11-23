@@ -399,7 +399,7 @@ const RepeatingInvoiceForm = () => {
                                         </Form.Group>
 
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Day</Form.Label>
+                                            <Form.Label className='required'>Day<small style={{fontSize:"10px", color:"grey"}}> (Every Month)</small> </Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
@@ -413,7 +413,7 @@ const RepeatingInvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Due Day</Form.Label>
+                                            <Form.Label className='required'>Due Day<small style={{ fontSize: "10px", color: "grey" }}> (Every Month)</small> </Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required
@@ -429,7 +429,7 @@ const RepeatingInvoiceForm = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Repeat Day</Form.Label>
+                                            <Form.Label className='required'>Repeat Day <small style={{ fontSize: "10px", color: "grey" }}> (Every Month)</small> </Form.Label>
                                             <Form.Control
                                                 type='number'
                                                 required

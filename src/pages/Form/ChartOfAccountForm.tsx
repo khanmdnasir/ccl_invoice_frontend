@@ -62,6 +62,7 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddChart
                             name="account_name"
                             placeholder="Enter account name"
                             containerClass={'mb-3'}
+                            labelClassName='required'
                         />
                         <FormInput
                             label="Code"
@@ -69,6 +70,7 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddChart
                             name="code"
                             placeholder="Enter Code"
                             containerClass={'mb-3'}
+                            labelClassName='required'
                         />
 
                         <FormInput
@@ -77,6 +79,7 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddChart
                             name="account_type"
                             placeholder="Enter account type"
                             containerClass={'mb-3'}
+                            labelClassName='required'
                         />
 
                         <FormInput
@@ -91,7 +94,8 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddChart
                             label="Transaction Type"
                             type="select"
                             name="transaction_type"
-                            containerClass={'mb-3'}  
+                            containerClass={'mb-3'} 
+                            labelClassName='required' 
                             defaultValue={chartOfAccount && chartOfAccount.transaction_type!=='' ? chartOfAccount.transaction_type : ''}
                         >    
                             <option value="" disabled>Select Transaction Type
