@@ -203,9 +203,9 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         </li> */}
                         <li className="dropdown notification-list topbar-dropdown">
                             <ProfileDropdown
-                                profilePic={user.profile_image !== 'null' ? user.profile_image: NoImage}
+                                profilePic={user? (user?.profile_image !== 'null' ? user.profile_image: NoImage) : NoImage}
                                 menuItems={ProfileMenus}
-                                username={user.first_name}
+                                username={user?.first_name}
                                 userTitle={'Founder'}
                             />
                         </li>

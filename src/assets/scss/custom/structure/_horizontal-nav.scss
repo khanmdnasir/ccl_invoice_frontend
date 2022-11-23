@@ -45,9 +45,10 @@ body[data-layout-mode="horizontal"] {
         .nav-link {
             font-size: $menu-item-size;
             position: relative;
+            font-weight: 500;
             line-height: 22px;
             padding: calc(#{$topnav-height - 22px} * 0.5) 1.1rem;
-            color: $white;
+            color: $menu-item;
             font-family: $font-family-secondary;
 
             i {
@@ -59,6 +60,7 @@ body[data-layout-mode="horizontal"] {
             &:hover {
                 color: $menu-item-hover;
                 background-color: transparent;
+                font-weight: bold;
             }
         }
 
@@ -91,10 +93,13 @@ body[data-layout-mode="horizontal"] {
             min-width: 180px;
             margin: 0 0.3rem;
             width: auto;
+            font-weight: 500;
+            font-family: $font-family-secondary;
 
             &.active {
                 background-color: transparent;
-                color: $menu-item-active;
+                color: $menu-item;
+                font-weight: bold;
             }
         }
 

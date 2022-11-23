@@ -127,7 +127,7 @@
     --#{$variable-prefix}navbar-dark-toggler-border-color:               #{rgba($white, .1)};
     --#{$variable-prefix}navbar-light-color:                             #{rgba($black, .55)};
     --#{$variable-prefix}navbar-light-hover-color:                       #{rgba($black, .7)};
-    --#{$variable-prefix}navbar-light-active-color:                      #{rgba($black, .9)};
+    --#{$variable-prefix}navbar-light-active-color:                      #{white};
     --#{$variable-prefix}navbar-light-disabled-color:                    #{rgba($black, .3)};
     --#{$variable-prefix}navbar-light-toggler-border-color:              #{rgba($black, .1)};
 
@@ -286,10 +286,10 @@
     --#{$variable-prefix}menu-item-active-color-dark:                     #{$white};
 
     //Menu item
-    --#{$variable-prefix}menu-item:                                       #6e768e;
-    --#{$variable-prefix}menu-item-hover:                                 #1203e4;
-    --#{$variable-prefix}menu-item-active:                                #1203e4;
-    --#{$variable-prefix}menu-sub-item-active:                            #1203e4;
+    --#{$variable-prefix}menu-item:                                       #e4e1e1;
+    --#{$variable-prefix}menu-item-hover:                                 #{white};
+    --#{$variable-prefix}menu-item-active:                                #{white};
+    --#{$variable-prefix}menu-sub-item-active:                            #{white};
 
     --#{$variable-prefix}menuitem-active-bg:                              #{rgba(#00acc1, 0.07)};
 
