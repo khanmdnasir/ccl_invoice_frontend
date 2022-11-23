@@ -1,9 +1,9 @@
 <p align="center"><a href="https://qoruminvoice.asl.aero" target="_blank"><img src="https://avatars.githubusercontent.com/u/25360261?v=4" width="200"></a></p>
 
 
-# Qourum Invoice Module
+# Qorum Invoice Module
 
-Qourum Invoice Module is an invoicing application that can use to manage your all of clients invoice and sent automatically email to the client. 
+Qorum Invoice Module is an invoicing application that can use to manage your all of clients invoice and sent automatically email to the client. 
 
 
 ## Tech Stack
