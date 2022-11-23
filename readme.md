@@ -43,7 +43,7 @@ Build docker image and run container
     
 ## API Documentation
 
-[Documentation](https://go.postman.co/workspace/gulp-bkk~05de5bfc-8f34-4cd0-a2f4-90e68f6fb262/collection/12750391-832473b0-4270-45f6-be48-13b07774427a?action=share&creator=12750391)
+[Documentation](https://documenter.getpostman.com/view/15933161/2s8YsnYGTE)
 
 
 ## Contributors
