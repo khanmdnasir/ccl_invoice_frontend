@@ -164,7 +164,7 @@ const Register = () => {
                     />
 
                     <div className="mb-0 d-grid text-center">
-                        <Button variant="primary" type="submit" disabled={loading}>
+                        <Button style={{"background":'#00a551', 'border':'none'}} type="submit" disabled={loading}>
                             {t('Sign Up')}
                         </Button>
                     </div>

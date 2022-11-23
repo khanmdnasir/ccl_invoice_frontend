@@ -34,6 +34,9 @@
 .btn-white {
     color: #{map-get($grays, "900")};
 }
+.btn-qorum {
+    background-color: '#00a551';
+}
 
 .btn-white {
     border-color: #{map-get($grays, "300")};

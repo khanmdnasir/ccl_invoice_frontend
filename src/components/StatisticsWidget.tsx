@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import CountUp from 'react-countup';
 import styled from 'styled-components';
+import classNames from 'classnames';
 
 interface StatisticsWidgetProps {
     variant: string;
@@ -28,7 +29,7 @@ const StatisticsWidget = (props: StatisticsWidgetProps) => {
                                 <p className="text-cyans mt-1 text-truncate">{props['description']}</p>
                                 
                                 
-                                <h3 className="text-blue mt-1">
+                                <h3 className={classNames(props['variant'],'mt-1')}>
                                     <span>
                                         <CountUp duration={1} end={props['stats']} {...props['counterOptions']} />
                                     </span>

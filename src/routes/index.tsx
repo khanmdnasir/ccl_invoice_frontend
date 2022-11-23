@@ -250,12 +250,12 @@ const authRoutes: RoutesProps[] = [
         component: PublicInvoice,
         route: Route,
     },
-    {
-        path: '/auth/register',
-        name: 'Register',
-        component: Register,
-        route: Route,
-    },
+    // {
+    //     path: '/auth/register',
+    //     name: 'Register',
+    //     component: Register,
+    //     route: Route,
+    // },
     {
         path: '/auth/confirm',
         name: 'Confirm',

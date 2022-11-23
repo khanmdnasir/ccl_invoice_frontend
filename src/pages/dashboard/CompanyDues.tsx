@@ -22,7 +22,7 @@ const CompanyDues = () => {
                             className="progress m-0"
                             label="10%"
                             // visuallyHidden
-                            variant="info"
+                            variant="qorum"
                         />
                     </div>
 
@@ -36,7 +36,7 @@ const CompanyDues = () => {
                             className="progress m-0"
                             label="20%"
                             // visuallyHidden
-                            variant="info"
+                            variant="qorum"
                         />
                     </div>
 
@@ -50,7 +50,7 @@ const CompanyDues = () => {
                             className="progress m-0"
                             label="30%"
                             // visuallyHidden
-                            variant="info"
+                            variant="qorum"
                         />
                     </div>
 
@@ -64,7 +64,7 @@ const CompanyDues = () => {
                             className="progress m-0"
                             label="40%"
                             // visuallyHidden
-                            variant="info"
+                            variant="qorum"
                         />
                     </div>
 
@@ -78,7 +78,7 @@ const CompanyDues = () => {
                             className="progress m-0"
                             label="50%"
                             // visuallyHidden
-                            variant="info"
+                            variant="qorum"
                         />
                     </div>
 
