@@ -17,7 +17,7 @@ import { LayoutTypes, SideBarTypes } from '../constants/layout';
 import MaximizeScreen from '../components/MaximizeScreen';
 // import SearchDropdown from '../components/SearchDropdown';
 import ProfileDropdown from '../components/ProfileDropdown';
-import CCL_Logo from '../assets/images/Qorum-v2.svg';
+import CCL_Logo from '../assets/images/Qorum.svg';
 import NoImage from '../assets/images/no_image.jpg';
 
 
@@ -162,13 +162,13 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         <div className="logo-box">
                             <Link to="/" className="logo logo-dark text-center">
                                 <span className="logo-sm">
-                                    <img src={CCL_Logo} alt="" height="40" />
+                                    <img src={CCL_Logo} alt="" height="60" />
                                 </span>
                                 <span className="logo-lg">
                                     <img
                                         src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? CCL_Logo : CCL_Logo}
                                         alt=""
-                                        height="40"
+                                        height="60"
                                     />
                                 </span>
                             </Link>
@@ -180,7 +180,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                                     <img
                                         src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? CCL_Logo : CCL_Logo}
                                         alt=""
-                                        height="40"
+                                        height="60"
                                     />
                                 </span>
                             </Link>

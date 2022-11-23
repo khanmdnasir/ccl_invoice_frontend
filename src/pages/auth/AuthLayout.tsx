@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 
-import CCL_Logo from '../../assets/images/Qorum-v2.svg';
+import CCL_Logo from '../../assets/images/Qorum.svg';
 
 
 
@@ -39,13 +39,13 @@ const AuthLayout = ({ helpText, bottomLinks, children, isCombineForm }: AccountL
                                 <div className="auth-logo">
                                     <Link to="/" className="logo logo-dark text-center outline-none">
                                         <span className="logo-lg">
-                                            <img src={CCL_Logo} alt="" height="90" />
+                                            <img src={CCL_Logo} alt="" height="140" />
                                         </span>
                                     </Link>
 
                                     <Link to="/" className="logo logo-light text-center">
                                         <span className="logo-lg">
-                                            <img src={CCL_Logo} alt="" height="90" />
+                                            <img src={CCL_Logo} alt="" height="140" />
                                         </span>
                                     </Link>
                                 </div>
@@ -60,17 +60,9 @@ const AuthLayout = ({ helpText, bottomLinks, children, isCombineForm }: AccountL
                 </div>
 
                 {/* Auth fluid right content */}
-                <div className="auth-fluid-right text-center">
+                <div className="auth-fluid-right text-center ml-5">
                     <div className="auth-user-testimonial">
-                        <h2 className="mb-3 text-white">{t('I love the color!')}</h2>
-                        <p className="lead">
-                            <i className="mdi mdi-format-quote-open"></i>{' '}
-                            {t(
-                                "I've been using your theme from the previous developer for our web app, once I knew new version is out, I immediately bought with no hesitation. Great themes, good documentation with lots of customization available and sample app that really fit our need."
-                            )}{' '}
-                            <i className="mdi mdi-format-quote-close"></i>
-                        </p>
-                        <h5 className="text-white">{t('- Fadlisaad (Ubold Admin User)')}</h5>
+
                     </div>
                 </div>
             </div>
