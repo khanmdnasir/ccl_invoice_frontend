@@ -243,6 +243,7 @@ const Users = () => {
     */
 
     useEffect(()=>{
+
         if(success !== ''){
             onCloseModal();
         }
@@ -250,12 +251,12 @@ const Users = () => {
         setTimeout(()=>{
             dispatch(setUserSuccessAlert(''));
         },2000)
+
     },[success])
     
     const onSubmit = (formData:FormData) => {
 
         dispatch(addUser({'first_name':formData['first_name'],'last_name':formData['last_name'],'email':formData['email'],'password':formData['password'],'phone':formData['phone'],'groups':[parseInt(formData['groups'])],'is_active':formData['is_active']}));
-        dispatch(getUser(pageSize,1));
         
         
     };

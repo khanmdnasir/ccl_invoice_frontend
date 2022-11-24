@@ -31,12 +31,12 @@ const BottomLink = () => {
 
     return (
         <footer className="footer footer-alt">
-            <p className="text-muted">
+            {/* <p className="text-muted">
                 {t("Don't have an account?")}{' '}
                 <Link to={'/auth/register'} className="text-muted ms-1">
                     <b>{t('Sign Up')}</b>
                 </Link>
-            </p>
+            </p> */}
         </footer>
     );
 };
@@ -118,7 +118,7 @@ const Login = () => {
                     <FormInput label="Remember me" type="checkbox" name="checkbox" containerClass={'mb-3'} />
 
                     <div className="d-grid mb-0 text-center">
-                        <Button variant="primary" type="submit" disabled={loading}>
+                        <Button style={{"background":'#00a551', 'border':'none'}} type="submit" disabled={loading}>
                             {t('Log In')}
                         </Button>
                     </div>
