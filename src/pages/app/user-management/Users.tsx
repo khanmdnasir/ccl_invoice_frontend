@@ -243,7 +243,10 @@ const Users = () => {
     */
 
     useEffect(()=>{
-        onCloseModal();
+        if(success !== ''){
+            onCloseModal();
+        }
+        
         setTimeout(()=>{
             dispatch(setUserSuccessAlert(''));
         },2000)
