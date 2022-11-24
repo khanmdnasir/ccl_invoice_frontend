@@ -225,7 +225,10 @@ const Contact = () => {
     */
 
     useEffect(()=>{
-        onCloseModal();
+        if(success !== ''){
+            onCloseModal();
+        }
+        
         setTimeout(()=>{
             dispatch(setContactSuccessAlert(''));
         },2000)

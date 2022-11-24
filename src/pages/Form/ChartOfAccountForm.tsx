@@ -101,7 +101,7 @@ const ChartOfAccountForm = ({ show, onHide, onSubmit, chartOfAccount }: AddChart
                             <option value="" disabled>Select Transaction Type
                             </option>                         
                             <option value="expense">Expense</option>                         
-                            <option value="non-expense">Non-Expense</option>                         
+                            <option value="income">Income</option>                         
 
                         </FormInput>
 

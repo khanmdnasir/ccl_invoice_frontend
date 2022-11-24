@@ -243,13 +243,14 @@ const Users = () => {
     */
 
     useEffect(()=>{
-        if (success!==''){
+
+        if(success !== ''){
             onCloseModal();
+        }
             dispatch(getUser(pageSize,1));
             setTimeout(()=>{
                 dispatch(setUserSuccessAlert(''));
             },2000)
-        }
     },[success])
     
     const onSubmit = (formData:FormData) => {

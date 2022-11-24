@@ -66,10 +66,10 @@ const RoleForm = () => {
         const isChecked = e.target.checked;
         
         if(isChecked){
-            setRolePermission([...role_permission,parseInt(e.target.value)  ]);
+            setRolePermission([...role_permission,e.target.value ]);
             
         }else{
-            let index = role_permission.findIndex((x) => parseInt(x) === parseInt(e.target.value))
+            let index = role_permission.findIndex((x) => x === e.target.value)
             role_permission.splice(index,1)
             setRolePermission([...role_permission])
             
@@ -86,10 +86,10 @@ const RoleForm = () => {
         if (role){
             setRoleName(role?.name)
             const permissions = role?.permissions;
-            const permissionsId = permissions.map(permission=>{
-                return permission.id
+            const permissionsCodeName = permissions.map(permission=>{
+                return permission.codename
             })
-            setRolePermission(permissionsId)
+            setRolePermission(permissionsCodeName)
         }
         
         
@@ -132,18 +132,18 @@ const RoleForm = () => {
                                         <Card.Body>
                                             <Row className='mb-4'>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="View" value='38' checked={role_permission.includes(38)} />                                                  
+                                                    <Form.Check label="View" value='view_contact' checked={role_permission.includes('view_contact')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Add" value='35' checked={role_permission.includes(35)} />                                                  
+                                                    <Form.Check label="Add" value='add_contact' checked={role_permission.includes('add_contact')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                             <Row>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Edit" value='36' checked={role_permission.includes(36)} />                                                  
+                                                    <Form.Check label="Edit" value='change_contact' checked={role_permission.includes('change_contact')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Delete" value='37' checked={role_permission.includes(37)} />                                                  
+                                                    <Form.Check label="Delete" value='delete_contact' checked={role_permission.includes('delete_contact')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                         
@@ -156,18 +156,18 @@ const RoleForm = () => {
                                         <Card.Body>
                                             <Row className='mb-4'>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="View" value='54' checked={role_permission.includes(54)} />                                                  
+                                                    <Form.Check label="View" value='view_service' checked={role_permission.includes('view_service')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Add" value='51' checked={role_permission.includes(51)} />                                                  
+                                                    <Form.Check label="Add" value='add_service' checked={role_permission.includes('add_service')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                             <Row>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Edit" value='52' checked={role_permission.includes(52)} />                                                  
+                                                    <Form.Check label="Edit" value='change_service' checked={role_permission.includes('change_service')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Delete" value='53' checked={role_permission.includes(53)} />                                                  
+                                                    <Form.Check label="Delete" value='delete_service' checked={role_permission.includes('delete_service')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                         
@@ -180,18 +180,18 @@ const RoleForm = () => {
                                         <Card.Body>
                                             <Row className='mb-4'>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="View" value='46' checked={role_permission.includes(46)} />                                                  
+                                                    <Form.Check label="View" value='view_invoice' checked={role_permission.includes('view_invoice')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Add" value='43' checked={role_permission.includes(43)} />                                                  
+                                                    <Form.Check label="Add" value='add_invoice' checked={role_permission.includes('add_invoice')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                             <Row>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Edit" value='44' checked={role_permission.includes(44)} />                                                  
+                                                    <Form.Check label="Edit" value='change_invoice' checked={role_permission.includes('change_invoice')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Delete" value='45' checked={role_permission.includes(45)} />                                                  
+                                                    <Form.Check label="Delete" value='delete_invoice' checked={role_permission.includes('delete_invoice')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                         
@@ -204,18 +204,18 @@ const RoleForm = () => {
                                         <Card.Body>
                                             <Row className='mb-2'>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="View" value='50' checked={role_permission.includes(50)} />                                                  
+                                                    <Form.Check label="View" value='view_repeatinginvoice' checked={role_permission.includes('view_repeatinginvoice')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Add" value='47' checked={role_permission.includes(47)} />                                                  
+                                                    <Form.Check label="Add" value='add_repeatinginvoice' checked={role_permission.includes('add_repeatinginvoice')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                             <Row>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Edit" value='48' checked={role_permission.includes(48)} />                                                  
+                                                    <Form.Check label="Edit" value='change_repeatinginvoice' checked={role_permission.includes('change_repeatinginvoice')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Delete" value='49' checked={role_permission.includes(49)} />                                                  
+                                                    <Form.Check label="Delete" value='delete_repeatinginvoice' checked={role_permission.includes('delete_repeatinginvoice')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                         
@@ -232,18 +232,18 @@ const RoleForm = () => {
                                         <Card.Body>
                                             <Row className='mb-2'>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="View" value='12' checked={role_permission.includes(12)} />                                                  
+                                                    <Form.Check label="View" value='view_group' checked={role_permission.includes('view_group')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Add" value='9' checked={role_permission.includes(9)} />                                                  
+                                                    <Form.Check label="Add" value='add_group' checked={role_permission.includes('add_group')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                             <Row>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Edit" value='10' checked={role_permission.includes(10)} />                                                  
+                                                    <Form.Check label="Edit" value='change_group' checked={role_permission.includes('change_group')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Delete" value='11' checked={role_permission.includes(11)} />                                                  
+                                                    <Form.Check label="Delete" value='delete_group' checked={role_permission.includes('delete_group')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                         
@@ -256,47 +256,24 @@ const RoleForm = () => {
                                         <Card.Body>
                                             <Row className='mb-2'>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="View" value='28' checked={role_permission.includes(28)} />                                                  
+                                                    <Form.Check label="View" value='view_user' checked={role_permission.includes('view_user')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Add" value='25' checked={role_permission.includes(25)} />                                                  
+                                                    <Form.Check label="Add" value='add_user' checked={role_permission.includes('add_user')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                             <Row>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Edit" value='26' checked={role_permission.includes(26)} />                                                  
+                                                    <Form.Check label="Edit" value='change_user' checked={role_permission.includes('change_user')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Delete" value='27' checked={role_permission.includes(27)} />                                                  
+                                                    <Form.Check label="Delete" value='delete_user' checked={role_permission.includes('delete_user')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                         
                                         </Card.Body>
                                     </Card >
-                                    <Card as={Col}>
-                                        <Card.Header>
-                                            <h5 className='me-2'>Company Settings</h5>
-                                        </Card.Header>
-                                        <Card.Body>
-                                            <Row className='mb-2'>
-                                                <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="View" value='106' checked={role_permission.includes(106)} />                                                  
-                                                </Form.Group>
-                                                <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Add" value='103' checked={role_permission.includes(103)} />                                                  
-                                                </Form.Group>
-                                            </Row>
-                                            <Row>
-                                                <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Edit" value='104' checked={role_permission.includes(104)} />                                                  
-                                                </Form.Group>
-                                                <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Delete" value='105' checked={role_permission.includes(105)} />                                                  
-                                                </Form.Group>
-                                            </Row>
-                                        
-                                        </Card.Body>
-                                    </Card >
+                                    
                                     <Card as={Col}>
                                         <Card.Header>
                                             <h5 className='me-2'>Chart of Account</h5>
@@ -304,24 +281,24 @@ const RoleForm = () => {
                                         <Card.Body>
                                             <Row className='mb-2'>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="View" value='34' checked={role_permission.includes(34)} />                                                  
+                                                    <Form.Check label="View" value='view_chartofaccount' checked={role_permission.includes('view_chartofaccount')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Add" value='31' checked={role_permission.includes(31)} />                                                  
+                                                    <Form.Check label="Add" value='add_chartofaccount' checked={role_permission.includes('add_chartofaccount')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                             <Row>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Edit" value='32' checked={role_permission.includes(32)} />                                                  
+                                                    <Form.Check label="Edit" value='change_chartofaccount' checked={role_permission.includes('change_chartofaccount')} />                                                  
                                                 </Form.Group>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
-                                                    <Form.Check label="Delete" value='33' checked={role_permission.includes(33)} />                                                  
+                                                    <Form.Check label="Delete" value='delete_chartofaccount' checked={role_permission.includes('delete_chartofaccount')} />                                                  
                                                 </Form.Group>
                                             </Row>
                                         
                                         </Card.Body>
                                     </Card >
-                                    
+                                    <Col></Col>
                                 
                             </Row>
                             
