@@ -16,9 +16,9 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.IP }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
+          host: "192.163.143.42"
+          username: "shuvo"
+          key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDEwy272hZxga3+HeVr+OZmOkpjuaztfEqknLcTh2byJEZovDgo1SZxrb6OCKgF86Zeg+UDkyjeaNSCgyRju7bwo6raTwDqkI/W5YHeSMK8S3eKcXDmneEQOk7BQ1zWBYAvX4unqTZM2W1Pp40mUhPemm8LPhcVHP1imvugf7hfJ1UcsOvAP7oDE1eU+BYHxskQvFaKSiwGlTa1zgYB+k7o6K5PPWKFqeT/NJ5AJ7STCcYVP9RP09prJNjhD5l5oaTNje4s92CxOjUHnZjfE6y6r476ve6M0MemWOrkhUQRXgLvbScj2tlxxNQjWVNMoa61vjUus+iIu58KJWdJUUq/ shuvo@vmi1085337.contaboserver.net"
           script: |
             cd /usr/share/nginx/html/ccl_invoice_frontend
             git pull
