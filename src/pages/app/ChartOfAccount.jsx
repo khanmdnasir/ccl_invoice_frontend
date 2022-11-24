@@ -188,11 +188,12 @@ const ChartOfAccounts = () => {
     useEffect(() => {
         if (success!==''){
             onCloseModal();
+        }
             dispatch(getChartAccount(pageSize, 1));
             setTimeout(() => {
                 dispatch(setChartOfAccountSuccessAlert(''));
             }, 2000)
-        }
+        
     }, [success])
 
     /*

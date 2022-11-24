@@ -247,11 +247,10 @@ const Users = () => {
         if(success !== ''){
             onCloseModal();
         }
-        
-        setTimeout(()=>{
-            dispatch(setUserSuccessAlert(''));
-        },2000)
-
+            dispatch(getUser(pageSize,1));
+            setTimeout(()=>{
+                dispatch(setUserSuccessAlert(''));
+            },2000)
     },[success])
     
     const onSubmit = (formData:FormData) => {
