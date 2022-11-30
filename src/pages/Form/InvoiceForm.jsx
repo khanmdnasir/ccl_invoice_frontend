@@ -43,6 +43,7 @@ const InvoiceForm = () => {
     const [currency, setCurrency] = useState('1');
     const [tax_type, setTaxType] = useState('inclusive');
     const [sub_total, setSubTotal] = useState('');
+    const [total, setTotal] = useState('');
     const [discount, setDiscount] = useState('');
     const [total_tax, setTotalTax] = useState('');
     const [status, setStatus] = useState('draft');
@@ -152,11 +153,13 @@ const InvoiceForm = () => {
     useEffect(() => {
         const groupOfTax = {}
         let total_discount = 0
-        let total_subTotal = 0.00
+        let total_amount = 0.00
+        let subTotal = 0.00
         let total_taxAmount = 0
         newItems.forEach((item) => {
-            total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
-            total_subTotal += parseFloat(item.total_amount);
+            total_discount += parseFloat((parseFloat(item.unit_price) * parseFloat(item.qty) / 100) * parseFloat(item.discount));
+            subTotal += parseFloat(parseFloat(item.unit_price) * parseFloat(item.qty))
+            total_amount += parseFloat(item.total_amount);
             var item_tax_amount = 0;
             if (tax_type === 'inclusive') {
                 item_tax_amount = parseFloat((parseFloat(item.sub_total) * parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)) / (100 + parseFloat(item.tax_rate !== '' ? item.tax_rate : 0)))
@@ -179,8 +182,9 @@ const InvoiceForm = () => {
 
 
         oldItems.forEach((item) => {
-            total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
-            total_subTotal += parseFloat(item.total_amount);
+            total_discount += parseFloat((parseFloat(item.unit_price) * parseFloat(item.qty) / 100) * parseFloat(item.discount));
+            subTotal += parseFloat(parseFloat(item.unit_price) * parseFloat(item.qty))
+            total_amount += parseFloat(item.total_amount);
 
             var item_tax_amount = 0;
             if (tax_type === 'inclusive') {
@@ -202,9 +206,10 @@ const InvoiceForm = () => {
             }
         })
         setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
-        setSubTotal(parseFloat(parseFloat(total_subTotal).toFixed(2)));
+        setTotal(parseFloat(parseFloat(total_amount).toFixed(2)));
+        setSubTotal(parseFloat(parseFloat(subTotal).toFixed(2)));
         setTotalTax(parseFloat(parseFloat(total_taxAmount).toFixed(2)));
-        let totalAmount = parseFloat(parseFloat(parseFloat(total_subTotal) + (tax_type === 'exclusive' && parseFloat(total_taxAmount))).toFixed(2));
+        let totalAmount = parseFloat(parseFloat(parseFloat(total_amount) + (tax_type === 'exclusive' && parseFloat(total_taxAmount))).toFixed(2));
         setTotalAmount(totalAmount)
         setTaxGroup(groupOfTax)
     }, [newItems, oldItems, tax_type])
@@ -270,30 +275,30 @@ const InvoiceForm = () => {
         setSuccess(null);
         let formatDate = format(new Date(date), 'yyyy-MM-dd');
         let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
-        if(newItems.length > 0){
+        if (newItems.length > 0) {
             api.create(`/api/invoice/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
-            .then(res => {
+                .then(res => {
 
-                if (res.data.success) {
-                    setSuccess('Data Saved Successfully');
-                    setRloading(false);
-                    setTimeout(() => {
-                        history.push('/app/invoice')
-                    }, 2000);
-                } else {
-                    setError(res.data.error)
-                    setRloading(false);
+                    if (res.data.success) {
+                        setSuccess('Data Saved Successfully');
+                        setRloading(false);
+                        setTimeout(() => {
+                            history.push('/app/invoice')
+                        }, 2000);
+                    } else {
+                        setError(res.data.error)
+                        setRloading(false);
 
-                }
+                    }
 
-            })
-            .catch(err => {
-                setError(err)
-            })
-        }else{
+                })
+                .catch(err => {
+                    setError(err)
+                })
+        } else {
             setError("Please add at least one service")
         }
-        
+
     }
 
     const onUpdate = (e) => {
@@ -304,31 +309,31 @@ const InvoiceForm = () => {
         let formatDate = format(new Date(date), 'yyyy-MM-dd');
         let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
 
-        if(oldItems.length > 0){
+        if (oldItems.length > 0) {
             api.updatePatch(`/api/invoice/${invoiceId}/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
-            .then(res => {
+                .then(res => {
 
-                if (res.data.success) {
-                    setSuccess('Data Updated Successfully');
-                    setRloading(false);
-                    setTimeout(() => {
-                        history.push('/app/invoice')
-                    }, 2000);
-                    
-                } else {
-                    setError(res.data.error)
-                    setRloading(false);
-                }
+                    if (res.data.success) {
+                        setSuccess('Data Updated Successfully');
+                        setRloading(false);
+                        setTimeout(() => {
+                            history.push('/app/invoice')
+                        }, 2000);
 
-            })
-            .catch(err => {
-                setError(err)
-            })
-        }else{
+                    } else {
+                        setError(res.data.error)
+                        setRloading(false);
+                    }
+
+                })
+                .catch(err => {
+                    setError(err)
+                })
+        } else {
             setRloading(false)
             setError("You have to add at least one service")
         }
-        
+
     }
 
     return (
@@ -424,7 +429,7 @@ const InvoiceForm = () => {
                                             <Form.Label >Reference</Form.Label>
                                             <Form.Control
                                                 type='text'
-                                                
+
                                                 name='reference'
                                                 onChange={(e) => setReference(e.target.value)}
                                                 defaultValue={invoiceId && invoice_details?.reference}
@@ -458,14 +463,13 @@ const InvoiceForm = () => {
                                         <tr>
                                             <th className='required'>Item</th>
                                             <th >Description</th>
-                                            <th className='required'>Quantity</th>
+                                            <th className='required'>Chart Of Account</th>
                                             <th className='required'>Unit Price</th>
+                                            <th className='required'>Quantity</th>
+                                            <th className='required'>Sub Total</th>
                                             <th >Discount %</th>
-                                            <th className='required'>Account</th>
-                                            <th >Tax Rate %</th>
-
                                             <th >Total</th>
-
+                                            <th >Tax Rate %</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -494,45 +498,6 @@ const InvoiceForm = () => {
                                                                 name='description'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.description}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                required
-                                                                name='qty'
-                                                                onChange={(e) => onOldItemsChange(e, index)}
-                                                                value={item?.qty}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                required
-                                                                name='unit_price'
-                                                                onChange={(e) => onOldItemsChange(e, index)}
-                                                                value={item?.unit_price}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                            
-                                                                name='discount'
-                                                                onChange={(e) => onOldItemsChange(e, index)}
-                                                                value={item?.discount}
                                                             >
 
                                                             </Form.Control>
@@ -569,10 +534,47 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                
-                                                                name='tax_rate'
+                                                                required
+                                                                name='unit_price'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
-                                                                value={item?.tax_rate}
+                                                                value={item?.unit_price}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='qty'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.qty}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                readOnly={true}
+                                                                value={item?.unit_price * parseInt(item?.qty)}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+
+                                                                name='discount'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.discount}
                                                             >
 
                                                             </Form.Control>
@@ -584,6 +586,20 @@ const InvoiceForm = () => {
                                                             <Form.Control
                                                                 readOnly={true}
                                                                 value={item?.total_amount}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+
+                                                                name='tax_rate'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.tax_rate}
                                                             >
 
                                                             </Form.Control>
@@ -622,7 +638,7 @@ const InvoiceForm = () => {
                                                             <Form.Control
                                                                 as='textarea'
                                                                 rows='1'
-                                                                
+
                                                                 name='description'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.description}
@@ -631,45 +647,7 @@ const InvoiceForm = () => {
                                                             </Form.Control>
                                                         </Form.Group>
                                                     </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                required
-                                                                name='qty'
-                                                                onChange={(e) => onNewItemsChange(e, index)}
-                                                                value={item?.qty}
-                                                            >
 
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                required
-                                                                name='unit_price'
-                                                                onChange={(e) => onNewItemsChange(e, index)}
-                                                                value={item?.unit_price}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                
-                                                                name='discount'
-                                                                onChange={(e) => onNewItemsChange(e, index)}
-                                                                value={item?.discount}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
                                                     <td>
                                                         <Form.Group as={Col}>
 
@@ -701,10 +679,33 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                
-                                                                name='tax_rate'
+                                                                required
+                                                                name='unit_price'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
-                                                                value={item?.tax_rate}
+                                                                value={item?.unit_price}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='qty'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.qty}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                readOnly={true}
+                                                                value={item?.unit_price * parseInt(item?.qty)}
                                                             >
 
                                                             </Form.Control>
@@ -714,8 +715,34 @@ const InvoiceForm = () => {
                                                     <td>
                                                         <Form.Group>
                                                             <Form.Control
+                                                                type='number'
+
+                                                                name='discount'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.discount}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
                                                                 readOnly={true}
                                                                 value={item?.total_amount}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+
+                                                                name='tax_rate'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.tax_rate}
                                                             >
 
                                                             </Form.Control>
@@ -907,8 +934,18 @@ const InvoiceForm = () => {
                                     </Link>
                                     <div >
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Subtotal</p>
+                                            <p style={{ fontSize: '20px' }}>Sub Total</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {sub_total}</p>
+                                        </div>
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Discount</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {discount}</p>
+                                        </div>
+                                        <hr></hr>
+
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Total</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {total}</p>
                                         </div>
                                         {/* {newItems?.map((item)=>{
                                                 if(item.tax_rate > 0)
@@ -933,7 +970,7 @@ const InvoiceForm = () => {
                                             if (item[0] > 0) {
                                                 return (
                                                     <div className="d-flex justify-content-between" >
-                                                        <p style={{ fontSize: '20px' }}>Total Tax {item[0]}%</p>
+                                                        <p style={{ fontSize: '20px' }}>Tax {item[0]}%</p>
                                                         <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {item[1]}</p>
 
                                                     </div>)
@@ -941,7 +978,7 @@ const InvoiceForm = () => {
                                         })}
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Total</p>
+                                            <p style={{ fontSize: '20px' }}>Net Payable</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {total_amount}</p>
                                         </div>
                                         <hr></hr><hr></hr>
