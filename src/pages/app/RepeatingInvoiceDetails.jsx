@@ -191,13 +191,13 @@ const RepeatingInvoiceDetails = withSwal(({ swal }) => {
                                         <tr>
                                             <th>Item</th>
                                             <th>Description</th>
-                                            <th>Quantity</th>
+                                            <th>Chart Of Account</th>
                                             <th>Unit Price</th>
+                                            <th>Quantity</th>
+                                            <th>Sub Total</th>
                                             <th>Discount %</th>
-                                            <th>Account</th>
-                                            <th>Tax Rate %</th>
-
                                             <th>Total</th>
+                                            <th>Tax Rate %</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -226,13 +226,15 @@ const RepeatingInvoiceDetails = withSwal(({ swal }) => {
                                                             </Form.Group>
                                                         </td>
                                                         <td>
-                                                            <Form.Group>
+                                                            <Form.Group as={Col}>
+
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.qty}
+                                                                    defaultValue={item.account_id.account_name}
                                                                 >
 
                                                                 </Form.Control>
+
                                                             </Form.Group>
                                                         </td>
                                                         <td>
@@ -249,29 +251,27 @@ const RepeatingInvoiceDetails = withSwal(({ swal }) => {
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.discount}
+                                                                    defaultValue={item.qty}
                                                                 >
 
                                                                 </Form.Control>
-                                                            </Form.Group>
-                                                        </td>
-                                                        <td>
-                                                            <Form.Group as={Col}>
-
-                                                                <Form.Control
-                                                                    readOnly={true}
-                                                                    defaultValue={item.account_id.account_name}
-                                                                >
-
-                                                                </Form.Control>
-
                                                             </Form.Group>
                                                         </td>
                                                         <td>
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    defaultValue={item.tax_rate}
+                                                                    value={item.unit_price * item.qty}
+                                                                >
+
+                                                                </Form.Control>
+                                                            </Form.Group>
+                                                        </td>
+                                                        <td>
+                                                            <Form.Group>
+                                                                <Form.Control
+                                                                    readOnly={true}
+                                                                    defaultValue={item.discount}
                                                                 >
 
                                                                 </Form.Control>
@@ -283,6 +283,16 @@ const RepeatingInvoiceDetails = withSwal(({ swal }) => {
                                                                 <Form.Control
                                                                     readOnly={true}
                                                                     value={item.total_amount}
+                                                                >
+
+                                                                </Form.Control>
+                                                            </Form.Group>
+                                                        </td>
+                                                        <td>
+                                                            <Form.Group>
+                                                                <Form.Control
+                                                                    readOnly={true}
+                                                                    defaultValue={item.tax_rate}
                                                                 >
 
                                                                 </Form.Control>
@@ -300,10 +310,19 @@ const RepeatingInvoiceDetails = withSwal(({ swal }) => {
                                     <div></div>
                                     <div >
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Subtotal (discount {scurrency?.symbol} {repeating_invoice_details?.discount} )</p>
+                                            <p style={{ fontSize: '20px' }}>Sub Total </p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.sub_total}</p>
                                         </div>
 
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Discount </p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.discount}</p>
+                                        </div>
+                                        <hr></hr>
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Total </p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.sub_total - repeating_invoice_details?.discount}</p>
+                                        </div>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total Tax</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.total_tax}</p>
@@ -311,7 +330,7 @@ const RepeatingInvoiceDetails = withSwal(({ swal }) => {
 
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Total</p>
+                                            <p style={{ fontSize: '20px' }}>Net Payable </p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.total_amount}</p>
                                         </div>
                                         <hr></hr><hr></hr>

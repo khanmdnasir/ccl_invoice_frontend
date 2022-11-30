@@ -368,7 +368,6 @@ const InvoiceDetails = withSwal(({swal}) => {
                                             <p style={{ fontSize: '20px' }}>Total </p>
                                                     <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.sub_total - invoiceDetails?.discount}</p>
                                         </div>
-                                                <hr></hr>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total Tax</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.total_tax}</p>
@@ -376,7 +375,7 @@ const InvoiceDetails = withSwal(({swal}) => {
 
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Total</p>
+                                                    <p style={{ fontSize: '20px' }}>Net Payable </p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.total_amount}</p>
                                         </div>
                                         <hr></hr><hr></hr>

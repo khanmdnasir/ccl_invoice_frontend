@@ -157,7 +157,7 @@ const InvoiceForm = () => {
         let subTotal = 0.00
         let total_taxAmount = 0
         newItems.forEach((item) => {
-            total_discount += parseFloat((parseFloat(item.unit_price) * parseFloat(item.qty) / 100) * parseFloat(item.discount));
+            total_discount += parseFloat((parseFloat(item.unit_price) * parseFloat(item.qty) / 100) * parseFloat(item.discount ? item.discount : 0));
             subTotal += parseFloat(parseFloat(item.unit_price) * parseFloat(item.qty))
             total_amount += parseFloat(item.total_amount);
             var item_tax_amount = 0;
@@ -182,7 +182,7 @@ const InvoiceForm = () => {
 
 
         oldItems.forEach((item) => {
-            total_discount += parseFloat((parseFloat(item.unit_price) * parseFloat(item.qty) / 100) * parseFloat(item.discount));
+            total_discount += parseFloat((parseFloat(item.unit_price) * parseFloat(item.qty) / 100) * parseFloat(item.discount ? item.discount:0));
             subTotal += parseFloat(parseFloat(item.unit_price) * parseFloat(item.qty))
             total_amount += parseFloat(item.total_amount);
 
@@ -466,7 +466,7 @@ const InvoiceForm = () => {
                                             <th className='required'>Chart Of Account</th>
                                             <th className='required'>Unit Price</th>
                                             <th className='required'>Quantity</th>
-                                            <th className='required'>Sub Total</th>
+                                            <th>Sub Total</th>
                                             <th >Discount %</th>
                                             <th >Total</th>
                                             <th >Tax Rate %</th>
@@ -987,7 +987,7 @@ const InvoiceForm = () => {
                                 <div className="d-flex justify-content-between">
 
                                     <Button variant="info" type="submit" className="waves-effect waves-light me-1" >
-                                        Save
+                                        Draft
                                     </Button>
                                     <div>
                                         <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading} onClick={() => setStatus('approve')}>

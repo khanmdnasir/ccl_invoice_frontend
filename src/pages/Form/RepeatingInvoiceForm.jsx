@@ -43,6 +43,7 @@ const RepeatingInvoiceForm = () => {
     const scurrency = useSelector(state => state.Currency.selectedCurrency);
     const [tax_type, setTaxType] = useState('inclusive');
     const [sub_total, setSubTotal] = useState('');
+    const [total, setTotal] = useState('');
     const [discount, setDiscount] = useState('');
     const [total_tax, setTotalTax] = useState('');
     const [status, setStatus] = useState('draft');
@@ -155,11 +156,13 @@ const RepeatingInvoiceForm = () => {
     useEffect(() => {
         const groupOfTax = {}
         let total_discount = 0
-        let total_subTotal = 0.00
+        let total_amount = 0.00
+        let subTotal = 0.00
         let total_taxAmount = 0
         newItems.forEach((item) => {
-            total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
-            total_subTotal += parseFloat(item.total_amount);
+            total_discount += parseFloat((parseFloat(item.unit_price) * parseFloat(item.qty) / 100) * parseFloat(item.discount ? item.discount : 0));
+            total_amount += parseFloat(item.total_amount);
+            subTotal += parseFloat(parseFloat(item.unit_price) * parseFloat(item.qty))
 
             var item_tax_amount = 0;
             if (tax_type === 'inclusive') {
@@ -184,8 +187,9 @@ const RepeatingInvoiceForm = () => {
 
 
         oldItems.forEach((item) => {
-            total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
-            total_subTotal += parseFloat(item.total_amount);
+            total_discount += parseFloat((parseFloat(item.unit_price) * parseFloat(item.qty) / 100) * parseFloat(item.discount ? item.discount : 0));
+            subTotal += parseFloat(parseFloat(item.unit_price) * parseFloat(item.qty))
+            total_amount += parseFloat(item.total_amount);
 
             var item_tax_amount = 0;
             if (tax_type === 'inclusive') {
@@ -209,9 +213,10 @@ const RepeatingInvoiceForm = () => {
 
         })
         setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
-        setSubTotal(parseFloat(parseFloat(total_subTotal).toFixed(2)));
+        setTotal(parseFloat(parseFloat(total_amount).toFixed(2)));
+        setSubTotal(parseFloat(parseFloat(subTotal).toFixed(2)));
         setTotalTax(parseFloat(parseFloat(total_taxAmount).toFixed(2)));
-        let totalAmount = parseFloat(parseFloat(parseFloat(total_subTotal) + (tax_type === 'exclusive' && parseFloat(total_taxAmount))).toFixed(2));
+        let totalAmount = parseFloat(parseFloat(parseFloat(total_amount) + (tax_type === 'exclusive' && parseFloat(total_taxAmount))).toFixed(2));
         setTotalAmount(totalAmount)
         setTaxGroup(groupOfTax)
     }, [newItems, oldItems, tax_type])
@@ -480,14 +485,13 @@ const RepeatingInvoiceForm = () => {
                                         <tr>
                                             <th className='required'>Item</th>
                                             <th>Description</th>
-                                            <th className='required'>Quantity</th>
+                                            <th className='required'>Chart Of Account</th>
                                             <th className='required'>Unit Price</th>
+                                            <th className='required'>Quantity</th>
+                                            <th>Sub Total</th>
                                             <th>Discount %</th>
-                                            <th className='required'>Account</th>
-                                            <th>Tax Rate %</th>
-
                                             <th>Total</th>
-
+                                            <th>Tax Rate %</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -517,45 +521,6 @@ const RepeatingInvoiceForm = () => {
                                                                 name='description'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.description}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                required
-                                                                name='qty'
-                                                                onChange={(e) => onOldItemsChange(e, index)}
-                                                                value={item?.qty}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                required
-                                                                name='unit_price'
-                                                                onChange={(e) => onOldItemsChange(e, index)}
-                                                                value={item?.unit_price}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                
-                                                                name='discount'
-                                                                onChange={(e) => onOldItemsChange(e, index)}
-                                                                value={item?.discount}
                                                             >
 
                                                             </Form.Control>
@@ -592,16 +557,51 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                
-                                                                name='tax_rate'
+                                                                required
+                                                                name='unit_price'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
-                                                                value={item?.tax_rate}
+                                                                value={item?.unit_price}
                                                             >
 
                                                             </Form.Control>
                                                         </Form.Group>
                                                     </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='qty'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.qty}
+                                                            >
 
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                readOnly={true}
+                                                                value={item?.unit_price * parseInt(item?.qty)}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                
+                                                                name='discount'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.discount}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
                                                     <td>
                                                         <Form.Group>
                                                             <Form.Control
@@ -612,6 +612,20 @@ const RepeatingInvoiceForm = () => {
                                                             </Form.Control>
                                                         </Form.Group>
                                                     </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                
+                                                                name='tax_rate'
+                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                value={item?.tax_rate}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+
 
                                                     <td>
                                                         <Link to="#" className="d-flex justify-content-center align-items-center " style={{ backgroundColor: '#1299dd', color: '#fff', height: '30px' }} onClick={() => {
@@ -655,45 +669,6 @@ const RepeatingInvoiceForm = () => {
                                                         </Form.Group>
                                                     </td>
                                                     <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                required
-                                                                name='qty'
-                                                                onChange={(e) => onNewItemsChange(e, index)}
-                                                                value={item?.qty}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                required
-                                                                name='unit_price'
-                                                                onChange={(e) => onNewItemsChange(e, index)}
-                                                                value={item?.unit_price}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
-                                                        <Form.Group>
-                                                            <Form.Control
-                                                                type='number'
-                                                                
-                                                                name='discount'
-                                                                onChange={(e) => onNewItemsChange(e, index)}
-                                                                value={item?.discount}
-                                                            >
-
-                                                            </Form.Control>
-                                                        </Form.Group>
-                                                    </td>
-                                                    <td>
                                                         <Form.Group as={Col}>
 
 
@@ -724,10 +699,46 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                
-                                                                name='tax_rate'
+                                                                required
+                                                                name='unit_price'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
-                                                                value={item?.tax_rate}
+                                                                value={item?.unit_price}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                required
+                                                                name='qty'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.qty}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                readOnly={true}
+                                                                value={item?.unit_price * parseInt(item?.qty)}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                
+                                                                name='discount'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.discount}
                                                             >
 
                                                             </Form.Control>
@@ -739,6 +750,19 @@ const RepeatingInvoiceForm = () => {
                                                             <Form.Control
                                                                 readOnly={true}
                                                                 value={item?.total_amount}
+                                                            >
+
+                                                            </Form.Control>
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                type='number'
+                                                                
+                                                                name='tax_rate'
+                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                value={item?.tax_rate}
                                                             >
 
                                                             </Form.Control>
@@ -930,8 +954,18 @@ const RepeatingInvoiceForm = () => {
                                     </Link>
                                     <div >
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Subtotal</p>
+                                            <p style={{ fontSize: '20px' }}>Sub Total</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {sub_total}</p>
+                                        </div>
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Discount</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {discount}</p>
+                                        </div>
+                                        <hr></hr>
+
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Total</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {total}</p>
                                         </div>
                                         {/* {newItems?.map((item)=>{
                                                 if(item.tax_rate > 0)
@@ -964,7 +998,7 @@ const RepeatingInvoiceForm = () => {
                                         })}
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Total</p>
+                                            <p style={{ fontSize: '20px' }}>Net Payable</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {total_amount}</p>
                                         </div>
                                         <hr></hr><hr></hr>
@@ -973,7 +1007,7 @@ const RepeatingInvoiceForm = () => {
                                 <div className="d-flex justify-content-between">
 
                                     <Button variant="info" type="submit" className="waves-effect waves-light me-1" >
-                                        Save
+                                        Draft
                                     </Button>
                                     <div>
                                         <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading} onClick={() => setStatus('approve')}>
