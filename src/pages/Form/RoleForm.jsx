@@ -77,7 +77,7 @@ const RoleForm = () => {
     }
 
     
-    
+    console.log(role)
     useEffect(()=>{
         api.get(`/api/permission`,{})
         .then(res=>{
@@ -298,7 +298,25 @@ const RoleForm = () => {
                                         
                                         </Card.Body>
                                     </Card >
-                                    <Col></Col>
+                                    <Card as={Col}>
+                                        <Card.Header>
+                                            <h5 className='me-2'>Extra</h5>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <Row className='mb-2'>
+                                                <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
+                                                    <Form.Check label="Send Mail" value='can_send_mail' checked={role_permission.includes('can_send_mail')} />                                                  
+                                                </Form.Group>
+                                                <Col></Col>
+                                            </Row>
+                                            <Row>
+                                                <Col></Col>
+                                                <Col></Col>
+                                            </Row>
+                                        
+                                        </Card.Body>
+                                    </Card >
+                                    
                                 
                             </Row>
                             

@@ -6,7 +6,7 @@ import { APICore } from '../../../helpers/api/apiCore';
 import PageTitle from '../../../components/PageTitle';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logoutUser } from '../../../redux/actions';
+import { logoutUser, resetAuth } from '../../../redux/actions';
 
 const api = new APICore();
 
@@ -24,7 +24,9 @@ const ChangePassword = () => {
             .then(res=>{
                 
                 if(res.data.success){
-                    history.push('/auth/logout');
+                    dispatch(resetAuth());
+                    dispatch(logoutUser());
+                    history.push('/auth/login');
                 }else{
                     
                    setError(res.data.error) 
@@ -65,7 +67,7 @@ const ChangePassword = () => {
                                     
                                     <Form style={{width: '50%'}} onSubmit={(e)=>handleSubmit(e)}>
                                         {error && (
-                                            <Alert variant="danger" className="my-2">
+                                            <Alert variant="danger" className="my-2" dismissible onClick={()=>setError(null)}>
                                                 {error}
                                             </Alert>
                                         )}

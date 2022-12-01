@@ -9,6 +9,8 @@ const api = new APICore();
 const INIT_STATE = {
     user: api.getLoggedInUser(),
     loading: false,
+    success: null,
+    error: null
 };
 
 interface UserData {
@@ -28,13 +30,14 @@ interface AuthActionType {
         | AuthActionTypes.API_RESPONSE_ERROR
         | AuthActionTypes.LOGIN_USER
         | AuthActionTypes.LOGOUT_USER
-        | AuthActionTypes.RESET;
+        | AuthActionTypes.RESET
+        | AuthActionTypes.SET_AUTH_SUCCESS_ALERT
+        | AuthActionTypes.SET_AUTH_ERROR_ALERT;
     payload: {
         actionType?: string;
         data?: UserData | {};
         key?: any;
         error?: string;
-        success?: string;
     };
 }
 
@@ -77,7 +80,7 @@ const Auth = (state: State = INIT_STATE, action: AuthActionType): any => {
                         ...state,
                         user: api.getLoggedInUser(),
                         loading: false,
-                        success: "Profile Updated Successfully"
+                        success: 'Profile Updated Successfully'
                     };
                 }
                 case AuthActionTypes.UPDATE_PROFILE_IMAGE: {
@@ -85,6 +88,7 @@ const Auth = (state: State = INIT_STATE, action: AuthActionType): any => {
                         ...state,
                         user: api.getLoggedInUser(),
                         loading: false,
+                        success: 'Profile Image Updated Successfully'
                     };
                 }
                 default:
@@ -145,6 +149,22 @@ const Auth = (state: State = INIT_STATE, action: AuthActionType): any => {
                 passwordChange: false,
                 resetPasswordSuccess: null,
             };
+
+        case AuthActionTypes.SET_AUTH_SUCCESS_ALERT: {
+    
+            return {
+                ...state,
+                success: action.payload,
+            };
+        }
+
+        case AuthActionTypes.SET_AUTH_ERROR_ALERT: {
+            
+            return {
+                ...state,
+                error: action.payload,
+            };
+        }
         default:
             return { ...state };
     }

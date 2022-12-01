@@ -10,4 +10,6 @@ export enum AuthActionTypes {
     RESET = '@@auth/RESET',
     UPDATE_PROFILE = '@@auth/UPDATE_PROFILE',
     UPDATE_PROFILE_IMAGE = '@@auth/UPDATE_PROFILE_IMAGE',
+    SET_AUTH_SUCCESS_ALERT = '@@auth/SET_AUTH_SUCCESS_ALERT',
+    SET_AUTH_ERROR_ALERT = '@@auth/SET_AUTH_ERROR_ALERT',
 }
