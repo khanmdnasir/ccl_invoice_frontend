@@ -11,6 +11,8 @@ export interface AuthActionType {
         | AuthActionTypes.SIGNUP_USER
         | AuthActionTypes.UPDATE_PROFILE
         | AuthActionTypes.UPDATE_PROFILE_IMAGE
+        | AuthActionTypes.SET_AUTH_SUCCESS_ALERT
+        | AuthActionTypes.SET_AUTH_ERROR_ALERT
     payload: {} | string;
 }
 
@@ -67,4 +69,15 @@ export const UpdateProfile = (formData:UserData): AuthActionType => ({
 export const UpdateProfileImage = (profile_image:File): AuthActionType => ({
     type: AuthActionTypes.UPDATE_PROFILE_IMAGE,
     payload: profile_image,
+});
+
+
+export const setAuthSuccessAlert = (msg:string) => ({
+    type: AuthActionTypes.SET_AUTH_SUCCESS_ALERT,
+    payload: msg,
+});
+
+export const setAuthErrorAlert = (msg:string) => ({
+    type: AuthActionTypes.SET_AUTH_ERROR_ALERT,
+    payload: msg,
 });

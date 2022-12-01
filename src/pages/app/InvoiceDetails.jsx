@@ -96,6 +96,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                     // dispatch(deleteContact(row.original.id))
                     api.create(`/api/send-email/`, data)
                         .then(res => {
+                            
                             // dispatch(getInvoice(10, 1));
                             swal.fire(
                                 'Sent!',
@@ -154,11 +155,11 @@ const InvoiceDetails = withSwal(({swal}) => {
                                             ''
                                         }
 
-                                        {invoiceDetails?.status === "approve" ?
+                                        {invoiceDetails?.status === "approve" &&  user_role.includes('can_send_mail') &&
                                             <Link to="#" className="btn btn-info me-2" onClick={() => sendEmail()}>
                                                 <i className="mdi mdi-email me-1"></i>Mail
-                                            </Link> :
-                                            ''
+                                            </Link> 
+                                            
                                         }
                                     </div>
                                 </Col>
