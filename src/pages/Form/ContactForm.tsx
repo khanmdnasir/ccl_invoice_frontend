@@ -46,8 +46,8 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
         yup.object().shape({
             name: yup.string().required('Please enter name'),
             client_id: yup.string().required('Please enter client id'),
-            contact_type: yup.string().required('Please select contact type').typeError('Please select contact type'),
-            contact_person: yup.string().required('Please enter contact person'),
+            contact_type: yup.string().required('Please select client type').typeError('Please select client type'),
+            contact_person: yup.string().required('Please enter client person'),
             phone: yup.string().required('Please enter phone number').typeError('Please enter number'),
                               
         })
@@ -77,7 +77,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
         <>
             <Modal show={show} onHide={onHide} aria-labelledby="contained-modal-title-vcenter" centered>
                 <Modal.Header className="bg-light" onHide={onHide} closeButton>
-                    <Modal.Title className="m-0">Add Contact</Modal.Title>
+                    <Modal.Title className="m-0">Add Client</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
                 {!loading  && error && (
@@ -113,7 +113,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                 />
                             
                                 <FormInput
-                                label="Contact Type"
+                                label="Client Type"
                                 type="select"
                                 name="contact_type"
                                 labelClassName='required'
@@ -123,7 +123,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                 control={control}
                                 defaultValue={contact ? contact.contact_type : ''}
                                 >    
-                                    <option value="" disabled>Select Contact Type ...</option>                         
+                                    <option value="" disabled>Select Client Type ...</option>                         
                                     <option value="individual" >Individual</option>                         
                                     <option value="corporate" >Corporate</option>                                                 
                                 

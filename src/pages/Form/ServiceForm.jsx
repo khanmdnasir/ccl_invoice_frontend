@@ -189,7 +189,7 @@ const ServiceForm = () => {
                             <Form onSubmit={(e) => { oldItems.length > 0 ? onUpdate(e) : onSubmit(e) }}>
 
                                 <Form.Group className='mb-3' style={{ width: '20%' }}>
-                                    <Form.Label >Contact</Form.Label>
+                                    <Form.Label >Client</Form.Label>
                                     {contactId ?
 
                                         <Form.Select
@@ -202,7 +202,7 @@ const ServiceForm = () => {
                                             {cloading ? <option value="" disabled>Loading...</option> :
                                                 <>
 
-                                                    <option value="" disabled>Select Contact ...</option>
+                                                    <option value="" disabled>Select Client ...</option>
                                                     {contacts.length > 0 && contacts?.map((item) => {
                                                         return (
                                                             <option key={'scontact' + item.id} value={item.id} >{item.name}</option>
@@ -221,7 +221,7 @@ const ServiceForm = () => {
                                             {cloading ? <option value="" disabled>Loading...</option> :
                                                 <>
 
-                                                    <option value="" >Select Contact ...</option>
+                                                    <option value="" >Select Client ...</option>
                                                     {contacts.length > 0 && contacts?.map((item) => {
                                                         return (
                                                             <option key={'scontact' + item.id} value={item.id} >{item.name}</option>
@@ -237,7 +237,7 @@ const ServiceForm = () => {
                                     <thead>
                                         <tr>
                                             <th className='required'>Service Type</th>
-                                            <th className='required'>Contact Mode</th>
+                                            <th className='required'>Client Mode</th>
                                             <th className='required'>Payment Terms</th>
                                             <th className='required'>Govt VAT (%)</th>
                                             <th className='required'>Total</th>
@@ -271,7 +271,7 @@ const ServiceForm = () => {
                                                                 value={item?.contact_mode}
                                                             >
 
-                                                                <option value="" disabled>Select Contact Mode ...</option>
+                                                                <option value="" disabled>Select Client Mode ...</option>
                                                                 <option value="pre-paid" >Pre-Paid</option>
                                                                 <option value="post-paid" >Post-Paid</option>
 
@@ -354,7 +354,7 @@ const ServiceForm = () => {
                                                                 value={item?.contact_mode}
                                                             >
 
-                                                                <option value="" disabled>Select Contact Mode ...</option>
+                                                                <option value="" disabled>Select Client Mode ...</option>
                                                                 <option value="pre-paid" >Pre-Paid</option>
                                                                 <option value="post-paid" >Post-Paid</option>
 

@@ -24,7 +24,7 @@ const invoicesColumns = [
         sort: true,
     },
     {
-        Header: 'Contact',
+        Header: 'Client',
         accessor: 'contact_id.name',
         sort: true,
     },
@@ -78,7 +78,7 @@ const invoicesColumns = [
 const servicesColumns = [
 
     {
-        Header: 'Contact',
+        Header: 'Client',
         accessor: 'contact_id.name',
         sort: true,
     },
@@ -88,7 +88,7 @@ const servicesColumns = [
         sort: true,
     },
     {
-        Header: 'Contact Mode',
+        Header: 'Client Mode',
         accessor: 'contact_mode',
         sort: true,
     },
@@ -307,10 +307,10 @@ const ContactDetails = () => {
 
             <PageTitle
                 breadCrumbItems={[
-                    { label: 'Contact', path: '/app/contact', active: false },
-                    { label: 'Contact Details', path: '/app/contact_details', active: true },
+                    { label: 'Client', path: '/app/client', active: false },
+                    { label: 'Client Details', path: '/app/client_details', active: true },
                 ]}
-                title={'Contact Report'}
+                title={'Client Report'}
             />
             <Row>
                 <Col md={4} xl={4}>
@@ -327,11 +327,11 @@ const ContactDetails = () => {
                                         <p>{contact_details?.name}</p>
                                     </div>
                                     <div className="col-sm">
-                                        <h5 className='me-2'>Contact ID:</h5>
+                                        <h5 className='me-2'>Client ID:</h5>
                                         <p>{contact_details?.client_id}</p>
                                     </div>
                                     <div className="col-sm">
-                                        <h5 className='me-2'>Contact Type:</h5>
+                                        <h5 className='me-2'>Client Type:</h5>
                                         <p>{contact_details?.contact_type}</p>
 
                                     </div>

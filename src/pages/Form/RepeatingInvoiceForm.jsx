@@ -373,7 +373,7 @@ const RepeatingInvoiceForm = () => {
                                                 {cloading ? <option value="" disabled>Loading...</option> :
                                                     <>
 
-                                                        <option value="" disabled>Select Contact ...</option>
+                                                        <option value="" disabled>Select Client ...</option>
                                                         {contacts.length > 0 && contacts?.map((item) => {
                                                             return (
                                                                 <option key={'scontact' + item.id} value={item.id} >{item.name}</option>

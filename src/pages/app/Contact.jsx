@@ -106,7 +106,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
 
     return (
         <>
-            <Link to={{ pathname: '/app/contact_details', state: row.original.id }} className="action-icon" >
+            <Link to={{ pathname: '/app/client_details', state: row.original.id }} className="action-icon" >
                 <i className="mdi mdi-eye"></i>
             </Link>
 
@@ -149,7 +149,7 @@ const columns = [
         sort: true,
     },
     {
-        Header: 'Contact Type',
+        Header: 'Client Type',
         accessor: 'contact_type',
         sort: true,
     },
@@ -248,9 +248,9 @@ const Contact = () => {
         <>
             <PageTitle
                 breadCrumbItems={[
-                    { label: 'Contact', path: '/app/contact', active: true },
+                    { label: 'Client', path: '/app/client', active: true },
                 ]}
-                title={'Contact'}
+                title={'Client'}
             />
 
             <Row>
