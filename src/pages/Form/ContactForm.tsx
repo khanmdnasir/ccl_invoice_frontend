@@ -20,6 +20,9 @@ interface FormData {
     contact_person: string;
     phone: string;
     email: string;
+    dim_number: string;
+    kam: string;
+    balance: any;
     city: any;
     country: any;
     billing_address: string;
@@ -48,13 +51,15 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
             client_id: yup.string().required('Please enter client id'),
             contact_type: yup.string().required('Please select client type').typeError('Please select client type'),
             contact_person: yup.string().required('Please enter client person'),
+            dim_number: yup.string().required('Please enter dim number'),
+            kam: yup.string().required('Please enter kam'),
             phone: yup.string().required('Please enter phone number').typeError('Please enter number'),
                               
         })
     );
 
     const methods = useForm<Partial<FormData>>({
-        defaultValues: {name:contact?.name,client_id:contact?.client_id,contact_person:contact?.contact_person,phone:contact?.phone,email:contact?.email,city:contact?.city?.id,country:contact?.country?.id,billing_address:contact?.billing_address},
+        defaultValues: {name:contact?.name,client_id:contact?.client_id,contact_person:contact?.contact_person,dim_number:contact?.dim_number,kam:contact?.kam, phone:contact?.phone,email:contact?.email,city:contact?.city?.id,country:contact?.country?.id,billing_address:contact?.billing_address},
         resolver: schemaResolver,
     });
     const {
@@ -128,6 +133,18 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     <option value="corporate" >Corporate</option>                                                 
                                 
                                 </FormInput>
+
+                                <FormInput
+                                    label="Dim Number"
+                                    type="text"
+                                    name="dim_number"
+                                    labelClassName='required'
+                                    placeholder="Enter dim number"
+                                    containerClass={'mb-3'}
+                                    register={register}
+                                    errors={errors}
+                                    control={control}
+                                />
 
                                 <FormInput
                                     label="Contact Person"
@@ -228,7 +245,18 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     })}                                                 
                                 
                                 </FormInput> */}
-                                
+                                <FormInput
+                                    label="KAM (Key Account Manager)"
+                                    type="text"
+                                    name="kam"
+                                    labelClassName='required'
+                                    placeholder="Enter kam"
+                                    containerClass={'mb-3'}
+                                    register={register}
+                                    errors={errors}
+                                    control={control}
+                                />
+
                                 <FormInput
                                     label="Billing Address"
                                     type="textarea"

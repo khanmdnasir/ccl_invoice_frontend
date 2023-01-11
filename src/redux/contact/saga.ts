@@ -21,6 +21,8 @@ interface ContactData {
         client_id: string;
         contact_type: string;
         contact_person: string;
+        dim_number: string;
+        kam: string;
         phone: string;
         email: string;
         city: string;
@@ -113,10 +115,10 @@ function* getAllContact():SagaIterator {
 
 
 
-function* addContact({ payload: {name,client_id,contact_type,contact_person,phone,email,city,country,billing_address} }: ContactData):SagaIterator {
+function* addContact({ payload: {name,client_id,contact_type,contact_person,dim_number,kam,phone,email,city,country,billing_address} }: ContactData):SagaIterator {
     
     try {
-        const response = yield call(addContactApi,{name,client_id,contact_type,contact_person,phone,email,city,country,billing_address});
+        const response = yield call(addContactApi,{name,client_id,contact_type,contact_person,dim_number,kam,phone,email,city,country,billing_address,});
         const result = response.data;
         if(result.success){
             yield put({type: 'ADD_CONTACT_SUCCESS' , contact: result.data});

@@ -159,6 +159,16 @@ const columns = [
         sort: true,
     },
     {
+        Header: 'Dim Number',
+        accessor: 'dim_number',
+        sort: true,
+    },
+    {
+        Header: 'KAM (Key Account Manager)',
+        accessor: 'kam',
+        sort: true,
+    },
+    {
         Header: 'Phone',
         accessor: 'phone',
         sort: true,
