@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { APICore } from '../../helpers/api/apiCore';
-import ContactForm from '../Form/ContactForm';
+import CompanySettingsForm from '../Form/CompanySettingsForm';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
 import { withSwal } from 'react-sweetalert2';
 
@@ -9,10 +9,9 @@ import Table from '../../components/Table';
 import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact,deleteContact,getContact } from '../../redux/actions';
+import { addCompanySetting, getCompanySettings, setCompanySettingsSuccessAlert, setCompanySettingsErrorAlert } from '../../redux/actions';
 import ReactExport from "react-export-excel";
 import Pagination from '../../components/CustomPagination';
-import { getCountry } from '../../redux/location/actions';
 
 
 const ExcelFile = ReactExport.ExcelFile;
@@ -28,7 +27,6 @@ const ActionColumn = withSwal(({ row, swal }) => {
      *   modal handeling
      */
     const dispatch = useDispatch();
-    const country = useSelector(state => state.Location.country);
     const user_role = useSelector((state)=> state.Role.user_role);
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
@@ -39,68 +37,32 @@ const ActionColumn = withSwal(({ row, swal }) => {
     */
     const onSubmit = (formData) => {
         
-        api.updatePatch(`/api/contact/${row.original.id}/`,formData)
+        api.updatePatch(`/api/company_settings/${row.original.id}/`,formData)
         .then(res=>{
             
             if(res.data.success){
-                dispatch(getContact(10,1));
+                dispatch(getCompanySettings(10,1));
+                onCloseModal()
+                setTimeout(() => {
+                    dispatch(setCompanySettingsSuccessAlert(''));
+                }, 2000)
             }else{
-                swal.fire({
-                    title: res.data.error,
-                }) 
-                
+                dispatch(setCompanySettingsErrorAlert(res.data.error));
             }
             
         })
         .catch(err => {
-            swal.fire({
-                title: err,
-            })
+            dispatch(setCompanySettingsErrorAlert(err));
         })
-        onCloseModal()
     };
-
-    const onDelete = () => {
-        swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#28bb4b',
-                cancelButtonColor: '#f34e4e',
-                confirmButtonText: 'Yes, delete it!',
-            })
-            .then(function(result){
-                if(result.value){
-                    // dispatch(deleteContact(row.original.id))
-                    api.delete(`/api/contact/${row.original.id}/`)
-                .then(res=>{
-                    dispatch(getContact(10,1))
-                    swal.fire(
-                        'Deleted!',
-                        'Account has been deleted.',
-                        'success'
-                    );            
-                })
-                .catch(err => {
-                    swal.fire({
-                        title: err,
-                    }
-                    );
-                })
-                }else if(result.dismiss === 'cancel'){
-                    console.log('cancel')
-                }
-            })        
-    }
 
     return (
         <>
-            <Link to={{ pathname: '/app/client_details', state: row.original.id }} className="action-icon" >
+            {/* <Link to={{ pathname: '/app/client_details', state: row.original.id }} className="action-icon" >
                 <i className="mdi mdi-eye"></i>
-            </Link>
+            </Link> */}
 
-            { user_role.includes('change_contact') ?
+            {user_role.includes('change_companysettings') ?
                 <Link to="#" className="action-icon" onClick={()=>onOpenModal()}>
                     <i className="mdi mdi-square-edit-outline"></i>
                 </Link>:
@@ -108,18 +70,10 @@ const ActionColumn = withSwal(({ row, swal }) => {
                     <i className="mdi mdi-square-edit-outline"></i>
                 </Link>
             }
-            
-            { user_role.includes('delete_contact') ?
-                <Link to="#" className="action-icon" onClick={()=>onDelete()}>
-                    <i className="mdi mdi-delete"></i>
-                </Link>:
-                <Link to="#" className="action-icon" style={{pointerEvents: 'none'}}>
-                    <i className="mdi mdi-delete"></i>
-                </Link>
-            }
+
             {
                 show?
-                <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} contact={row.original} countries={country}/>
+                <CompanySettingsForm show={show} onHide={onCloseModal} onSubmit={onSubmit} company_settings={row.original}/>
                 :null
             }
         </>
@@ -129,45 +83,19 @@ const ActionColumn = withSwal(({ row, swal }) => {
 const columns = [
     
     {
-        Header: 'Name',
-        accessor: 'name',
+        Header: 'Key',
+        accessor: 'key',
         sort: true,
     },
     {
-        Header: 'Client Id',
-        accessor: 'client_id',
+        Header: 'Value',
+        accessor: 'value',
         sort: true,
     },
     {
-        Header: 'Contact Type',
-        accessor: 'contact_type',
+        Header: 'Type',
+        accessor: 'type',
         sort: true,
-    },
-    {
-        Header: 'Contact Person',
-        accessor: 'contact_person',
-        sort: true,
-    },
-    {
-        Header: 'Phone',
-        accessor: 'phone',
-        sort: true,
-    },
-    {
-        Header: 'Email',
-        accessor: 'email',
-        sort: true,
-    },
-    {
-        Header: 'City',
-        accessor: 'city.name',
-        sort: true,
-    },
-    {
-        Header: 'country',
-        accessor: 'country.name',
-        sort: true,
-
     },
     {
         Header: 'Action',
@@ -179,17 +107,16 @@ const columns = [
 
 const CompanySettings = () => {
     const dispatch = useDispatch();
-    const contact = useSelector(state => state.Contact.contact);
-    const country = useSelector(state => state.Location.country);
-    const previous = useSelector(state => state.Contact.previous);
-    const next = useSelector(state => state.Contact.next);
-    const current_page = useSelector(state => state.Contact.current_page);
-    const total_page = useSelector(state => state.Contact.total_page);
-    const active = useSelector(state => state.Contact.active);
+    const company_settings = useSelector(state => state.CompanySettings.company_settings);
+    const previous = useSelector(state => state.CompanySettings.previous);
+    const next = useSelector(state => state.CompanySettings.next);
+    const current_page = useSelector(state => state.CompanySettings.current_page);
+    const total_page = useSelector(state => state.CompanySettings.total_page);
+    const active = useSelector(state => state.CompanySettings.active);
     const user_role = useSelector((state)=> state.Role.user_role);
-    const loading = useSelector(state => state.Contact.loading);
-    const error = useSelector(state => state.Contact.error);
-    const success = useSelector(state => state.Contact.success);
+    const loading = useSelector(state => state.CompanySettings.loading);
+    const error = useSelector(state => state.CompanySettings.error);
+    const success = useSelector(state => state.CompanySettings.success);
     const [pageSize,setPageSize] = useState(10);
     const [alertShow, setAlertShow] = useState(true);
     /*
@@ -200,59 +127,66 @@ const CompanySettings = () => {
     const onOpenModal = () => setShow(true);
 
     const visitPage = (page) => {
-        dispatch(getContact(pageSize,page));
+        dispatch(getCompanySettings(pageSize,page));
     };
 
     const previous_number = () => {
-        dispatch(getContact(pageSize,previous));
+        dispatch(getCompanySettings(pageSize,previous));
     };
 
     const next_number = () => {
-        dispatch(getContact(pageSize,next));
+        dispatch(getCompanySettings(pageSize,next));
     };
+
+    useEffect(() => {
+        if (success !== '') {
+            onCloseModal();
+        }
+        dispatch(getCompanySettings(pageSize, 1));
+        setTimeout(() => {
+            dispatch(setCompanySettingsSuccessAlert(''));
+        }, 2000)
+
+    }, [success])
 
     /*
     handle form submission
     */
     const onSubmit = (formData) => {
-        dispatch(addContact(formData));
+        console.log('formdata', formData)
+
+        dispatch(addCompanySetting(formData));
         onCloseModal();
         
     };
 
 
     useEffect(()=>{ 
-        dispatch(getContact(pageSize,1));
-        dispatch(getCountry());   
+        dispatch(getCompanySettings(pageSize,1));   
     },[pageSize])
     return (
         <>
             <PageTitle
                 breadCrumbItems={[
-                    { label: 'Contact', path: '/app/client', active: true },
+                    { label: 'Company Settings', path: '/app/company_settings', active: true },
                 ]}
-                title={'Client'}
+                title={'Company Settings'}
             />
 
             <Row>
                 <Col>
                     <Card>
                         <Card.Body>
-                            {!loading && alertShow && error && (
-                            <Alert variant="danger" className="my-2" onClose={()=>setAlertShow(false)} dismissible>
-                                {error}
-                            </Alert>
-                        )}
-                            {!loading && alertShow && success !== null && (
-                                <Alert variant="success" className="my-2" onClose={() => setAlertShow(false)} dismissible>
-                                {success}
-                            </Alert>
-                        )}
+                            {!loading && success && (
+                                <Alert variant="success" className="my-2" onClose={() => dispatch(setCompanySettingsSuccessAlert(''))} dismissible>
+                                    {success}
+                                </Alert>
+                            )}
                             <Row className="mb-2">
                                 <Col sm={4}>
                                     <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
                                         <span className='me-2'>Show:</span>
-                                        <Form.Select style={{width: '40%'}} onChange={(e)=>{setPageSize(e.target.value);dispatch(getContact(e.target.value,current_page))}}>
+                                        <Form.Select style={{width: '40%'}} onChange={(e)=>{setPageSize(e.target.value);dispatch(getCompanySettings(e.target.value,current_page))}}>
                                             <option value='10'>10</option>
                                             <option value='15'>20</option>
                                             <option value='20'>30</option>
@@ -262,7 +196,7 @@ const CompanySettings = () => {
 
                                 <Col sm={8}>
                                     <div className="text-sm-end mt-2 mt-sm-0">
-                                        { user_role.includes('add_contact') ?
+                                        {user_role.includes('add_companysettings') ?
                                             <Button className="btn btn-success mb-2 me-1" onClick={onOpenModal}>
                                             <i className="mdi mdi-plus-circle me-1"></i> Add New
                                             </Button>:
@@ -285,11 +219,11 @@ const CompanySettings = () => {
                             
                             {loading ? <p>Loading...</p>:
                             <>
-                            {contact.length > 0 ?
+                            {company_settings.length > 0 ?
                             <>
                             <Table
                                 columns={columns}
-                                data={contact}
+                                data={company_settings}
                                 pageSize={pageSize}
                                 isSortable={true}
                                 pagination={false}
@@ -309,7 +243,7 @@ const CompanySettings = () => {
 
             {/* add contact modal */}
             
-            <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} countries={country}/>
+            <CompanySettingsForm show={show} onHide={onCloseModal} onSubmit={onSubmit}/>
             
             
             
