@@ -9,7 +9,7 @@ import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
 import { getAllContact, getChartAccount, getContactService, getInvoiceDetails } from '../../redux/actions';
-
+import moment from "moment";
 
 const api = new APICore()
 
@@ -37,11 +37,12 @@ const InvoiceForm = () => {
     const [contactId, setContactId] = useState('');
     const [invoiceNo, setInvoiceNo] = useState('');
     const [invoiceId, setInvoiceId] = useState(null);
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
     const [due_date, setDueDate] = useState('');
     const [reference, setReference] = useState('');
     const [currency, setCurrency] = useState('1');
-    const [tax_type, setTaxType] = useState('inclusive');
+    const [updateDateCount, setupdateDateCount] = useState(0);
+    const [tax_type, setTaxType] = useState('exclusive');
     const [sub_total, setSubTotal] = useState('');
     const [discount, setDiscount] = useState('');
     const [total_tax, setTotalTax] = useState('');
@@ -69,6 +70,21 @@ const InvoiceForm = () => {
         setContactId(e.target.value);
         dispatch(getContactService(e.target.value));
     }
+
+    useEffect(()=>{
+        if (invoiceId){
+            if (updateDateCount===0){
+                setupdateDateCount(1)
+            }
+            else if (updateDateCount>0){
+                setDueDate(moment(date).add(7, 'days').format("YYYY-MM-DD"))
+            }
+        }
+        else if (date){
+            setDueDate(moment(date).add(7, 'days').format("YYYY-MM-DD"))
+        }
+    },[date])
+
 
     useEffect(() => {
         if (contact_services.length > 0) {
@@ -330,7 +346,6 @@ const InvoiceForm = () => {
         }
         
     }
-
     return (
         <>
 
@@ -359,7 +374,7 @@ const InvoiceForm = () => {
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Contact</Form.Label>
+                                            <Form.Label className='required'>Client</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -403,7 +418,7 @@ const InvoiceForm = () => {
                                                 required
                                                 name='date'
                                                 onChange={(e) => setDate(e.target.value)}
-                                                defaultValue={invoiceId && invoice_details?.date}
+                                                value={date}
                                             >
 
                                             </Form.Control>
@@ -415,7 +430,7 @@ const InvoiceForm = () => {
                                                 required
                                                 name='due_date'
                                                 onChange={(e) => setDueDate(e.target.value)}
-                                                defaultValue={invoiceId && invoice_details?.due_date}
+                                                value={due_date}
                                             >
 
                                             </Form.Control>

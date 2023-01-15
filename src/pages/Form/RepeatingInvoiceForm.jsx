@@ -361,7 +361,7 @@ const RepeatingInvoiceForm = () => {
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Contact</Form.Label>
+                                            <Form.Label className='required'>Client</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
