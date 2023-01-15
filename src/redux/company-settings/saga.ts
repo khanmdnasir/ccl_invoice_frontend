@@ -11,7 +11,7 @@ import {
 interface companySettingsData {
     payload: {
         id: number;
-        company_settings: any[];
+        company_settings: any;
         limit: number;
         page: number;
         contact_id: number;
@@ -30,14 +30,13 @@ function* getCompanySettings({ payload: {limit,page}}:companySettingsData):SagaI
     }
 }
 
-function* addCompanySetting({ payload: {company_settings} }: companySettingsData):SagaIterator {
-    console.log(company_settings)
+function* addCompanySetting({ payload: company_settings }: companySettingsData):SagaIterator {
     try {
-        const response = yield call(addCompanySettingApi,{company_settings});
+        const response = yield call(addCompanySettingApi, company_settings);
         const result = response.data;
         
         if(result.success){
-            yield put({type: 'ADD_COMPANY_SETTINGS_SUCCESS' , contact: result.data});
+            yield put({type: 'ADD_COMPANY_SETTINGS_SUCCESS' , data: result.data});
         }else{
             yield put({type: 'ADD_COMPANY_SETTINGS_FAILED', error: result.error});
         }

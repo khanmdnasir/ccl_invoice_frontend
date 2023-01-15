@@ -2,7 +2,9 @@ import * as type from './types';
 
 
 interface CompanySettingForm {
-    company_setting: any[];
+    key: string;
+    value: string;
+    type: string;
 }
 
 export const getCompanySettings = (limit:number,page:number) => ({

@@ -14,10 +14,6 @@ import ReactExport from "react-export-excel";
 import Pagination from '../../components/CustomPagination';
 
 
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
-
 const api = new APICore();
 
 
@@ -30,7 +26,8 @@ const ActionColumn = withSwal(({ row, swal }) => {
     const user_role = useSelector((state)=> state.Role.user_role);
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
-    const onOpenModal = () => setShow(true);
+    const onOpenModal = () => { dispatch(setCompanySettingsErrorAlert('')); setShow(true) };
+
 
     /*
     handle form submission
@@ -42,6 +39,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
             
             if(res.data.success){
                 dispatch(getCompanySettings(10,1));
+                dispatch(setCompanySettingsSuccessAlert('Company Setting Updated Successfully'));
                 onCloseModal()
                 setTimeout(() => {
                     dispatch(setCompanySettingsSuccessAlert(''));
@@ -124,7 +122,8 @@ const CompanySettings = () => {
      */
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
-    const onOpenModal = () => setShow(true);
+    const onOpenModal = () => { dispatch(setCompanySettingsErrorAlert('')); setShow(true) };
+
 
     const visitPage = (page) => {
         dispatch(getCompanySettings(pageSize,page));
@@ -153,8 +152,7 @@ const CompanySettings = () => {
     handle form submission
     */
     const onSubmit = (formData) => {
-        console.log('formdata', formData)
-
+        console.log('formData', formData)
         dispatch(addCompanySetting(formData));
         onCloseModal();
         

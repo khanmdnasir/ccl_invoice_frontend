@@ -52,8 +52,9 @@ const Service = (state = INIT_STATE, action: any) => {
             return {
                 ...state,
                 loading: false,
-                company_settings: [action.data,...state.company_settings]
-                
+                company_settings: [action.data,...state.company_settings],
+                success: 'Company Settings Created Successfully'
+
             };
         }
         case type.ADD_COMPANY_SETTINGS_FAILED: {
