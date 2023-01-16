@@ -35,7 +35,6 @@ const InvoiceForm = () => {
     const invoice_details = useSelector((state) => state.Invoice.invoice_details);
     const contact_services = useSelector((state) => state.Service.contact_services);
     const [contactId, setContactId] = useState('');
-    const [invoiceNo, setInvoiceNo] = useState('');
     const [invoiceId, setInvoiceId] = useState(null);
     const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
     const [due_date, setDueDate] = useState('');
@@ -245,7 +244,6 @@ const InvoiceForm = () => {
     useEffect(() => {
         if (invoiceId) {
             setNewItems([]);
-            setInvoiceNo(invoice_details?.invoice_no);
             setContactId(invoice_details?.contact_id?.id);
             setTaxType(invoice_details?.tax_type);
             setDate(invoice_details?.date);
@@ -287,7 +285,7 @@ const InvoiceForm = () => {
         let formatDate = format(new Date(date), 'yyyy-MM-dd');
         let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
         if(newItems.length > 0){
-            api.create(`/api/invoice/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
+            api.create(`/api/invoice/`, { 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
             .then(res => {
 
                 if (res.data.success) {
@@ -321,7 +319,7 @@ const InvoiceForm = () => {
         let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
 
         if(oldItems.length > 0){
-            api.updatePatch(`/api/invoice/${invoiceId}/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
+            api.updatePatch(`/api/invoice/${invoiceId}/`, { 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
             .then(res => {
 
                 if (res.data.success) {
@@ -398,18 +396,20 @@ const InvoiceForm = () => {
                                             </Form.Select>
 
                                         </Form.Group>
+
+                                        {/* {invoiceId?
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Invoice No</Form.Label>
+                                            <Form.Label>Invoice No</Form.Label>
                                             <Form.Control
                                                 type='text'
-                                                required
                                                 name='invoice_no'
-                                                onChange={(e) => setInvoiceNo(e.target.value)}
+                                                disabled={invoiceId ? true : false}
                                                 defaultValue={invoiceId && invoice_details?.invoice_no}
                                             >
-
                                             </Form.Control>
                                         </Form.Group>
+                                        : null
+                                        } */}
 
                                         <Form.Group as={Col}>
                                             <Form.Label className='required'>Date</Form.Label>

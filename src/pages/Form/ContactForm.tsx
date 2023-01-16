@@ -15,7 +15,6 @@ const api = new APICore();
 
 interface FormData {
     name: string;
-    client_id: string;
     contact_type: string;
     contact_person: string;
     phone: string;
@@ -48,7 +47,6 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
     const schemaResolver = yupResolver(
         yup.object().shape({
             name: yup.string().required('Please enter name'),
-            client_id: yup.string().required('Please enter client id'),
             contact_type: yup.string().required('Please select client type').typeError('Please select client type'),
             contact_person: yup.string().required('Please enter client person'),
             dim_number: yup.string().required('Please enter dim number'),
@@ -59,7 +57,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
     );
 
     const methods = useForm<Partial<FormData>>({
-        defaultValues: {name:contact?.name,client_id:contact?.client_id,contact_person:contact?.contact_person,dim_number:contact?.dim_number,kam:contact?.kam, phone:contact?.phone,email:contact?.email,city:contact?.city?.id,country:contact?.country?.id,billing_address:contact?.billing_address},
+        defaultValues: {name:contact?.name,contact_person:contact?.contact_person,dim_number:contact?.dim_number,kam:contact?.kam, phone:contact?.phone,email:contact?.email,city:contact?.city?.id,country:contact?.country?.id,billing_address:contact?.billing_address},
         resolver: schemaResolver,
     });
     const {
@@ -105,7 +103,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     errors={errors}
                                     control={control}
                                 />
-                                <FormInput
+                                {/* <FormInput
                                     label="Client Id"
                                     type="text"
                                     name="client_id"
@@ -115,7 +113,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     register={register}
                                     errors={errors}
                                     control={control}
-                                />
+                                /> */}
                             
                                 <FormInput
                                 label="Client Type"
