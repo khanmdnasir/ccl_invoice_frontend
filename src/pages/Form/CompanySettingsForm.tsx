@@ -14,8 +14,8 @@ const api = new APICore();
 
 interface FormData {
     key: string;
-    type: any;
-    value: string;
+    type: string;
+    value: any;
 }
 
 interface AddCompanySettingProps {

@@ -3,7 +3,7 @@ import * as type from './types';
 
 interface CompanySettingForm {
     key: string;
-    value: string;
+    value: any;
     type: string;
 }
 

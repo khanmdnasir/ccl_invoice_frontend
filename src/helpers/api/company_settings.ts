@@ -13,7 +13,9 @@ function getCompanySettings(params: {limit: number,page:number}) {
 
 function addCompanySetting(params:any) {
     const baseUrl = '/api/company_settings/';
-    return api.create(`${baseUrl}`,params);
+    if(params.type === 'text')
+        return api.create(`${baseUrl}`,params);
+    return api.createWithFile(`${baseUrl}`,params);
 }
 
 
