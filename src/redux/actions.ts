@@ -10,4 +10,5 @@ export * from './repeating-invoice/actions';
 export * from './currency/actions';
 export * from './chart-account/actions';
 export * from './company-settings/actions';
+export * from './kam/actions';
 

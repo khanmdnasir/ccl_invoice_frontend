@@ -33,7 +33,7 @@ function getAllContact() {
     return api.get(`${baseUrl}`,{});
 }
 
-function addContact(params: { name:string,client_id:string,contact_type:string,contact_person:string,phone:string,dim_number:string,kam:string,email:string,city:string,country:string,billing_address:string }) {
+function addContact(params: { name:string,client_id:string,contact_type:string,contact_person:string,phone:string,bin:string,kam:string,email:string,city:string,country:string,billing_address:string }) {
     const baseUrl = '/api/contact/';
     return api.create(`${baseUrl}`,params);
 }

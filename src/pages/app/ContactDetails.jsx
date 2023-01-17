@@ -366,6 +366,21 @@ const ContactDetails = () => {
                                         <p>{contact_details?.billing_address}</p>
                                     </div>
                                 </div>
+
+                                <div className="row mb-4">
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Kam:</h5>
+                                        <p>{contact_details?.kam?.name}</p>
+                                    </div>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Bin:</h5>
+                                        <p>{contact_details?.bin}</p>
+                                    </div>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'></h5>
+                                        <p></p>
+                                    </div>
+                                </div>
                             </div>
 
                         </Card.Body>

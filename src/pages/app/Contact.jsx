@@ -9,10 +9,11 @@ import Table from '../../components/Table';
 import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact,deleteContact,getContact, setContactErrorAlert, setContactSuccessAlert } from '../../redux/actions';
+import { addContact, deleteContact, getContact, setContactErrorAlert, setContactSuccessAlert } from '../../redux/actions';
 import ReactExport from "react-export-excel";
 import Pagination from '../../components/CustomPagination';
 import { getCountry } from '../../redux/location/actions';
+import { getKamList } from '../../redux/kam/actions';
 
 
 const ExcelFile = ReactExport.ExcelFile;
@@ -29,79 +30,79 @@ const ActionColumn = withSwal(({ row, swal }) => {
      */
     const dispatch = useDispatch();
     const country = useSelector(state => state.Location.country);
-    const user_role = useSelector((state)=> state.Role.user_role);
+    const user_role = useSelector((state) => state.Role.user_role);
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
     const onOpenModal = () => setShow(true);
-
+    const kamList = useSelector(state => state.Kam.kamList);
     /*
     handle form submission
     */
     const onSubmit = (formData) => {
-        
-        api.updatePatch(`/api/contact/${row.original.id}/`,formData)
-        .then(res=>{
-            
-            if(res.data.success){
-                dispatch(getContact(10,1));
-            }else{
-                swal.fire({
-                    title: res.data.error,
-                }) 
-                
-            }
-            
-        })
-        .catch(err => {
-            swal.fire({
-                title: err,
+
+        api.updatePatch(`/api/contact/${row.original.id}/`, formData)
+            .then(res => {
+
+                if (res.data.success) {
+                    dispatch(getContact(10, 1));
+                } else {
+                    swal.fire({
+                        title: res.data.error,
+                    })
+
+                }
+
             })
-        })
+            .catch(err => {
+                swal.fire({
+                    title: err,
+                })
+            })
         onCloseModal()
     };
 
     const onDelete = () => {
         swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#28bb4b',
-                cancelButtonColor: '#f34e4e',
-                confirmButtonText: 'Yes, delete it!',
-            })
-            .then(function(result){
-                if(result.value){
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28bb4b',
+            cancelButtonColor: '#f34e4e',
+            confirmButtonText: 'Yes, delete it!',
+        })
+            .then(function (result) {
+                if (result.value) {
                     // dispatch(deleteContact(row.original.id))
                     api.delete(`/api/contact/${row.original.id}/`)
-                .then(res=>{
-                    dispatch(getContact(10,1))
-                    if(res.data.success){
-                        swal.fire(
-                            'Deleted!',
-                            'Account has been deleted.',
-                            'success'
-                        ); 
-                    }else{
-                        swal.fire(
-                            'Error',
-                            res.data.error,
-                            'warning'
-                        
-                        );
-                    }
-                               
-                })
-                .catch(err => {
-                    swal.fire({
-                        title: err,
-                    }
-                    );
-                })
-                }else if(result.dismiss === 'cancel'){
+                        .then(res => {
+                            dispatch(getContact(10, 1))
+                            if (res.data.success) {
+                                swal.fire(
+                                    'Deleted!',
+                                    'Account has been deleted.',
+                                    'success'
+                                );
+                            } else {
+                                swal.fire(
+                                    'Error',
+                                    res.data.error,
+                                    'warning'
+
+                                );
+                            }
+
+                        })
+                        .catch(err => {
+                            swal.fire({
+                                title: err,
+                            }
+                            );
+                        })
+                } else if (result.dismiss === 'cancel') {
                     console.log('cancel')
                 }
-            })        
+            })
     }
 
     return (
@@ -110,34 +111,34 @@ const ActionColumn = withSwal(({ row, swal }) => {
                 <i className="mdi mdi-eye"></i>
             </Link>
 
-            { user_role.includes('change_contact') ?
-                <Link to="#" className="action-icon" onClick={()=>onOpenModal()}>
+            {user_role.includes('change_contact') ?
+                <Link to="#" className="action-icon" onClick={() => onOpenModal()}>
                     <i className="mdi mdi-square-edit-outline"></i>
-                </Link>:
-                <Link to="#" className="action-icon"  style={{pointerEvents: 'none'}}>
+                </Link> :
+                <Link to="#" className="action-icon" style={{ pointerEvents: 'none' }}>
                     <i className="mdi mdi-square-edit-outline"></i>
                 </Link>
             }
-            
-            { user_role.includes('delete_contact') ?
-                <Link to="#" className="action-icon" onClick={()=>onDelete()}>
+
+            {user_role.includes('delete_contact') ?
+                <Link to="#" className="action-icon" onClick={() => onDelete()}>
                     <i className="mdi mdi-delete"></i>
-                </Link>:
-                <Link to="#" className="action-icon" style={{pointerEvents: 'none'}}>
+                </Link> :
+                <Link to="#" className="action-icon" style={{ pointerEvents: 'none' }}>
                     <i className="mdi mdi-delete"></i>
                 </Link>
             }
             {
-                show?
-                <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} contact={row.original} countries={country}/>
-                :null
+                show ?
+                    <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} contact={row.original} countries={country} kamList={kamList} />
+                    : null
             }
         </>
     );
 });
 
 const columns = [
-    
+
     {
         Header: 'Name',
         accessor: 'name',
@@ -159,13 +160,13 @@ const columns = [
         sort: true,
     },
     {
-        Header: 'Dim Number',
-        accessor: 'dim_number',
+        Header: 'Bin',
+        accessor: 'bin',
         sort: true,
     },
     {
         Header: 'KAM (Key Account Manager)',
-        accessor: 'kam',
+        accessor: 'kam.name',
         sort: true,
     },
     {
@@ -201,59 +202,62 @@ const Contact = () => {
     const dispatch = useDispatch();
     const contact = useSelector(state => state.Contact.contact);
     const country = useSelector(state => state.Location.country);
+    const kamList = useSelector(state => state.Kam.kamList);
     const previous = useSelector(state => state.Contact.previous);
     const next = useSelector(state => state.Contact.next);
     const current_page = useSelector(state => state.Contact.current_page);
     const total_page = useSelector(state => state.Contact.total_page);
     const active = useSelector(state => state.Contact.active);
-    const user_role = useSelector((state)=> state.Role.user_role);
+    const user_role = useSelector((state) => state.Role.user_role);
     const loading = useSelector(state => state.Contact.loading);
     const success = useSelector(state => state.Contact.success);
-    const [pageSize,setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(10);
 
     /*
      *   modal handeling
      */
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
-    const onOpenModal = () => {dispatch(setContactErrorAlert(''));setShow(true)};
+    const onOpenModal = () => { dispatch(setContactErrorAlert('')); setShow(true) };
 
     const visitPage = (page) => {
-        dispatch(getContact(pageSize,page));
+        dispatch(getContact(pageSize, page));
     };
 
     const previous_number = () => {
-        dispatch(getContact(pageSize,previous));
+        dispatch(getContact(pageSize, previous));
     };
 
     const next_number = () => {
-        dispatch(getContact(pageSize,next));
+        dispatch(getContact(pageSize, next));
     };
 
     /*
     handle form submission
     */
 
-    useEffect(()=>{
-        if(success !== ''){
+    useEffect(() => {
+        if (success !== '') {
             onCloseModal();
         }
-        
-        setTimeout(()=>{
+
+        setTimeout(() => {
             dispatch(setContactSuccessAlert(''));
-        },2000)
-    },[success])
+        }, 2000)
+    }, [success])
 
     const onSubmit = (formData) => {
+        console.log("formData", formData)
         dispatch(addContact(formData));
-        
+
     };
 
 
-    useEffect(()=>{ 
-        dispatch(getContact(pageSize,1));
-        dispatch(getCountry());   
-    },[pageSize])
+    useEffect(() => {
+        dispatch(getContact(pageSize, 1));
+        dispatch(getCountry());
+        dispatch(getKamList());
+    }, [pageSize])
     return (
         <>
             <PageTitle
@@ -267,17 +271,17 @@ const Contact = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                            
-                            {!loading  && success && (
+
+                            {!loading && success && (
                                 <Alert variant="success" className="my-2" onClose={() => dispatch(setContactSuccessAlert(''))} dismissible>
-                                {success}
-                            </Alert>
+                                    {success}
+                                </Alert>
                             )}
                             <Row className="mb-2">
                                 <Col sm={4}>
-                                    <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
+                                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                         <span className='me-2'>Show:</span>
-                                        <Form.Select style={{width: '40%'}} onChange={(e)=>{setPageSize(e.target.value);dispatch(getContact(e.target.value,current_page))}}>
+                                        <Form.Select style={{ width: '40%' }} onChange={(e) => { setPageSize(e.target.value); dispatch(getContact(e.target.value, current_page)) }}>
                                             <option value='10'>10</option>
                                             <option value='15'>20</option>
                                             <option value='20'>30</option>
@@ -287,14 +291,14 @@ const Contact = () => {
 
                                 <Col sm={8}>
                                     <div className="text-sm-end mt-2 mt-sm-0">
-                                        { user_role.includes('add_contact') ?
+                                        {user_role.includes('add_contact') ?
                                             <Button className="btn btn-success mb-2 me-1" onClick={onOpenModal}>
-                                            <i className="mdi mdi-plus-circle me-1"></i> Add New
-                                            </Button>:
+                                                <i className="mdi mdi-plus-circle me-1"></i> Add New
+                                            </Button> :
                                             <>
                                             </>
                                         }
-                                        
+
                                         {/* <ExcelFile element={<Button className="btn btn-light mb-2">Export</Button>}>
                                             <ExcelSheet data={users} name="Users">
                                                 <ExcelColumn label="Name" value="name"/>
@@ -303,41 +307,41 @@ const Contact = () => {
                                                 <ExcelColumn label="Role" value={(col)=> col.groups[0].name}/>                                            
                                             </ExcelSheet>
                                         </ExcelFile> */}
-  
+
                                     </div>
                                 </Col>
                             </Row>
-                            
-                            {loading ? <p>Loading...</p>:
-                            <>
-                            {contact.length > 0 ?
-                            <>
-                            <Table
-                                columns={columns}
-                                data={contact}
-                                pageSize={pageSize}
-                                isSortable={true}
-                                pagination={false}
-                                isSearchable={true}
-                                tableClass="table-nowrap table-hover"
-                                searchBoxClass=""
-                            />
-                            <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={total_page} current_page={current_page} active={active}/>
-                            </>
-                            :
-                            'No user available!'}</>}
-                            
+
+                            {loading ? <p>Loading...</p> :
+                                <>
+                                    {contact.length > 0 ?
+                                        <>
+                                            <Table
+                                                columns={columns}
+                                                data={contact}
+                                                pageSize={pageSize}
+                                                isSortable={true}
+                                                pagination={false}
+                                                isSearchable={true}
+                                                tableClass="table-nowrap table-hover"
+                                                searchBoxClass=""
+                                            />
+                                            <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={total_page} current_page={current_page} active={active} />
+                                        </>
+                                        :
+                                        'No user available!'}</>}
+
                         </Card.Body>
                     </Card>
                 </Col>
             </Row>
 
             {/* add contact modal */}
-            
-            <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} countries={country}/>
-            
-            
-            
+
+            <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} countries={country} kamList={kamList} />
+
+
+
         </>
     );
 };
