@@ -23,7 +23,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
      *   modal handeling
      */
     const dispatch = useDispatch();
-    const user_role = useSelector((state)=> state.Role.user_role);
+    const user_role = useSelector((state) => state.Role.user_role);
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
     const onOpenModal = () => { dispatch(setCompanySettingsErrorAlert('')); setShow(true) };
@@ -33,25 +33,44 @@ const ActionColumn = withSwal(({ row, swal }) => {
     handle form submission
     */
     const onSubmit = (formData) => {
-        
-        api.updatePatch(`/api/company_settings/${row.original.id}/`,formData)
-        .then(res=>{
-            
-            if(res.data.success){
-                dispatch(getCompanySettings(10,1));
-                dispatch(setCompanySettingsSuccessAlert('Company Setting Updated Successfully'));
-                onCloseModal()
-                setTimeout(() => {
-                    dispatch(setCompanySettingsSuccessAlert(''));
-                }, 2000)
-            }else{
-                dispatch(setCompanySettingsErrorAlert(res.data.error));
-            }
-            
-        })
-        .catch(err => {
-            dispatch(setCompanySettingsErrorAlert(err));
-        })
+        if (formData.type === 'text') {
+            api.updatePatch(`/api/company_settings/${row.original.id}/`, { 'key': formData.key, 'type': formData.type, 'value': formData.value })
+                .then(res => {
+
+                    if (res.data.success) {
+                        dispatch(getCompanySettings(10, 1));
+                        dispatch(setCompanySettingsSuccessAlert('Company Setting Updated Successfully'));
+                        onCloseModal()
+                        setTimeout(() => {
+                            dispatch(setCompanySettingsSuccessAlert(''));
+                        }, 2000)
+                    } else {
+                        dispatch(setCompanySettingsErrorAlert(res.data.error));
+                    }
+                })
+                .catch(err => {
+                    dispatch(setCompanySettingsErrorAlert(err));
+                })
+        }
+        else {
+            console.log('formData', formData)
+            api.updateWithFile(`/api/company_settings/${row.original.id}/`, { 'key': formData.key, 'type': formData.type, 'value': formData.value[0] })
+                .then(res => {
+                    if (res.data.success) {
+                        dispatch(getCompanySettings(10, 1));
+                        dispatch(setCompanySettingsSuccessAlert('Company Setting Updated Successfully'));
+                        onCloseModal()
+                        setTimeout(() => {
+                            dispatch(setCompanySettingsSuccessAlert(''));
+                        }, 2000)
+                    } else {
+                        dispatch(setCompanySettingsErrorAlert(res.data.error));
+                    }
+                })
+                .catch(err => {
+                    dispatch(setCompanySettingsErrorAlert(err));
+                })
+        }
     };
 
     return (
@@ -61,25 +80,35 @@ const ActionColumn = withSwal(({ row, swal }) => {
             </Link> */}
 
             {user_role.includes('change_companysettings') ?
-                <Link to="#" className="action-icon" onClick={()=>onOpenModal()}>
+                <Link to="#" className="action-icon" onClick={() => onOpenModal()}>
                     <i className="mdi mdi-square-edit-outline"></i>
-                </Link>:
-                <Link to="#" className="action-icon"  style={{pointerEvents: 'none'}}>
+                </Link> :
+                <Link to="#" className="action-icon" style={{ pointerEvents: 'none' }}>
                     <i className="mdi mdi-square-edit-outline"></i>
                 </Link>
             }
 
             {
-                show?
-                <CompanySettingsForm show={show} onHide={onCloseModal} onSubmit={onSubmit} company_settings={row.original}/>
-                :null
+                show ?
+                    <CompanySettingsForm show={show} onHide={onCloseModal} onSubmit={onSubmit} company_settings={row.original} />
+                    : null
             }
         </>
     );
 });
 
+const valueColumn = ({ row }) => {
+
+    return <>
+        {row.original.type === 'text' ?
+            <p>{row.original.value_text}</p>
+            : <img style={{ "height": '4rem', width: '5rem' }} src={row.original.value_file} alt="" />
+        }
+    </>
+}
+
 const columns = [
-    
+
     {
         Header: 'Key',
         accessor: 'key',
@@ -89,6 +118,7 @@ const columns = [
         Header: 'Value',
         accessor: 'value',
         sort: true,
+        Cell: valueColumn,
     },
     {
         Header: 'Type',
@@ -111,11 +141,11 @@ const CompanySettings = () => {
     const current_page = useSelector(state => state.CompanySettings.current_page);
     const total_page = useSelector(state => state.CompanySettings.total_page);
     const active = useSelector(state => state.CompanySettings.active);
-    const user_role = useSelector((state)=> state.Role.user_role);
+    const user_role = useSelector((state) => state.Role.user_role);
     const loading = useSelector(state => state.CompanySettings.loading);
     const error = useSelector(state => state.CompanySettings.error);
     const success = useSelector(state => state.CompanySettings.success);
-    const [pageSize,setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(10);
     const [alertShow, setAlertShow] = useState(true);
     /*
      *   modal handeling
@@ -126,15 +156,15 @@ const CompanySettings = () => {
 
 
     const visitPage = (page) => {
-        dispatch(getCompanySettings(pageSize,page));
+        dispatch(getCompanySettings(pageSize, page));
     };
 
     const previous_number = () => {
-        dispatch(getCompanySettings(pageSize,previous));
+        dispatch(getCompanySettings(pageSize, previous));
     };
 
     const next_number = () => {
-        dispatch(getCompanySettings(pageSize,next));
+        dispatch(getCompanySettings(pageSize, next));
     };
 
     useEffect(() => {
@@ -153,15 +183,15 @@ const CompanySettings = () => {
     */
     const onSubmit = (formData) => {
         console.log('formData', formData)
-        dispatch(addCompanySetting({'key':formData.key,'type':formData.type,'value': formData.type === 'text' ? formData.value : formData.value[0]}));
+        dispatch(addCompanySetting({ 'key': formData.key, 'type': formData.type, 'value': formData.type === 'text' ? formData.value : formData.value[0] }));
         onCloseModal();
-        
+
     };
 
 
-    useEffect(()=>{ 
-        dispatch(getCompanySettings(pageSize,1));   
-    },[pageSize])
+    useEffect(() => {
+        dispatch(getCompanySettings(pageSize, 1));
+    }, [pageSize])
     return (
         <>
             <PageTitle
@@ -182,9 +212,9 @@ const CompanySettings = () => {
                             )}
                             <Row className="mb-2">
                                 <Col sm={4}>
-                                    <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
+                                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                         <span className='me-2'>Show:</span>
-                                        <Form.Select style={{width: '40%'}} onChange={(e)=>{setPageSize(e.target.value);dispatch(getCompanySettings(e.target.value,current_page))}}>
+                                        <Form.Select style={{ width: '40%' }} onChange={(e) => { setPageSize(e.target.value); dispatch(getCompanySettings(e.target.value, current_page)) }}>
                                             <option value='10'>10</option>
                                             <option value='15'>20</option>
                                             <option value='20'>30</option>
@@ -196,12 +226,12 @@ const CompanySettings = () => {
                                     <div className="text-sm-end mt-2 mt-sm-0">
                                         {user_role.includes('add_companysettings') ?
                                             <Button className="btn btn-success mb-2 me-1" onClick={onOpenModal}>
-                                            <i className="mdi mdi-plus-circle me-1"></i> Add New
-                                            </Button>:
+                                                <i className="mdi mdi-plus-circle me-1"></i> Add New
+                                            </Button> :
                                             <>
                                             </>
                                         }
-                                        
+
                                         {/* <ExcelFile element={<Button className="btn btn-light mb-2">Export</Button>}>
                                             <ExcelSheet data={users} name="Users">
                                                 <ExcelColumn label="Name" value="name"/>
@@ -210,41 +240,41 @@ const CompanySettings = () => {
                                                 <ExcelColumn label="Role" value={(col)=> col.groups[0].name}/>                                            
                                             </ExcelSheet>
                                         </ExcelFile> */}
-  
+
                                     </div>
                                 </Col>
                             </Row>
-                            
-                            {loading ? <p>Loading...</p>:
-                            <>
-                            {company_settings.length > 0 ?
-                            <>
-                            <Table
-                                columns={columns}
-                                data={company_settings}
-                                pageSize={pageSize}
-                                isSortable={true}
-                                pagination={false}
-                                isSearchable={true}
-                                tableClass="table-nowrap table-hover"
-                                searchBoxClass=""
-                            />
-                            <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={total_page} current_page={current_page} active={active}/>
-                            </>
-                            :
-                            'No user available!'}</>}
-                            
+
+                            {loading ? <p>Loading...</p> :
+                                <>
+                                    {company_settings.length > 0 ?
+                                        <>
+                                            <Table
+                                                columns={columns}
+                                                data={company_settings}
+                                                pageSize={pageSize}
+                                                isSortable={true}
+                                                pagination={false}
+                                                isSearchable={true}
+                                                tableClass="table-nowrap table-hover"
+                                                searchBoxClass=""
+                                            />
+                                            <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={total_page} current_page={current_page} active={active} />
+                                        </>
+                                        :
+                                        'No user available!'}</>}
+
                         </Card.Body>
                     </Card>
                 </Col>
             </Row>
 
             {/* add contact modal */}
-            
-            <CompanySettingsForm show={show} onHide={onCloseModal} onSubmit={onSubmit}/>
-            
-            
-            
+
+            <CompanySettingsForm show={show} onHide={onCloseModal} onSubmit={onSubmit} />
+
+
+
         </>
     );
 };

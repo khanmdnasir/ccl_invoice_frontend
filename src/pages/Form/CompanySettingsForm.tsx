@@ -13,9 +13,11 @@ import { setCompanySettingsErrorAlert } from '../../redux/actions';
 const api = new APICore();
 
 interface FormData {
+    id: any;
     key: string;
     type: string;
     value: any;
+    value_text: any;
 }
 
 interface AddCompanySettingProps {
@@ -38,12 +40,12 @@ const CompanySettingsForm = ({ show, onHide, onSubmit, company_settings }: AddCo
         yup.object().shape({
             key: yup.string().required('Please enter key'),
             type: yup.string().required('Please select type').typeError('Please select client type'),
-            value: yup.mixed().required('Please enter value')
+            value: yup.mixed().required('Please enter value').typeError('Please enter value')
         })
     );
 
     const methods = useForm<Partial<FormData>>({
-        defaultValues: { key: company_settings?.key, value: company_settings?.type === "text" ? company_settings?.value : '', type: company_settings?.type },
+        defaultValues: { key: company_settings?.key, value: company_settings && company_settings?.type === "text" ? company_settings?.value_text : ''  , type: company_settings?.type },
         resolver: schemaResolver,
     });
     const {
@@ -56,14 +58,12 @@ const CompanySettingsForm = ({ show, onHide, onSubmit, company_settings }: AddCo
         formState: { errors },
     } = methods;
 
-    // console.log('company_settings',company_settings)
-    // console.log('dataType',dataType)
-    // console.log('company_settings',company_settings)
+
     return (
         <>
             <Modal show={show} onHide={onHide} aria-labelledby="contained-modal-title-vcenter" centered>
                 <Modal.Header className="bg-light" onHide={onHide} closeButton>
-                    <Modal.Title className="m-0">Add Company Settings</Modal.Title>
+                    <Modal.Title className="m-0">{company_settings?.id ? "Edit Company Settings": "Add Company Settings" }</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
                     {!loading && error && (
@@ -79,6 +79,7 @@ const CompanySettingsForm = ({ show, onHide, onSubmit, company_settings }: AddCo
                                     label="Key"
                                     type="text"
                                     name="key"
+                                    required
                                     labelClassName='required'
                                     placeholder="Enter key"
                                     containerClass={'mb-3'}
@@ -91,6 +92,7 @@ const CompanySettingsForm = ({ show, onHide, onSubmit, company_settings }: AddCo
                                     label="Value"
                                     type={dataType !== undefined || dataType !== null ? dataType : "text"}
                                     name="value"
+                                    required
                                     labelClassName='required'
                                     placeholder="Enter value"
                                     containerClass={'mb-3'}
@@ -104,6 +106,7 @@ const CompanySettingsForm = ({ show, onHide, onSubmit, company_settings }: AddCo
                                     label="Type"
                                     type="select"
                                     name="type"
+                                    required
                                     labelClassName='required'
                                     containerClass={'mb-3'}
                                     register={register}
