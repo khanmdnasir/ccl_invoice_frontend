@@ -39,7 +39,7 @@ const Statistics = () => {
                             prefix: '',
                             decimals: 0,
                         }}
-                        description="Total Contact"
+                        description="Total Client"
                         stats={statistics.total_contact}
                         color="#fff"
                     />

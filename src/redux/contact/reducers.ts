@@ -187,7 +187,7 @@ const Contact = (state = INIT_STATE, action: any) => {
                 ...state,
                 loading: false,
                 contact: [action.contact,...state.contact],
-                success:'Contact Created Successfully'
+                success:'Client Created Successfully'
                 
             };
         }

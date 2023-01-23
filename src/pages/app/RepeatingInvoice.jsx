@@ -123,7 +123,7 @@ const columns = [
         sort: true,
     },
     {
-        Header: 'Contact',
+        Header: 'Client',
         accessor: 'contact_id.name',
         sort: true,
     },

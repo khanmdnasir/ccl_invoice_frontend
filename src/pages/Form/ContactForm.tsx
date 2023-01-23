@@ -15,11 +15,13 @@ const api = new APICore();
 
 interface FormData {
     name: string;
-    client_id: string;
     contact_type: string;
     contact_person: string;
     phone: string;
     email: string;
+    bin: string;
+    kam: any;
+    balance: any;
     city: any;
     country: any;
     billing_address: string;
@@ -30,14 +32,14 @@ interface AddContactProps {
     onHide: () => void;
     contact: FormData;
     countries: any;
+    kamList: any;
     onSubmit: (value: any) => void;
 }
 
-const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactProps) => {
+const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddContactProps) => {
     /*
     form validation schema
     */
-   
     const dispatch = useDispatch<AppDispatch>();
     const error = useSelector((state:RootState) => state.Contact.error);
     const loading = useSelector((state:RootState) => state.Contact.loading);
@@ -45,16 +47,18 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
     const schemaResolver = yupResolver(
         yup.object().shape({
             name: yup.string().required('Please enter name'),
-            client_id: yup.string().required('Please enter client id'),
-            contact_type: yup.string().required('Please select contact type').typeError('Please select contact type'),
-            contact_person: yup.string().required('Please enter contact person'),
+            contact_type: yup.string().required('Please select client type').typeError('Please select client type'),
+            contact_person: yup.string().required('Please enter client person'),
+            bin: yup.string().required('Please enter bin'),
             phone: yup.string().required('Please enter phone number').typeError('Please enter number'),
                               
         })
     );
 
+    console.log('contact',contact)
+
     const methods = useForm<Partial<FormData>>({
-        defaultValues: {name:contact?.name,client_id:contact?.client_id,contact_person:contact?.contact_person,phone:contact?.phone,email:contact?.email,city:contact?.city?.id,country:contact?.country?.id,billing_address:contact?.billing_address},
+        defaultValues: {name:contact?.name,contact_person:contact?.contact_person,bin:contact?.bin,kam:contact?.kam?.id, phone:contact?.phone,email:contact?.email,city:contact?.city?.id,country:contact?.country?.id,billing_address:contact?.billing_address},
         resolver: schemaResolver,
     });
     const {
@@ -72,12 +76,13 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
             dispatch(getCity(contact?.country?.id))
         }
     },[contact])
-   
+
+    console.log('kem list',kamList);
     return (
         <>
             <Modal show={show} onHide={onHide} aria-labelledby="contained-modal-title-vcenter" centered>
                 <Modal.Header className="bg-light" onHide={onHide} closeButton>
-                    <Modal.Title className="m-0">Add Contact</Modal.Title>
+                    <Modal.Title className="m-0">Add Client</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
                 {!loading  && error && (
@@ -100,7 +105,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     errors={errors}
                                     control={control}
                                 />
-                                <FormInput
+                                {/* <FormInput
                                     label="Client Id"
                                     type="text"
                                     name="client_id"
@@ -110,10 +115,10 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     register={register}
                                     errors={errors}
                                     control={control}
-                                />
+                                /> */}
                             
                                 <FormInput
-                                label="Contact Type"
+                                label="Client Type"
                                 type="select"
                                 name="contact_type"
                                 labelClassName='required'
@@ -123,11 +128,23 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                 control={control}
                                 defaultValue={contact ? contact.contact_type : ''}
                                 >    
-                                    <option value="" disabled>Select Contact Type ...</option>                         
+                                    <option value="" disabled>Select Client Type ...</option>                         
                                     <option value="individual" >Individual</option>                         
                                     <option value="corporate" >Corporate</option>                                                 
                                 
                                 </FormInput>
+
+                                <FormInput
+                                    label="Bin"
+                                    type="text"
+                                    name="bin"
+                                    labelClassName='required'
+                                    placeholder="Enter bin"
+                                    containerClass={'mb-3'}
+                                    register={register}
+                                    errors={errors}
+                                    control={control}
+                                />
 
                                 <FormInput
                                     label="Contact Person"
@@ -228,7 +245,25 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries }: AddContactPro
                                     })}                                                 
                                 
                                 </FormInput> */}
+                                <FormInput
+                                label="Kam"
+                                type="select"
+                                name="kam"
+                                containerClass={'mb-3'} 
+                                register={register}
+                                errors={errors}
+                                control={control} 
+                                defaultValue={contact ? contact?.kam?.id : ''}
+                                >    
+                                    <option value="">Select Kam ...</option> 
+                                    {kamList?.length > 0 && kamList?.map((kam:any)=>{
+                                        return(
+                                            <option key={'km-'+kam.id} value={kam.id} >{kam.name}</option>
+                                        )
+                                    })}                                                 
                                 
+                                </FormInput>
+
                                 <FormInput
                                     label="Billing Address"
                                     type="textarea"
