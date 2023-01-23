@@ -1,0 +1,27 @@
+import { APICore } from './apiCore';
+
+const api = new APICore();
+
+
+function getPayment(params: {limit: number,page:number}) {
+    const baseUrl = '/api/payment/';
+    return api.get(`${baseUrl}`,params);
+}
+
+function getPaymentDetails(params:any) {
+    const baseUrl = `/api/payment/${params.payload}/`;
+    return api.get(`${baseUrl}`,null);
+}
+
+function getPaymentTypes(params: {limit: number,page:number}) {
+    const baseUrl = '/api/payment-types/';
+    return api.get(`${baseUrl}`,params);
+}
+
+function getDueInvoices(params: {id: number}) {
+    const baseUrl = `/api/client/${params.id}/due-invoice`;
+    return api.get(`${baseUrl}`,null);
+}
+
+
+export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes };

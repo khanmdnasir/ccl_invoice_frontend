@@ -13,6 +13,7 @@ import Currency from './currency/reducers';
 import ChartAccount from './chart-account/reducers';
 import CompanySettings from './company-settings/reducers';
 import Kam from './kam/reducers';
+import Payment from './payment/reducers';
 
 
 export default combineReducers({
@@ -28,7 +29,8 @@ export default combineReducers({
     Currency,
     ChartAccount,
     CompanySettings,
-    Kam
+    Kam,
+    Payment
 
     
 });
