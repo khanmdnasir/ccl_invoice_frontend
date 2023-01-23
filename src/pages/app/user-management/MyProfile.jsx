@@ -7,7 +7,7 @@ import PageTitle from '../../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import { APICore } from '../../../helpers/api/apiCore';
-import { UpdateProfile, UpdateProfileImage} from '../../../redux/actions';
+import { setAuthErrorAlert, setAuthSuccessAlert, UpdateProfile, UpdateProfileImage} from '../../../redux/actions';
 
 const api = new APICore()
 
@@ -16,13 +16,11 @@ const MyProfile = () => {
     const dispatch = useDispatch();
     const[isEdit,setIsEdit] = useState(false);
     const[isImageEdit,setIsImageEdit] = useState(false);
-    const { user, error, loading, success } = useSelector((state) => ({
+    const { user } = useSelector((state) => ({
         user: state.Auth.user,
-        error: state.Auth.error,
-        loading: state.Auth.loading,
-        success: state.Auth.success,
     }));
-
+    const success = useSelector(state => state.Auth.success);
+    const error = useSelector(state => state.Auth.erro);
    const[first_name,setFirstName] = useState(user.first_name);
    const[last_name,setLastName] = useState(user.last_name);
    const[email,setEmail] = useState(user.email);
@@ -52,14 +50,14 @@ const MyProfile = () => {
                 <Col>
                     <Card>
                         <Card.Body>
-                        {!loading && error && (
-                                <Alert variant="danger" className="my-2">
-                                    {error}
-                                </Alert>
-                            )}
-                        {!loading && success && (
-                            <Alert variant="success" className="my-2">
+                        {success && (
+                            <Alert variant="success" className="my-2" onClose={()=>dispatch(setAuthSuccessAlert(null))} dismissible>
                                 {success}
+                            </Alert>
+                        )}
+                        {error && (
+                            <Alert variant="warning" className="my-2" onClose={()=>dispatch(setAuthErrorAlert(null))} dismissible>
+                                {error}
                             </Alert>
                         )}
                             <Row>

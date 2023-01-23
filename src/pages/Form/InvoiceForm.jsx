@@ -9,7 +9,7 @@ import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
 import { getAllContact, getChartAccount, getContactService, getInvoiceDetails } from '../../redux/actions';
-
+import moment from "moment";
 
 const api = new APICore()
 
@@ -35,13 +35,13 @@ const InvoiceForm = () => {
     const invoice_details = useSelector((state) => state.Invoice.invoice_details);
     const contact_services = useSelector((state) => state.Service.contact_services);
     const [contactId, setContactId] = useState('');
-    const [invoiceNo, setInvoiceNo] = useState('');
     const [invoiceId, setInvoiceId] = useState(null);
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
     const [due_date, setDueDate] = useState('');
     const [reference, setReference] = useState('');
     const [currency, setCurrency] = useState('1');
-    const [tax_type, setTaxType] = useState('inclusive');
+    const [updateDateCount, setupdateDateCount] = useState(0);
+    const [tax_type, setTaxType] = useState('exclusive');
     const [sub_total, setSubTotal] = useState('');
     const [discount, setDiscount] = useState('');
     const [total_tax, setTotalTax] = useState('');
@@ -69,6 +69,21 @@ const InvoiceForm = () => {
         setContactId(e.target.value);
         dispatch(getContactService(e.target.value));
     }
+
+    useEffect(()=>{
+        if (invoiceId){
+            if (updateDateCount===0){
+                setupdateDateCount(1)
+            }
+            else if (updateDateCount>0){
+                setDueDate(moment(date).add(7, 'days').format("YYYY-MM-DD"))
+            }
+        }
+        else if (date){
+            setDueDate(moment(date).add(7, 'days').format("YYYY-MM-DD"))
+        }
+    },[date])
+
 
     useEffect(() => {
         if (contact_services.length > 0) {
@@ -229,7 +244,6 @@ const InvoiceForm = () => {
     useEffect(() => {
         if (invoiceId) {
             setNewItems([]);
-            setInvoiceNo(invoice_details?.invoice_no);
             setContactId(invoice_details?.contact_id?.id);
             setTaxType(invoice_details?.tax_type);
             setDate(invoice_details?.date);
@@ -271,7 +285,7 @@ const InvoiceForm = () => {
         let formatDate = format(new Date(date), 'yyyy-MM-dd');
         let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
         if(newItems.length > 0){
-            api.create(`/api/invoice/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
+            api.create(`/api/invoice/`, { 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
             .then(res => {
 
                 if (res.data.success) {
@@ -305,7 +319,7 @@ const InvoiceForm = () => {
         let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
 
         if(oldItems.length > 0){
-            api.updatePatch(`/api/invoice/${invoiceId}/`, { 'invoice_no': invoiceNo, 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
+            api.updatePatch(`/api/invoice/${invoiceId}/`, { 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
             .then(res => {
 
                 if (res.data.success) {
@@ -330,7 +344,6 @@ const InvoiceForm = () => {
         }
         
     }
-
     return (
         <>
 
@@ -359,7 +372,7 @@ const InvoiceForm = () => {
                                 <div className='mb-4'>
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Contact</Form.Label>
+                                            <Form.Label className='required'>Client</Form.Label>
 
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -371,7 +384,7 @@ const InvoiceForm = () => {
                                                 {cloading ? <option value="" disabled>Loading...</option> :
                                                     <>
 
-                                                        <option value="" disabled>Select Contact ...</option>
+                                                        <option value="" disabled>Select Client ...</option>
                                                         {contacts.length > 0 && contacts?.map((item) => {
                                                             return (
                                                                 <option key={'scontact' + item.id} value={item.id} >{item.name}</option>
@@ -383,18 +396,20 @@ const InvoiceForm = () => {
                                             </Form.Select>
 
                                         </Form.Group>
+
+                                        {/* {invoiceId?
                                         <Form.Group as={Col}>
-                                            <Form.Label className='required'>Invoice No</Form.Label>
+                                            <Form.Label>Invoice No</Form.Label>
                                             <Form.Control
                                                 type='text'
-                                                required
                                                 name='invoice_no'
-                                                onChange={(e) => setInvoiceNo(e.target.value)}
+                                                disabled={invoiceId ? true : false}
                                                 defaultValue={invoiceId && invoice_details?.invoice_no}
                                             >
-
                                             </Form.Control>
                                         </Form.Group>
+                                        : null
+                                        } */}
 
                                         <Form.Group as={Col}>
                                             <Form.Label className='required'>Date</Form.Label>
@@ -403,7 +418,7 @@ const InvoiceForm = () => {
                                                 required
                                                 name='date'
                                                 onChange={(e) => setDate(e.target.value)}
-                                                defaultValue={invoiceId && invoice_details?.date}
+                                                value={date}
                                             >
 
                                             </Form.Control>
@@ -415,7 +430,7 @@ const InvoiceForm = () => {
                                                 required
                                                 name='due_date'
                                                 onChange={(e) => setDueDate(e.target.value)}
-                                                defaultValue={invoiceId && invoice_details?.due_date}
+                                                value={due_date}
                                             >
 
                                             </Form.Control>

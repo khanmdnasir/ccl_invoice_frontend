@@ -115,7 +115,7 @@ const api = new APICore();
 const columns = [
     
     {
-        Header: 'Contact',
+        Header: 'Client',
         accessor: 'contact_id.name',
         sort: true,
     },
@@ -125,7 +125,7 @@ const columns = [
         sort: true,
     },
     {
-        Header: 'Contact Mode',
+        Header: 'Client Mode',
         accessor: 'contact_mode',
         sort: true,
     },
@@ -194,7 +194,7 @@ const Service = () => {
             <PageTitle
                 breadCrumbItems={[
                     { label: 'Service', path: '/app/service', active: false },
-                    { label: 'Contact Service', path: '/app/service_by_contact', active: true },
+                    { label: 'Client Service', path: '/app/service_by_contact', active: true },
                 ]}
                 title={`Service of ${contact.name}`}
             />
