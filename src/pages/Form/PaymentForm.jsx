@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form, Alert, InputGroup } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
@@ -22,11 +22,11 @@ const PaymentForm = () => {
   // const payment_types = useSelector((state) => state.Payment.payment_types);
   const due_invoices = useSelector((state) => state.Payment.due_invoices);
   const payment_types = [
-    {id:1,name:"type one"},
-    {id:2,name:"type two"},
-    {id:3,name:"type three"},
-    {id:4,name:"type four"}
-]
+    { id: 1, name: "type one" },
+    { id: 2, name: "type two" },
+    { id: 3, name: "type three" },
+    { id: 4, name: "type four" }
+  ]
   const cloading = useSelector((state) => state.Contact.loading);
   const chloading = useSelector((state) => state.ChartAccount.loading);
   const [rloading, setRloading] = useState(false);
@@ -36,11 +36,11 @@ const PaymentForm = () => {
   const [invoiceId, setInvoiceId] = useState(null);
   const [status, setStatus] = useState('draft');
 
-  console.log('due_invoices', due_invoices)
+
   const [paymentData, setPaymentData] = useState({
-    "payment_date": "2023-01-22",
+    "payment_date": "",
     "status": "success",
-    "amount": 0,
+    "amount": '',
     "total_invoice_amount": 0,
     "reference": "",
     "note": "",
@@ -48,30 +48,18 @@ const PaymentForm = () => {
     "payment_type": '',
   })
 
-  const [items, setItems] = useState({
-    "account_type": "dr",
-    "payment_nature": "regular",
-    "amount": 3800,
-    "client_id": 1,
-    "invoice_id": 1
-  });
+  // const [invoicesData, setInvoicesData] = useState([
+  //   {
+  //     "account_type": "dr",
+  //     "payment_nature": "regular",
+  //     "amount": '',
+  //     "client_id": '',
+  //     "invoice_id": '',
+  //     "adjustment_amount":''
+  //   }
+  // ]);
 
-  const [invoicesData, setInvoicesData] = useState([
-    {
-      "account_type": "dr",
-      "payment_nature": "regular",
-      "amount": 3800,
-      "client_id": 1,
-      "invoice_id": 1
-    },
-    {
-      "account_type": "dr",
-      "payment_nature": "adjustment",
-      "amount": 500,
-      "client_id": 1,
-      "invoice_id": 1
-    }
-  ]);
+  const [invoicesData, setInvoicesData] = useState({});
 
   const onChange = (e) => {
     const newData = { ...paymentData }
@@ -79,25 +67,77 @@ const PaymentForm = () => {
     setPaymentData(newData)
   }
 
-
-  useEffect(() => {
-    const state = location.state
-    dispatch(getAllContact());
-    if (state) {
-      dispatch(getInvoiceDetails(state));
-      setInvoiceId(state);
-
-    } else {
-      setInvoiceId(null);
+  const onChangeInvoice = (id, e) => {
+    const newInvoicesObj = { ...invoicesData }
+    const changingObj = newInvoicesObj[id]
+    const target = e.target.name
+    let value = e.target.value
+    if (target ==='invoice_selected'){
+      value=e.target.checked;
+      if (value===false){
+        const newPaymentData = { ...paymentData }
+        newPaymentData['total_invoice_amount'] -= ((changingObj.paying_amount !== '' ? changingObj.paying_amount : 0) +
+        (changingObj.adjustment_amount !== '' ? changingObj.adjustment_amount: 0))
+        setPaymentData(newPaymentData)
+        changingObj['paying_amount'] = ''
+        changingObj['adjustment_amount'] = ''
+      }
+      else{
+        changingObj['paying_amount'] = changingObj.total_amount
+        const newPaymentData = { ...paymentData }
+        newPaymentData['total_invoice_amount'] += changingObj.total_amount 
+        setPaymentData(newPaymentData)
+      }
     }
 
+    if (target ==='paying_amount'){
+      console.log('value',value)
+      if (value + (changingObj.adjustment_amount !== '' ? changingObj.adjustment_amount : 0) > changingObj.total_amount){
+        value = changingObj.paying_amount;
+      }
+    }
+
+    if (target ==='adjustment_amount'){
+      if (value + (changingObj.paying_amount !== '' ? changingObj.paying_amount : 0) > changingObj.total_amount){
+        value = changingObj.adjustment_amount;
+      }
+    }
+
+    changingObj[target] = value
+    newInvoicesObj[id] = changingObj
+    setInvoicesData(newInvoicesObj)
+  }
+
+  // console.log("invoicesData", invoicesData)
+
+  useEffect(() => {
+    // const state = location.state
+    dispatch(getAllContact());
   }, [])
 
   useEffect(() => {
-    if (paymentData?.client_id!==''){
+    if (paymentData?.client_id !== '') {
       dispatch(getDueInvoices(paymentData?.client_id))
     }
   }, [paymentData?.client_id])
+
+  useEffect(() => {
+    if (due_invoices !== '' && due_invoices !== undefined && due_invoices !== null) {
+      const due_invoice_objects = {}
+      due_invoices.forEach(element => {
+        const newElement = {}
+        newElement['invoice_id'] = element.id;
+        newElement['invoice_no'] = element.invoice_no;
+        newElement['status'] = element.status;
+        newElement['total_amount'] = element.total_amount;
+        newElement['adjustment_amount'] = '';
+        newElement['paying_amount'] = '';
+        newElement['invoice_selected'] = false;
+        due_invoice_objects[(element.id)] = newElement
+      });
+      setInvoicesData(due_invoice_objects)
+    }
+  }, [due_invoices])
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -144,6 +184,9 @@ const PaymentForm = () => {
       <Row>
         <Col>
           <Card>
+              <div>
+              <Button disabled className="m-3 float-end" variant="primary" size="lg">{(paymentData.amount === '' ? 0 : paymentData.amount) - paymentData?.total_invoice_amount} {scurrency.symbol}</Button>
+              </div>
             <Card.Body>
               {error && (
                 <Alert variant="danger" className="my-2" onClose={() => setError(null)} dismissible>
@@ -228,6 +271,7 @@ const PaymentForm = () => {
                       <Form.Control
                         type='text'
                         name='reference'
+                        placeholder="Please enter an reference"
                         onChange={(e) => onChange(e)}
                         defaultValue={paymentData?.reference}
                       >
@@ -239,17 +283,62 @@ const PaymentForm = () => {
 
 
                 </div>
-                <Form.Label>Invoices:</Form.Label>
                 <Table striped bordered hover>
                   <thead>
                     <tr>
-                      <th className='required'>Invoice No:</th>
-                      <th>Action</th>
+                      <th className='required'>Invoice</th>
+                      <th>Paying Amount</th>
+                      <th>Adjustment Amount</th>
                     </tr>
+                    {Object.keys(invoicesData).length > 0 && Object.entries(invoicesData).map(inv => {
+                      return (
+                        <tr key={"inv" + inv[0]}>
+                          <td>
+                            <Form.Check
+                              style={{ 'minHeight': '2rem' }}
+                              type="checkbox"
+                              id={inv.id}
+                              name="invoice_selected"
+                              label={`Invoice No: ${inv[1].invoice_no}, Total Amount: ${scurrency.symbol}${inv[1].total_amount}`}
+                              onChange={(e) => onChangeInvoice(inv[0], e)}
+                            />
+                          </td>
+
+
+                          <td>
+                            <Form.Group as={Col}>
+                              <Form.Control
+                                type='number'
+                                max={inv[1].total_amount}
+                                name='paying_amount'
+                                readOnly={!inv[1].invoice_selected}
+                                value={inv[1].paying_amount}
+                                onChange={(e) => onChangeInvoice(inv[0], e)}
+                              >
+
+                              </Form.Control>
+                            </Form.Group>
+                          </td>
+                          <td>
+                            <Form.Group as={Col}>
+                              <Form.Control
+                                type='number'
+                                max={inv[1].total_amount-inv[1].paying_amount}
+                                name='adjustment_amount'
+                                readOnly={!inv[1].invoice_selected || inv[1].paying_amount >= inv[1].total_amount}
+                                value={inv[1].adjustment_amount}
+                                onChange={(e) => onChangeInvoice(inv[0], e)}
+                              >
+                              </Form.Control>
+                            </Form.Group>
+                          </td>
+                        </tr>
+                      )
+
+                    })}
+                    {Object.keys(invoicesData).length < 1 ?  <b> No due invoice found </b> : null}
                   </thead>
                   <tbody>
-              <p>Hello</p>
-
 
                   </tbody>
                 </Table>
