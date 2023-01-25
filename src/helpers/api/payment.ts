@@ -14,8 +14,13 @@ function getPaymentDetails(params:any) {
 }
 
 function getPaymentTypes(params: {limit: number,page:number}) {
-    const baseUrl = '/api/payment-types/';
-    return api.get(`${baseUrl}`,params);
+    const baseUrl = '/api/payment_method/';
+    if (params.limit!==undefined && params.page!==undefined){
+        return api.get(`${baseUrl}`,params);
+    }
+    else{
+        return api.get(`${baseUrl}`,null);
+    }
 }
 
 function getDueInvoices(params: {id: number}) {
@@ -23,5 +28,10 @@ function getDueInvoices(params: {id: number}) {
     return api.get(`${baseUrl}`,null);
 }
 
+function getClientBalance(params: {id: number}) {
+    const baseUrl = `/api/client/${params.id}/balance`;
+    return api.get(`${baseUrl}`,null);
+}
 
-export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes };
+
+export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance };

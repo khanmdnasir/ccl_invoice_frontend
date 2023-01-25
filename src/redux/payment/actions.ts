@@ -22,6 +22,11 @@ export const getDueInvoices = (id:number) => ({
     payload: id,
 });
 
+export const getClientBalance = (id:number) => ({
+    type: type.GET_CLIENT_BALANCE_REQUESTED,
+    payload: id,
+});
+
 
 
 

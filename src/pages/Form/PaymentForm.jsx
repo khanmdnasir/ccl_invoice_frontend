@@ -7,8 +7,8 @@ import { useLocation } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact, getContactService, getInvoiceDetails, getDueInvoices } from '../../redux/actions';
-
+import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance } from '../../redux/actions';
+import moment from "moment";
 const api = new APICore()
 
 
@@ -21,12 +21,8 @@ const PaymentForm = () => {
   const contacts = useSelector((state) => state.Contact.all_contact);
   // const payment_types = useSelector((state) => state.Payment.payment_types);
   const due_invoices = useSelector((state) => state.Payment.due_invoices);
-  const payment_types = [
-    { id: 1, name: "type one" },
-    { id: 2, name: "type two" },
-    { id: 3, name: "type three" },
-    { id: 4, name: "type four" }
-  ]
+  const client_balance = useSelector((state) => state.Payment.client_balance);
+  const payment_types = useSelector((state) => state.Payment.payment_types);
   const cloading = useSelector((state) => state.Contact.loading);
   const chloading = useSelector((state) => state.ChartAccount.loading);
   const [rloading, setRloading] = useState(false);
@@ -35,10 +31,12 @@ const PaymentForm = () => {
 
   const [invoiceId, setInvoiceId] = useState(null);
   const [status, setStatus] = useState('draft');
-
+  const date = new Date()
+  const current_time = date.toLocaleTimeString();
 
   const [paymentData, setPaymentData] = useState({
     "payment_date": "",
+    // "payment_time": current_time,
     "status": "success",
     "amount": '',
     "total_invoice_amount": 0,
@@ -46,6 +44,7 @@ const PaymentForm = () => {
     "note": "",
     "client_id": '',
     "payment_type": '',
+    "client_balance": client_balance,
   })
 
   // const [invoicesData, setInvoicesData] = useState([
@@ -72,52 +71,59 @@ const PaymentForm = () => {
     const changingObj = newInvoicesObj[id]
     const target = e.target.name
     let value = e.target.value
+    const newPaymentData = { ...paymentData }
     if (target ==='invoice_selected'){
       value=e.target.checked;
       if (value===false){
-        const newPaymentData = { ...paymentData }
         newPaymentData['total_invoice_amount'] -= ((changingObj.paying_amount !== '' ? changingObj.paying_amount : 0) +
         (changingObj.adjustment_amount !== '' ? changingObj.adjustment_amount: 0))
-        setPaymentData(newPaymentData)
         changingObj['paying_amount'] = ''
         changingObj['adjustment_amount'] = ''
       }
       else{
         changingObj['paying_amount'] = changingObj.total_amount
-        const newPaymentData = { ...paymentData }
         newPaymentData['total_invoice_amount'] += changingObj.total_amount 
-        setPaymentData(newPaymentData)
       }
     }
-
+    
     if (target ==='paying_amount'){
-      console.log('value',value)
-      if (value + (changingObj.adjustment_amount !== '' ? changingObj.adjustment_amount : 0) > changingObj.total_amount){
-        value = changingObj.paying_amount;
+      if (parseFloat(value) + (changingObj.adjustment_amount !== '' ? parseFloat(changingObj.adjustment_amount) : 0) > parseFloat(changingObj.total_amount)){
+        value = changingObj.paying_amount !== '' ? parseFloat(changingObj.paying_amount) : '';
+      }
+      else{
+        const preChangingObjValue = changingObj.paying_amount !== '' ? parseFloat(changingObj.paying_amount) : 0;
+        const netValue = (value !== '' ? parseFloat(value) : 0) - preChangingObjValue;
+        newPaymentData['total_invoice_amount'] += netValue;
       }
     }
 
     if (target ==='adjustment_amount'){
-      if (value + (changingObj.paying_amount !== '' ? changingObj.paying_amount : 0) > changingObj.total_amount){
-        value = changingObj.adjustment_amount;
+      if (parseFloat(value) + (changingObj.paying_amount !== '' ? parseFloat(changingObj.paying_amount) : 0) > parseFloat(changingObj.total_amount)){
+        value = changingObj.adjustment_amount !== '' ? parseFloat(changingObj.adjustment_amount) : '';
       }
     }
 
+    setPaymentData(newPaymentData)
+    
     changingObj[target] = value
     newInvoicesObj[id] = changingObj
     setInvoicesData(newInvoicesObj)
   }
-
+  
+  // console.log("client_balance", client_balance)
   // console.log("invoicesData", invoicesData)
+  // console.log("payment_types", payment_types)
 
   useEffect(() => {
     // const state = location.state
     dispatch(getAllContact());
+    dispatch(getPaymentTypes());
   }, [])
 
   useEffect(() => {
     if (paymentData?.client_id !== '') {
       dispatch(getDueInvoices(paymentData?.client_id))
+      dispatch(getClientBalance(paymentData?.client_id))
     }
   }, [paymentData?.client_id])
 
@@ -184,10 +190,6 @@ const PaymentForm = () => {
       <Row>
         <Col>
           <Card>
-              <div>
-              <Button disabled className="m-3 float-end" variant="primary" size="lg">{(paymentData.amount === '' ? 0 : paymentData.amount) - paymentData?.total_invoice_amount} {scurrency.symbol}</Button>
-              </div>
-            <Card.Body>
               {error && (
                 <Alert variant="danger" className="my-2" onClose={() => setError(null)} dismissible>
                   {error}
@@ -198,6 +200,23 @@ const PaymentForm = () => {
                   {success}
                 </Alert>
               )}
+              <div className='p-3 d-flex justify-content-between'>
+                <Form.Group>
+                  <Form.Label>Date</Form.Label>
+                  <Form.Control
+                    type='date'
+                    name='payment_date'
+                    onChange={(e) => onChange(e)}
+                  defaultValue={paymentData?.payment_date}
+                  >
+                  </Form.Control>
+                </Form.Group>
+                <div className='float-right'>
+                <Button disabled className="m-3" variant="success" size="lg"><b>Balance: {parseFloat(client_balance) + (paymentData.amount === '' ? 0 : parseFloat(paymentData.amount)) - paymentData?.total_invoice_amount} {scurrency.symbol}</b></Button>
+                </div>
+              </div>
+
+            <Card.Body>
               <Form onSubmit={(e) => { onSubmit(e) }}>
                 <div className='mb-4'>
                   <Row className='mb-3'>
@@ -284,12 +303,18 @@ const PaymentForm = () => {
 
                 </div>
                 <Table striped bordered hover>
+                  {Object.keys(invoicesData).length > 0 ? 
+                  <>
+                    <thead>
+                      <tr>
+                        <th className='required'>Invoice</th>
+                        <th>Paying Amount</th>
+                        <th>Adjustment Amount</th>
+                      </tr>
+                    </thead>
+                  </>
+                  : null}
                   <thead>
-                    <tr>
-                      <th className='required'>Invoice</th>
-                      <th>Paying Amount</th>
-                      <th>Adjustment Amount</th>
-                    </tr>
                     {Object.keys(invoicesData).length > 0 && Object.entries(invoicesData).map(inv => {
                       return (
                         <tr key={"inv" + inv[0]}>
@@ -338,6 +363,7 @@ const PaymentForm = () => {
                     })}
                     {Object.keys(invoicesData).length < 1 ?  <b> No due invoice found </b> : null}
                   </thead>
+
                   <tbody>
 
                   </tbody>

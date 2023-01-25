@@ -4,6 +4,7 @@ const INIT_STATE = {
     payments: [],
     payment_types: [],
     due_invoices: [],
+    client_balance: 0,
     payment_details: [],
     previous: '',
     next: '',
@@ -81,7 +82,7 @@ const Payment = (state = INIT_STATE, action: any) => {
             return {
                 ...state,
                 loading: false,
-                payment_types: action.data.result,
+                payment_types: action.data.data,
                 previous: action.data.previous,
                 next: action.data.next,
                 current_page: action.data.current_page,
@@ -113,6 +114,29 @@ const Payment = (state = INIT_STATE, action: any) => {
             };
         }
         case type.GET_DUE_INVOICES_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+            };
+        }
+
+
+                        
+        case type.GET_CLIENT_BALANCE_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.GET_CLIENT_BALANCE_SUCCESS: {
+            return {
+                ...state,
+                loading: false,
+                client_balance: action.data.data,
+            };
+        }
+        case type.GET_CLIENT_BALANCE_FAILED: {
             return {
                 ...state,
                 loading: false,
