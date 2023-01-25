@@ -11,6 +11,7 @@ import Invoice from './invoice/reducers';
 import RepeatingInvoice from './repeating-invoice/reducers';
 import Currency from './currency/reducers';
 import ChartAccount from './chart-account/reducers';
+import Kam from './kam/reducers'
 
 
 export default combineReducers({
@@ -25,6 +26,7 @@ export default combineReducers({
     RepeatingInvoice,
     Currency,
     ChartAccount,
+    Kam,
 
     
 });

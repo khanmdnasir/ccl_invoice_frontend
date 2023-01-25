@@ -101,6 +101,12 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 url: '/app/chart_of_accounts',
                 parentKey: 'settings',
             },
+            {
+                key: 'view_kammodel',
+                label: 'Key Account Manager',
+                url: '/app/key_account_manager',
+                parentKey: 'settings',
+            },
             
             
         ],
@@ -193,6 +199,12 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 url: '/app/chart_of_accounts',
                 parentKey: 'settings',
             },
+            {
+                key: 'view_kammodel',
+                label: 'Key Account Manager',
+                url: '/app/key_account_manager',
+                parentKey: 'settings',
+            },
             
             
         ],
@@ -283,6 +295,12 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_chartofaccount',
                 label: 'Chart Of Accounts',
                 url: '/app/chart_of_accounts',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_kammodel',
+                label: 'Key Account Manager',
+                url: '/app/key_account_manager',
                 parentKey: 'settings',
             },
             
