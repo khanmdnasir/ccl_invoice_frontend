@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance } from '../../redux/actions';
+import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance, addPayment, clearSuccessMessage } from '../../redux/actions';
 import moment from "moment";
 const api = new APICore()
 
@@ -23,8 +23,9 @@ const PaymentForm = () => {
   const due_invoices = useSelector((state) => state.Payment.due_invoices);
   const client_balance = useSelector((state) => state.Payment.client_balance);
   const payment_types = useSelector((state) => state.Payment.payment_types);
-  const cloading = useSelector((state) => state.Contact.loading);
-  const chloading = useSelector((state) => state.ChartAccount.loading);
+  const payment_success = useSelector((state) => state.Payment.payment_success);
+  const payment_error = useSelector((state) => state.Payment.payment_error);
+  const cloading = useSelector((state) => state.Payment.loading);
   const [rloading, setRloading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -108,6 +109,19 @@ const PaymentForm = () => {
   }, [])
 
   useEffect(() => {
+    if (payment_success !== null) {
+      setSuccess(payment_success);
+      setTimeout(() => {
+        dispatch(clearSuccessMessage())
+        history.push('/app/payment')
+      }, 2000);
+    }
+    else if(payment_error !== null){
+      setError(payment_error);
+    }
+  }, [payment_success, payment_error])
+
+  useEffect(() => {
     if (paymentData?.client_id !== '') {
       dispatch(getDueInvoices(paymentData?.client_id))
       dispatch(getClientBalance(paymentData?.client_id))
@@ -144,22 +158,22 @@ const PaymentForm = () => {
     }
 
     const current_balance = parseFloat(client_balance) + parseFloat(paymentData.amount) - parseFloat(paymentData.total_invoice_amount);
-    if (current_balance < 1) {
+    if (current_balance < 0) {
       setError("You don't have enough balance to make payment!")
     }
 
-    const finalSelectedInvoices = selectedInvoices.map(inv=>{
+    const finalSelectedInvoices = selectedInvoices.map(inv => {
 
       const payingAmount = (inv.paying_amount !== '' && inv.paying_amount !== 0 && inv.adjustment_amount !== null) ? parseFloat(inv.paying_amount) : 0;
       const adjAmount = (inv.adjustment_amount !== '' && inv.adjustment_amount !== 0 && inv.adjustment_amount !== null) ? parseFloat(inv.adjustment_amount) : 0;
-      
-      if (payingAmount===0){
-        setError("Paying acount should not be empty!")
+
+      if (payingAmount === 0) {
+        setError("Paying amount should not be empty!")
       }
 
       const newInv = {
-        "payment_nature": adjAmount!==0?"adjustment":"regular",
-        "amount": payingAmount !== 0 ? payingAmount:'',
+        "payment_nature": adjAmount !== 0 ? "adjustment" : "regular",
+        "amount": payingAmount !== 0 ? payingAmount : '',
         "client_id": paymentData?.client_id,
         "invoice_id": inv?.invoice_id,
         "adjustment_amount": adjAmount !== 0 ? adjAmount : '',
@@ -169,12 +183,13 @@ const PaymentForm = () => {
       return newInv;
     })
 
-    const finalPaymentData = {...paymentData}
+    const finalPaymentData = { ...paymentData }
     finalPaymentData['invoices'] = finalSelectedInvoices
 
     // console.log("congo")
 
     console.log("finalPaymentData", finalPaymentData)
+    dispatch(addPayment(finalPaymentData))
   }
 
 
@@ -314,14 +329,14 @@ const PaymentForm = () => {
                       <thead>
                         <tr>
                           <th className='required'>Invoice</th>
-                          <th>Paying Amount</th>
+                          <th className='required'>Paying Amount</th>
                           <th>Adjustment Amount</th>
                         </tr>
                       </thead>
                     </>
                     : null}
                   <thead>
-                  
+
                     {Object.keys(invoicesData).length > 0 && Object.entries(invoicesData).map(inv => {
                       return (
                         <tr key={"inv" + inv[0]}>
@@ -343,6 +358,7 @@ const PaymentForm = () => {
                                 type='number'
                                 max={inv[1].total_amount}
                                 name='paying_amount'
+                                required
                                 readOnly={!inv[1].invoice_selected}
                                 value={inv[1].paying_amount}
                                 onChange={(e) => onChangeInvoice(inv[0], e)}
@@ -372,18 +388,18 @@ const PaymentForm = () => {
                   </thead>
 
                 </Table>
-                    <Form.Group as={Col}>
-                      <Form.Label >Note</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        name='note'
-                        placeholder="Please enter an note"
-                        onChange={(e) => onChange(e)}
-                        defaultValue={paymentData?.note}
-                      >
+                <Form.Group as={Col}>
+                  <Form.Label >Note</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    name='note'
+                    placeholder="Please enter an note"
+                    onChange={(e) => onChange(e)}
+                    defaultValue={paymentData?.note}
+                  >
 
-                      </Form.Control>
-                    </Form.Group>
+                  </Form.Control>
+                </Form.Group>
                 <div className='mt-2'>
 
                   <Button variant="success" type="submit" className="waves-effect waves-light me-1 float-end" disabled={rloading} onClick={() => setStatus('submit')}>

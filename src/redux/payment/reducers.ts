@@ -13,6 +13,9 @@ const INIT_STATE = {
     active: '',
     loading: false,
     error: null,
+    success: null,
+    payment_error: null,
+    payment_success:null,
 };
 
 
@@ -141,6 +144,39 @@ const Payment = (state = INIT_STATE, action: any) => {
                 ...state,
                 loading: false,
                 error: action.error,
+            };
+        }
+
+
+                        
+        case type.ADD_PAYMENT_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.ADD_PAYMENT_SUCCESS: {
+            return {
+                 ...state,
+                loading: false,
+                payments: [action.data.data,...state.payments],
+                payment_success:'Payment Successful'
+            };
+        }
+        case type.ADD_PAYMENT_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                payment_error: action.error,
+            };
+        }
+
+
+        case type.CLEAR_SUCCESS_MESSAGE: {
+            return {
+                ...state,
+                loading: false,
+                payment_success: null,
             };
         }
 

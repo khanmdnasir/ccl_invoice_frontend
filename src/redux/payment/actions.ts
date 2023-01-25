@@ -6,6 +6,11 @@ export const getPayment = (limit:number,page:number) => ({
     payload: {limit,page},
 });
 
+export const addPayment = (data:any) => ({
+    type: type.ADD_PAYMENT_REQUESTED,
+    payload: data,
+});
+
 export const getPaymentDetails = (id:number) => ({
     type: type.GET_PAYMENT_DETAILS_REQUESTED,
     payload: id,
@@ -25,6 +30,12 @@ export const getDueInvoices = (id:number) => ({
 export const getClientBalance = (id:number) => ({
     type: type.GET_CLIENT_BALANCE_REQUESTED,
     payload: id,
+});
+
+
+export const clearSuccessMessage = () => ({
+    type: type.CLEAR_SUCCESS_MESSAGE,
+    payload: {},
 });
 
 
