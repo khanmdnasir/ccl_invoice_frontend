@@ -15,6 +15,8 @@ import Service from '../pages/app/service';
 import ServiceForm from '../pages/Form/ServiceForm';
 import ContactCard from '../pages/app/ContactCard';
 import Invoice from '../pages/app/invoice';
+import Payment from '../pages/app/payment';
+import PaymentForm from '../pages/Form/PaymentForm';
 import InvoiceForm from '../pages/Form/InvoiceForm';
 import InvoiceDetails from '../pages/app/InvoiceDetails';
 import RepeatingInvoiceDetails from '../pages/app/RepeatingInvoiceDetails';
@@ -159,6 +161,18 @@ const AppRoutes = {
             path: '/app/invoice_form',
             name: 'Invoice Form',
             component: InvoiceForm,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/payment',
+            name: 'Payments',
+            component: Payment,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/payment_form',
+            name: 'Payment Form',
+            component: PaymentForm,
             route: PrivateRoute,
         },
         {
