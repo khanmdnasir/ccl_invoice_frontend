@@ -20,7 +20,7 @@ export const getKamDetails = (id:number) => {
 }
 
 export const getAllKam = () => ({
-    type: type.ADD_KAM_REQUESTED,
+    type: type.GET_ALLKAM_REQUESTED,
     payload: {},
 });
 

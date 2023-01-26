@@ -51,7 +51,7 @@ function* getAllKam():SagaIterator {
     try {
         const response = yield call(getAllKamApi);
         const data = response.data;
-        yield put({type: 'GET_ALLKAM_SUCCESS' , data: data.results});
+        yield put({type: 'GET_ALLKAM_SUCCESS' , data: data});
     } catch (error) {
         yield put({type: 'GET_ALLKAM_FAILED', error: error});
         

@@ -120,14 +120,14 @@ const AppRoutes = {
             route: PrivateRoute,
         },
         {
-            path: '/app/contact',
-            name: 'Contact',
+            path: '/app/client',
+            name: 'Client',
             component: Contact,
             route: PrivateRoute,
         },
         {
-            path: '/app/contact_details',
-            name: 'Contact Details',
+            path: '/app/client_details',
+            name: 'Client Details',
             component: ContactDetails,
             route: PrivateRoute,
         },

@@ -77,7 +77,7 @@ const Kam = (state = INIT_STATE, action: any) => {
             return {
                 ...state,
                 loading: false,
-                all_kam: action.data,
+                all_kam: action.data.data,
                 previous: action.data.previous,
                 next: action.data.next,
                 current_page: action.data.current_page,
@@ -157,7 +157,6 @@ const Kam = (state = INIT_STATE, action: any) => {
         }
 
         case type.SET_KAM_ERROR_ALERT: {
-            
             return {
                 ...state,
                 error: action.payload,
@@ -167,6 +166,6 @@ const Kam = (state = INIT_STATE, action: any) => {
         default:
             return state;
     }
-}
+};
 
 export default Kam;

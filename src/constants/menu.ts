@@ -27,10 +27,10 @@ const MENU_ITEMS: MenuItemTypes[] = [
     },
     {
         key: 'view_contact',
-        label: 'Contact',
+        label: 'Client',
         isTitle: false,
         icon: 'clipboard',
-        url: '/app/contact',
+        url: '/app/client',
         
     },
     {
@@ -90,7 +90,7 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'settings',
             },
             {
-                key: 'view_companystaticfile',
+                key: 'view_companysettings',
                 label: 'Company Settings',
                 url: '/app/company_settings',
                 parentKey: 'settings',
@@ -125,10 +125,10 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
     },
     {
         key: 'view_contact',
-        label: 'Contact',
+        label: 'Client',
         isTitle: false,
         icon: 'clipboard',
-        url: '/app/contact',
+        url: '/app/client',
         
     },
     {
@@ -188,7 +188,7 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'settings',
             },
             {
-                key: 'view_companystaticfile',
+                key: 'view_companysettings',
                 label: 'Company Settings',
                 url: '/app/company_settings',
                 parentKey: 'settings',
@@ -223,10 +223,10 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
     },
     {
         key: 'view_contact',
-        label: 'Contact',
+        label: 'Client',
         isTitle: false,
         icon: 'clipboard',
-        url: '/app/contact',
+        url: '/app/client',
         
     },
     {
@@ -286,7 +286,7 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'settings',
             },
             {
-                key: 'view_companystaticfile',
+                key: 'view_companysettings',
                 label: 'Company Settings',
                 url: '/app/company_settings',
                 parentKey: 'settings',
