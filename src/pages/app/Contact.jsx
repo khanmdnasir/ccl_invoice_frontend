@@ -13,7 +13,7 @@ import { addContact, deleteContact, getContact, setContactErrorAlert, setContact
 import ReactExport from "react-export-excel";
 import Pagination from '../../components/CustomPagination';
 import { getCountry } from '../../redux/location/actions';
-import { getKamList } from '../../redux/kam/actions';
+import { getAllKam } from '../../redux/kam/actions';
 
 
 const ExcelFile = ReactExport.ExcelFile;
@@ -34,7 +34,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
     const onOpenModal = () => setShow(true);
-    const kamList = useSelector(state => state.Kam.kamList);
+    const all_kam = useSelector(state => state.Kam.all_kam);
     /*
     handle form submission
     */
@@ -130,7 +130,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
             }
             {
                 show ?
-                    <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} contact={row.original} countries={country} kamList={kamList} />
+                    <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} contact={row.original} countries={country} kamList={all_kam} />
                     : null
             }
         </>
@@ -202,7 +202,7 @@ const Contact = () => {
     const dispatch = useDispatch();
     const contact = useSelector(state => state.Contact.contact);
     const country = useSelector(state => state.Location.country);
-    const kamList = useSelector(state => state.Kam.kamList);
+    const all_kam = useSelector(state => state.Kam.all_kam);
     const previous = useSelector(state => state.Contact.previous);
     const next = useSelector(state => state.Contact.next);
     const current_page = useSelector(state => state.Contact.current_page);
@@ -256,7 +256,7 @@ const Contact = () => {
     useEffect(() => {
         dispatch(getContact(pageSize, 1));
         dispatch(getCountry());
-        dispatch(getKamList());
+        dispatch(getAllKam());
     }, [pageSize])
     return (
         <>
@@ -338,7 +338,7 @@ const Contact = () => {
 
             {/* add contact modal */}
 
-            <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} countries={country} kamList={kamList} />
+            <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} countries={country} kamList={all_kam} />
 
 
 
