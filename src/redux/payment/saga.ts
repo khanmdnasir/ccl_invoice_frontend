@@ -82,7 +82,12 @@ function* addPayment({ payload: payloadData}:any):SagaIterator {
     try {
         const response = yield call(addPaymentApi,payloadData);
         const data = response.data;
-        yield put({type: 'ADD_PAYMENT_SUCCESS' , data: data});
+        if(data?.success){
+            yield put({type: 'ADD_PAYMENT_SUCCESS' , data: data});
+        }else{
+            yield put({type: 'ADD_PAYMENT_FAILED', error: data.msg});
+        }
+        
     } catch (error) {
         yield put({type: 'ADD_PAYMENT_FAILED', error: error});
         
