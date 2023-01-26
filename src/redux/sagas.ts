@@ -13,9 +13,10 @@ import currencySaga from './currency/saga';
 import chartAccountSaga from './chart-account/saga';
 import companySettings from './company-settings/saga';
 import kamSaga from './kam/saga';
+import dashboardSaga from './dashboard/saga';
 
 
 
 export default function* rootSaga() {
-    yield all([authSaga(), layoutSaga(), userSaga(),roleSaga(),contactSaga(),locationSaga(),serviceSaga(),invoiceSaga(),currencySaga(),chartAccountSaga(),repeatingInvoiceSaga(), companySettings(), kamSaga()]);
+    yield all([authSaga(), layoutSaga(), userSaga(),roleSaga(),contactSaga(),locationSaga(),serviceSaga(),invoiceSaga(),currencySaga(),chartAccountSaga(),repeatingInvoiceSaga(), companySettings(), kamSaga(),dashboardSaga()]);
 }
