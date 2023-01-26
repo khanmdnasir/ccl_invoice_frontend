@@ -14,6 +14,7 @@ import ChartAccount from './chart-account/reducers';
 import CompanySettings from './company-settings/reducers';
 import Kam from './kam/reducers';
 import Payment from './payment/reducers';
+import Dashboard from './dashboard/reducers';
 
 
 export default combineReducers({
@@ -30,7 +31,8 @@ export default combineReducers({
     ChartAccount,
     CompanySettings,
     Kam,
-    Payment
+    Payment,
+    Dashboard
 
     
 });

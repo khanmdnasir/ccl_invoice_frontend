@@ -10,6 +10,6 @@ import { getRepeatingInvoice, getRepeatingInvoiceDetails } from './repeating_inv
 import { getCurrency } from './currency';
 import { getChartAccount, addChartOfAccount } from './chart_account';
 import { getCompanySettings, addCompanySetting } from './company_settings';
-import { getKamList } from './kam';
 import { getPayment, getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance, addPayment } from './payment';
-export { login, signup, updateProfile, updateProfileImage,getUser,addUser,getRole,getUserRole,getContact,getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getAllContact,addContact,deleteContact,getCountry,getCity,getService,getContactService,addService,getInvoice,getInvoiceDetails,getCurrency,getChartAccount, addChartOfAccount, getRepeatingInvoice, getRepeatingInvoiceDetails, getCompanySettings, addCompanySetting, getKam, getPayment,getKamDetails,getAllKam,addKam,deleteKam, getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance, addPayment };
+import { getDashboardSummary } from './dashboard';
+export { login, signup, updateProfile, updateProfileImage,getUser,addUser,getRole,getUserRole,getContact,getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getAllContact,addContact,deleteContact,getCountry,getCity,getService,getContactService,addService,getInvoice,getInvoiceDetails,getCurrency,getChartAccount, addChartOfAccount, getRepeatingInvoice, getRepeatingInvoiceDetails, getCompanySettings, addCompanySetting, getKam, getPayment,getKamDetails,getAllKam,addKam,deleteKam, getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance, addPayment,getDashboardSummary };
