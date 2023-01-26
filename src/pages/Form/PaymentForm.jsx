@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance, addPayment, clearSuccessMessage } from '../../redux/actions';
+import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance, addPayment, clearSubmitSuccessMessage, clearSubmitErrorMessage, resetPaymentReducerState,  clearDueInvoices } from '../../redux/actions';
 import moment from "moment";
 const api = new APICore()
 
@@ -32,12 +32,9 @@ const PaymentForm = () => {
 
   const [invoiceId, setInvoiceId] = useState(null);
   const [status, setStatus] = useState('draft');
-  const date = new Date()
-  const current_time = date.toLocaleTimeString();
 
   const [paymentData, setPaymentData] = useState({
-    "payment_date": "",
-    // "payment_time": current_time,
+    "payment_date": moment().format("YYYY-MM-DD"),
     "status": "success",
     "amount": '',
     "total_invoice_amount": 0,
@@ -106,18 +103,27 @@ const PaymentForm = () => {
     // const state = location.state
     dispatch(getAllContact());
     dispatch(getPaymentTypes());
+
+    return () => {
+      dispatch(resetPaymentReducerState())
+    }
   }, [])
 
   useEffect(() => {
     if (payment_success !== null) {
       setSuccess(payment_success);
       setTimeout(() => {
-        dispatch(clearSuccessMessage())
+        setRloading(false);
         history.push('/app/payment')
       }, 2000);
     }
-    else if(payment_error !== null){
+    else if (payment_error !== null) {
       setError(payment_error);
+      setRloading(false);
+    }
+    return () => {
+      dispatch(clearSubmitSuccessMessage())
+      dispatch(clearSubmitErrorMessage())
     }
   }, [payment_success, payment_error])
 
@@ -125,6 +131,10 @@ const PaymentForm = () => {
     if (paymentData?.client_id !== '') {
       dispatch(getDueInvoices(paymentData?.client_id))
       dispatch(getClientBalance(paymentData?.client_id))
+    }
+
+    return () => {
+      dispatch(clearDueInvoices())
     }
   }, [paymentData?.client_id])
 
@@ -149,13 +159,14 @@ const PaymentForm = () => {
   const onSubmit = (e) => {
 
     e.preventDefault();
+    setRloading(true);
     const selectedInvoices = Object.values(invoicesData).filter(inv => {
       return inv.invoice_selected;
     })
 
-    if (selectedInvoices.length < 1) {
-      setError("Please add at least one invoice to make payment!")
-    }
+    // if (selectedInvoices.length < 1) {
+    //   setError("Please add at least one invoice to make payment!")
+    // }
 
     const current_balance = parseFloat(client_balance) + parseFloat(paymentData.amount) - parseFloat(paymentData.total_invoice_amount);
     if (current_balance < 0) {
@@ -186,9 +197,8 @@ const PaymentForm = () => {
     const finalPaymentData = { ...paymentData }
     finalPaymentData['invoices'] = finalSelectedInvoices
 
-    // console.log("congo")
+    // console.log("finalPaymentData", finalPaymentData)
 
-    console.log("finalPaymentData", finalPaymentData)
     dispatch(addPayment(finalPaymentData))
   }
 
@@ -230,7 +240,7 @@ const PaymentForm = () => {
                   </Form.Control>
                 </Form.Group>
                 <div className='float-right'>
-                  <Button disabled style={{ textAlign: "left" }} variant="success" size="lg"><b>
+                  <Button style={{ textAlign: "left" }} variant="success" size="lg"><b>
                     Current Balance: {parseFloat(client_balance)} {scurrency.symbol}
                     <br />
                     New Balance: {parseFloat(client_balance) + (paymentData.amount === '' ? 0 : parseFloat(paymentData.amount)) - paymentData?.total_invoice_amount} {scurrency.symbol}</b></Button>

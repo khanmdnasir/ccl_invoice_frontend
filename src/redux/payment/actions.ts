@@ -33,8 +33,25 @@ export const getClientBalance = (id:number) => ({
 });
 
 
-export const clearSuccessMessage = () => ({
-    type: type.CLEAR_SUCCESS_MESSAGE,
+export const clearSubmitSuccessMessage = () => ({
+    type: type.CLEAR_SUBMIT_SUCCESS_MESSAGE,
+    payload: {},
+});
+
+
+export const clearSubmitErrorMessage = () => ({
+    type: type.CLEAR_SUBMIT_ERROR_MESSAGE,
+    payload: {},
+});
+
+
+export const clearDueInvoices = () => ({
+    type: type.CLEAR_DUE_INVOICES,
+    payload: {},
+});
+
+export const resetPaymentReducerState = () => ({
+    type: type.RESET_PAYMENT_REDUCER_STATE,
     payload: {},
 });
 
