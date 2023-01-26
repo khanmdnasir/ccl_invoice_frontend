@@ -11,5 +11,6 @@ export * from './currency/actions';
 export * from './chart-account/actions';
 export * from './company-settings/actions';
 export * from './kam/actions';
+export * from './payment/actions';
 export * from './dashboard/actions';
 

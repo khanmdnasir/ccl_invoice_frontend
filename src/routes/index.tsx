@@ -15,6 +15,8 @@ import Service from '../pages/app/service';
 import ServiceForm from '../pages/Form/ServiceForm';
 import ContactCard from '../pages/app/ContactCard';
 import Invoice from '../pages/app/invoice';
+import Payment from '../pages/app/payment';
+import PaymentForm from '../pages/Form/PaymentForm';
 import InvoiceForm from '../pages/Form/InvoiceForm';
 import InvoiceDetails from '../pages/app/InvoiceDetails';
 import RepeatingInvoiceDetails from '../pages/app/RepeatingInvoiceDetails';
@@ -24,6 +26,7 @@ import PublicInvoice from '../pages/app/PublicInvoice';
 import CompanySettings from '../pages/app/CompanySettings';
 import ChartOfAccount from '../pages/app/ChartOfAccount';
 import Currency from '../pages/app/Currency';
+import KeyAccountManager from '../pages/app/Kam/KeyAccountManager';
 
 // lazy load all the views
 
@@ -161,6 +164,18 @@ const AppRoutes = {
             route: PrivateRoute,
         },
         {
+            path: '/app/payment',
+            name: 'Payments',
+            component: Payment,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/payment_form',
+            name: 'Payment Form',
+            component: PaymentForm,
+            route: PrivateRoute,
+        },
+        {
             path: '/app/repeating_invoice',
             name: 'Repeating Invoice',
             component: RepeatingInvoice,
@@ -195,6 +210,12 @@ const AppRoutes = {
             path: '/app/chart_of_accounts',
             name: 'Chart Of Account',
             component: ChartOfAccount,
+            route: PrivateRoute,
+         },
+         {
+            path: '/app/key_account_manager',
+            name: 'Key Account Manager',
+            component: KeyAccountManager,
             route: PrivateRoute,
          },
          {

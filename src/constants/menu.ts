@@ -42,6 +42,30 @@ const MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
+        key: 'payment',
+        label: 'Payment',
+        isTitle: false,
+        icon: 'payment',
+        children: [ 
+            {
+                key: 'view_paymentmodel',
+                label: 'Payments',
+                url: '/app/payment',
+                parentKey: 'payment',
+            },
+            {
+                key: 'add_paymentmodel',
+                label: 'Add Payment',
+                url: '/app/payment_form',
+                parentKey: 'payment',
+            },
+            
+            
+        ],
+        
+        
+    },
+    {
         key: 'invoice',
         label: 'Invoice',
         isTitle: false,
@@ -99,6 +123,12 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_chartofaccount',
                 label: 'Chart Of Accounts',
                 url: '/app/chart_of_accounts',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_kammodel',
+                label: 'Key Account Manager',
+                url: '/app/key_account_manager',
                 parentKey: 'settings',
             },
             
@@ -134,6 +164,30 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
+        key: 'payment',
+        label: 'Payment',
+        isTitle: false,
+        icon: 'payment',
+        children: [ 
+            {
+                key: 'view_paymentmodel',
+                label: 'Payments',
+                url: '/app/payment',
+                parentKey: 'payment',
+            },
+            {
+                key: 'add_paymentmodel',
+                label: 'Add Payment',
+                url: '/app/payment_form',
+                parentKey: 'payment',
+            },
+            
+            
+        ],
+        
+        
+    },
+    {
         key: 'invoice',
         label: 'Invoice',
         isTitle: false,
@@ -191,6 +245,12 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_chartofaccount',
                 label: 'Chart Of Accounts',
                 url: '/app/chart_of_accounts',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_kammodel',
+                label: 'Key Account Manager',
+                url: '/app/key_account_manager',
                 parentKey: 'settings',
             },
             
@@ -226,6 +286,30 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
+        key: 'payment',
+        label: 'Payment',
+        isTitle: false,
+        icon: 'payment',
+        children: [ 
+            {
+                key: 'view_paymentmodel',
+                label: 'Payments',
+                url: '/app/payment',
+                parentKey: 'payment',
+            },
+            {
+                key: 'add_paymentmodel',
+                label: 'Add Payment',
+                url: '/app/payment_form',
+                parentKey: 'payment',
+            },
+            
+            
+        ],
+        
+        
+    },
+    {
         key: 'invoice',
         label: 'Invoice',
         isTitle: false,
@@ -283,6 +367,12 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_chartofaccount',
                 label: 'Chart Of Accounts',
                 url: '/app/chart_of_accounts',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_kammodel',
+                label: 'Key Account Manager',
+                url: '/app/key_account_manager',
                 parentKey: 'settings',
             },
             

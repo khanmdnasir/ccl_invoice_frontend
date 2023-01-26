@@ -13,6 +13,7 @@ import Currency from './currency/reducers';
 import ChartAccount from './chart-account/reducers';
 import CompanySettings from './company-settings/reducers';
 import Kam from './kam/reducers';
+import Payment from './payment/reducers';
 import Dashboard from './dashboard/reducers';
 
 
@@ -30,6 +31,7 @@ export default combineReducers({
     ChartAccount,
     CompanySettings,
     Kam,
+    Payment,
     Dashboard
 
     
