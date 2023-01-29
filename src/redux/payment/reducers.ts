@@ -200,7 +200,7 @@ const Payment = (state = INIT_STATE, action: any) => {
         case type.RESET_PAYMENT_REDUCER_STATE: {
             return {
                 payments: [],
-                payment_types: [],
+                payment_types: state.payment_types,
                 due_invoices: [],
                 client_balance: 0,
                 payment_details: [],
