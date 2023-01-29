@@ -7,10 +7,10 @@ import { useLocation } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getInvoiceDetails } from '../../redux/actions';
+import { getInvoiceDetails, addInvoicePayment } from '../../redux/actions';
 import { isNumber } from '@amcharts/amcharts4/core';
 import { withSwal } from 'react-sweetalert2';
-
+import PaymentModal from '../Form/PaymentModal'
 const api = new APICore()
 
 
@@ -25,14 +25,38 @@ const InvoiceDetails = withSwal(({swal}) => {
     const loading = useSelector(state => state.Invoice.loading);
     const user_role = useSelector((state) => state.Role.user_role);
     const scurrency = useSelector(state => state.Currency.selectedCurrency);
+    
+    const invoice_payment_success = useSelector(state => state.Payment.invoice_payment_success);
+    const invoice_payment_error = useSelector(state => state.Payment.invoice_payment_error);
+    const [show, setShow] = useState(false);
+    const onCloseModal = () => setShow(false);
+    const onOpenModal = () => setShow(true);
+
 
     useEffect(() => {
         const state = location.state
-        
         setInvoiceId(parseInt(state));
-        
-        
     }, [])
+
+    useEffect(() => {
+        if (invoice_payment_success !== '' && invoice_payment_success !== null && invoice_payment_success!== undefined) {
+            onCloseModal();
+            setTimeout(() => {
+                // history.push("/app/invoice")
+                console.log("redirect to invoice page")
+                // dispatch(setChartOfAccountSuccessAlert(''));
+            }, 2000)
+        }
+
+    }, [invoice_payment_success])
+
+    const paymentSubmit = (data) => {
+        data['id'] = invoiceId;
+        data['amount'] = data['amount'] !== '' ? parseFloat(data['amount']) : 0;
+        data['adjustment_amount'] = data['adjustment_amount'] !== '' ? parseFloat(data['adjustment_amount']) : 0;
+        data['invoice_status'] = (data['amount'] + data['adjustment_amount']) < parseFloat(invoiceDetails?.total_amount) ? "partial_paid" : "paid" ;
+        dispatch(addInvoicePayment(data))
+    }
 
     
 
@@ -155,12 +179,20 @@ const InvoiceDetails = withSwal(({swal}) => {
                                             ''
                                         }
 
+                                        {invoiceDetails?.status === "approve" &&
+                                            <Link to="#" className="btn btn-success me-2" onClick={() => onOpenModal()}>
+                                                <i className="mdi mdi-cash me-1"></i>Payment
+                                            </Link> 
+                                            
+                                        }
+
                                         {invoiceDetails?.status === "approve" &&  user_role.includes('can_send_mail') &&
                                             <Link to="#" className="btn btn-info me-2" onClick={() => sendEmail()}>
                                                 <i className="mdi mdi-email me-1"></i>Mail
                                             </Link> 
                                             
                                         }
+
                                     </div>
                                 </Col>
                             </Row>
@@ -372,6 +404,9 @@ const InvoiceDetails = withSwal(({swal}) => {
                     </Card>
                 </Col>
             </Row>
+            {invoiceDetails?
+                <PaymentModal show={show} onHide={onCloseModal} paymentSubmit={paymentSubmit} maxAmount={invoiceDetails.total_amount} />:null
+            }
         </>
     );
 });

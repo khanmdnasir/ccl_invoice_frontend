@@ -16,6 +16,8 @@ const INIT_STATE = {
     success: null,
     payment_error: null,
     payment_success:null,
+    invoice_payment_error: null,
+    invoice_payment_success:null,
 };
 
 
@@ -168,6 +170,28 @@ const Payment = (state = INIT_STATE, action: any) => {
                 ...state,
                 loading: false,
                 payment_error: action.error,
+            };
+        }
+
+                        
+        case type.ADD_INVOICE_PAYMENT_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.ADD_INVOICE_PAYMENT_SUCCESS: {
+            return {
+                 ...state,
+                loading: false,
+                invoice_payment_success:'Invoice Payment Successful'
+            };
+        }
+        case type.ADD_INVOICE_PAYMENT_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                invoice_payment_error: action.error,
             };
         }
 

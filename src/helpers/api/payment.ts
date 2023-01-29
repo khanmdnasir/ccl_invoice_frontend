@@ -40,4 +40,11 @@ function addPayment(params: {data: any}) {
 }
 
 
-export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance, addPayment };
+function addInvoicePayment(params: {amount: any, id: any, adjustment_amount: any}) {
+    console.log("params", params)
+    const baseUrl = `/api/invoice/${params.id}/payment`;
+    return api.create(`${baseUrl}`, params);
+}
+
+
+export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance, addPayment, addInvoicePayment };

@@ -5,6 +5,7 @@ import { SagaIterator } from '@redux-saga/core';
 import {
     getCompanySettings as getCompanySettingsApi,
     addCompanySetting as addCompanySettingApi,
+    getInvoiceMappingCompanySettings as getInvoiceMappingCompanySettingsApi,
     
 } from '../../helpers';
 
@@ -22,6 +23,17 @@ interface companySettingsData {
 function* getCompanySettings({ payload: {limit,page}}:companySettingsData):SagaIterator {
     try {
         const response = yield call(getCompanySettingsApi,{limit,page});
+        const data = response.data;
+        yield put({type: 'GET_COMPANY_SETTINGS_SUCCESS' , data: data});
+    } catch (error) {
+        yield put({type: 'GET_COMPANY_SETTINGS_FAILED', error: error});
+        
+    }
+}
+
+function* getInvoiceMappingCompanySettings({ payload: {}}:companySettingsData):SagaIterator {
+    try {
+        const response = yield call(getInvoiceMappingCompanySettingsApi,{});
         const data = response.data;
         yield put({type: 'GET_COMPANY_SETTINGS_SUCCESS' , data: data});
     } catch (error) {
@@ -61,8 +73,14 @@ export function* watchAddCompanySetting() {
 
 
 
+export function* watchGetInvoiceMappingCompanySettings() {
+    yield takeEvery('ADD_COMPANY_SETTINGS_REQUESTED', getInvoiceMappingCompanySettings);
+}
+
+
+
 function* companySettingsSaga() {
-    yield all([fork(watchGetCompanySettings),fork(watchAddCompanySetting)]);
+    yield all([fork(watchGetCompanySettings),fork(watchAddCompanySetting), fork(watchGetInvoiceMappingCompanySettings)]);
 }
 
 export default companySettingsSaga;

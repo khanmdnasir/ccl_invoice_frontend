@@ -13,7 +13,7 @@ const INIT_STATE = {
 
 
 
-const Service = (state = INIT_STATE, action: any) => {
+const CompanySettings = (state = INIT_STATE, action: any) => {
     switch (action.type) {
         case type.GET_COMPANY_SETTINGS_REQUESTED: {
             return {
@@ -34,6 +34,27 @@ const Service = (state = INIT_STATE, action: any) => {
             };
         }
         case type.GET_COMPANY_SETTINGS_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+            };
+        }
+
+
+
+        case type.GET_INVOICE_MAPPING_COMPANY_SETTINGS_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.GET_INVOICE_MAPPING_COMPANY_SETTINGS_SUCCESS: {
+            return {
+                ...state
+            };
+        }
+        case type.GET_INVOICE_MAPPING_COMPANY_SETTINGS_FAILED: {
             return {
                 ...state,
                 loading: false,
@@ -84,4 +105,4 @@ const Service = (state = INIT_STATE, action: any) => {
     }
 };
 
-export default Service;
+export default CompanySettings;
