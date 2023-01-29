@@ -27,6 +27,7 @@ import CompanySettings from '../pages/app/CompanySettings';
 import ChartOfAccount from '../pages/app/ChartOfAccount';
 import Currency from '../pages/app/Currency';
 import KeyAccountManager from '../pages/app/Kam/KeyAccountManager';
+import ClientStatement from '../pages/app/ClientStatement';
 
 // lazy load all the views
 
@@ -167,6 +168,12 @@ const AppRoutes = {
             path: '/app/payment',
             name: 'Payments',
             component: Payment,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/client_statement',
+            name: 'Client Statement',
+            component: ClientStatement,
             route: PrivateRoute,
         },
         {
