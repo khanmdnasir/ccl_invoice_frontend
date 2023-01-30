@@ -11,9 +11,9 @@ function getCompanySettings(params: {limit: number,page:number}) {
     return api.get(`${baseUrl}`,{});
 }
 
-function getInvoiceMappingCompanySettings(params:any) {
-    const baseUrl = '/api/invoice_mapping_company_settings/';
-    return api.get(`${baseUrl}`,null);
+function getCompanySettingsByKey(params:any) {
+    const baseUrl = '/api/setting';
+    return api.get(`${baseUrl}`,params);
 }
 
 function addCompanySetting(params:any) {
@@ -24,4 +24,4 @@ function addCompanySetting(params:any) {
 }
 
 
-export { getCompanySettings, addCompanySetting, getInvoiceMappingCompanySettings };
+export { getCompanySettings, addCompanySetting, getCompanySettingsByKey };

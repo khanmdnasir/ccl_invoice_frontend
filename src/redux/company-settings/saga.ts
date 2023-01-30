@@ -5,7 +5,7 @@ import { SagaIterator } from '@redux-saga/core';
 import {
     getCompanySettings as getCompanySettingsApi,
     addCompanySetting as addCompanySettingApi,
-    getInvoiceMappingCompanySettings as getInvoiceMappingCompanySettingsApi,
+    getCompanySettingsByKey as getCompanySettingsByKeyApi,
     
 } from '../../helpers';
 
@@ -31,13 +31,14 @@ function* getCompanySettings({ payload: {limit,page}}:companySettingsData):SagaI
     }
 }
 
-function* getInvoiceMappingCompanySettings({ payload: {}}:companySettingsData):SagaIterator {
+function* getCompanySettingsByKey({ payload: paramData}:companySettingsData):SagaIterator {
+    console.log("paramData", paramData)
     try {
-        const response = yield call(getInvoiceMappingCompanySettingsApi,{});
+        const response = yield call(getCompanySettingsByKeyApi, paramData);
         const data = response.data;
-        yield put({type: 'GET_COMPANY_SETTINGS_SUCCESS' , data: data});
+        yield put({type: 'GET_COMPANY_SETTINGS_BY_KEY_SUCCESS' , data: data});
     } catch (error) {
-        yield put({type: 'GET_COMPANY_SETTINGS_FAILED', error: error});
+        yield put({type: 'GET_COMPANY_SETTINGS_BY_KEY_FAILED', error: error});
         
     }
 }
@@ -73,14 +74,14 @@ export function* watchAddCompanySetting() {
 
 
 
-export function* watchGetInvoiceMappingCompanySettings() {
-    yield takeEvery('ADD_COMPANY_SETTINGS_REQUESTED', getInvoiceMappingCompanySettings);
+export function* watchGetCompanySettingsByKey() {
+    yield takeEvery('GET_COMPANY_SETTINGS_BY_KEY_REQUESTED', getCompanySettingsByKey);
 }
 
 
 
 function* companySettingsSaga() {
-    yield all([fork(watchGetCompanySettings),fork(watchAddCompanySetting), fork(watchGetInvoiceMappingCompanySettings)]);
+    yield all([fork(watchGetCompanySettings),fork(watchAddCompanySetting), fork(watchGetCompanySettingsByKey)]);
 }
 
 export default companySettingsSaga;

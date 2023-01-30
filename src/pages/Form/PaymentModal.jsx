@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button,Form,Row,Col,Alert} from 'react-bootstrap';
 // components
 import { FormInput } from '../../components';
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { clearSubmitErrorMessage } from '../../redux/actions';
 const PaymentModal = ({ show, onHide, paymentSubmit, maxAmount }) => {
-
-    const error = useSelector((state) => state.Contact.error);
+    const dispatch = useDispatch();
+    const invoice_payment_error = useSelector(state => state.Payment.invoice_payment_error);
     const loading = useSelector((state) => state.Contact.loading);
     const [paymentData, setPaymentData] = useState({
         "amount": "",
@@ -59,9 +59,9 @@ const PaymentModal = ({ show, onHide, paymentSubmit, maxAmount }) => {
                     <Modal.Title className="m-0">Invoice Payment</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
-                {!loading  && error && (
-                    <Alert variant="danger" className="my-2" onClose={()=>console.log("hello")} dismissible>
-                        {error}
+                {!loading && invoice_payment_error && (
+                        <Alert variant="danger" className="my-2" onClose={() => dispatch(clearSubmitErrorMessage(''))} dismissible>
+                        {invoice_payment_error}
                     </Alert>
                 )}
                     <Form>

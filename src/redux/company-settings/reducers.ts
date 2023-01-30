@@ -2,6 +2,7 @@ import * as type from './types';
 
 const INIT_STATE = {
     company_settings: [],
+    company_setting_by_key: null,
     previous: '',
     next: '',
     current_page: '',
@@ -43,18 +44,19 @@ const CompanySettings = (state = INIT_STATE, action: any) => {
 
 
 
-        case type.GET_INVOICE_MAPPING_COMPANY_SETTINGS_REQUESTED: {
+        case type.GET_COMPANY_SETTINGS_BY_KEY_REQUESTED: {
             return {
                 ...state,
                 loading: true,
             };
         }
-        case type.GET_INVOICE_MAPPING_COMPANY_SETTINGS_SUCCESS: {
+        case type.GET_COMPANY_SETTINGS_BY_KEY_SUCCESS: {
             return {
-                ...state
+                ...state,
+                company_setting_by_key:action.data.data
             };
         }
-        case type.GET_INVOICE_MAPPING_COMPANY_SETTINGS_FAILED: {
+        case type.GET_COMPANY_SETTINGS_BY_KEY_FAILED: {
             return {
                 ...state,
                 loading: false,

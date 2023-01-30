@@ -201,6 +201,7 @@ const Payment = (state = INIT_STATE, action: any) => {
                 ...state,
                 loading: false,
                 payment_success: null,
+                invoice_payment_success: null,
             };
         }
 
@@ -209,6 +210,7 @@ const Payment = (state = INIT_STATE, action: any) => {
                 ...state,
                 loading: false,
                 payment_error: null,
+                invoice_payment_error: null,
             };
         }
 

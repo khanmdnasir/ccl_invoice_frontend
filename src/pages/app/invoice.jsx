@@ -51,6 +51,7 @@ export const StatusColumn = withSwal(({ row, swal }) => {
     const approvesOptions =
         <>
             <option selected={row.original.status === 'approve'} value='approve'>Approved</option>
+            <option selected={row.original.status === 'partial_paid'} value='partial_paid'>Partial Paid</option>
             <option selected={row.original.status === 'paid'} value='paid'>Paid</option>
         </>
 
@@ -186,7 +187,6 @@ const columns = [
         Header: 'Status',
         accessor: 'status',
         sort: true,
-        Cell: StatusColumn,
     },
     
 

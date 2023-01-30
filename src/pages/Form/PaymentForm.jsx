@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance, addPayment, clearSubmitSuccessMessage, clearSubmitErrorMessage, resetPaymentReducerState, clearDueInvoices, getInvoiceMappingCompanySettings } from '../../redux/actions';
+import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance, addPayment, clearSubmitSuccessMessage, clearSubmitErrorMessage, resetPaymentReducerState, clearDueInvoices, getCompanySettingsByKey } from '../../redux/actions';
 import moment from "moment";
 const api = new APICore()
 
@@ -30,7 +30,8 @@ const PaymentForm = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [status, setStatus] = useState('draft');
-  const [invoice_mapping, setInvoice_mapping] = useState('');
+
+  const company_setting_by_key = useSelector(state => state.CompanySettings.company_setting_by_key);
 
   const [paymentData, setPaymentData] = useState({
     "payment_date": moment().format("YYYY-MM-DD"),
@@ -102,8 +103,9 @@ const PaymentForm = () => {
     // const state = location.state
     dispatch(getAllContact());
     dispatch(getPaymentTypes());
-    setInvoice_mapping(true)
-
+    dispatch(getCompanySettingsByKey({
+      "key": "payment_invoice_map"
+    }));
     return () => {
       // dispatch(resetPaymentReducerState())
     }
@@ -141,7 +143,7 @@ const PaymentForm = () => {
   useEffect(() => {
     if (paymentData?.client_id !== '' && paymentData?.client_id !== undefined && paymentData?.client_id !== null) {
       dispatch(getClientBalance(paymentData?.client_id))
-      if (invoice_mapping){
+      if (company_setting_by_key?.value_text === "1"){
         dispatch(getDueInvoices(paymentData?.client_id))
       }
     }

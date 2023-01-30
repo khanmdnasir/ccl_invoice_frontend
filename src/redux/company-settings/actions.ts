@@ -13,9 +13,9 @@ export const getCompanySettings = (limit:number,page:number) => ({
 });
 
 
-export const getInvoiceMappingCompanySettings = () => ({
-    type: type.GET_INVOICE_MAPPING_COMPANY_SETTINGS_REQUESTED,
-    payload: {},
+export const getCompanySettingsByKey = (data:any) => ({
+    type: type.GET_COMPANY_SETTINGS_BY_KEY_REQUESTED,
+    payload: data,
 });
 
 export const addCompanySetting = (company_setting: CompanySettingForm) => ({
