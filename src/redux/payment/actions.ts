@@ -11,6 +11,12 @@ export const addPayment = (data:any) => ({
     payload: data,
 });
 
+
+export const addInvoicePayment = (data:any) => ({
+    type: type.ADD_INVOICE_PAYMENT_REQUESTED,
+    payload: data,
+});
+
 export const getPaymentDetails = (id:number) => ({
     type: type.GET_PAYMENT_DETAILS_REQUESTED,
     payload: id,

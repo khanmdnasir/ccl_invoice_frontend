@@ -2,6 +2,7 @@ import * as type from './types';
 
 const INIT_STATE = {
     company_settings: [],
+    company_setting_by_key: null,
     previous: '',
     next: '',
     current_page: '',
@@ -13,7 +14,7 @@ const INIT_STATE = {
 
 
 
-const Service = (state = INIT_STATE, action: any) => {
+const CompanySettings = (state = INIT_STATE, action: any) => {
     switch (action.type) {
         case type.GET_COMPANY_SETTINGS_REQUESTED: {
             return {
@@ -34,6 +35,28 @@ const Service = (state = INIT_STATE, action: any) => {
             };
         }
         case type.GET_COMPANY_SETTINGS_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+            };
+        }
+
+
+
+        case type.GET_COMPANY_SETTINGS_BY_KEY_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.GET_COMPANY_SETTINGS_BY_KEY_SUCCESS: {
+            return {
+                ...state,
+                company_setting_by_key:action.data.data
+            };
+        }
+        case type.GET_COMPANY_SETTINGS_BY_KEY_FAILED: {
             return {
                 ...state,
                 loading: false,
@@ -84,4 +107,4 @@ const Service = (state = INIT_STATE, action: any) => {
     }
 };
 
-export default Service;
+export default CompanySettings;

@@ -38,9 +38,15 @@ function getClientBalance(params: {id: number}) {
     return api.get(`${baseUrl}`,null);
 }
 
-
-export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance,getAllPayment, addPayment };
 function addPayment(params: {data: any}) {
     const baseUrl = `/api/payment/`;
     return api.create(`${baseUrl}`,params);
 }
+
+
+function addInvoicePayment(params: {amount: any, id: any, adjustment_amount: any}) {
+    const baseUrl = `/api/invoice/${params.id}/payment`;
+    return api.create(`${baseUrl}`, params);
+}
+
+export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance,getAllPayment, addPayment,addInvoicePayment };

@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance, addPayment, clearSubmitSuccessMessage, clearSubmitErrorMessage, resetPaymentReducerState,  clearDueInvoices } from '../../redux/actions';
+import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance, addPayment, clearSubmitSuccessMessage, clearSubmitErrorMessage, resetPaymentReducerState, clearDueInvoices, getCompanySettingsByKey } from '../../redux/actions';
 import moment from "moment";
 const api = new APICore()
 
@@ -29,9 +29,9 @@ const PaymentForm = () => {
   const [rloading, setRloading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
-  const [invoiceId, setInvoiceId] = useState(null);
   const [status, setStatus] = useState('draft');
+
+  const company_setting_by_key = useSelector(state => state.CompanySettings.company_setting_by_key);
 
   const [paymentData, setPaymentData] = useState({
     "payment_date": moment().format("YYYY-MM-DD"),
@@ -102,18 +102,31 @@ const PaymentForm = () => {
     // const state = location.state
     dispatch(getAllContact());
     dispatch(getPaymentTypes());
-
+    dispatch(getCompanySettingsByKey({
+      "key": "payment_invoice_map"
+    }));
     return () => {
-      dispatch(resetPaymentReducerState())
+      // dispatch(resetPaymentReducerState())
     }
   }, [])
 
   useEffect(() => {
     if (payment_success !== null) {
       setSuccess(payment_success);
+      setPaymentData({
+        "payment_date": moment().format("YYYY-MM-DD"),
+        "status": "success",
+        "amount": '',
+        "total_invoice_amount": 0,
+        "reference": "",
+        "note": "",
+        "client_id": '',
+        "payment_type": ''
+      })
+      dispatch(resetPaymentReducerState())
       setTimeout(() => {
         setRloading(false);
-        history.push('/app/payment')
+        setSuccess("");
       }, 2000);
     }
     else if (payment_error !== null) {
@@ -127,9 +140,11 @@ const PaymentForm = () => {
   }, [payment_success, payment_error])
 
   useEffect(() => {
-    if (paymentData?.client_id !== '') {
-      dispatch(getDueInvoices(paymentData?.client_id))
+    if (paymentData?.client_id !== '' && paymentData?.client_id !== undefined && paymentData?.client_id !== null) {
       dispatch(getClientBalance(paymentData?.client_id))
+      if (company_setting_by_key?.value_text === "1"){
+        dispatch(getDueInvoices(paymentData?.client_id))
+      }
     }
 
     return () => {
@@ -145,11 +160,13 @@ const PaymentForm = () => {
         newElement['invoice_id'] = element.id;
         newElement['invoice_no'] = element.invoice_no;
         newElement['status'] = element.status;
-        newElement['total_amount'] = element.total_amount;
+        newElement['total_amount'] = element.payable;
         newElement['adjustment_amount'] = '';
         newElement['paying_amount'] = '';
         newElement['invoice_selected'] = false;
-        due_invoice_objects[(element.id)] = newElement
+        if (element.payable>0){
+          due_invoice_objects[(element.id)] = newElement
+        }
       });
       setInvoicesData(due_invoice_objects)
     }
@@ -182,7 +199,7 @@ const PaymentForm = () => {
       }
 
       const newInv = {
-        "payment_nature": adjAmount !== 0 ? "adjustment" : "regular",
+        // "payment_nature": adjAmount !== 0 ? "adjustment" : "regular",
         "amount": payingAmount !== 0 ? payingAmount : '',
         "client_id": paymentData?.client_id,
         "invoice_id": inv?.invoice_id,
@@ -234,7 +251,7 @@ const PaymentForm = () => {
                     required
                     name='payment_date'
                     onChange={(e) => onChange(e)}
-                    defaultValue={paymentData?.payment_date}
+                    value={paymentData?.payment_date}
                   >
                   </Form.Control>
                 </Form.Group>
@@ -254,7 +271,6 @@ const PaymentForm = () => {
 
                       <Form.Select
                         aria-label="Default select example"
-                        disabled={invoiceId ? true : false}
                         required
                         name="client_id"
                         onChange={(e) => onChange(e)}
@@ -281,7 +297,6 @@ const PaymentForm = () => {
 
                       <Form.Select
                         aria-label="Default select example"
-                        disabled={invoiceId ? true : false}
                         required
                         name="payment_type"
                         onChange={(e) => onChange(e)}
@@ -310,7 +325,7 @@ const PaymentForm = () => {
                         required
                         onChange={(e) => onChange(e)}
                         placeholder="Please enter an amount"
-                        defaultValue={paymentData?.amount}
+                        value={paymentData?.amount}
                       >
 
                       </Form.Control>
@@ -322,7 +337,7 @@ const PaymentForm = () => {
                         name='reference'
                         placeholder="Please enter an reference"
                         onChange={(e) => onChange(e)}
-                        defaultValue={paymentData?.reference}
+                        value={paymentData?.reference}
                       >
 
                       </Form.Control>

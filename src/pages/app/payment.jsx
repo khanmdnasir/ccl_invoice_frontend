@@ -203,4 +203,4 @@ useEffect (() => {
   );
 };
 
-export default payment
+export default Payment

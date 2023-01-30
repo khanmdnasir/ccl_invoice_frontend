@@ -17,6 +17,8 @@ const INIT_STATE = {
     success: null,
     payment_error: null,
     payment_success:null,
+    invoice_payment_error: null,
+    invoice_payment_success:null,
 };
 
 
@@ -223,12 +225,43 @@ const Payment = (state = INIT_STATE, action: any) => {
             };
         }
 
+                        
+        case type.ADD_INVOICE_PAYMENT_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.ADD_INVOICE_PAYMENT_SUCCESS: {
+            return {
+                 ...state,
+                loading: false,
+                invoice_payment_success:'Invoice Payment Successful'
+            };
+        }
+        case type.ADD_INVOICE_PAYMENT_FAILED: {
+            let invoice_payment_error = null
+            
+            if (action?.error?.error){
+                invoice_payment_error = action?.error?.error
+            }
+            else{
+                invoice_payment_error = "Something Went Wrong"
+            }
+            return {
+                ...state,
+                loading: false,
+                invoice_payment_error: invoice_payment_error,
+            };
+        }
+
 
         case type.CLEAR_SUBMIT_SUCCESS_MESSAGE: {
             return {
                 ...state,
                 loading: false,
                 payment_success: null,
+                invoice_payment_success: null,
             };
         }
 
@@ -237,6 +270,7 @@ const Payment = (state = INIT_STATE, action: any) => {
                 ...state,
                 loading: false,
                 payment_error: null,
+                invoice_payment_error: null,
             };
         }
 
@@ -252,7 +286,7 @@ const Payment = (state = INIT_STATE, action: any) => {
         case type.RESET_PAYMENT_REDUCER_STATE: {
             return {
                 payments: [],
-                payment_types: [],
+                payment_types: state.payment_types,
                 due_invoices: [],
                 client_balance: 0,
                 payment_details: [],
