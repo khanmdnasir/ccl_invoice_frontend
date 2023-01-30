@@ -188,10 +188,18 @@ const Payment = (state = INIT_STATE, action: any) => {
             };
         }
         case type.ADD_INVOICE_PAYMENT_FAILED: {
+            let invoice_payment_error = null
+            
+            if (action?.error?.error){
+                invoice_payment_error = action?.error?.error
+            }
+            else{
+                invoice_payment_error = "Something Went Wrong"
+            }
             return {
                 ...state,
                 loading: false,
-                invoice_payment_error: action.error,
+                invoice_payment_error: invoice_payment_error,
             };
         }
 

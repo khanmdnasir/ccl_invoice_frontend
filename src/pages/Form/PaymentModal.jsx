@@ -60,7 +60,7 @@ const PaymentModal = ({ show, onHide, paymentSubmit, maxAmount }) => {
                 </Modal.Header>
                 <Modal.Body className="p-4">
                 {!loading && invoice_payment_error && (
-                        <Alert variant="danger" className="my-2" onClose={() => dispatch(clearSubmitErrorMessage(''))} dismissible>
+                        <Alert variant="danger" className="" onClose={() => dispatch(clearSubmitErrorMessage(''))} dismissible>
                         {invoice_payment_error}
                     </Alert>
                 )}

@@ -25,7 +25,6 @@ const refreshPage = () => {
 }
 
 const StatusColumn = ({ row }) => {
-    console.log('row.original.status', row.original.status)
     return (
         <React.Fragment>
             <span style={{width:"5rem",fontSize:12}}

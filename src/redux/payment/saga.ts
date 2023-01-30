@@ -100,10 +100,10 @@ function* addInvoicePayment({ payload: payloadData}:any):SagaIterator {
     try {
         const response = yield call(addInvoicePaymentApi,payloadData);
         const data = response.data;
-        if(data?.status){
+        if(data?.success){
             yield put({type: 'ADD_INVOICE_PAYMENT_SUCCESS' , data: data});
         }else{
-            yield put({type: 'ADD_INVOICE_PAYMENT_FAILED', error: data.msg});
+            yield put({type: 'ADD_INVOICE_PAYMENT_FAILED', error: data});
         }
         
     } catch (error) {
