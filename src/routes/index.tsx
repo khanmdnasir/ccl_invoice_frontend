@@ -26,6 +26,7 @@ import PublicInvoice from '../pages/app/PublicInvoice';
 import CompanySettings from '../pages/app/CompanySettings';
 import ChartOfAccount from '../pages/app/ChartOfAccount';
 import Currency from '../pages/app/Currency';
+import PaymentDetails from '../pages/app/paymentDetails';
 import KeyAccountManager from '../pages/app/Kam/KeyAccountManager';
 import ClientStatement from '../pages/app/ClientStatement';
 
@@ -171,10 +172,16 @@ const AppRoutes = {
             route: PrivateRoute,
         },
         {
-            path: '/app/client_statement',
-            name: 'Client Statement',
-            component: ClientStatement,
-            route: PrivateRoute,
+          path: '/app/payment_details',
+          name: 'Payments Details',
+          component: PaymentDetails,
+          route: PrivateRoute,
+        },
+        {
+          path: '/app/client_statement',
+          name: 'Client Statement',
+          component: ClientStatement,
+          route: PrivateRoute,
         },
         {
             path: '/app/payment_form',

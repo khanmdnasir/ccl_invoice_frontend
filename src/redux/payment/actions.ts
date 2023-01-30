@@ -16,6 +16,11 @@ export const getPaymentDetails = (id:number) => ({
     payload: id,
 });
 
+export const getAllPayment = () => ({
+    type: type.GET_ALLPAYMENT_REQUESTED,
+    payload: {},
+});
+
 
 export const getPaymentTypes = (limit:number,page:number) => ({
     type: type.GET_PAYMENT_TYPES_REQUESTED,
@@ -32,6 +37,20 @@ export const getClientBalance = (id:number) => ({
     payload: id,
 });
 
+export const getPaymentDetailsSuccessMsg = (msg:string) => ({
+    type: type.GET_PAYMENT_DETAILS_SUCCESS_MSG,
+    payload: msg,
+});
+
+export const setPaymentSuccessAlert = (msg:string) => ({
+    type: type.SET_PAYMENT_SUCCESS_ALERT,
+    payload: msg,
+});
+
+export const setPaymentErrorAlert = (msg:string) => ({
+    type: type.SET_PAYMENT_ERROR_ALERT,
+    payload: msg,
+});
 
 export const clearSubmitSuccessMessage = () => ({
     type: type.CLEAR_SUBMIT_SUCCESS_MESSAGE,

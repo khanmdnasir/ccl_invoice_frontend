@@ -53,7 +53,7 @@ const invoicesColumns = [
         accessor: 'discount',
         sort: true,
         Cell: (row) => {
-            return <div>{(row.row.original.discount).toFixed(2)}</div>;
+            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toFixed(2):0}</div>;
         }
     },
     {
