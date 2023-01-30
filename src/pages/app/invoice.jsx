@@ -4,6 +4,7 @@ import { Row, Col, Card, Form, Alert, Tab, Nav } from 'react-bootstrap';
 import { withSwal } from 'react-sweetalert2';
 
 // components
+import classNames from 'classnames';
 import Table from '../../components/Table';
 import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
@@ -23,9 +24,28 @@ const refreshPage = () => {
     window.location.reload();
 }
 
+const StatusColumn = ({ row }) => {
+    console.log('row.original.status', row.original.status)
+    return (
+        <React.Fragment>
+            <span style={{width:"5rem",fontSize:12}}
+                className={classNames('badge', {
+                    'bg-soft-primary text-primary': row.original.status === "draft",
+                    'bg-soft-secondary text-secondary': row.original.status === "waiting",
+                    'bg-soft-success text-success': row.original.status === "approve",
+                    'bg-soft-warning text-warning': row.original.status === "partial_paid",
+                    'bg-soft-info text-info': row.original.status === "paid",
+                })}
+            >
+
+                {row.original.status}
+            </span>
+        </React.Fragment>
+    );
+};
 
 
-export const StatusColumn = withSwal(({ row, swal }) => {
+export const StatusColumn2 = withSwal(({ row, swal }) => {
     /*
      *   modal handeling
      */
@@ -187,6 +207,7 @@ const columns = [
         Header: 'Status',
         accessor: 'status',
         sort: true,
+        Cell: StatusColumn
     },
     
 

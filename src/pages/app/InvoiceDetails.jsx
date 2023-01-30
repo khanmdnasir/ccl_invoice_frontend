@@ -186,7 +186,7 @@ const InvoiceDetails = withSwal(({swal}) => {
             "status": value
         }
         swal.fire({
-            title: 'Are you sure?',
+            title: `Are you sure to change status from ${invoiceDetails?.status} to ${value}?`,
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
@@ -251,7 +251,8 @@ const InvoiceDetails = withSwal(({swal}) => {
                             <>
                             <Row className="mb-3">
                                 <Col sm={4}>
-                                    {(invoiceDetails?.status === "draft" || invoiceDetails?.status === "waiting") || (company_setting_by_key?.value_text !== "1") ? 
+                                    {/* <span>{invoiceDetails?.status}</span> */}
+                                            {((invoiceDetails?.status === "draft" || invoiceDetails?.status === "waiting") || (company_setting_by_key?.value_text !== "1")) && invoiceDetails?.status !== "paid" ? 
                                 <>
                                     <Form.Label>Status Change to</Form.Label>
                                     <Form.Select value={invoiceStatus} onChange={(e) => handleStatusChange(e)}>
