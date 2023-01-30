@@ -39,4 +39,8 @@ function getClientBalance(params: {id: number}) {
 }
 
 
-export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance,getAllPayment };
+export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance,getAllPayment, addPayment };
+function addPayment(params: {data: any}) {
+    const baseUrl = `/api/payment/`;
+    return api.create(`${baseUrl}`,params);
+}

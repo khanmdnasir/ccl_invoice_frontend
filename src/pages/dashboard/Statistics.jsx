@@ -4,30 +4,31 @@ import { Row, Col } from 'react-bootstrap';
 // componets
 import StatisticsWidget from '../../components/StatisticsWidget';
 import { APICore } from '../../helpers/api/apiCore';
-import { useSelector } from 'react-redux';
-
+import { useSelector,useDispatch } from 'react-redux';
+import { getDashboardSummary } from '../../redux/dashboard/actions';
 const api = new APICore();
 
 
 const Statistics = () => {
+    const dispatch = useDispatch();
     const[statistics,setStatistics] = useState({});
     const scurrency = useSelector(state => state.Currency.selectedCurrency)
+    const summaryList = useSelector(state => state.Dashboard.summaryList);
     useEffect(()=>{
 
+        dispatch(getDashboardSummary());
+
+        console.log(summaryList)
+
         const data = {
-            total_contact: 500,
-            draft_amount: 420,
+            total_contact: summaryList.total_contact,
+            draft_amount: 420, 
             awaiting_approval_amount: 645,
             awaiting_payment_amount: 785,
             paid_amount: 310,
 
         }
         setStatistics(data)
-
-        // api.get(`/api/statistics`,{})
-        // .then(res=>{
-        //     setStatistics(res.data)
-        // }) 
     },[])
     return (
         <>
@@ -40,58 +41,59 @@ const Statistics = () => {
                             decimals: 0,
                         }}
                         description="Total Client"
-                        stats={statistics.total_contact}
+                        stats={summaryList.total_contact}
                         color="#fff"
                     />
                 </Col>
-                <Col  >
+                <Col>
                     <StatisticsWidget
                         variant="text-muted"
-                        description="Draft (5)"
+                        description={`Draft (${summaryList.draft_invoice ? summaryList.draft_invoice.total_data:0})`}
                         counterOptions={{
                             prefix: scurrency? scurrency.symbol : '',
                             decimals: 2,
                         }}
-                        stats={statistics.draft_amount}
+                        stats={summaryList.draft_invoice ? summaryList.draft_invoice.total_amount:0}
                         color="#fff"
                     />
                 </Col>
                 <Col  >
                     <StatisticsWidget
                         variant="text-info"
-                        description="Awaiting Approval (33)"
+                        description={`Awaiting Approval (${summaryList.waiting_invoice ? summaryList.waiting_invoice.total_data:0})`}
                         counterOptions={{
                             prefix: scurrency? scurrency.symbol : '',
                             decimals: 2,
                         }}
-                        stats={statistics.awaiting_approval_amount}
+                        stats={summaryList.waiting_invoice ? summaryList.waiting_invoice.total_amount:0}
                         color="#fff"
                     />
                 </Col>
                 <Col  >
                     <StatisticsWidget 
                         variant="text-warning" 
-                        description="Awaiting Payment (25)" 
+                        description={`Awaiting Payment (${summaryList.approve_invoice ? summaryList.approve_invoice.total_data:0})`}
                         counterOptions={{
                             prefix: scurrency? scurrency.symbol : '',
                             decimals: 2,
                         }}
-                        stats={statistics.awaiting_payment_amount} 
+                        stats={summaryList.approve_invoice ? summaryList.approve_invoice.total_amount:0}
                         color="#fff" 
                     />
                 </Col>
                 <Col  >
                 <StatisticsWidget 
                     variant="text-success" 
-                    description="Paid (18)" 
+                    description={`Paid (${summaryList.paid_invoice ? summaryList.paid_invoice.total_data:0})`}
                     counterOptions={{
                         prefix: scurrency? scurrency.symbol : '',
                         decimals: 2,
                     }}
-                    stats={statistics.paid_amount} 
+                    stats={summaryList.paid_invoice ? summaryList.paid_invoice.total_amount:0} 
                     color="#fff" 
                 />
                 </Col>
+                
                 
             </Row>
         </>

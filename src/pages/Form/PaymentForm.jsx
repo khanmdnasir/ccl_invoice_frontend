@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance } from '../../redux/actions';
+import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance, addPayment, clearSubmitSuccessMessage, clearSubmitErrorMessage, resetPaymentReducerState,  clearDueInvoices } from '../../redux/actions';
 import moment from "moment";
 const api = new APICore()
 
@@ -23,39 +23,25 @@ const PaymentForm = () => {
   const due_invoices = useSelector((state) => state.Payment.due_invoices);
   const client_balance = useSelector((state) => state.Payment.client_balance);
   const payment_types = useSelector((state) => state.Payment.payment_types);
-  const cloading = useSelector((state) => state.Contact.loading);
-  const chloading = useSelector((state) => state.ChartAccount.loading);
+  const payment_success = useSelector((state) => state.Payment.payment_success);
+  const payment_error = useSelector((state) => state.Payment.payment_error);
+  const cloading = useSelector((state) => state.Payment.loading);
   const [rloading, setRloading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
   const [invoiceId, setInvoiceId] = useState(null);
   const [status, setStatus] = useState('draft');
-  const date = new Date()
-  const current_time = date.toLocaleTimeString();
 
   const [paymentData, setPaymentData] = useState({
-    "payment_date": "",
-    // "payment_time": current_time,
+    "payment_date": moment().format("YYYY-MM-DD"),
     "status": "success",
     "amount": '',
     "total_invoice_amount": 0,
     "reference": "",
     "client_id": '',
-    "payment_type": '',
-    "client_balance": client_balance,
+    "payment_type": ''
   })
-
-  // const [invoicesData, setInvoicesData] = useState([
-  //   {
-  //     "account_type": "dr",
-  //     "payment_nature": "regular",
-  //     "amount": '',
-  //     "client_id": '',
-  //     "invoice_id": '',
-  //     "adjustment_amount":''
-  //   }
-  // ]);
 
   const [invoicesData, setInvoicesData] = useState({});
 
@@ -71,58 +57,83 @@ const PaymentForm = () => {
     const target = e.target.name
     let value = e.target.value
     const newPaymentData = { ...paymentData }
-    if (target ==='invoice_selected'){
-      value=e.target.checked;
-      if (value===false){
-        newPaymentData['total_invoice_amount'] -= ((changingObj.paying_amount !== '' ? changingObj.paying_amount : 0) +
-        (changingObj.adjustment_amount !== '' ? changingObj.adjustment_amount: 0))
+    if (target === 'invoice_selected') {
+      value = e.target.checked;
+      if (value === false) {
+        newPaymentData['total_invoice_amount'] -= ((changingObj.paying_amount !== '' ? parseFloat(changingObj.paying_amount) : 0) +
+          (changingObj.adjustment_amount !== '' ? parseFloat(changingObj.adjustment_amount) : 0))
         changingObj['paying_amount'] = ''
         changingObj['adjustment_amount'] = ''
       }
-      else{
+      else {
         changingObj['paying_amount'] = changingObj.total_amount
-        newPaymentData['total_invoice_amount'] += changingObj.total_amount 
+        newPaymentData['total_invoice_amount'] += changingObj.total_amount
       }
     }
-    
-    if (target ==='paying_amount'){
-      if (parseFloat(value) + (changingObj.adjustment_amount !== '' ? parseFloat(changingObj.adjustment_amount) : 0) > parseFloat(changingObj.total_amount)){
+
+    if (target === 'paying_amount') {
+      if (parseFloat(value) + (changingObj.adjustment_amount !== '' ? parseFloat(changingObj.adjustment_amount) : 0) > parseFloat(changingObj.total_amount)) {
         value = changingObj.paying_amount !== '' ? parseFloat(changingObj.paying_amount) : '';
       }
-      else{
+      else {
         const preChangingObjValue = changingObj.paying_amount !== '' ? parseFloat(changingObj.paying_amount) : 0;
         const netValue = (value !== '' ? parseFloat(value) : 0) - preChangingObjValue;
         newPaymentData['total_invoice_amount'] += netValue;
       }
     }
 
-    if (target ==='adjustment_amount'){
-      if (parseFloat(value) + (changingObj.paying_amount !== '' ? parseFloat(changingObj.paying_amount) : 0) > parseFloat(changingObj.total_amount)){
+    if (target === 'adjustment_amount') {
+      if (parseFloat(value) + (changingObj.paying_amount !== '' ? parseFloat(changingObj.paying_amount) : 0) > parseFloat(changingObj.total_amount)) {
         value = changingObj.adjustment_amount !== '' ? parseFloat(changingObj.adjustment_amount) : '';
       }
     }
 
     setPaymentData(newPaymentData)
-    
+
     changingObj[target] = value
     newInvoicesObj[id] = changingObj
     setInvoicesData(newInvoicesObj)
   }
-  
+
+
   // console.log("client_balance", client_balance)
-  // console.log("invoicesData", invoicesData)
-  // console.log("payment_types", payment_types)
 
   useEffect(() => {
     // const state = location.state
     dispatch(getAllContact());
     dispatch(getPaymentTypes());
+
+    return () => {
+      dispatch(resetPaymentReducerState())
+    }
   }, [])
+
+  useEffect(() => {
+    if (payment_success !== null) {
+      setSuccess(payment_success);
+      setTimeout(() => {
+        setRloading(false);
+        history.push('/app/payment')
+      }, 2000);
+    }
+    else if (payment_error !== null) {
+      setError(payment_error);
+      setRloading(false);
+    }
+    return () => {
+      dispatch(clearSubmitSuccessMessage())
+      dispatch(clearSubmitErrorMessage())
+    }
+  }, [payment_success, payment_error])
 
   useEffect(() => {
     if (paymentData?.client_id !== '') {
       dispatch(getDueInvoices(paymentData?.client_id))
       dispatch(getClientBalance(paymentData?.client_id))
+    }
+
+    return () => {
+      dispatch(clearDueInvoices())
     }
   }, [paymentData?.client_id])
 
@@ -145,34 +156,49 @@ const PaymentForm = () => {
   }, [due_invoices])
 
   const onSubmit = (e) => {
+
     e.preventDefault();
     setRloading(true);
-    setError(null);
-    setSuccess(null);
-    if (invoicesData.length > 0) {
-      api.create(`/api/payment/`, {})
-        .then(res => {
+    const selectedInvoices = Object.values(invoicesData).filter(inv => {
+      return inv.invoice_selected;
+    })
 
-          if (res.data.success) {
-            setSuccess('Data Saved Successfully');
-            setRloading(false);
-            setTimeout(() => {
-              history.push('/app/payment')
-            }, 2000);
-          } else {
-            setError(res.data.error)
-            setRloading(false);
+    // if (selectedInvoices.length < 1) {
+    //   setError("Please add at least one invoice to make payment!")
+    // }
 
-          }
-
-        })
-        .catch(err => {
-          setError(err)
-        })
-    } else {
-      setError("Please add at least one service")
+    const current_balance = parseFloat(client_balance) + parseFloat(paymentData.amount) - parseFloat(paymentData.total_invoice_amount);
+    if (current_balance < 0) {
+      setError("You don't have enough balance to make payment!")
     }
 
+    const finalSelectedInvoices = selectedInvoices.map(inv => {
+
+      const payingAmount = (inv.paying_amount !== '' && inv.paying_amount !== 0 && inv.adjustment_amount !== null) ? parseFloat(inv.paying_amount) : 0;
+      const adjAmount = (inv.adjustment_amount !== '' && inv.adjustment_amount !== 0 && inv.adjustment_amount !== null) ? parseFloat(inv.adjustment_amount) : 0;
+
+      if (payingAmount === 0) {
+        setError("Paying amount should not be empty!")
+      }
+
+      const newInv = {
+        "payment_nature": adjAmount !== 0 ? "adjustment" : "regular",
+        "amount": payingAmount !== 0 ? payingAmount : '',
+        "client_id": paymentData?.client_id,
+        "invoice_id": inv?.invoice_id,
+        "adjustment_amount": adjAmount !== 0 ? adjAmount : '',
+        "invoice_status": parseFloat(payingAmount + adjAmount) < parseFloat(inv.total_amount) ? "partial_paid" : "paid"
+      }
+
+      return newInv;
+    })
+
+    const finalPaymentData = { ...paymentData }
+    finalPaymentData['invoices'] = finalSelectedInvoices
+
+    // console.log("finalPaymentData", finalPaymentData)
+
+    dispatch(addPayment(finalPaymentData))
   }
 
 
@@ -189,34 +215,38 @@ const PaymentForm = () => {
       <Row>
         <Col>
           <Card>
-              {error && (
-                <Alert variant="danger" className="my-2" onClose={() => setError(null)} dismissible>
-                  {error}
-                </Alert>
-              )}
-              {success && (
-                <Alert variant="success" className="my-2" onClose={() => setSuccess(null)} dismissible>
-                  {success}
-                </Alert>
-              )}
+            {error && (
+              <Alert variant="danger" className="my-2" onClose={() => setError(null)} dismissible>
+                {error}
+              </Alert>
+            )}
+            {success && (
+              <Alert variant="success" className="my-2" onClose={() => setSuccess(null)} dismissible>
+                {success}
+              </Alert>
+            )}
+            <Form onSubmit={(e) => { onSubmit(e) }}>
               <div className='p-3 d-flex justify-content-between'>
                 <Form.Group>
-                  <Form.Label>Date</Form.Label>
+                  <Form.Label className='required'>Date</Form.Label>
                   <Form.Control
                     type='date'
+                    required
                     name='payment_date'
                     onChange={(e) => onChange(e)}
-                  defaultValue={paymentData?.payment_date}
+                    defaultValue={paymentData?.payment_date}
                   >
                   </Form.Control>
                 </Form.Group>
                 <div className='float-right'>
-                <Button disabled className="m-3" variant="success" size="lg"><b>Balance: {parseFloat(client_balance) + (paymentData.amount === '' ? 0 : parseFloat(paymentData.amount)) - paymentData?.total_invoice_amount} {scurrency.symbol}</b></Button>
+                  <Button style={{ textAlign: "left" }} variant="success" size="lg"><b>
+                    Current Balance: {parseFloat(client_balance)} {scurrency.symbol}
+                    <br />
+                    New Balance: {parseFloat(client_balance) + (paymentData.amount === '' ? 0 : parseFloat(paymentData.amount)) - paymentData?.total_invoice_amount} {scurrency.symbol}</b></Button>
                 </div>
               </div>
 
-            <Card.Body>
-              <Form onSubmit={(e) => { onSubmit(e) }}>
+              <Card.Body>
                 <div className='mb-4'>
                   <Row className='mb-3'>
                     <Form.Group as={Col}>
@@ -275,8 +305,9 @@ const PaymentForm = () => {
                     <Form.Group as={Col}>
                       <Form.Label className='required'>Amount</Form.Label>
                       <Form.Control
-                        type='text'
+                        type='number'
                         name='amount'
+                        required
                         onChange={(e) => onChange(e)}
                         placeholder="Please enter an amount"
                         defaultValue={paymentData?.amount}
@@ -302,18 +333,19 @@ const PaymentForm = () => {
 
                 </div>
                 <Table striped bordered hover>
-                  {Object.keys(invoicesData).length > 0 ? 
-                  <>
-                    <thead>
-                      <tr>
-                        <th className='required'>Invoice</th>
-                        <th>Paying Amount</th>
-                        <th>Adjustment Amount</th>
-                      </tr>
-                    </thead>
-                  </>
-                  : null}
+                  {Object.keys(invoicesData).length > 0 ?
+                    <>
+                      <thead>
+                        <tr>
+                          <th className='required'>Invoice</th>
+                          <th className='required'>Paying Amount</th>
+                          <th>Adjustment Amount</th>
+                        </tr>
+                      </thead>
+                    </>
+                    : null}
                   <thead>
+
                     {Object.keys(invoicesData).length > 0 && Object.entries(invoicesData).map(inv => {
                       return (
                         <tr key={"inv" + inv[0]}>
@@ -322,12 +354,12 @@ const PaymentForm = () => {
                               style={{ 'minHeight': '2rem' }}
                               type="checkbox"
                               id={inv.id}
+                              checked={inv[1].invoice_selected}
                               name="invoice_selected"
                               label={`Invoice No: ${inv[1].invoice_no}, Total Amount: ${scurrency.symbol}${inv[1].total_amount}`}
                               onChange={(e) => onChangeInvoice(inv[0], e)}
                             />
                           </td>
-
 
                           <td>
                             <Form.Group as={Col}>
@@ -335,6 +367,7 @@ const PaymentForm = () => {
                                 type='number'
                                 max={inv[1].total_amount}
                                 name='paying_amount'
+                                required
                                 readOnly={!inv[1].invoice_selected}
                                 value={inv[1].paying_amount}
                                 onChange={(e) => onChangeInvoice(inv[0], e)}
@@ -347,7 +380,7 @@ const PaymentForm = () => {
                             <Form.Group as={Col}>
                               <Form.Control
                                 type='number'
-                                max={inv[1].total_amount-inv[1].paying_amount}
+                                max={inv[1].total_amount - inv[1].paying_amount}
                                 name='adjustment_amount'
                                 readOnly={!inv[1].invoice_selected || inv[1].paying_amount >= inv[1].total_amount}
                                 value={inv[1].adjustment_amount}
@@ -360,38 +393,43 @@ const PaymentForm = () => {
                       )
 
                     })}
-                    {Object.keys(invoicesData).length < 1 ?  <b> No due invoice found </b> : null}
+                    {Object.keys(invoicesData).length < 1 ? <b> No due invoice found </b> : null}
                   </thead>
 
-                  <tbody>
-
-                  </tbody>
                 </Table>
-                <div className="d-flex justify-content-between">
+                <Form.Group as={Col}>
+                  <Form.Label >Note</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    name='note'
+                    placeholder="Please enter an note"
+                    onChange={(e) => onChange(e)}
+                    defaultValue={paymentData?.note}
+                  >
 
-                  <Button variant="info" type="submit" className="waves-effect waves-light me-1" >
-                    Save
+                  </Form.Control>
+                </Form.Group>
+                <div className='mt-2'>
+
+                  <Button variant="success" type="submit" className="waves-effect waves-light me-1 float-end" disabled={rloading} onClick={() => setStatus('submit')}>
+                    {rloading ? 'Loading...' : 'Submit'}
                   </Button>
-                  <div>
-                    <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading} onClick={() => setStatus('approve')}>
-                      {rloading ? 'Loading...' : 'Approve'}
-                    </Button>
-                    <Link
-                      to='#'
-                      onClick={() => history.goBack()}
-                      className=" btn btn-secondary waves-effect waves-light"
-                    >
-                      Cancel
-                    </Link>
-                  </div>
+                  <Link
+                    to='#'
+                    onClick={() => history.goBack()}
+                    className=" btn btn-secondary waves-effect waves-light"
+                  >
+                    Cancel
+                  </Link>
                 </div>
 
 
-              </Form>
 
 
 
-            </Card.Body>
+
+              </Card.Body>
+            </Form>
           </Card>
         </Col>
       </Row>

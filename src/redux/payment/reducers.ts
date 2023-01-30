@@ -14,7 +14,9 @@ const INIT_STATE = {
     active: '',
     loading: false,
     error: null,
-    success:null,
+    success: null,
+    payment_error: null,
+    payment_success:null,
 };
 
 
@@ -173,6 +175,7 @@ const Payment = (state = INIT_STATE, action: any) => {
             };
         }
 
+
         case type.SET_PAYMENT_SUCCESS_ALERT: {
             
             return {
@@ -196,6 +199,75 @@ const Payment = (state = INIT_STATE, action: any) => {
         //         success:'Payment Canceled Successfully',
         //     };
         // }
+
+                        
+        case type.ADD_PAYMENT_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.ADD_PAYMENT_SUCCESS: {
+            return {
+                 ...state,
+                loading: false,
+                payments: [action.data.data,...state.payments],
+                payment_success:'Payment Successful'
+            };
+        }
+        case type.ADD_PAYMENT_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                payment_error: action.error,
+            };
+        }
+
+
+        case type.CLEAR_SUBMIT_SUCCESS_MESSAGE: {
+            return {
+                ...state,
+                loading: false,
+                payment_success: null,
+            };
+        }
+
+        case type.CLEAR_SUBMIT_ERROR_MESSAGE: {
+            return {
+                ...state,
+                loading: false,
+                payment_error: null,
+            };
+        }
+
+        case type.CLEAR_DUE_INVOICES: {
+            return {
+                ...state,
+                loading: false,
+                due_invoices: [],
+            };
+        }
+
+
+        case type.RESET_PAYMENT_REDUCER_STATE: {
+            return {
+                payments: [],
+                payment_types: [],
+                due_invoices: [],
+                client_balance: 0,
+                payment_details: [],
+                previous: '',
+                next: '',
+                current_page: '',
+                total_page: '',
+                active: '',
+                loading: false,
+                error: null,
+                success: null,
+                payment_error: null,
+                payment_success:null,
+            };
+        }
 
         default:
             return state;

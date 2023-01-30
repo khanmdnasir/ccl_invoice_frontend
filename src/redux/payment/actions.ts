@@ -6,6 +6,11 @@ export const getPayment = (limit:number,page:number) => ({
     payload: {limit,page},
 });
 
+export const addPayment = (data:any) => ({
+    type: type.ADD_PAYMENT_REQUESTED,
+    payload: data,
+});
+
 export const getPaymentDetails = (id:number) => ({
     type: type.GET_PAYMENT_DETAILS_REQUESTED,
     payload: id,
@@ -46,6 +51,29 @@ export const setPaymentErrorAlert = (msg:string) => ({
     type: type.SET_PAYMENT_ERROR_ALERT,
     payload: msg,
 });
+
+export const clearSubmitSuccessMessage = () => ({
+    type: type.CLEAR_SUBMIT_SUCCESS_MESSAGE,
+    payload: {},
+});
+
+
+export const clearSubmitErrorMessage = () => ({
+    type: type.CLEAR_SUBMIT_ERROR_MESSAGE,
+    payload: {},
+});
+
+
+export const clearDueInvoices = () => ({
+    type: type.CLEAR_DUE_INVOICES,
+    payload: {},
+});
+
+export const resetPaymentReducerState = () => ({
+    type: type.RESET_PAYMENT_REDUCER_STATE,
+    payload: {},
+});
+
 
 
 

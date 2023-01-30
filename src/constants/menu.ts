@@ -54,6 +54,12 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'payment',
             },
             {
+                key: 'view_paymentmodel',
+                label: 'Client Statement',
+                url: '/app/client_statement',
+                parentKey: 'payment',
+            },
+            {
                 key: 'add_paymentmodel',
                 label: 'Add Payment',
                 url: '/app/payment_form',
@@ -123,6 +129,12 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_chartofaccount',
                 label: 'Chart Of Accounts',
                 url: '/app/chart_of_accounts',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_kammodel',
+                label: 'Key Account Manager',
+                url: '/app/key_account_manager',
                 parentKey: 'settings',
             },
             
@@ -170,6 +182,12 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'payment',
             },
             {
+                key: 'view_paymentmodel',
+                label: 'Client Statement',
+                url: '/app/client_statement',
+                parentKey: 'payment',
+            },
+            {
                 key: 'add_paymentmodel',
                 label: 'Add Payment',
                 url: '/app/payment_form',
@@ -239,6 +257,12 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_chartofaccount',
                 label: 'Chart Of Accounts',
                 url: '/app/chart_of_accounts',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_kammodel',
+                label: 'Key Account Manager',
+                url: '/app/key_account_manager',
                 parentKey: 'settings',
             },
             
@@ -286,6 +310,12 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'payment',
             },
             {
+                key: 'view_paymentmodel',
+                label: 'Client Statement',
+                url: '/app/client_statement',
+                parentKey: 'payment',
+            },
+            {
                 key: 'add_paymentmodel',
                 label: 'Add Payment',
                 url: '/app/payment_form',
@@ -355,6 +385,12 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_chartofaccount',
                 label: 'Chart Of Accounts',
                 url: '/app/chart_of_accounts',
+                parentKey: 'settings',
+            },
+            {
+                key: 'view_kammodel',
+                label: 'Key Account Manager',
+                url: '/app/key_account_manager',
                 parentKey: 'settings',
             },
             
