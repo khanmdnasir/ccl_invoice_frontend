@@ -54,6 +54,12 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'payment',
             },
             {
+                key: 'view_paymentmodel',
+                label: 'Client Statement',
+                url: '/app/client_statement',
+                parentKey: 'payment',
+            },
+            {
                 key: 'add_paymentmodel',
                 label: 'Add Payment',
                 url: '/app/payment_form',
@@ -176,6 +182,12 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'payment',
             },
             {
+                key: 'view_paymentmodel',
+                label: 'Client Statement',
+                url: '/app/client_statement',
+                parentKey: 'payment',
+            },
+            {
                 key: 'add_paymentmodel',
                 label: 'Add Payment',
                 url: '/app/payment_form',
@@ -295,6 +307,12 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 key: 'view_paymentmodel',
                 label: 'Payments',
                 url: '/app/payment',
+                parentKey: 'payment',
+            },
+            {
+                key: 'view_paymentmodel',
+                label: 'Client Statement',
+                url: '/app/client_statement',
                 parentKey: 'payment',
             },
             {
