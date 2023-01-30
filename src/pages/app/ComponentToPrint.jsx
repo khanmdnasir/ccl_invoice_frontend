@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
 import logo from '../../assets/images/Qorum.svg'
 // components
@@ -13,12 +12,13 @@ const ComponentToPrint = forwardRef(( props, ref) => {
         <div ref={ref} className='container'>
             
 
-            <Row>
+            <Row className='container'>
                 <Col>
                     <Card>
-                        <Card.Body>
-                            <div className="clearfix">
-                                <div className="mt-2">
+                        <Card.Body>                            
+                                
+                            <Row className='mt-2'>
+                                <Col>
                                     <div className="auth-logo">
                                         <div className="logo logo-dark">
                                             <span className="logo-lg">
@@ -31,59 +31,98 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                             </span>
                                         </div>
                                     </div>
-                                </div>
-                                
-                            </div>
-
+                                </Col>
+                                <Col>
+                                    
+                                        <h5 className='text-end'>Statement of Account</h5>
+                                    
+                                    <p className='text-end ' style={{fontSize: '10px'}} >
+                                        Level 4, Khansons Center<br/>
+                                        37 Kawran Bazar Rd, Dhaka 1215                                        
+                                    </p>
+                                </Col>
+                                <hr style={{height:'2px',borderWidth:0,color:'gray',backgroundColor:'gray'}} />
+                            </Row>                                  
+                                                        
+                            
                             <Row>
-                                <Col md={6}>
-                                    <div className="mt-3">
-                                        <p>
-                                            <b>Statement of, {props.data?.client?.name}</b>
+                                <Col >
+                                    
+                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
+                                            <b>Statement Print Date: </b>{getCurrentDate()}
                                         </p>
+                                        <p style={{fontSize: '12px'}}>
+                                            <b>{props.data?.client?.name}</b>
+                                        </p>
+                                        <address style={{fontSize: '12px'}}>
+                                            {props.data?.client?.billing_address}
+                                            
+                                        </address>
                                         
-                                    </div>
+                                    
                                 </Col>
 
-                                <Col md={{ span: 4, offset: 2 }}>
-                                    <div className="mt-3 float-end">
-                                        <p>
-                                            <strong>Date : </strong>{' '}
-                                            <span className="float-end"> &nbsp;&nbsp;&nbsp; {getCurrentDate()} </span>
+                                <Col >
+                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
+                                            <b style={{marginRight: '76px'}}>Client Id </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.client_id}
                                         </p>
-                                        
-                                    </div>
+                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
+                                            <b style={{marginRight: '50px'}}>Contact Type </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.contact_type}
+                                        </p>
+                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
+                                            <b style={{marginRight: '88px'}}>Phone </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.phone}
+                                        </p>
+                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
+                                            <b style={{marginRight: '92px'}}>Email </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.email}
+                                        </p>
                                 </Col>
                             </Row>
+                            
 
-                           
+                            <div style={{display: 'flex',justifyContent: 'space-between'}}>
+                                    
+                                <p style={{fontSize: '10px'}}>
+                                    <b>Total Invoice Amount:</b> <span className="">{props.data?.summary?.total_invoice_amount}</span>
+                                </p>
+                            
+                            
+                                <p style={{fontSize: '10px'}}>
+                                    <b>Total Paid Amount:</b> <span className="">{props.data?.summary?.total_paid_amount}</span>
+                                </p>
+                                <p style={{fontSize: '10px'}}>
+                                    <b>Total Due:</b> <span className="">{props.data?.summary?.total_due}</span>
+                                </p>
+                                <p style={{fontSize: '10px'}}>
+                                    <b>Total Balance:</b> <span className="">{props.data?.summary?.total_balance}</span>
+                                </p>
+                                
+                            </div>   
 
                             <Row>
                                 <Col xs={12}>
-                                    <div className="table-responsive">
-                                        <table className="table mt-4 table-centered">
+                                    <div >
+                                        <table className="table mt-2 "  >
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
-                                                    
-                                                    <th >Date</th>
-                                                    <th >Description</th>
-                                                    <th >Invoice Amount</th>
-                                                    <th >Payment Amount</th>
-                                                    <th >Status</th>
+                                                                                                        
+                                                    <th style={{fontSize: '12px',padding: '1px'}}>Date</th>
+                                                    <th style={{fontSize: '12px',padding: '1px'}}>Description</th>
+                                                    <th style={{fontSize: '12px',padding: '1px'}}>Invoice Amount</th>
+                                                    <th style={{fontSize: '12px',padding: '1px'}}>Payment Amount</th>
+                                                    <th style={{fontSize: '12px',padding: '1px'}}>Status</th>
                                                     
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody >
                                                 {(props.data?.statements || []).map((item, idx) => {
                                                     return (
-                                                        <tr key={idx}>
-                                                            <td>{idx + 1}</td>                                            
-                                                            <td>{item.date}</td>
-                                                            <td>{item.invoice_no ? item.invoice_no : item.payment_no}</td>
-                                                            <td>{item.total_amount}</td>
-                                                            <td>{item.amount}</td>
-                                                            <td>{item.status}</td>
+                                                        <tr key={idx} >
+                                                                                                       
+                                                            <td style={{fontSize: '12px',padding: '1px'}}>{item.date}</td>
+                                                            <td style={{fontSize: '12px',padding: '1px'}}>{item.invoice_no ? item.invoice_no : item.payment_no}</td>
+                                                            <td style={{fontSize: '12px',padding: '1px'}}>{item.total_amount}</td>
+                                                            <td style={{fontSize: '12px',padding: '1px'}}>{item.amount}</td>
+                                                            <td style={{fontSize: '12px',padding: '1px'}}>{item.status}</td>
                                                             
                                                         </tr>
                                                     );
@@ -94,27 +133,7 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                 </Col>
                             </Row>
 
-                            <Row>
-                                <Col sm={6}>
-                                    
-                                </Col>
-                                <Col sm={6}>
-                                    <div className="float-end">
-                                        <p>
-                                            <b>Total Invoice Amount:</b> <span className="float-end">{props.data?.summary?.total_invoice_amount}</span>
-                                        </p>
-                                        <p>
-                                            <b>Total Paid Amount:</b> <span className="float-end">{props.data?.summary?.total_paid_amount}</span>
-                                        </p>
-                                        <p>
-                                            <b>Total Due:</b> <span className="float-end">{props.data?.summary?.total_due}</span>
-                                        </p>
-                                        
-                                        <h3>{props.data?.summary?.total_balance} USD</h3>
-                                    </div>
-                                    <div className="clearfix"></div>
-                                </Col>
-                            </Row>
+                            
 
                             
                         </Card.Body>
