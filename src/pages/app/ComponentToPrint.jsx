@@ -109,7 +109,7 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                                     <th style={{fontSize: '12px',padding: '1px'}}>Description</th>
                                                     <th style={{fontSize: '12px',padding: '1px'}}>Invoice Amount</th>
                                                     <th style={{fontSize: '12px',padding: '1px'}}>Payment Amount</th>
-                                                    <th style={{fontSize: '12px',padding: '1px'}}>Status</th>
+                                                    
                                                     
                                                 </tr>
                                             </thead>
@@ -122,7 +122,7 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                                             <td style={{fontSize: '12px',padding: '1px'}}>{item.invoice_no ? item.invoice_no : item.payment_no}</td>
                                                             <td style={{fontSize: '12px',padding: '1px'}}>{item.total_amount}</td>
                                                             <td style={{fontSize: '12px',padding: '1px'}}>{item.amount}</td>
-                                                            <td style={{fontSize: '12px',padding: '1px'}}>{item.status}</td>
+                                                            
                                                             
                                                         </tr>
                                                     );

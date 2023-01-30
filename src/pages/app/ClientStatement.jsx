@@ -19,22 +19,6 @@ import classNames from 'classnames';
 
 const api = new APICore();
 
-const StatusColumn = ({ row }) => {
-    return (
-        <React.Fragment>
-            <span
-                className={classNames('badge', {
-                    'bg-soft-success text-success': row.original.status === 'approve',
-                    'bg-soft-danger text-danger': row.original.status !== 'approve',
-                })}
-            >
-
-                {row.original.status
-                }
-            </span>
-        </React.Fragment>
-    );
-};
 
 const DescriptionColumn = ({ row }) => {
     return (
@@ -72,12 +56,8 @@ const columns = [
         Header: 'Payment Amount',
         accessor: 'amount',
         sort: true,
-    },
-    {
-        Header: 'Status',
-        accessor: 'status',
-        Cell: StatusColumn,
-    },
+    }
+    
    
 ];
 
