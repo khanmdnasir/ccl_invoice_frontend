@@ -99,14 +99,26 @@ const ClientStatement = () => {
         e.preventDefault()
         setLoading(true);
         
-        const response = await api.get('/api/client-ledger',{ client_id: contactId })
-        if(response.data.success){
+        if (fromDate === '' || toDate === ''){
+            const response = await api.get('/api/client-ledger',{ client_id: contactId })
+        
+            if(response.data.success){
 
-            setLoading(false)
+                setLoading(false)
+            }
+            setClientLedger(response.data.data)
+        }else{
+            
+            const response = await api.get('/api/client-ledger',{ client_id: contactId,start_date: format(new Date(fromDate), 'yyyy-MM-dd'),end_date: format(new Date(toDate), 'yyyy-MM-dd') })
+        
+            if(response.data.success){
+
+                setLoading(false)
+            }
+            setClientLedger(response.data.data)
         }
-        setClientLedger(response.data.data)
     }
-    console.log(clientLedger)
+
     useEffect(() => {
         dispatch(getContact(0,1));
         // dispatch(getPayment(pageSize,1));
@@ -120,7 +132,7 @@ const ClientStatement = () => {
                 ]}
                 title={'Client Statement'}
             />
-
+           
             <Row>
                 <Col>
                     <Card>
