@@ -9,8 +9,13 @@ function getPayment(params: {limit: number,page:number}) {
 }
 
 function getPaymentDetails(params:any) {
-    const baseUrl = `/api/payment/${params.payload}/`;
+    const baseUrl = `/api/payment/${params.payload}/single`;
     return api.get(`${baseUrl}`,null);
+}
+
+function getAllPayment() {
+    const baseUrl = '/api/payment/';
+    return api.get(`${baseUrl}`,{});
 }
 
 function getPaymentTypes(params: {limit: number,page:number}) {
@@ -34,4 +39,4 @@ function getClientBalance(params: {id: number}) {
 }
 
 
-export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance };
+export { getPayment,getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance,getAllPayment };

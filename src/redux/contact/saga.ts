@@ -188,7 +188,6 @@ export function* watchGetAllContact() {
 }
 
 
-
 export function* watchAddContact() {
     yield takeEvery('ADD_CONTACT_REQUESTED', addContact);
 }

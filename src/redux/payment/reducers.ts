@@ -6,6 +6,7 @@ const INIT_STATE = {
     due_invoices: [],
     client_balance: 0,
     payment_details: [],
+    all_payment: [],
     previous: '',
     next: '',
     current_page: '',
@@ -13,6 +14,7 @@ const INIT_STATE = {
     active: '',
     loading: false,
     error: null,
+    success:null,
 };
 
 
@@ -52,15 +54,17 @@ const Payment = (state = INIT_STATE, action: any) => {
             };
         }
         case type.GET_PAYMENT_DETAILS_SUCCESS: {
+            // console.log(action.data);
             return {
                 ...state,
                 loading: false,
-                payment_details: action.data.result,
+                payment_details: action.data.data,
                 previous: action.data.previous,
                 next: action.data.next,
                 current_page: action.data.current_page,
                 total_page: action.data.total_page,
                 active: action.data.current_page,
+              
             };
         }
         case type.GET_PAYMENT_DETAILS_FAILED: {
@@ -71,7 +75,32 @@ const Payment = (state = INIT_STATE, action: any) => {
             };
         }
 
-                
+        case type.GET_ALLPAYMENT_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.GET_ALLPAYMENT_SUCCESS: {
+            return {
+                ...state,
+                loading: false,
+                all_payment: action.data,
+                previous: action.data.previous,
+                next: action.data.next,
+                current_page: action.data.current_page,
+                total_page: action.data.total_page,
+                active: action.data.current_page,
+            };
+        }
+        case type.GET_ALLPAYMENT_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+            };
+        } 
+        
         case type.GET_PAYMENT_TYPES_REQUESTED: {
             return {
                 ...state,
@@ -143,6 +172,30 @@ const Payment = (state = INIT_STATE, action: any) => {
                 error: action.error,
             };
         }
+
+        case type.SET_PAYMENT_SUCCESS_ALERT: {
+            
+            return {
+                ...state,
+                success: action.payload,
+            };
+        }
+
+        case type.SET_PAYMENT_ERROR_ALERT: {
+            
+            return {
+                ...state,
+                error: action.payload,
+            };
+        }
+
+        // case type.GET_PAYMENT_DETAILS_SUCCESS_MSG: {
+            
+        //     return {
+        //         ...state,
+        //         success:'Payment Canceled Successfully',
+        //     };
+        // }
 
         default:
             return state;

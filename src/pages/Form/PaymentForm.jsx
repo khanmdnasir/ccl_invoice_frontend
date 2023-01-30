@@ -41,7 +41,6 @@ const PaymentForm = () => {
     "amount": '',
     "total_invoice_amount": 0,
     "reference": "",
-    "note": "",
     "client_id": '',
     "payment_type": '',
     "client_balance": client_balance,

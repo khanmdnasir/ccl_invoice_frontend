@@ -26,6 +26,7 @@ import PublicInvoice from '../pages/app/PublicInvoice';
 import CompanySettings from '../pages/app/CompanySettings';
 import ChartOfAccount from '../pages/app/ChartOfAccount';
 import Currency from '../pages/app/Currency';
+import PaymentDetails from '../pages/app/paymentDetails';
 
 // lazy load all the views
 
@@ -166,6 +167,12 @@ const AppRoutes = {
             path: '/app/payment',
             name: 'Payments',
             component: Payment,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/payment_details',
+            name: 'Payments Details',
+            component: PaymentDetails,
             route: PrivateRoute,
         },
         {
