@@ -7,10 +7,10 @@ import { useLocation } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getInvoiceDetails } from '../../redux/actions';
+import { getInvoiceDetails, addInvoicePayment, clearSubmitSuccessMessage, getCompanySettingsByKey } from '../../redux/actions';
 import { isNumber } from '@amcharts/amcharts4/core';
 import { withSwal } from 'react-sweetalert2';
-
+import PaymentModal from '../Form/PaymentModal'
 const api = new APICore()
 
 
@@ -25,16 +25,48 @@ const InvoiceDetails = withSwal(({swal}) => {
     const loading = useSelector(state => state.Invoice.loading);
     const user_role = useSelector((state) => state.Role.user_role);
     const scurrency = useSelector(state => state.Currency.selectedCurrency);
+    const [invoiceStatus, setInvoiceStatus] = useState('')
+    
+    const invoice_payment_success = useSelector(state => state.Payment.invoice_payment_success);
+    const company_setting_by_key = useSelector(state => state.CompanySettings.company_setting_by_key);
+    const [show, setShow] = useState(false);
+    const onCloseModal = () => setShow(false);
+    const onOpenModal = () => setShow(true);
 
     useEffect(() => {
         const state = location.state
-        
         setInvoiceId(parseInt(state));
-        
-        
+        dispatch(getCompanySettingsByKey({
+            "key": "payment_invoice_map"
+        }))
     }, [])
 
-    
+    useEffect(() => {
+        if (invoice_payment_success !== '') {
+            onCloseModal();
+        }
+        if (invoice_payment_success !== '' && invoice_payment_success !== null && invoice_payment_success!== undefined) {
+            onCloseModal();
+            setTimeout(() => {
+                dispatch(clearSubmitSuccessMessage());
+                dispatch(getInvoiceDetails(invoiceId))
+            }, 2000)
+        }
+
+    }, [invoice_payment_success])
+
+    const paymentSubmit = (data) => {
+        data['id'] = invoiceId;
+        data['amount'] = data['amount'] !== '' ? parseFloat(data['amount']) : 0;
+        data['adjustment_amount'] = data['adjustment_amount'] !== '' ? parseFloat(data['adjustment_amount']) : 0;
+        data['invoice_status'] = (data['amount'] + data['adjustment_amount']) < parseFloat(invoiceDetails?.payable) ? "partial_paid" : "paid" ;
+        dispatch(addInvoicePayment(data))
+    }
+
+    useEffect(() => {
+        setInvoiceStatus(invoiceDetails?.status)
+    }, [invoiceDetails?.status])
+
 
     useEffect(() => {
         if(isNumber(invoiceId)){
@@ -115,6 +147,91 @@ const InvoiceDetails = withSwal(({swal}) => {
                 }
             })
     }
+
+    const draftsOptions =
+        <>
+            <option disabled selected={invoiceDetails?.status === 'draft'} value='draft'>Draft</option>
+            <option selected={invoiceDetails?.status === 'waiting'} value='waiting'>Waiting</option>
+            <option selected={invoiceDetails?.status === 'approve'} value='approve'>Approved</option>
+        </>
+
+    const waitingsOptions =
+        <>
+            <option disabled selected={invoiceDetails?.status === 'waiting'} value='waiting'>Waiting</option>
+            <option selected={invoiceDetails?.status === 'approve'} value='approve'>Approved</option>
+        </>
+
+    const approvesOptions =
+        <>
+            <option disabled selected={invoiceDetails?.status === 'approve'} value='approve'>Approved</option>
+            <option selected={invoiceDetails?.status === 'partial_paid'} value='partial_paid'>Partial Paid</option>
+            <option selected={invoiceDetails?.status === 'paid'} value='paid'>Paid</option>
+        </>
+
+    const partialPaidsOptions =
+        <>
+            <option disabled selected={invoiceDetails?.status === 'partial_paid'} value='partial_paid'>Partial Paid</option>
+            <option selected={invoiceDetails?.status === 'paid'} value='paid'>Paid</option>
+        </>
+
+    const paidsOptions =
+        <>
+            <option disabled selected={invoiceDetails?.status === 'paid'} value='paid'>Paid</option>
+        </>
+
+    const handleStatusChange = (e) => {
+
+        const value = e.target.value;
+        const data = {
+            "status": value
+        }
+        swal.fire({
+            title: `Are you sure to change status from ${invoiceDetails?.status} to ${value}?`,
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28bb4b',
+            cancelButtonColor: '#f34e4e',
+            confirmButtonText: 'Yes, change it!',
+        })
+            .then(function (result) {
+
+                if (result.value) {
+                    api.update(`/api/change-invoice-status/?id=${invoiceId}`, data)
+                        .then(res => {
+                            if (res?.data?.success) {
+                                swal.fire(
+                                    'Updated!',
+                                    'Invoice Status has been Updated.',
+                                    'success'
+                                );
+                                if (isNumber(invoiceId)) {
+                                    dispatch(getInvoiceDetails(invoiceId))
+                                }
+                            }
+                            else {
+                                swal.fire(
+                                    'Updated!',
+                                    `${res?.data?.error}`,
+                                    'warning'
+                                );
+                            }
+                        })
+                        .catch(err => {
+                            console.log('err', err)
+                            swal.fire({
+                                title: err,
+                            }
+                            );
+                        })
+                } else if (result.dismiss === 'cancel') {
+
+                }
+            })
+            .catch(err => {
+                console.log('swal fire err', err)
+            })
+    };
     
     return (
         <>
@@ -132,15 +249,28 @@ const InvoiceDetails = withSwal(({swal}) => {
                         <Card.Body>
                             {loading ? <p>Loading...</p> :
                             <>
-                            <Row className="mb-2">
+                            <Row className="mb-3">
                                 <Col sm={4}>
-                                    
+                                    {/* <span>{invoiceDetails?.status}</span> */}
+                                            {((invoiceDetails?.status === "draft" || invoiceDetails?.status === "waiting") || (company_setting_by_key?.value_text !== "1")) && invoiceDetails?.status !== "paid" ? 
+                                <>
+                                    <Form.Label>Status Change to</Form.Label>
+                                    <Form.Select value={invoiceStatus} onChange={(e) => handleStatusChange(e)}>
+                                        {invoiceDetails?.status === "draft" ? (draftsOptions) : null}
+                                        {invoiceDetails?.status === "waiting" ? (waitingsOptions) : null}
+                                        {invoiceDetails?.status === "approve" ? (approvesOptions) : null}
+                                        {invoiceDetails?.status === "partial_paid" ? (partialPaidsOptions) : null}
+                                        {invoiceDetails?.status === "paid" ? (paidsOptions) : null}
+                                    </Form.Select>
+                                </>
+                                 : null}
                                 </Col>
 
                                 <Col sm={8}>
+                                    <Form.Label></Form.Label>
                                     <div className="text-sm-end mt-2 mt-sm-0">
                                         {user_role.includes('change_invoice') ?
-                                            invoiceDetails?.status !== 'approve' &&
+                                            (invoiceDetails?.status === 'draft' || invoiceDetails?.status === 'waiting') &&
                                             <Link to={{ pathname: '/app/invoice_form', state: invoiceId }} className="btn btn-success me-2" >
                                                 <i className="mdi mdi-square-edit-outline me-1"></i>Edit
                                             </Link> :
@@ -148,11 +278,18 @@ const InvoiceDetails = withSwal(({swal}) => {
                                         }
 
                                         {user_role.includes('delete_invoice') ?
-                                            invoiceDetails?.status !== 'approve' &&
+                                            (invoiceDetails?.status === 'draft' || invoiceDetails?.status === 'waiting') &&
                                             <Link to="#" className="btn btn-danger me-2" onClick={() => onDelete()}>
                                                 <i className="mdi mdi-delete me-1"></i>Delete
                                             </Link> :
                                             ''
+                                        }
+
+                                                {(invoiceDetails?.status === "approve" || invoiceDetails?.status === "partial_paid") && (company_setting_by_key?.value_text === "1") &&
+                                            <Link to="#" className="btn btn-success me-2" onClick={() => onOpenModal()}>
+                                                <i className="mdi mdi-cash me-1"></i>Payment
+                                            </Link> 
+                                            
                                         }
 
                                         {invoiceDetails?.status === "approve" &&  user_role.includes('can_send_mail') &&
@@ -161,11 +298,17 @@ const InvoiceDetails = withSwal(({swal}) => {
                                             </Link> 
                                             
                                         }
+
                                     </div>
                                 </Col>
                             </Row>
                             <Form>
                                 <div className='mb-4'>
+                                        {!loading && invoice_payment_success && (
+                                                <Alert variant="success" className="my-2" onClose={() => dispatch(clearSubmitSuccessMessage())} dismissible>
+                                        {invoice_payment_success}
+                                        </Alert>
+                                    )}
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
                                             <Form.Label >Contact</Form.Label>
@@ -372,6 +515,9 @@ const InvoiceDetails = withSwal(({swal}) => {
                     </Card>
                 </Col>
             </Row>
+            {invoiceDetails?
+                <PaymentModal show={show} onHide={onCloseModal} paymentSubmit={paymentSubmit} maxAmount={invoiceDetails?.payable} />:null
+            }
         </>
     );
 });

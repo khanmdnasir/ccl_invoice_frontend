@@ -9,6 +9,7 @@ import {
     getDueInvoices as getDueInvoicesApi,    
     getClientBalance as getClientBalanceApi,    
     addPayment as addPaymentApi,    
+    addInvoicePayment as addInvoicePaymentApi,    
 } from '../../helpers';
 
 interface PaymentData {
@@ -95,6 +96,23 @@ function* addPayment({ payload: payloadData}:any):SagaIterator {
 }
 
 
+function* addInvoicePayment({ payload: payloadData}:any):SagaIterator {
+    try {
+        const response = yield call(addInvoicePaymentApi,payloadData);
+        const data = response.data;
+        if(data?.success){
+            yield put({type: 'ADD_INVOICE_PAYMENT_SUCCESS' , data: data});
+        }else{
+            yield put({type: 'ADD_INVOICE_PAYMENT_FAILED', error: data});
+        }
+        
+    } catch (error) {
+        yield put({type: 'ADD_INVOICE_PAYMENT_FAILED', error: error});
+        
+    }
+}
+
+
 export function* watchGetPayment() {
     yield takeEvery('GET_PAYMENT_REQUESTED', getPayment);
 }
@@ -114,17 +132,21 @@ export function* watchGetDueInvoices() {
 }
 
 export function* watchGetClientBalance() {
-    yield takeEvery('GET_DUE_INVOICES_REQUESTED', getClientBalance);
+    yield takeEvery('GET_CLIENT_BALANCE_REQUESTED', getClientBalance);
 }
 
 export function* watchAddPayment() {
     yield takeEvery('ADD_PAYMENT_REQUESTED', addPayment);
 }
 
+export function* watchAddInvoicePayment() {
+    yield takeEvery('ADD_INVOICE_PAYMENT_REQUESTED', addInvoicePayment);
+}
+
 
 
 function* paymentSaga() {
-    yield all([fork(watchGetPayment),fork(watchGetPaymentDetails), fork(watchGetPaymentTypes),fork(watchGetDueInvoices), watchGetClientBalance(), watchAddPayment()]);
+    yield all([fork(watchGetPayment),fork(watchGetPaymentDetails), fork(watchGetPaymentTypes),fork(watchGetDueInvoices), watchGetClientBalance(), watchAddPayment(), watchAddInvoicePayment()]);
 }
 
 export default paymentSaga;

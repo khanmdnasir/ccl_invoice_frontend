@@ -12,6 +12,12 @@ export const getCompanySettings = (limit:number,page:number) => ({
     payload: {limit,page},
 });
 
+
+export const getCompanySettingsByKey = (data:any) => ({
+    type: type.GET_COMPANY_SETTINGS_BY_KEY_REQUESTED,
+    payload: data,
+});
+
 export const addCompanySetting = (company_setting: CompanySettingForm) => ({
     type: type.ADD_COMPANY_SETTINGS_REQUESTED,
     payload: company_setting,

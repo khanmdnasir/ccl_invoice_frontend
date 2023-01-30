@@ -11,6 +11,11 @@ function getCompanySettings(params: {limit: number,page:number}) {
     return api.get(`${baseUrl}`,{});
 }
 
+function getCompanySettingsByKey(params:any) {
+    const baseUrl = '/api/setting';
+    return api.get(`${baseUrl}`,params);
+}
+
 function addCompanySetting(params:any) {
     const baseUrl = '/api/company_settings/';
     if(params.type === 'text')
@@ -19,4 +24,4 @@ function addCompanySetting(params:any) {
 }
 
 
-export { getCompanySettings, addCompanySetting };
+export { getCompanySettings, addCompanySetting, getCompanySettingsByKey };
