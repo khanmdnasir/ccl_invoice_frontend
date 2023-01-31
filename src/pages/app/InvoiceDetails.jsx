@@ -20,7 +20,7 @@ const InvoiceDetails = withSwal(({swal}) => {
     const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch();
-    const [invoiceId, setInvoiceId] = useState({});
+    const [invoiceId, setInvoiceId] = useState('');
     const invoiceDetails = useSelector(state => state.Invoice.invoice_details);
     const client_balance = useSelector(state => state.Payment.client_balance);
     const loading = useSelector(state => state.Invoice.loading);
@@ -36,7 +36,13 @@ const InvoiceDetails = withSwal(({swal}) => {
 
     useEffect(() => {
         const state = location.state
-        setInvoiceId(parseInt(state));
+        if(state){
+            setInvoiceId(parseInt(state));
+            localStorage.setItem('invoice_id',parseInt(state));
+        }else{
+            let invoice_id = localStorage.getItem('invoice_id');
+            setInvoiceId(parseInt(invoice_id));
+        }
         dispatch(getCompanySettingsByKey({
             "key": "payment_invoice_map"
         }))
