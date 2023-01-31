@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getInvoiceDetails, addInvoicePayment, clearSubmitSuccessMessage, getCompanySettingsByKey } from '../../redux/actions';
+import { getInvoiceDetails, addInvoicePayment, clearSubmitSuccessMessage, getCompanySettingsByKey, getClientBalance } from '../../redux/actions';
 import { isNumber } from '@amcharts/amcharts4/core';
 import { withSwal } from 'react-sweetalert2';
 import PaymentModal from '../Form/PaymentModal'
@@ -22,6 +22,7 @@ const InvoiceDetails = withSwal(({swal}) => {
     const dispatch = useDispatch();
     const [invoiceId, setInvoiceId] = useState({});
     const invoiceDetails = useSelector(state => state.Invoice.invoice_details);
+    const client_balance = useSelector(state => state.Payment.client_balance);
     const loading = useSelector(state => state.Invoice.loading);
     const user_role = useSelector((state) => state.Role.user_role);
     const scurrency = useSelector(state => state.Currency.selectedCurrency);
@@ -55,17 +56,27 @@ const InvoiceDetails = withSwal(({swal}) => {
 
     }, [invoice_payment_success])
 
-    const paymentSubmit = (data) => {
+    const paymentSubmit = (data, setPaymentData) => {
         data['id'] = invoiceId;
         data['amount'] = data['amount'] !== '' ? parseFloat(data['amount']) : 0;
         data['adjustment_amount'] = data['adjustment_amount'] !== '' ? parseFloat(data['adjustment_amount']) : 0;
         data['invoice_status'] = (data['amount'] + data['adjustment_amount']) < parseFloat(invoiceDetails?.payable) ? "partial_paid" : "paid" ;
         dispatch(addInvoicePayment(data))
+        setPaymentData({
+            "amount": "",
+            "adjustment_amount": ""})
     }
 
     useEffect(() => {
         setInvoiceStatus(invoiceDetails?.status)
     }, [invoiceDetails?.status])
+
+
+    useEffect(() => {
+        if (invoiceDetails?.contact_id?.id !== undefined && invoiceDetails?.contact_id?.id !== null){
+            dispatch(getClientBalance(invoiceDetails?.contact_id?.id))
+        }
+    }, [invoiceDetails?.contact_id?.id])
 
 
     useEffect(() => {
@@ -285,7 +296,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                                             ''
                                         }
 
-                                                {(invoiceDetails?.status === "approve" || invoiceDetails?.status === "partial_paid") && (company_setting_by_key?.value_text === "1") &&
+                                                { !loading && (invoiceDetails?.status === "approve" || invoiceDetails?.status === "partial_paid") && (company_setting_by_key?.value_text === "1") &&
                                             <Link to="#" className="btn btn-success me-2" onClick={() => onOpenModal()}>
                                                 <i className="mdi mdi-cash me-1"></i>Payment
                                             </Link> 
@@ -311,7 +322,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                                     )}
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
-                                            <Form.Label >Contact</Form.Label>
+                                            <Form.Label >Client</Form.Label>
                                             <Form.Control
                                                 readOnly={true}
                                                 defaultValue={invoiceDetails?.contact_id?.name}
@@ -516,7 +527,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                 </Col>
             </Row>
             {invoiceDetails?
-                <PaymentModal show={show} onHide={onCloseModal} paymentSubmit={paymentSubmit} maxAmount={invoiceDetails?.payable} />:null
+                <PaymentModal show={show} onHide={onCloseModal} paymentSubmit={paymentSubmit} maxAmount={invoiceDetails?.payable} client_balance={client_balance} scurrency={scurrency} />:null
             }
         </>
     );

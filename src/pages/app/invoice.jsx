@@ -25,6 +25,13 @@ const refreshPage = () => {
 }
 
 const StatusColumn = ({ row }) => {
+    let status = (row.original.status).split('_')
+
+    for (var i = 0; i < status.length; i++) {
+        status[i] = status[i].charAt(0).toUpperCase() + status[i].slice(1);
+    }
+    status = status.join(" ");
+
     return (
         <React.Fragment>
             <span style={{width:"5rem",fontSize:12}}
@@ -37,7 +44,7 @@ const StatusColumn = ({ row }) => {
                 })}
             >
 
-                {row.original.status}
+                {status}
             </span>
         </React.Fragment>
     );
