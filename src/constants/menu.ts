@@ -54,12 +54,6 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'payment',
             },
             {
-                key: 'view_paymentmodel',
-                label: 'General Ledger',
-                url: '/app/client_statement',
-                parentKey: 'payment',
-            },
-            {
                 key: 'add_paymentmodel',
                 label: 'Add Payment',
                 url: '/app/payment_form',
@@ -92,8 +86,20 @@ const MENU_ITEMS: MenuItemTypes[] = [
             
             
         ],
-        
-        
+    },
+    {
+        key: 'view_paymentmodel',
+        label: 'Reports',
+        isTitle: false,
+        icon: 'report',
+        children: [ 
+            {
+                key: 'view_paymentmodel',
+                label: 'General Report',
+                url: '/app/client_statement',
+                parentKey: 'view_paymentmodel',
+            },
+        ],
     },
     {
         key: 'settings',
@@ -165,7 +171,7 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         key: 'view_service',
         label: 'Add Service',
         isTitle: false,
-        icon: 'service',
+        icon: 'folder-plus',
         url: '/app/service',
         
     },
@@ -173,7 +179,7 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         key: 'payment',
         label: 'Payment',
         isTitle: false,
-        icon: 'payment',
+        icon: 'dollar-sign',
         children: [ 
             {
                 key: 'view_paymentmodel',
@@ -182,19 +188,11 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'payment',
             },
             {
-                key: 'view_paymentmodel',
-                label: 'General Ledger',
-                url: '/app/client_statement',
-                parentKey: 'payment',
-            },
-            {
                 key: 'add_paymentmodel',
                 label: 'Add Payment',
                 url: '/app/payment_form',
                 parentKey: 'payment',
             },
-            
-            
         ],
         
         
@@ -203,7 +201,7 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         key: 'invoice',
         label: 'Invoice',
         isTitle: false,
-        icon: 'invoice',
+        icon: 'file-minus',
         children: [ 
             {
                 key: 'view_invoice',
@@ -220,8 +218,20 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
             
             
         ],
-        
-        
+    },
+    {
+        key: 'view_paymentmodel',
+        label: 'Reports',
+        isTitle: false,
+        icon: 'layers',
+        children: [ 
+            {
+                key: 'view_paymentmodel',
+                label: 'General Report',
+                url: '/app/client_statement',
+                parentKey: 'view_paymentmodel',
+            },
+        ],
     },
     {
         key: 'settings',
@@ -310,12 +320,6 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'payment',
             },
             {
-                key: 'view_paymentmodel',
-                label: 'General Ledger',
-                url: '/app/client_statement',
-                parentKey: 'payment',
-            },
-            {
                 key: 'add_paymentmodel',
                 label: 'Add Payment',
                 url: '/app/payment_form',
@@ -346,10 +350,22 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'dashboards',
             },
             
-            
         ],
         
-        
+    },
+    {
+        key: 'view_paymentmodel',
+        label: 'Reports',
+        isTitle: false,
+        icon: 'report',
+        children: [ 
+            {
+                key: 'view_paymentmodel',
+                label: 'General Report',
+                url: '/app/client_statement',
+                parentKey: 'view_paymentmodel',
+            },
+        ],
     },
     {
         key: 'settings',
