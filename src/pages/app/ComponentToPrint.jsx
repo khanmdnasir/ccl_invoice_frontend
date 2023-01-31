@@ -22,19 +22,19 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                     <div className="auth-logo">
                                         <div className="logo logo-dark">
                                             <span className="logo-lg">
-                                                <img src={logo} alt="" height="50" />
+                                                <img src={logo} alt="" height="70" />
                                             </span>
                                         </div>
                                         <div className="logo logo-light">
                                             <span className="logo-lg">
-                                                <img src={logo} alt="" height="50" />
+                                                <img src={logo} alt="" height="70" />
                                             </span>
                                         </div>
                                     </div>
                                 </Col>
                                 <Col>
                                     
-                                        <h5 className='text-end'>Statement of Account</h5>
+                                        <h5 className='text-end'>Ledger Statement of, {props.data?.client?.name?.split(' ')[0]}</h5>
                                     
                                     <p className='text-end ' style={{fontSize: '10px'}} >
                                         Level 4, Khansons Center<br/>
@@ -42,62 +42,68 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                     </p>
                                 </Col>
                                 <hr style={{height:'2px',borderWidth:0,color:'gray',backgroundColor:'gray'}} />
+                                
                             </Row>                                  
                                                         
-                            
+                            <p style={{fontSize: '12px'}} className='text-end'>
+                                <b>Date: </b>{getCurrentDate()}
+                            </p>
+                                                        
+                                        
+                                
                             <Row>
                                 <Col >
                                     
                                         <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
-                                            <b>Statement Print Date: </b>{getCurrentDate()}
+                                            <b style={{marginRight: '40px'}}>Client Id </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.client_id}
                                         </p>
-                                        <p style={{fontSize: '12px'}}>
-                                            <b>{props.data?.client?.name}</b>
+                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
+                                            <b style={{marginRight: '54px'}}>Name </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.name}
+                                        </p>
+                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
+                                            <b style={{marginRight: '55px'}}>Email </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.email}
+                                        </p>
+                                        
+                                        
+                                    
+                                </Col>
+
+                                <Col >
+                                        
+                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
+                                            <b style={{marginRight: '40px'}}>Contact Type </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.contact_type}
+                                        </p>
+                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
+                                            <b style={{marginRight: '77px'}}>Phone </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.phone}
                                         </p>
                                         <address style={{fontSize: '12px'}}>
                                             {props.data?.client?.billing_address}
                                             
                                         </address>
                                         
-                                    
-                                </Col>
-
-                                <Col >
-                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
-                                            <b style={{marginRight: '76px'}}>Client Id </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.client_id}
-                                        </p>
-                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
-                                            <b style={{marginRight: '50px'}}>Contact Type </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.contact_type}
-                                        </p>
-                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
-                                            <b style={{marginRight: '88px'}}>Phone </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.phone}
-                                        </p>
-                                        <p style={{fontSize: '12px',marginTop: 0,marginBottom: '1px'}}>
-                                            <b style={{marginRight: '92px'}}>Email </b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.data?.client?.email}
-                                        </p>
                                 </Col>
                             </Row>
                             
 
                             <div style={{display: 'flex',justifyContent: 'space-between'}}>
                                     
-                                <p style={{fontSize: '10px'}}>
+                                <p style={{fontSize: '14px'}}>
                                     <b>Total Invoice Amount:</b> <span className="">{props.data?.summary?.total_invoice_amount}</span>
                                 </p>
                             
                             
-                                <p style={{fontSize: '10px'}}>
+                                <p style={{fontSize: '14px'}}>
                                     <b>Total Paid Amount:</b> <span className="">{props.data?.summary?.total_paid_amount}</span>
                                 </p>
-                                <p style={{fontSize: '10px'}}>
+                                <p style={{fontSize: '14px'}}>
                                     <b>Total Due:</b> <span className="">{props.data?.summary?.total_due}</span>
                                 </p>
-                                <p style={{fontSize: '10px'}}>
+                                <p style={{fontSize: '14px'}}>
                                     <b>Total Balance:</b> <span className="">{props.data?.summary?.total_balance}</span>
                                 </p>
                                 
                             </div>   
-
+                            <hr style={{height:'1px',borderWidth:0,color:'gray',backgroundColor:'gray'}}/>
                             <Row>
                                 <Col xs={12}>
                                     <div >

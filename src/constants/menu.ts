@@ -55,7 +55,7 @@ const MENU_ITEMS: MenuItemTypes[] = [
             },
             {
                 key: 'view_paymentmodel',
-                label: 'Client Statement',
+                label: 'General Ledger',
                 url: '/app/client_statement',
                 parentKey: 'payment',
             },
@@ -183,7 +183,7 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
             },
             {
                 key: 'view_paymentmodel',
-                label: 'Client Statement',
+                label: 'General Ledger',
                 url: '/app/client_statement',
                 parentKey: 'payment',
             },
@@ -311,7 +311,7 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
             },
             {
                 key: 'view_paymentmodel',
-                label: 'Client Statement',
+                label: 'General Ledger',
                 url: '/app/client_statement',
                 parentKey: 'payment',
             },
