@@ -14,6 +14,7 @@ import ReactExport from "react-export-excel";
 import Pagination from '../../components/CustomPagination';
 
 
+
 const api = new APICore();
 
 
@@ -107,8 +108,17 @@ const valueColumn = ({ row }) => {
     </>
 }
 
+
+
+
+
 const columns = [
 
+    {
+        Header: 'Name',
+        accessor: 'name',
+        sort: true,
+    },
     {
         Header: 'Key',
         accessor: 'key',
@@ -147,6 +157,7 @@ const CompanySettings = () => {
     const success = useSelector(state => state.CompanySettings.success);
     const [pageSize, setPageSize] = useState(10);
     const [alertShow, setAlertShow] = useState(true);
+    const [companyAttribute, setCompanyAttribute] = useState('');
     /*
      *   modal handeling
      */
@@ -192,6 +203,34 @@ const CompanySettings = () => {
     useEffect(() => {
         dispatch(getCompanySettings(pageSize, 1));
     }, [pageSize])
+
+
+    // Key attribute change to Name
+
+     useEffect(() => {
+        const attributeChange = company_settings.map((setting) => {
+            let change = ((setting.key.replaceAll("_"," ")).charAt(0).toUpperCase() + (setting.key.replaceAll("_"," ")).slice(1));
+            setting["name"] = change;
+            return setting;
+        });
+        setCompanyAttribute(attributeChange)
+     },[company_settings])
+
+
+     // extra 
+    //  const extra = company_settings.map((sets) => {
+    //     let set = ((sets.key.replaceAll("_"," ")));
+    //     console.log(set);
+        
+    //     for(let i=0; i<set.length; i++){
+    //           let ch = set[i];
+    //         //   console.log((ch).charAt(i).toUpperCase() + (ch).slice(1))
+    //         }
+         
+    //  })
+    
+
+   
     return (
         <>
             <PageTitle
@@ -251,7 +290,7 @@ const CompanySettings = () => {
                                         <>
                                             <Table
                                                 columns={columns}
-                                                data={company_settings}
+                                                data={companyAttribute}
                                                 pageSize={pageSize}
                                                 isSortable={true}
                                                 pagination={false}
@@ -262,7 +301,7 @@ const CompanySettings = () => {
                                             <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={total_page} current_page={current_page} active={active} />
                                         </>
                                         :
-                                        'No user available!'}</>}
+                                        'No company available!'}</>}
 
                         </Card.Body>
                     </Card>
