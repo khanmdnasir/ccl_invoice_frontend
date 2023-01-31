@@ -54,9 +54,9 @@ const InvoiceDetails = withSwal(({swal}) => {
         }
         if (invoice_payment_success !== '' && invoice_payment_success !== null && invoice_payment_success!== undefined) {
             onCloseModal();
+            dispatch(getInvoiceDetails(invoiceId))
             setTimeout(() => {
                 dispatch(clearSubmitSuccessMessage());
-                dispatch(getInvoiceDetails(invoiceId))
             }, 2000)
         }
 
@@ -68,7 +68,6 @@ const InvoiceDetails = withSwal(({swal}) => {
         data['adjustment_amount'] = data['adjustment_amount'] !== '' ? parseFloat(data['adjustment_amount']) : 0;
         data['invoice_status'] = (data['amount'] + data['adjustment_amount']) < parseFloat(invoiceDetails?.payable) ? "partial_paid" : "paid" ;
         dispatch(addInvoicePayment(data))
-        dispatch(getClientBalance(invoiceDetails?.contact_id?.id))
         setPaymentData({
             "amount": "",
             "adjustment_amount": ""})
@@ -83,7 +82,7 @@ const InvoiceDetails = withSwal(({swal}) => {
         if (invoiceDetails?.contact_id?.id !== undefined && invoiceDetails?.contact_id?.id !== null){
             dispatch(getClientBalance(invoiceDetails?.contact_id?.id))
         }
-    }, [invoiceDetails?.contact_id?.id])
+    }, [invoiceDetails?.contact_id])
 
 
     useEffect(() => {
