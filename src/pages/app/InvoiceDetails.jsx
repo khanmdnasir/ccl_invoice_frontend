@@ -62,6 +62,7 @@ const InvoiceDetails = withSwal(({swal}) => {
         data['adjustment_amount'] = data['adjustment_amount'] !== '' ? parseFloat(data['adjustment_amount']) : 0;
         data['invoice_status'] = (data['amount'] + data['adjustment_amount']) < parseFloat(invoiceDetails?.payable) ? "partial_paid" : "paid" ;
         dispatch(addInvoicePayment(data))
+        dispatch(getClientBalance(invoiceDetails?.contact_id?.id))
         setPaymentData({
             "amount": "",
             "adjustment_amount": ""})
