@@ -11,7 +11,7 @@ import FeatherIcon from 'feather-icons-react';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getContactService } from '../../redux/actions';
+import { getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getContactService, getClientBalance } from '../../redux/actions';
 
 
 const api = new APICore()
@@ -53,7 +53,7 @@ const invoicesColumns = [
         accessor: 'discount',
         sort: true,
         Cell: (row) => {
-            return <div>{(row.row.original.discount).toFixed(2)}</div>;
+            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toFixed(2):0}</div>;
         }
     },
     {
@@ -137,6 +137,7 @@ const ContactDetails = () => {
     const invoice_setting_error = useSelector(state => state.Contact.invoice_setting_error);
     const invoice_setting_success = useSelector(state => state.Contact.invoice_setting_success);
     const services = useSelector(state => state.Service.contact_services);
+    const client_balance = useSelector(state => state.Payment.client_balance);
 
 
     useEffect(() => {
@@ -170,6 +171,7 @@ const ContactDetails = () => {
             dispatch(getContactDetails(contactId))
             dispatch(getContactInvoiceSetting(contactId))
             dispatch(getContactService(contactId)); 
+            dispatch(getClientBalance(contactId)); 
         }
     }, [contactId])
 
@@ -377,8 +379,8 @@ const ContactDetails = () => {
                                         <p>{contact_details?.bin}</p>
                                     </div>
                                     <div className="col-sm">
-                                        <h5 className='me-2'></h5>
-                                        <p></p>
+                                        <h5 className='me-2'>Balance</h5>
+                                        <p>{client_balance}</p>
                                     </div>
                                 </div>
                             </div>

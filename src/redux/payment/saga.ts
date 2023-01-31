@@ -5,6 +5,7 @@ import { SagaIterator } from '@redux-saga/core';
 import {
     getPayment as getPaymentApi,    
     getPaymentDetails as getPaymentDetailsApi,    
+    getAllPayment as getAllPaymentApi,
     getPaymentTypes as getPaymentTypesApi,    
     getDueInvoices as getDueInvoicesApi,    
     getClientBalance as getClientBalanceApi,    
@@ -36,13 +37,23 @@ function* getPaymentDetails({ payload }:PaymentData):SagaIterator {
     try {
         const response = yield call(getPaymentDetailsApi,{payload});
         const data = response.data;
-        yield put({type: 'GET_INVOICEDETAILS_SUCCESS' , data: data});
+        yield put({type: 'GET_PAYMENT_DETAILS_SUCCESS' , data: data});
     } catch (error) {
-        yield put({type: 'GET_INVOICEDETAILS_FAILED', error: error});
+        yield put({type: 'GET_PAYMENT_DETAILS_FAILED', error: error});
         
     }
 }
 
+function* getAllPayment():SagaIterator {
+    try {
+        const response = yield call(getAllPaymentApi);
+        const data = response.data;
+        yield put({type: 'GET_ALLPAYMENT_SUCCESS' , data: data.results});
+    } catch (error) {
+        yield put({type: 'GET_ALLPAYMENT_FAILED', error: error});
+        
+    }
+}
 
 function* getPaymentTypes({ payload: {limit,page}}:any):SagaIterator {
     try {
@@ -121,7 +132,9 @@ export function* watchGetPaymentDetails() {
     yield takeEvery('GET_PAYMENT_DETAILS_REQUESTED', getPaymentDetails);
 }
 
-
+export function* watchGetAllPayment(){
+    yield takeEvery('GET_ALLPAYMENT_REQUESTED', getAllPayment);
+}
 
 export function* watchGetPaymentTypes() {
     yield takeEvery('GET_PAYMENT_TYPES_REQUESTED', getPaymentTypes);
@@ -146,7 +159,7 @@ export function* watchAddInvoicePayment() {
 
 
 function* paymentSaga() {
-    yield all([fork(watchGetPayment),fork(watchGetPaymentDetails), fork(watchGetPaymentTypes),fork(watchGetDueInvoices), watchGetClientBalance(), watchAddPayment(), watchAddInvoicePayment()]);
+    yield all([fork(watchGetPayment),fork(watchGetPaymentDetails),fork(watchGetAllPayment), fork(watchGetPaymentTypes),fork(watchGetDueInvoices), fork(watchGetClientBalance), fork(watchAddPayment),fork(watchAddInvoicePayment)]);
 }
 
 export default paymentSaga;

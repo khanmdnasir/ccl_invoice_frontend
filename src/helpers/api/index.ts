@@ -9,7 +9,13 @@ import { getInvoice,getInvoiceDetails } from './invoice';
 import { getRepeatingInvoice, getRepeatingInvoiceDetails } from './repeating_invoice';
 import { getCurrency } from './currency';
 import { getChartAccount, addChartOfAccount } from './chart_account';
+
+import { getPayment, getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance,getAllPayment,addPayment,addInvoicePayment} from './payment';
 import { getCompanySettings, addCompanySetting, getCompanySettingsByKey } from './company_settings';
-import { getPayment, getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance, addPayment, addInvoicePayment } from './payment';
+
 import { getDashboardSummary } from './dashboard';
-export { login, signup, updateProfile, updateProfileImage,getUser,addUser,getRole,getUserRole,getContact,getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getAllContact,addContact,deleteContact,getCountry,getCity,getService,getContactService,addService,getInvoice,getInvoiceDetails,getCurrency,getChartAccount, addChartOfAccount, getRepeatingInvoice, getRepeatingInvoiceDetails, getCompanySettings, addCompanySetting, getCompanySettingsByKey, getKam, getPayment,getKamDetails,getAllKam,addKam,deleteKam, getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance, addPayment, addInvoicePayment,getDashboardSummary };
+export { login, signup, updateProfile, updateProfileImage,getUser,addUser,getRole,getUserRole,getContact,getContactInvoice, 
+    getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getAllContact,addContact,deleteContact,getCountry,getCity,getService,
+    getContactService,addService,getInvoice,getInvoiceDetails,getCurrency,getChartAccount, addChartOfAccount, getRepeatingInvoice, getRepeatingInvoiceDetails,
+     getCompanySettings, addCompanySetting, getPayment, getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance, getAllPayment,
+     addPayment, addInvoicePayment,getDashboardSummary,getKam,getKamDetails,getAllKam,addKam,deleteKam ,getCompanySettingsByKey};

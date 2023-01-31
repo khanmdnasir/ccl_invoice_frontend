@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button,Form,Row,Col,Alert} from 'react-bootstrap';
+import { Modal, Button,Form,Row,Col,Alert, label} from 'react-bootstrap';
 // components
 import { FormInput } from '../../components';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearSubmitErrorMessage } from '../../redux/actions';
-const PaymentModal = ({ show, onHide, paymentSubmit, maxAmount }) => {
+const PaymentModal = ({ show, onHide, paymentSubmit, maxAmount, client_balance, scurrency }) => {
     const dispatch = useDispatch();
     const invoice_payment_error = useSelector(state => state.Payment.invoice_payment_error);
     const loading = useSelector((state) => state.Contact.loading);
@@ -55,9 +55,11 @@ const PaymentModal = ({ show, onHide, paymentSubmit, maxAmount }) => {
     return (
         <>
             <Modal show={show} onHide={onHide} aria-labelledby="contained-modal-title-vcenter" centered>
-                <Modal.Header className="bg-light" onHide={onHide} closeButton>
+                <Modal.Header className="bg-light" onHide={onHide}>
                     <Modal.Title className="m-0">Invoice Payment</Modal.Title>
+                    <Modal.Title style={{ color: "#00b6d5", fontWeight: "bold" }} className='align-right'> Available Balance: {scurrency.symbol}{client_balance} </Modal.Title>
                 </Modal.Header>
+                <label style={{ fontWeight: "bold" }} className='ms-4 mt-2'>Payable Invoice Amount: {scurrency.symbol}{maxAmount}</label>
                 <Modal.Body className="p-4">
                 {!loading && invoice_payment_error && (
                         <Alert variant="danger" className="" onClose={() => dispatch(clearSubmitErrorMessage(''))} dismissible>
@@ -98,7 +100,7 @@ const PaymentModal = ({ show, onHide, paymentSubmit, maxAmount }) => {
                         
                          
                         <div className="text-end">
-                            <Button onClick={()=>paymentSubmit(paymentData)} variant="success" className="waves-effect waves-light me-1">
+                            <Button onClick={() => paymentSubmit(paymentData, setPaymentData)} variant="success" className="waves-effect waves-light me-1">
                                 Save
                             </Button>
                             <Button
