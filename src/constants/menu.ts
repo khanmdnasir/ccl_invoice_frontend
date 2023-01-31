@@ -60,7 +60,6 @@ const MENU_ITEMS: MenuItemTypes[] = [
                 parentKey: 'payment',
             },
             
-            
         ],
         
         
