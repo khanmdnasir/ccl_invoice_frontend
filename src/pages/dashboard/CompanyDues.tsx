@@ -10,7 +10,7 @@ const CompanyDues = () => {
                 <Card.Body>
                     
 
-                    <h4 className="header-title">Company Dues</h4>
+                    <h4 className="header-title">Company Dues (Coming Soon)</h4>
                     
                     <div className="mt-4">
                         <h6 className="text-uppercase">
