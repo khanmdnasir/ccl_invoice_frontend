@@ -145,13 +145,22 @@ const InvoiceDetails = withSwal(({swal}) => {
                     // dispatch(deleteContact(row.original.id))
                     api.create(`/api/send-email/`, data)
                         .then(res => {
-                            
+                            if (res?.data?.success){
+                                swal.fire(
+                                    'Sent!',
+                                    'Email has been Sent.',
+                                    'success'
+                                );
+                            }
+                            else{
+                                swal.fire(
+                                    'Sent!',
+                                    `${res?.data?.error}`,
+                                    'error'
+                                );
+
+                            }                         
                             // dispatch(getInvoice(10, 1));
-                            swal.fire(
-                                'Sent!',
-                                'Email has been Sent.',
-                                'success'
-                            );
                         })
                         .catch(err => {
                             swal.fire({
@@ -533,7 +542,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                 </Col>
             </Row>
             {invoiceDetails?
-                <PaymentModal show={show} onHide={onCloseModal} paymentSubmit={paymentSubmit} maxAmount={invoiceDetails?.payable} client_balance={client_balance} scurrency={scurrency} />:null
+                <PaymentModal show={show} onHide={onCloseModal} paymentSubmit={paymentSubmit} maxAmount={parseFloat(parseFloat(invoiceDetails?.payable).toFixed(2))} client_balance={client_balance} scurrency={scurrency} />:null
             }
         </>
     );
