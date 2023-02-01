@@ -92,7 +92,7 @@ const RevenueChart = () => {
                         </div>
                     </div>
 
-                    <h4 className="header-title">Payment Receive</h4>
+                    <h4 className="header-title">Payment Receive (Coming Soon)</h4>
 
                     <Row className="mt-4 text-center">
                         {/* <Col className="col-4">

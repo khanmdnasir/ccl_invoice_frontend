@@ -1,5 +1,6 @@
-import { Row, Col, Card } from 'react-bootstrap';
+import { Row, Col, Card, Table } from 'react-bootstrap';
 import logo from '../../assets/images/Qorum.svg'
+
 // components
 import { forwardRef } from 'react';
 import { getCurrentDate } from '../../utils/getCurrentDate';
@@ -7,6 +8,10 @@ import { getCurrentDate } from '../../utils/getCurrentDate';
 // invoice component
 const ComponentToPrint = forwardRef(( props, ref) => {
     
+    const tdStyle =  { fontSize: '12px', padding: '5px' }
+    const tdStyleBold = {
+        fontSize: '12px', padding: '5px', color: '#6c757d', fontWeight:"bold" }
+
     
     return (
         <div ref={ref} className='container'>
@@ -48,9 +53,36 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                             <p style={{fontSize: '12px'}} className='text-end'>
                                 <b>Date: </b>{getCurrentDate()}
                             </p>
-                                                        
+                            
+
+                            <Row>
+                                <Col xs={12}>
+                                    <Table bordered>
+                                        <tbody>
+                                            <tr>
+                                                <td style={tdStyleBold}> Client Id:</td>
+                                                <td style={tdStyle}> {props.data?.client?.client_id}</td>
+                                                <td style={tdStyleBold}> Contact Type:</td>
+                                                <td style={tdStyle}> {props.data?.client?.contact_type}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style={tdStyleBold}> Name:</td>
+                                                <td style={tdStyle}> {props.data?.client?.name}</td>
+                                                <td style={tdStyleBold}> Phone:</td>
+                                                <td style={tdStyle}> {props.data?.client?.phone}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style={tdStyleBold}> Email:</td>
+                                                <td style={tdStyle}> {props.data?.client?.email}</td>
+                                                <td style={tdStyleBold}> Address:</td>
+                                                <td style={tdStyle}> {props.data?.client?.billing_address}</td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
+                                </Col>
+                            </Row>
+{/* 
                                         
-                                
                             <Row>
                                 <Col >
                                     
@@ -83,38 +115,20 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                         
                                 </Col>
                             </Row>
-                            
-
-                            <div style={{display: 'flex',justifyContent: 'space-between'}}>
-                                    
-                                <p style={{fontSize: '14px'}}>
-                                    <b>Total Invoice Amount:</b> <span className="">{props.data?.summary?.total_invoice_amount}</span>
-                                </p>
-                            
-                            
-                                <p style={{fontSize: '14px'}}>
-                                    <b>Total Paid Amount:</b> <span className="">{props.data?.summary?.total_paid_amount}</span>
-                                </p>
-                                <p style={{fontSize: '14px'}}>
-                                    <b>Total Due:</b> <span className="">{props.data?.summary?.total_due}</span>
-                                </p>
-                                <p style={{fontSize: '14px'}}>
-                                    <b>Total Balance:</b> <span className="">{props.data?.summary?.total_balance}</span>
-                                </p>
-                                
-                            </div>   
-                            <hr style={{height:'1px',borderWidth:0,color:'gray',backgroundColor:'gray'}}/>
+                             */}
+  
+                            {/* <hr style={{height:'1px',borderWidth:0,color:'gray',backgroundColor:'gray'}}/> */}
                             <Row>
                                 <Col xs={12}>
                                     <div >
-                                        <table className="table mt-2 "  >
+                                        <Table bordered >
                                             <thead>
                                                 <tr>
                                                                                                         
-                                                    <th style={{fontSize: '12px',padding: '1px'}}>Date</th>
-                                                    <th style={{fontSize: '12px',padding: '1px'}}>Description</th>
-                                                    <th style={{fontSize: '12px',padding: '1px'}}>Invoice Amount</th>
-                                                    <th style={{fontSize: '12px',padding: '1px'}}>Payment Amount</th>
+                                                    <th style={{fontSize: '12px',padding: '5px'}}>Date</th>
+                                                    <th style={{fontSize: '12px',padding: '5px'}}>Description</th>
+                                                    <th style={{fontSize: '12px',padding: '5px'}}>Invoice Amount</th>
+                                                    <th style={{fontSize: '12px',padding: '5px'}}>Payment Amount</th>
                                                     
                                                     
                                                 </tr>
@@ -124,23 +138,46 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                                     return (
                                                         <tr key={idx} >
                                                                                                        
-                                                            <td style={{fontSize: '12px',padding: '1px'}}>{item.date}</td>
-                                                            <td style={{fontSize: '12px',padding: '1px'}}>{item.invoice_no ? item.invoice_no : item.payment_no}</td>
-                                                            <td style={{fontSize: '12px',padding: '1px'}}>{item.total_amount}</td>
-                                                            <td style={{fontSize: '12px',padding: '1px'}}>{item.amount}</td>
+                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item.date}</td>
+                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item.invoice_no ? item.invoice_no : item.payment_no}</td>
+                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item.total_amount}</td>
+                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item.amount}</td>
                                                             
                                                             
                                                         </tr>
                                                     );
                                                 })}
                                             </tbody>
-                                        </table>
+                                        </Table>
                                     </div>
                                 </Col>
                             </Row>
 
+                            <Row>
+                                <Col xs={{span:"4", offset:"8"}}>
+                                    <Table bordered>
+                                        <tbody>
+                                            <tr>
+                                                <td style={tdStyleBold}> Total Invoice Amount:</td>
+                                                <td style={tdStyle}> {props.data?.summary?.total_invoice_amount}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style={tdStyleBold}> Total Paid Amount:</td>
+                                                <td style={tdStyle}> {props.data?.summary?.total_paid_amount}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style={tdStyleBold}> Total Due:</td>
+                                                <td style={tdStyle}> {props.data?.summary?.total_due}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style={tdStyleBold}> Total Balance:</td>
+                                                <td style={tdStyle}> {props.data?.summary?.total_balance}</td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
+                                </Col>
+                            </Row>
                             
-
                             
                         </Card.Body>
                     </Card>

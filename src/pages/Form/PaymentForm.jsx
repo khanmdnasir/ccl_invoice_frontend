@@ -106,7 +106,7 @@ const PaymentForm = () => {
       "key": "payment_invoice_map"
     }));
     return () => {
-      // dispatch(resetPaymentReducerState())
+      dispatch(resetPaymentReducerState())
     }
   }, [])
 

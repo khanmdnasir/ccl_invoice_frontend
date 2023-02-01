@@ -57,9 +57,9 @@ const PaymentModal = ({ show, onHide, paymentSubmit, maxAmount, client_balance, 
             <Modal show={show} onHide={onHide} aria-labelledby="contained-modal-title-vcenter" centered>
                 <Modal.Header className="bg-light" onHide={onHide}>
                     <Modal.Title className="m-0">Invoice Payment</Modal.Title>
-                    <Modal.Title style={{ color: "#00b6d5", fontWeight: "bold" }} className='align-right'> Available Balance: {scurrency.symbol}{client_balance} </Modal.Title>
+                    <Modal.Title style={{ color: "#00b6d5", fontWeight: "bold" }} className='align-right'> Available Balance: {scurrency?.symbol}{client_balance} </Modal.Title>
                 </Modal.Header>
-                <label style={{ fontWeight: "bold" }} className='ms-4 mt-2'>Payable Invoice Amount: {scurrency.symbol}{maxAmount}</label>
+                <label style={{ fontWeight: "bold", color:"#343a40", fontSize:"15px" }} className='ms-4 mt-2'>Payable Invoice Amount: {scurrency?.symbol}{maxAmount}</label>
                 <Modal.Body className="p-4">
                 {!loading && invoice_payment_error && (
                         <Alert variant="danger" className="" onClose={() => dispatch(clearSubmitErrorMessage(''))} dismissible>
