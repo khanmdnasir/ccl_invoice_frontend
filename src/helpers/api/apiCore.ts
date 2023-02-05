@@ -61,6 +61,7 @@ axios.interceptors.response.use(
             // window.location.href = '/not-found';
         } else if (error && error.response && error.response.status === 403) {
             console.log('access denied');
+            return Promise.reject(error?.response);
         } else {
             switch (error.response.status) {
                 case 401:

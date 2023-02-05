@@ -250,7 +250,7 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
         <>
             <ul className="navbar-nav" ref={menuRef} id="main-side-menu">
                 {(topnavMenuItems || []).map((item, idx) => {
-                    if(['dashboards','invoice','payment','settings'].includes(item.key) || user_permissions.includes(item.key))
+                    if(['dashboards','invoice','payment','settings', 'general_ledger'].includes(item.key) || user_permissions.includes(item.key))
                     return (
                         <React.Fragment key={idx}>
                             {item.children ? (

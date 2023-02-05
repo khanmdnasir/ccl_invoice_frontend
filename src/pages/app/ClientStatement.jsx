@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Button, Form } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
 import { format } from 'date-fns'
 
 // components
@@ -71,6 +71,7 @@ const ClientStatement = () => {
     const [fromDate,setFromDate] = useState('');
     const [toDate,setToDate] = useState('');
     const [clientLedger,setClientLedger] = useState({});
+    const [error,setError] = useState("");
     
     const [loading,setLoading] = useState(false); 
     
@@ -91,28 +92,45 @@ const ClientStatement = () => {
     }, [])
 
     const componentRef = React.useRef();
+
+    useEffect(() => {
+        if (error !== '') {
+            setTimeout(() => {
+                setError('')
+            }, 3000)
+        }
+            
+    }, [error])
    
     const handleSearch = async(e) => {
         e.preventDefault()
         setLoading(true);
         
         if (fromDate === '' || toDate === ''){
-            const response = await api.get('/api/client-ledger',{ client_id: contactId })
-        
-            if(response.data.success){
-
+            await api.get('/api/client-ledger',{ client_id: contactId })
+            .then(response=>{
                 setLoading(false)
-            }
-            setClientLedger(response.data.data)
+                setError('')
+                setClientLedger(response.data.data)
+            })
+            .catch(err=>{
+                const errorMsg = err?.data?.detail
+                setLoading(false)
+                setError(errorMsg)
+            })
         }else{
             
-            const response = await api.get('/api/client-ledger',{ client_id: contactId,start_date: format(new Date(fromDate), 'yyyy-MM-dd'),end_date: format(new Date(toDate), 'yyyy-MM-dd') })
-        
-            if(response.data.success){
-
+            await api.get('/api/client-ledger',{ client_id: contactId,start_date: format(new Date(fromDate), 'yyyy-MM-dd'),end_date: format(new Date(toDate), 'yyyy-MM-dd') })
+            .then(response=>{
                 setLoading(false)
-            }
-            setClientLedger(response.data.data)
+                setError('')
+                setClientLedger(response.data.data)
+            })
+            .catch(err=>{
+                const errorMsg = err?.data?.detail
+                setLoading(false)
+                setError(errorMsg)
+            })
         }
     }
 
@@ -127,7 +145,7 @@ const ClientStatement = () => {
                 breadCrumbItems={[
                     { label: 'Client Statement', path: '/app/client_statement', active: true },
                 ]}
-                title={'Client Statement'}
+                title={'General Ledger'}
             />
            
             <Row>
@@ -135,7 +153,11 @@ const ClientStatement = () => {
                     <Card>
                         <Card.Body>
 
-                            
+                            {!loading && error && (
+                                <Alert variant="danger" className="my-2" onClose={() => setError('')} dismissible>
+                                    {error}
+                                </Alert>
+                            )}
                             <Row className="mb-2">
                                 <Col sm={8}>
                                 <form onSubmit={(e)=>handleSearch(e)} className='mb-4'>

@@ -87,16 +87,16 @@ const MENU_ITEMS: MenuItemTypes[] = [
         ],
     },
     {
-        key: 'view_paymentmodel',
+        key: 'general_ledger',
         label: 'Reports',
         isTitle: false,
-        icon: 'report',
+        icon: 'layers',
         children: [ 
             {
-                key: 'view_paymentmodel',
+                key: 'view_general_ledger',
                 label: 'General Report',
                 url: '/app/client_statement',
-                parentKey: 'view_paymentmodel',
+                parentKey: 'general_ledger',
             },
         ],
     },
@@ -219,16 +219,16 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         ],
     },
     {
-        key: 'view_paymentmodel',
+        key: 'general_ledger',
         label: 'Reports',
         isTitle: false,
         icon: 'layers',
         children: [ 
             {
-                key: 'view_paymentmodel',
+                key: 'view_general_ledger',
                 label: 'General Report',
                 url: '/app/client_statement',
-                parentKey: 'view_paymentmodel',
+                parentKey: 'general_ledger',
             },
         ],
     },
@@ -353,16 +353,16 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
-        key: 'view_paymentmodel',
+        key: 'general_ledger',
         label: 'Reports',
         isTitle: false,
-        icon: 'report',
+        icon: 'layers',
         children: [ 
             {
-                key: 'view_paymentmodel',
+                key: 'view_general_ledger',
                 label: 'General Report',
                 url: '/app/client_statement',
-                parentKey: 'view_paymentmodel',
+                parentKey: 'general_ledger',
             },
         ],
     },
