@@ -11,8 +11,10 @@ const api = new APICore();
 // invoice component
 const PublicInvoice = () => {
   const [invoice_details, setInvoiceDetails] = useState({});
-  //   console.log('invoice_details',invoice_details?.contact_id?.name)
+  //   console.log('invoice_details',invoice_details)
   const [colorchange, setColorChange] = useState("blue-color");
+  const [errors, setErrors] = useState('');
+  
   const urlParams = new URLSearchParams(window.location.search);
   let unique_id = urlParams.get("unique_id");
   // Show only firstname
@@ -37,6 +39,9 @@ const PublicInvoice = () => {
         // console.log(res);
         if (res.data.success) {
           setInvoiceDetails(res.data.result);
+        }else{
+          console.log(res.data.error)
+          setErrors(res.data.error)
         }
       })
       .catch((err) => {
@@ -44,15 +49,31 @@ const PublicInvoice = () => {
       });
   }, []);
 
+
+
+
+
   return (
     <div className="row justify-content-md-center p-5" id={colorchange}>
-      <div className="switch">
+    {errors.length > 0 ?(
+      <div className="d-flex align-items-center justify-content-center" style={{height: "700px"}}>
+      <p style={{fontSize:"18px", fontWeight:"600"}}>{((errors.replaceAll("['"," "))).replaceAll(".']",' ')}</p>
+    </div>
+    
+    ): null}
+    
+
+
+    {errors.length > 0 ? null : (
+     <>
+     <div className="switch">
         <button className="float-end" onClick={() => changeColor()}>
           Switch Color
         </button>
       </div>
       <div className="col-6 p-4" style={{ background: "white" }}>
-        <React.Fragment>
+      
+      <React.Fragment>
           <div className="m-2 d-flex justify-content-between">
             <div className="head-logo">
               <Link to="/" className="logo">
@@ -138,66 +159,6 @@ const PublicInvoice = () => {
 
           <Row>
             <Col>
-              {/* <Row className="mt-3">
-                    <Col sm={6}>
-                    <div>
-                      <p>
-                        <strong>Contact : </strong>{" "}
-                        <span>
-                          {" "}
-                          &nbsp;&nbsp;&nbsp; {
-                            invoice_details?.contact_id?.name
-                          }{" "}
-                        </span>
-                      </p>
-                      <p>
-                        <strong>Invoice No : </strong>{" "}
-                        <span>
-                          {" "}
-                          <span>{invoice_details?.invoice_no}</span>
-                        </span>
-                      </p>
-                      <p>
-                        <strong>Date : </strong>
-                        <span>
-                          {" "}
-                          <span>{invoice_details?.date}</span>
-                        </span>
-                      </p>
-                      <p>
-                        <strong>Due Date : </strong>
-                        <span>
-                          {" "}
-                          <span>{invoice_details?.due_date}</span>
-                        </span>
-                      </p>
-                      <p>
-                        <strong>Reference : </strong>
-                        <span>
-                          {" "}
-                          <span>{invoice_details?.reference}</span>
-                        </span>
-                      </p>
-                      <p>
-                        <strong>Tax Type : </strong>
-                        <span>
-                          {" "}
-                          <span>{invoice_details?.tax_type}</span>
-                        </span>
-                      </p>
-                    </div>
-                  </Col>
-                    <Col sm={6}>
-                  <h6>Address</h6>
-                  <address>
-                    {invoice_details?.contact_id?.city?.name},{" "}
-                    {invoice_details?.contact_id?.country?.name}
-                    <br />
-                    {invoice_details?.contact_id?.email}
-                  </address>
-                </Col>
-                  </Row> */}
-
               <Row>
                 <Col xs={12}>
                   <div className="table-responsive main-table">
@@ -292,9 +253,16 @@ const PublicInvoice = () => {
             </Col>
           </Row>
         </React.Fragment>
+        
       </div>
-    </div>
-  );
+    
+     </>
+    )}
+     </div> 
+    
+  )
+    
+ 
 };
 
 export default PublicInvoice;
