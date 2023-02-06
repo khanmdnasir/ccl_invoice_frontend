@@ -51,6 +51,11 @@ export const addContact = (formData: ContactForm) => ({
     payload: formData,
 });
 
+export const updateContact = (formData: any) => ({
+    type: type.UPDATE_CONTACT_REQUESTED,
+    payload: formData,
+});
+
 export const deleteContact = (id: number) => ({
     type: type.DELETE_CONTACT_REQUESTED,
     payload: id,

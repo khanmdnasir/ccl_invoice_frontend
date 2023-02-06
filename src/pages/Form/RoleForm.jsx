@@ -148,7 +148,7 @@ const RoleForm = () => {
                                             </Row>
                                         
                                         </Card.Body>
-                                    </Card >
+                                    </Card>
                                     <Card as={Col}>
                                         <Card.Header>
                                             <h5 className='me-2'>Service</h5>
@@ -172,7 +172,7 @@ const RoleForm = () => {
                                             </Row>
                                         
                                         </Card.Body>
-                                    </Card >
+                                    </Card>
                                     <Card as={Col}>
                                         <Card.Header>
                                             <h5 className='me-2'>Invoice</h5>
@@ -196,7 +196,7 @@ const RoleForm = () => {
                                             </Row>
                                         
                                         </Card.Body>
-                                    </Card >
+                                    </Card>
                                     <Card as={Col}>
                                         <Card.Header>
                                             <h5 className='me-2'>Repeating Invoice</h5>
@@ -220,7 +220,7 @@ const RoleForm = () => {
                                             </Row>
                                         
                                         </Card.Body>
-                                    </Card >
+                                    </Card>
                                     
                                 
                             </Row>
@@ -248,7 +248,7 @@ const RoleForm = () => {
                                             </Row>
                                         
                                         </Card.Body>
-                                    </Card >
+                                    </Card>
                                     <Card as={Col}>
                                         <Card.Header>
                                             <h5 className='me-2'>User</h5>
@@ -272,7 +272,7 @@ const RoleForm = () => {
                                             </Row>
                                         
                                         </Card.Body>
-                                    </Card >
+                                    </Card>
                                     
                                     <Card as={Col}>
                                         <Card.Header>
@@ -297,25 +297,31 @@ const RoleForm = () => {
                                             </Row>
                                         
                                         </Card.Body>
-                                    </Card >
+                                    </Card>
                                     <Card as={Col}>
                                         <Card.Header>
-                                            <h5 className='me-2'>Extra</h5>
+                                            <h5 className='me-2'>Others</h5>
                                         </Card.Header>
                                         <Card.Body>
                                             <Row className='mb-2'>
                                                 <Form.Group as={Col}   onChange={(e)=>handleChange(e)}>                 
                                                     <Form.Check label="Send Mail" value='can_send_mail' checked={role_permission.includes('can_send_mail')} />                                                  
                                                 </Form.Group>
-                                                <Col></Col>
+                                                <Form.Group as={Col} onChange={(e) => handleChange(e)}>
+                                                    <Form.Check label="General Ledger" value='view_general_ledger' checked={role_permission.includes('view_general_ledger')} />
+                                                </Form.Group>
                                             </Row>
                                             <Row>
-                                                <Col></Col>
-                                                <Col></Col>
+                                                <Form.Group as={Col} onChange={(e) => handleChange(e)}>
+                                                    <Form.Check label="Client Balance" value='view_client_balance' checked={role_permission.includes('view_client_balance')} />
+                                                </Form.Group>
+                                                <Form.Group as={Col} onChange={(e) => handleChange(e)}>
+                                                    <Form.Check label="Invoice Payment" value='add_invoice_payment' checked={role_permission.includes('add_invoice_payment')} />
+                                                </Form.Group>
                                             </Row>
                                         
                                         </Card.Body>
-                                    </Card >
+                                    </Card>
                                     
                                 
                             </Row>

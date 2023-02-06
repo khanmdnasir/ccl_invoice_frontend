@@ -3,6 +3,8 @@ import { Row, Col, Card, Button, Form, Alert, InputGroup, Modal } from 'react-bo
 import { Link } from 'react-router-dom';
 import Table from '../../components/Table';
 import { useLocation } from 'react-router-dom';
+import { withSwal } from 'react-sweetalert2';
+import ContactForm from '../Form/ContactForm';
 
 import Pagination from '../../components/CustomPagination';
 import classNames from 'classnames';
@@ -11,7 +13,7 @@ import FeatherIcon from 'feather-icons-react';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getContactService, getClientBalance } from '../../redux/actions';
+import { getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, setContactSuccessAlert,  getContactService, updateContact, getClientBalance, getCountry, getAllKam } from '../../redux/actions';
 
 
 const api = new APICore()
@@ -111,7 +113,7 @@ const servicesColumns = [
 ];
 
 
-const ContactDetails = () => {
+const ContactDetails = withSwal(({ swal }) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const [contactId, setContactId] = useState();
@@ -136,16 +138,90 @@ const ContactDetails = () => {
     const loading = useSelector(state => state.Contact.loading);
     const invoice_setting_error = useSelector(state => state.Contact.invoice_setting_error);
     const invoice_setting_success = useSelector(state => state.Contact.invoice_setting_success);
+    const success = useSelector(state => state.Contact.success);
     const services = useSelector(state => state.Service.contact_services);
     const client_balance = useSelector(state => state.Payment.client_balance);
 
+
+    const user_role = useSelector((state) => state.Role.user_role);
+    const all_kam = useSelector(state => state.Kam.all_kam);
+    const country = useSelector(state => state.Location.country);
+    const [showClientEditModal, setShowClientEditModal] = useState(false);
+    const onCloseModal = () => setShowClientEditModal(false);
+    const onOpenModal = () => setShowClientEditModal(true);
+
+
+    const onSubmit = (formData) => {
+        formData['id'] = contactId
+        dispatch(updateContact(formData))
+        // onCloseModal()
+    };
+
+    const onDelete = () => {
+        swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28bb4b',
+            cancelButtonColor: '#f34e4e',
+            confirmButtonText: 'Yes, delete it!',
+        })
+            .then(function (result) {
+                if (result.value) {
+                    api.delete(`/api/contact/${contactId}/`)
+                        .then(res => {
+                            if (res.data.success) {
+                                swal.fire(
+                                    'Deleted!',
+                                    'Account has been deleted.',
+                                    'success'
+                                );
+                            } else {
+                                swal.fire(
+                                    'Error',
+                                    res.data.error,
+                                    'warning'
+
+                                );
+                            }
+
+                        })
+                        .catch(err => {
+                            swal.fire({
+                                title: err,
+                            }
+                            );
+                        })
+                } else if (result.dismiss === 'cancel') {
+                    console.log('cancel')
+                }
+            })
+    }
 
     useEffect(() => {
         const state = location.state
         if (state) {
             setContactId(parseInt(state));
+            localStorage.setItem('client_id', parseInt(state));
+        } else {
+            let client_id = localStorage.getItem('client_id');
+            setContactId(parseInt(client_id));
         }
+        dispatch(getCountry());
+        dispatch(getAllKam());
     }, [])
+
+
+    useEffect(() => {
+
+        if (success !== '') {
+            onCloseModal();
+        }
+        setTimeout(() => {
+            dispatch(setContactSuccessAlert(''));
+        }, 2000)
+    }, [success])
 
 
     const visitPage = (page) => {
@@ -187,38 +263,12 @@ const ContactDetails = () => {
         width: "12rem"
     };
 
-    // const myDayStyle = {
-    //     "display": "inline-block",
-    //     "width": "5rem",
-    //     "margin": "0 10px 10px",
-    //     "boxSizing": "border-box",
-    //     "border": "1px solid #ddd",
-    //     "borderBottomColor": "#d1d1d1",
-    //     "borderRadius": "3px",
-    //     "textAlign": "center",
-    //     "backgroundColor": "#fff",
-    //     "transition": "all .25s",
-    //     "cursor": "pointer"
-    // };
-
     const invoiceSettingChange = (e) => {
         const data = { ...invoiceSetting }
         const target = e.target.name;
         const value = e.target.checked;
         data[target] = value;
 
-        // if (target === "reminder_service" && value === false) {
-        // const id = invoiceSetting?.reminder_settings?.id;
-        // data['reminder_settings'] = {
-        //     "id":id,
-        //     "contact_id": contactId,
-        //     "is_include_public_link": false,
-        //     "is_include_pdf_link": false,
-        //     "minimum_invoice_amount": 0,
-        //     "reminder_type": "",
-        //     "days": []
-        // }
-        // }
         setInvoiceSetting(data);
     }
 
@@ -316,9 +366,40 @@ const ContactDetails = () => {
             />
             <Row>
                 <Col md={4} xl={4}>
+                    {!loading && success && (
+                        <Alert variant="success" className="my-2" onClose={() => dispatch(setContactSuccessAlert(''))} dismissible>
+                            {success}
+                        </Alert>
+                    )}
                     <Card>
                         <Card.Header>
-                            <p>Personal Details</p>
+                            <div className='d-flex justify-content-between'>
+
+                            <span>Personal Details</span>
+                                <div>
+                                {user_role.includes('view_general_ledger') ?
+                                    <Link to={{ pathname: '/app/client_statement', state: contactId }} className="action-icon" >
+                                        <i className="mdi mdi-file"></i>
+                                    </Link> : ""}
+
+                                {user_role.includes('change_contact') ?
+                                    <Link to="#" className="action-icon" onClick={() => onOpenModal()}>
+                                        <i className="mdi mdi-square-edit-outline"></i>
+                                    </Link> : ""
+                                }
+
+                                {user_role.includes('delete_contact') ?
+                                    <Link to="#" className="action-icon" onClick={() => onDelete()}>
+                                        <i className="mdi mdi-delete"></i>
+                                    </Link> : ""
+                                }
+                                {
+                                    showClientEditModal ?
+                                        <ContactForm show={showClientEditModal} onHide={onCloseModal} onSubmit={onSubmit} contact={contact_details} countries={country} kamList={all_kam} />
+                                        : null
+                                }
+                            </div>
+                        </div>
                         </Card.Header>
                         <Card.Body>
                             
@@ -611,5 +692,5 @@ const ContactDetails = () => {
 
         </>
     );
-};
+});
 export default ContactDetails;

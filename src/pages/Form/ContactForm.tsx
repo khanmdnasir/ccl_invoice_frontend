@@ -14,6 +14,7 @@ import { setContactErrorAlert } from '../../redux/actions';
 const api = new APICore();
 
 interface FormData {
+    id: number;
     name: string;
     contact_type: string;
     contact_person: string;
@@ -55,8 +56,6 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
         })
     );
 
-    console.log('contact',contact)
-
     const methods = useForm<Partial<FormData>>({
         defaultValues: {name:contact?.name,contact_person:contact?.contact_person,bin:contact?.bin,kam:contact?.kam?.id, phone:contact?.phone,email:contact?.email,city:contact?.city?.id,country:contact?.country?.id,billing_address:contact?.billing_address},
         resolver: schemaResolver,
@@ -75,14 +74,15 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
         if(contact?.country){
             dispatch(getCity(contact?.country?.id))
         }
-    },[contact])
+    },[contact?.country])
 
-    console.log('kem list',kamList);
+    console.log("")
+
     return (
         <>
             <Modal show={show} onHide={onHide} aria-labelledby="contained-modal-title-vcenter" centered>
                 <Modal.Header className="bg-light" onHide={onHide} closeButton>
-                    <Modal.Title className="m-0">Add Client</Modal.Title>
+                    <Modal.Title className="m-0">{contact?.id ? "Edit Client":"Add Client"}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
                 {!loading  && error && (
@@ -193,7 +193,10 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
                                 errors={errors}
                                 control={control} 
                                 defaultValue={contact ? contact?.country?.id : ''}
-                                onChange={(e:any) => {dispatch(getCity(e.target.value));if(!e.target.value){setValue('city','')}}}
+                                onChange={(e:any) => {dispatch(getCity(e.target.value));
+                                    if(e.target.value && e.target.value===contact?.country?.id){setValue('city',contact?.city?.id)}
+                                    else{setValue('city','')}
+                                }}
                                 >    
                                     <option value="">Select Country ...</option> 
                                     {countries?.map((item:any)=>{
