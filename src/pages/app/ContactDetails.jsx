@@ -378,18 +378,18 @@ const ContactDetails = withSwal(({ swal }) => {
                             <span>Personal Details</span>
                                 <div>
                                 {user_role.includes('view_general_ledger') ?
-                                    <Link to={{ pathname: '/app/client_statement', state: contactId }} className="action-icon" >
+                                        <Link data-bs-toggle="Client Statement" data-bs-placement="top" title="Client Statement" to={{ pathname: '/app/client_statement', state: contactId }} className="ms-1 btn btn-success" >
                                         <i className="mdi mdi-file"></i>
                                     </Link> : ""}
 
                                 {user_role.includes('change_contact') ?
-                                    <Link to="#" className="action-icon" onClick={() => onOpenModal()}>
+                                        <Link to="#" data-bs-toggle="Edit" data-bs-placement="top" title="Edit" className="ms-2 btn btn-primary" onClick={() => onOpenModal()}>
                                         <i className="mdi mdi-square-edit-outline"></i>
                                     </Link> : ""
                                 }
 
                                 {user_role.includes('delete_contact') ?
-                                    <Link to="#" className="action-icon" onClick={() => onDelete()}>
+                                        <Link to="#" data-bs-toggle="Delete" data-bs-placement="top" title="Delete" className="ms-2 btn btn-danger" onClick={() => onDelete()}>
                                         <i className="mdi mdi-delete"></i>
                                     </Link> : ""
                                 }
@@ -473,17 +473,18 @@ const ContactDetails = withSwal(({ swal }) => {
                 <Col md={8} xl={8}>
                     <Card>
                         <Card.Header>
-                            <p style={{ marginBottom: '0px !important' }}>Services List</p>
+                            <div className='d-flex justify-content-between'>
+                                <p style={{ marginBottom: '0px !important' }}>Services List</p>
+
+                                <Link className="btn btn-primary" to={{ pathname: '/app/service_form', state: { 'services': services, 'contactId': contactId } }}>
+                                        <i className="mdi mdi-pencil me-1"></i> Edit
+                                    </Link>
+
+                               
+                            </div>
                         </Card.Header>
 
                         <Card.Body>
-                            <span className="text-sm mt-2 mt-sm-0">
-                                <Link className="btn btn-info mb-2 me-1" to={{ pathname: '/app/service_form', state: { 'services': services, 'contactId': contactId } }}>
-                                    <i className="mdi mdi-pencil me-1"></i> Edit
-                                </Link>
-
-                            </span>
-
                             {services.length > 0 ?
                                 <>
                                     <Table

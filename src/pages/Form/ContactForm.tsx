@@ -76,8 +76,6 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
         }
     },[contact?.country])
 
-    console.log("")
-
     return (
         <>
             <Modal show={show} onHide={onHide} aria-labelledby="contained-modal-title-vcenter" centered>
@@ -194,7 +192,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
                                 control={control} 
                                 defaultValue={contact ? contact?.country?.id : ''}
                                 onChange={(e:any) => {dispatch(getCity(e.target.value));
-                                    if(e.target.value && e.target.value===contact?.country?.id){setValue('city',contact?.city?.id)}
+                                    if(e.target.value && parseInt(e.target.value)===contact?.country?.id){setValue('city',contact?.city?.id)}
                                     else{setValue('city','')}
                                 }}
                                 >    
