@@ -130,11 +130,11 @@ const columns = [
         sort: true,
         Cell: valueColumn,
     },
-    {
-        Header: 'Type',
-        accessor: 'type',
-        sort: true,
-    },
+    // {
+    //     Header: 'Type',
+    //     accessor: 'type',
+    //     sort: true,
+    // },
     {
         Header: 'Action',
         accessor: 'action',

@@ -80,6 +80,7 @@ const CompanySettingsForm = ({ show, onHide, onSubmit, company_settings }: AddCo
                                     type="text"
                                     name="key"
                                     required
+                                    disabled={company_settings?.id}
                                     labelClassName='required'
                                     placeholder="Enter key"
                                     containerClass={'mb-3'}
@@ -99,7 +100,7 @@ const CompanySettingsForm = ({ show, onHide, onSubmit, company_settings }: AddCo
                                     register={register}
                                     errors={errors}
                                     control={control}
-                                />
+                                    />
                             </Col>
                             <Col>
                                 <FormInput
@@ -107,6 +108,7 @@ const CompanySettingsForm = ({ show, onHide, onSubmit, company_settings }: AddCo
                                     type="select"
                                     name="type"
                                     required
+                                    disabled={company_settings?.id}
                                     labelClassName='required'
                                     containerClass={'mb-3'}
                                     register={register}

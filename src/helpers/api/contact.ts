@@ -38,10 +38,15 @@ function addContact(params: { name:string,client_id:string,contact_type:string,c
     return api.create(`${baseUrl}`,params);
 }
 
+function updateContact(params: { id: any, name:string,client_id:string,contact_type:string,contact_person:string,phone:string,bin:string,kam:string,email:string,city:string,country:string,billing_address:string }) {
+    const baseUrl = `/api/contact/${params?.id}/`;
+    return api.updatePatch(`${baseUrl}`,params);
+}
+
 function deleteContact(id:number) {
     const baseUrl = `/api/contact/${id}/`;
     return api.delete(`${baseUrl}`);
 }
 
 
-export { getContact, addContact,deleteContact,getAllContact, getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting };
+export { getContact, addContact,deleteContact,getAllContact, getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, updateContact };
