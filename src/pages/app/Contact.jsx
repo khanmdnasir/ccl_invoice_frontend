@@ -110,6 +110,9 @@ const ActionColumn = withSwal(({ row, swal }) => {
             <Link to={{ pathname: '/app/client_details', state: row.original.id }} className="action-icon" >
                 <i className="mdi mdi-eye"></i>
             </Link>
+            <Link to={{ pathname: '/app/client_statement', state: row.original.id }} className="action-icon" >
+                <i className="mdi mdi-file"></i>
+            </Link>
 
             {user_role.includes('change_contact') ?
                 <Link to="#" className="action-icon" onClick={() => onOpenModal()}>

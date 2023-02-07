@@ -32,7 +32,6 @@ function* getCompanySettings({ payload: {limit,page}}:companySettingsData):SagaI
 }
 
 function* getCompanySettingsByKey({ payload: paramData}:companySettingsData):SagaIterator {
-    console.log("paramData", paramData)
     try {
         const response = yield call(getCompanySettingsByKeyApi, paramData);
         const data = response.data;

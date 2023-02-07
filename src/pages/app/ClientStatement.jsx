@@ -12,6 +12,7 @@ import ReactToPrint from 'react-to-print';
 import { APICore } from '../../helpers/api/apiCore';
 import { getCurrentDate } from '../../utils/getCurrentDate';
 import classNames from 'classnames';
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -63,15 +64,31 @@ const columns = [
 
 const ClientStatement = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
     const contacts = useSelector(state => state.Contact.contact);
     const cloading = useSelector(state => state.Contact.loading);
-    const [contactId,setContactId] = useState();
+    const [contactId,setContactId] = useState('');
     const [fromDate,setFromDate] = useState('');
     const [toDate,setToDate] = useState('');
     const [clientLedger,setClientLedger] = useState({});
     
     const [loading,setLoading] = useState(false); 
     
+    useEffect(async() => {
+        const state = location.state
+        if (state) {
+            
+            setContactId(parseInt(state));
+            setLoading(true);
+            const response = await api.get('/api/client-ledger',{ client_id: parseInt(state) })
+        
+            if(response.data.success){
+
+                setLoading(false)
+            }
+            setClientLedger(response.data.data)
+        }
+    }, [])
 
     const componentRef = React.useRef();
    
@@ -130,7 +147,7 @@ const ClientStatement = () => {
                                                 aria-label="Default select example"
                                                 required
                                                 onChange={(e) => setContactId(e.target.value)}
-                                                defaultValue=""
+                                                value={contactId}
                                             >
                                                 {cloading ? <option value="" disabled>Loading...</option> :
                                                     <>
@@ -186,17 +203,17 @@ const ClientStatement = () => {
 
                                 <Col sm={4}>
                                     <div className="text-sm-end mt-2 mt-sm-0">
-                                        
+                                     { clientLedger.statements && clientLedger.statements?.length > 0 &&   
                                     <ReactToPrint
                                         trigger={() =>  <Button className="btn btn-success mb-2 me-1" >
                                         <i className="mdi mdi-printer me-1"></i> Print
                                     </Button>}
                                         content={() => componentRef.current}
-                                    />
+                                    />}
                                     <div className='d-none'>
                                     <ComponentToPrint ref={componentRef}  data={clientLedger}/>
                                     </div>
-                                       
+                                    
 
                                     </div>
                                 </Col>
