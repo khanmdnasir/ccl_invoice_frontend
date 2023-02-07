@@ -18,6 +18,11 @@ export const getCompanySettingsByKey = (data:any) => ({
     payload: data,
 });
 
+export const getLogo = () => ({
+    type: type.GET_LOGO_REQUESTED,
+    payload: null,
+});
+
 export const addCompanySetting = (company_setting: CompanySettingForm) => ({
     type: type.ADD_COMPANY_SETTINGS_REQUESTED,
     payload: company_setting,

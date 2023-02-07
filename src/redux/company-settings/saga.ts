@@ -6,6 +6,7 @@ import {
     getCompanySettings as getCompanySettingsApi,
     addCompanySetting as addCompanySettingApi,
     getCompanySettingsByKey as getCompanySettingsByKeyApi,
+    getLogo as getLogoApi,
     
 } from '../../helpers';
 
@@ -38,6 +39,17 @@ function* getCompanySettingsByKey({ payload: paramData}:companySettingsData):Sag
         yield put({type: 'GET_COMPANY_SETTINGS_BY_KEY_SUCCESS' , data: data});
     } catch (error) {
         yield put({type: 'GET_COMPANY_SETTINGS_BY_KEY_FAILED', error: error});
+        
+    }
+}
+
+function* getLogo():SagaIterator {
+    try {
+        const response = yield call(getLogoApi);
+        const data = response.data;
+        yield put({type: 'GET_LOGO_SUCCESS' , data: data});
+    } catch (error) {
+        yield put({type: 'GET_LOGO_FAILED', error: error});
         
     }
 }
@@ -78,9 +90,13 @@ export function* watchGetCompanySettingsByKey() {
 }
 
 
+export function* watchGetLogo() {
+    yield takeEvery('GET_LOGO_REQUESTED', getLogo);
+}
+
 
 function* companySettingsSaga() {
-    yield all([fork(watchGetCompanySettings),fork(watchAddCompanySetting), fork(watchGetCompanySettingsByKey)]);
+    yield all([fork(watchGetCompanySettings),fork(watchAddCompanySetting), fork(watchGetCompanySettingsByKey), fork(watchGetLogo)]);
 }
 
 export default companySettingsSaga;
