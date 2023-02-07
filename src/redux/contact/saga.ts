@@ -10,6 +10,7 @@ import {
     getContactDetails as getContactDetailsApi,
     getAllContact as getAllContactApi,
     addContact as addContactApi,
+    updateContact as updateContactApi,
     deleteContact as deleteContactApi
     
 } from '../../helpers';
@@ -132,6 +133,24 @@ function* addContact({ payload: {name,client_id,contact_type,contact_person,bin,
     }
 }
 
+
+function* updateContact({ payload:{id, name,client_id,contact_type,contact_person,bin,kam,phone,email,city,country,billing_address} }:any):SagaIterator {
+    try {
+        const response = yield call(updateContactApi,{id, name,client_id,contact_type,contact_person,bin,kam,phone,email,city,country,billing_address,});
+        const data = response.data;
+        if(data.success){
+            yield put({type: 'UPDATE_CONTACT_SUCCESS' , data: data.data});
+        }else{
+            yield put({type: 'UPDATE_CONTACT_FAILED', error: data.error});
+        }
+    } catch (error) {
+        console.log("error",error)
+        yield put({type: 'UPDATE_CONTACT_FAILED', error: error});
+        
+    }
+}
+
+
 function* deleteContact({ payload: {id} }: ContactData):SagaIterator {
     try {
         console.log(id)
@@ -192,6 +211,10 @@ export function* watchAddContact() {
     yield takeEvery('ADD_CONTACT_REQUESTED', addContact);
 }
 
+export function* watchUpdateContact() {
+    yield takeEvery('UPDATE_CONTACT_REQUESTED', updateContact);
+}
+
 export function* watchDeleteContact() {
     yield takeEvery('DELETE_CONTACT_REQUESTED', deleteContact);
 }
@@ -199,7 +222,7 @@ export function* watchDeleteContact() {
 
 
 function* contactSaga() {
-    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactInvoice), fork(watchGetContactDetails), fork(watchGetContactInvoiceSetting), fork(watchUpdateContactInvoiceSetting),setContactSuccessAlert,setContactErrorAlert]);
+    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchUpdateContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactInvoice), fork(watchGetContactDetails), fork(watchGetContactInvoiceSetting), fork(watchUpdateContactInvoiceSetting),setContactSuccessAlert,setContactErrorAlert]);
 }
 
 export default contactSaga;

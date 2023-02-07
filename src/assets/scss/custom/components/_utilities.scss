@@ -61,3 +61,87 @@ body[data-layout-color="dark"] {
         color: var(--#{$variable-prefix}body-color) !important;
     }
 }
+
+// custom 
+#blue-color{
+    --background-bill-head: #1c5193;
+    --icons--color:#1c5193;
+}
+#green-color{
+    --background-bill-head: #00a551;
+    --icons--color:#00a551;
+}
+.right-table tr td {
+    padding: 2px !important;
+}
+.right-table {
+    padding-top: 9px;
+}
+p.bill-head {
+    width: 245px;
+    background: var(--background-bill-head);
+    color: white;
+    text-transform: uppercase;
+    padding-left: 15px;
+    font-weight: 600;
+}
+hr.line {
+    height: 2px;
+    background: var(--background-bill-head);
+}
+
+p.icon {
+    color: var(--icons--color);
+    padding-right: 8px;
+    font-size: 18px;
+}
+p.icons i {
+    color:  var(--icons--color);
+    padding-right: 8px;
+    font-size: 18px;
+}
+.last-footer {
+    padding: 57px 0px 10px 0px;
+}
+.main-table tbody {
+    line-height: 0px !important;
+}
+.main-table thead {
+    line-height: 0px !important;
+    background: var(--background-bill-head);
+    color: white;
+}
+.bill-to {
+    margin-top: -11px;
+}
+.right-text h3{
+    color: var(--icons--color);
+    text-transform: uppercase;
+    margin-top: 34px;
+}
+.switch {
+    margin-right: 867px;
+    margin-bottom: 29px;
+}
+.switch button {
+    width: 142px;
+    height: 39px;
+    font-size: 16px;
+    color: white;
+    background:  var(--background-bill-head);
+    border: none;
+}
+.phone p{
+    font-size: 16px; 
+    color: var(--icons--color);
+}
+.phone p a{
+    font-size: 16px; 
+    color: var(--icons--color);
+}
+.phone span{
+    color: var(--icons--color);
+}
+span.textalign {
+    margin-left: 33px;
+}

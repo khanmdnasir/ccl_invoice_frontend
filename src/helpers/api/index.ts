@@ -1,7 +1,7 @@
 import { login, signup,updateProfile, updateProfileImage } from './auth';
 import { getUser,addUser } from './user';
 import { getRole,getUserRole } from './role';
-import { getContact,getAllContact,addContact,deleteContact, getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting } from './contact';
+import { getContact,getAllContact,addContact, updateContact, deleteContact, getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting } from './contact';
 import { getCountry,getCity } from './location';
 import { getKam,getKamDetails,getAllKam,addKam,deleteKam} from './kam';
 import { getService,getContactService, addService } from './service';
@@ -15,7 +15,7 @@ import { getCompanySettings, addCompanySetting, getCompanySettingsByKey } from '
 
 import { getDashboardSummary } from './dashboard';
 export { login, signup, updateProfile, updateProfileImage,getUser,addUser,getRole,getUserRole,getContact,getContactInvoice, 
-    getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getAllContact,addContact,deleteContact,getCountry,getCity,getService,
+    getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, getAllContact,addContact,updateContact, deleteContact,getCountry,getCity,getService,
     getContactService,addService,getInvoice,getInvoiceDetails,getCurrency,getChartAccount, addChartOfAccount, getRepeatingInvoice, getRepeatingInvoiceDetails,
      getCompanySettings, addCompanySetting, getPayment, getPaymentDetails, getDueInvoices, getPaymentTypes, getClientBalance, getAllPayment,
      addPayment, addInvoicePayment,getDashboardSummary,getKam,getKamDetails,getAllKam,addKam,deleteKam ,getCompanySettingsByKey};

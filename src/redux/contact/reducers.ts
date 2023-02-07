@@ -199,6 +199,33 @@ const Contact = (state = INIT_STATE, action: any) => {
             };
         }
 
+
+        case type.UPDATE_CONTACT_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+
+        case type.UPDATE_CONTACT_SUCCESS: {
+            return {
+                ...state,
+                loading: false,
+                contact_details: action.data,
+                success:'Client Updated Successfully'
+                
+            };
+        }
+
+        case type.UPDATE_CONTACT_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+            };
+        }
+
+        
         case type.DELETE_CONTACT_REQUESTED: {
             return {
                 ...state,
