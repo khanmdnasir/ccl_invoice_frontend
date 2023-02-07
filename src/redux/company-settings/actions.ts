@@ -34,3 +34,9 @@ export const setCompanySettingsErrorAlert = (msg:string) => ({
     type: type.SET_COMPANY_SETTINGS_ERROR_ALERT,
     payload: msg,
 });
+
+
+export const setLogo = (data:any) => ({
+    type: type.SET_LOGO,
+    payload: data,
+});

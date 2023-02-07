@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { Form } from 'react-bootstrap';
 // actions
-import { showRightSidebar, changeSidebarType, getUserRole, getCurrency } from '../redux/actions';
+import { showRightSidebar, changeSidebarType, getUserRole, getCurrency, getCompanySettingsByKey } from '../redux/actions';
 
 // store
 import { RootState, AppDispatch } from '../redux/store';
@@ -113,14 +113,15 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
     const navbarCssClasses: string = navCssClasses || '';
     const containerCssClasses: string = !hideLogo ? 'container-fluid' : '';
 
-    const { layoutType, leftSideBarType, user } = useSelector((state: RootState) => ({
+    const { layoutType, leftSideBarType, user, company_setting_by_key } = useSelector((state: RootState) => ({
         layoutType: state.Layout.layoutType,
         leftSideBarType: state.Layout.leftSideBarType,
         user: state.Auth.user,
+        company_setting_by_key: state.CompanySettings.company_setting_by_key
     }));
 
     
-    
+    // console.log("company_setting_by_key",company_setting_by_key)
 
     /**
      * Toggle the leftmenu when having mobile screen
@@ -146,12 +147,13 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
         if (leftSideBarType === 'condensed') dispatch(changeSidebarType(SideBarTypes.LEFT_SIDEBAR_TYPE_DEFAULT));
     };
 
-   
-
             
     useEffect(()=>{
         dispatch(getUserRole());
         dispatch(getCurrency());
+        dispatch(getCompanySettingsByKey({
+            "key": "logo"
+        }))
     },[])
    
     return (
@@ -162,24 +164,24 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         <div className="logo-box">
                             <Link to="/" className="logo logo-dark text-center">
                                 <span className="logo-sm">
-                                    <img src={CCL_Logo} alt="" height="60" />
+                                    <img src={company_setting_by_key?.value_file} alt="" height="60" />
                                 </span>
                                 <span className="logo-lg">
                                     <img
-                                        src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? CCL_Logo : CCL_Logo}
-                                        alt=""
+                                        src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? company_setting_by_key?.value_file : company_setting_by_key?.value_file}
+                                        alt="logo"
                                         height="60"
                                     />
                                 </span>
                             </Link>
                             <Link to="/" className="logo logo-light text-center">
                                 <span className="logo-sm">
-                                    <img src={CCL_Logo} alt="" height="30" />
+                                    <img src={company_setting_by_key?.value_file} alt="" height="30" />
                                 </span>
                                 <span className="logo-lg">
                                     <img
-                                        src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? CCL_Logo : CCL_Logo}
-                                        alt=""
+                                        src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? company_setting_by_key?.value_file : company_setting_by_key?.value_file}
+                                        alt="logo"
                                         height="60"
                                     />
                                 </span>

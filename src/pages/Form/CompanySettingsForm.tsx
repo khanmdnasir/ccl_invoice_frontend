@@ -127,12 +127,13 @@ const CompanySettingsForm = ({ show, onHide, onSubmit, company_settings }: AddCo
 
 
                         <div className="text-end">
-                            <Button variant="success" type="submit" className="waves-effect waves-light me-1">
+                            <Button variant="success" disabled={loading} type="submit" className="waves-effect waves-light me-1">
                                 Save
                             </Button>
                             <Button
                                 variant="danger"
                                 type="button"
+                                disabled={loading}
                                 className="waves-effect waves-light"
                                 onClick={onHide}
                             >

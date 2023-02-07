@@ -65,6 +65,14 @@ const CompanySettings = (state = INIT_STATE, action: any) => {
         }
 
 
+        case type.SET_LOGO: {
+            return {
+                ...state,
+                company_setting_by_key:action.payload
+            };
+        }
+
+
         case type.ADD_COMPANY_SETTINGS_REQUESTED: {
             return {
                 ...state,
