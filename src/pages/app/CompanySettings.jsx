@@ -193,9 +193,9 @@ const CompanySettings = () => {
     handle form submission
     */
     const onSubmit = (formData) => {
-        console.log('formData', formData)
+        // console.log('formData', formData)
         dispatch(addCompanySetting({ 'key': formData.key, 'type': formData.type, 'value': formData.type === 'text' ? formData.value : formData.value[0] }));
-        onCloseModal();
+        // onCloseModal();
 
     };
 

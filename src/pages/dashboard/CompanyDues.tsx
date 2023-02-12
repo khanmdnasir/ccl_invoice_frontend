@@ -3,7 +3,7 @@ import {Card, Row, Col, ProgressBar } from 'react-bootstrap';
 
 // componets
 
-const CompanyDues = () => {
+const CompanyDues = ({summaryList, scurrency}:any) => {
     return (
         <>
             <Card>

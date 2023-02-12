@@ -5,7 +5,7 @@ import { Line, defaults as ChartjsDefaults } from 'react-chartjs-2';
 // components
 import ChartStatistics from '../../components/ChartStatistics';
 
-const RevenueChart = () => {
+const RevenueChart = ({summaryList, scurrency}:any) => {
     ChartjsDefaults.color = '#8391a2';
     ChartjsDefaults.scale.grid.color = '#8391a2';
 

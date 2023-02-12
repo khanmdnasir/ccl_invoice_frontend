@@ -10,12 +10,17 @@ import { ReactSortable } from 'react-sortablejs';
 import { useEffect, useState } from 'react';
 import InvoiceChart from './InvoiceChart';
 import RevenueChart from './RevenueChart';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { getDashboardSummary } from '../../redux/dashboard/actions';
 
 
 const Dashboard = () => {   
-    
-
+    const dispatch = useDispatch();
+    const scurrency = useSelector(state => state.Currency.selectedCurrency)
+    const summaryList = useSelector(state => state.Dashboard.summaryList);
+    useEffect(() => {
+        dispatch(getDashboardSummary());
+    }, [])
     
     return (
         <div className='mt-4'>
@@ -42,18 +47,18 @@ const Dashboard = () => {
                 </Col>
             </Row>
 
-            <Statistics />
+            <Statistics summaryList={summaryList} scurrency={scurrency}/>
             
 
                 <Row>
                 
                     <Col  xl={6}>
                         
-                        <RevenueChart/>
+                        <RevenueChart summaryList={summaryList} scurrency={scurrency}/>
                         
                     </Col>
                     <Col  xl={6}>
-                    <CompanyDues />
+                    <CompanyDues summaryList={summaryList} scurrency={scurrency}/>
                         {/* <AssetTypeChart/> */}
                         
                     </Col>
