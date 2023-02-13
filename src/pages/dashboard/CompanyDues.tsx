@@ -16,7 +16,7 @@ const CompanyDues = ({summaryList, scurrency}:any) => {
                             <>
                                 <div className="mt-4">
                                     <h6 className="text-uppercase">
-                                        {due?.contact_id__name} <span className="float-end">{scurrency?.symbol}{due?.total_amount}</span>
+                                        {due?.contact_id__name} <span className="float-end">{scurrency?.symbol}{due?.net_due_amount}</span>
                                     </h6>
     
                                     <ProgressBar
