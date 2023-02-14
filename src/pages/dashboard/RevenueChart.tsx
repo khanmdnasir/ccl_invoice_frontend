@@ -11,28 +11,28 @@ const RevenueChart = ({summaryList, scurrency}:any) => {
 
     // chart data
     const lineChartData = {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        labels: summaryList?.monthly_received_payment ? summaryList?.monthly_received_payment[0]:[],
         datasets: [
             {
-                label: 'Current Week',
+                label: `Payment(${scurrency.symbol})`,
                 backgroundColor: '#00a551',
                 borderColor: '#00a551',
-                data: [32, 42, 42, 62, 52, 75, 62],
+                data: summaryList?.monthly_received_payment ? summaryList?.monthly_received_payment[1]:[],
                 tension: 0.4,
                 fill: {
                     target: 'origin',
                     above: 'rgb(0, 165, 81, 0.3)',
                 },
             },
-            {
-                label: 'Previous Week',
-                fill: true,
-                backgroundColor: 'transparent',
-                borderColor: '#00a551',
-                borderDash: [5, 5],
-                data: [42, 58, 66, 93, 82, 105, 92],
-                tension: 0.4,
-            },
+            // {
+            //     label: 'Previous Week',
+            //     fill: true,
+            //     backgroundColor: 'transparent',
+            //     borderColor: '#00a551',
+            //     borderDash: [5, 5],
+            //     data: [412, 581, 661, 821, 1075],
+            //     tension: 0.4,
+            // },
         ],
     };
 
@@ -62,7 +62,7 @@ const RevenueChart = ({summaryList, scurrency}:any) => {
             },
             y: {
                 ticks: {
-                    stepSize: 20,
+                    stepSize: summaryList?.monthly_received_payment ? summaryList?.monthly_received_payment[2]:0,
                 },
                 display: true,
                 borderDash: [5, 5],
@@ -92,7 +92,7 @@ const RevenueChart = ({summaryList, scurrency}:any) => {
                         </div>
                     </div>
 
-                    <h4 className="header-title">Payment Receive (Coming Soon)</h4>
+                    <h4 className="header-title">Payment Receive</h4>
 
                     <Row className="mt-4 text-center">
                         {/* <Col className="col-4">
