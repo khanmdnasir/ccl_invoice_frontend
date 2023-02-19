@@ -286,7 +286,7 @@ const CompanySettings = () => {
 
                             {loading ? <p>Loading...</p> :
                                 <>
-                                    {company_settings.length > 0 ?
+                                    {companyAttribute?.length > 0 ?
                                         <>
                                             <Table
                                                 columns={columns}
