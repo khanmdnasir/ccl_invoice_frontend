@@ -49,6 +49,11 @@ const columns = [
         sort: true,
     },
     {
+        Header: 'Payment Type',
+        accessor: 'payment_type',
+        sort: true,
+    },
+    {
         Header: 'Invoice Amoount',
         accessor: 'total_amount',
         sort: true,
