@@ -250,6 +250,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
                                 label="Kam"
                                 type="select"
                                 name="kam"
+                                labelClassName='required'
                                 containerClass={'mb-3'} 
                                 register={register}
                                 errors={errors}

@@ -3,33 +3,9 @@ import { Row, Col } from 'react-bootstrap';
 
 // componets
 import StatisticsWidget from '../../components/StatisticsWidget';
-import { APICore } from '../../helpers/api/apiCore';
-import { useSelector,useDispatch } from 'react-redux';
-import { getDashboardSummary } from '../../redux/dashboard/actions';
-const api = new APICore();
 
+const Statistics = ({summaryList, scurrency}) => {
 
-const Statistics = () => {
-    const dispatch = useDispatch();
-    const[statistics,setStatistics] = useState({});
-    const scurrency = useSelector(state => state.Currency.selectedCurrency)
-    const summaryList = useSelector(state => state.Dashboard.summaryList);
-    useEffect(()=>{
-
-        dispatch(getDashboardSummary());
-
-        console.log(summaryList)
-
-        const data = {
-            total_contact: summaryList.total_contact,
-            draft_amount: 420, 
-            awaiting_approval_amount: 645,
-            awaiting_payment_amount: 785,
-            paid_amount: 310,
-
-        }
-        setStatistics(data)
-    },[])
     return (
         <>
             <Row >
