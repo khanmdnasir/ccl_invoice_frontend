@@ -127,7 +127,7 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                                                                                         
                                                     <th style={{fontSize: '12px',padding: '5px'}}>Date</th>
                                                     <th style={{fontSize: '12px',padding: '5px'}}>Description</th>
-                                                    <th style={{fontSize: '12px',padding: '5px'}}>Payment Type</th>
+                                                    <th style={{fontSize: '12px',padding: '5px'}}>Paid By</th>
                                                     <th style={{fontSize: '12px',padding: '5px'}}>Invoice Amount</th>
                                                     <th style={{fontSize: '12px',padding: '5px'}}>Payment Amount</th>
                                                     
