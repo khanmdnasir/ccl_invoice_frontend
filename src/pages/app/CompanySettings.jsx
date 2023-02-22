@@ -9,7 +9,7 @@ import Table from '../../components/Table';
 import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { addCompanySetting, getCompanySettings, setCompanySettingsSuccessAlert, setCompanySettingsErrorAlert } from '../../redux/actions';
+import { addCompanySetting, getCompanySettings, setCompanySettingsSuccessAlert, setCompanySettingsErrorAlert, setLogo } from '../../redux/actions';
 import ReactExport from "react-export-excel";
 import Pagination from '../../components/CustomPagination';
 
@@ -38,7 +38,7 @@ const ActionColumn = withSwal(({ row, swal }) => {
             api.updatePatch(`/api/company_settings/${row.original.id}/`, { 'key': formData.key, 'type': formData.type, 'value': formData.value })
                 .then(res => {
 
-                    if (res.data.success) {
+                    if (res?.data?.success) {
                         dispatch(getCompanySettings(10, 1));
                         dispatch(setCompanySettingsSuccessAlert('Company Setting Updated Successfully'));
                         onCloseModal()
@@ -54,10 +54,13 @@ const ActionColumn = withSwal(({ row, swal }) => {
                 })
         }
         else {
-            console.log('formData', formData)
+            // console.log('formData', formData)
             api.updateWithFile(`/api/company_settings/${row.original.id}/`, { 'key': formData.key, 'type': formData.type, 'value': formData.value[0] })
                 .then(res => {
-                    if (res.data.success) {
+                    if (res?.data?.success) {
+                        if (res?.data?.data?.key === 'logo') {
+                            dispatch(setLogo(res?.data?.data))
+                        }
                         dispatch(getCompanySettings(10, 1));
                         dispatch(setCompanySettingsSuccessAlert('Company Setting Updated Successfully'));
                         onCloseModal()
@@ -193,7 +196,7 @@ const CompanySettings = () => {
     handle form submission
     */
     const onSubmit = (formData) => {
-        console.log('formData', formData)
+        
         dispatch(addCompanySetting({ 'key': formData.key, 'type': formData.type, 'value': formData.type === 'text' ? formData.value : formData.value[0] }));
         onCloseModal();
 

@@ -2,9 +2,13 @@ import React, { useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { getLogo } from '../../redux/actions';
 
 
 import CCL_Logo from '../../assets/images/Qorum.svg';
+import { RootState, AppDispatch } from '../../redux/store';
 
 
 
@@ -17,6 +21,15 @@ interface AccountLayoutProps {
 
 const AuthLayout = ({ helpText, bottomLinks, children, isCombineForm }: AccountLayoutProps) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch<AppDispatch>();
+
+    const { company_logo } = useSelector((state: RootState) => ({
+        company_logo: state.CompanySettings.company_logo
+    }));
+
+    useEffect(()=>{
+        dispatch(getLogo())
+    },[])
 
     useEffect(() => {
         if (document.body) document.body.classList.remove('authentication-bg', 'authentication-bg-pattern');
@@ -39,13 +52,13 @@ const AuthLayout = ({ helpText, bottomLinks, children, isCombineForm }: AccountL
                                 <div className="auth-logo">
                                     <Link to="/" className="logo logo-dark text-center outline-none">
                                         <span className="logo-lg">
-                                            <img src={CCL_Logo} alt="" height="140" />
+                                            <img src={company_logo?.value_file} alt="" height="140" />
                                         </span>
                                     </Link>
 
                                     <Link to="/" className="logo logo-light text-center">
                                         <span className="logo-lg">
-                                            <img src={CCL_Logo} alt="" height="140" />
+                                            <img src={company_logo?.value_file} alt="" height="140" />
                                         </span>
                                     </Link>
                                 </div>
