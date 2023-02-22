@@ -16,6 +16,11 @@ function getCompanySettingsByKey(params:any) {
     return api.get(`${baseUrl}`,params);
 }
 
+function getLogo() {
+    const baseUrl = '/api/get-logo';
+    return api.get(`${baseUrl}`,{});
+}
+
 function addCompanySetting(params:any) {
     const baseUrl = '/api/company_settings/';
     if(params.type === 'text')
@@ -24,4 +29,4 @@ function addCompanySetting(params:any) {
 }
 
 
-export { getCompanySettings, addCompanySetting, getCompanySettingsByKey };
+export { getCompanySettings, addCompanySetting, getCompanySettingsByKey, getLogo };
