@@ -140,6 +140,11 @@ const PaymentForm = () => {
   }, [payment_success, payment_error])
 
   useEffect(() => {
+
+    setPaymentData({...paymentData,
+      "total_invoice_amount": 0
+    })
+
     if (paymentData?.client_id !== '' && paymentData?.client_id !== undefined && paymentData?.client_id !== null) {
       dispatch(getClientBalance(paymentData?.client_id))
       if (company_setting_by_key?.value_text === "1"){
@@ -257,9 +262,9 @@ const PaymentForm = () => {
                 </Form.Group>
                 <div className='float-right'>
                   <Button style={{ textAlign: "left" }} variant="success" size="lg"><b>
-                    Current Balance: {parseFloat(client_balance)} {scurrency.symbol}
+                    Current Balance: {parseFloat(client_balance).toFixed(2)} {scurrency.symbol}
                     <br />
-                    New Balance: {parseFloat(client_balance) + (paymentData.amount === '' ? 0 : parseFloat(paymentData.amount)) - paymentData?.total_invoice_amount} {scurrency.symbol}</b></Button>
+                    New Balance: {parseFloat(parseFloat(client_balance) + (paymentData.amount === '' ? 0 : parseFloat(paymentData.amount)) - paymentData?.total_invoice_amount).toFixed(2)} {scurrency.symbol}</b></Button>
                 </div>
               </div>
 

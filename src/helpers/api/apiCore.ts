@@ -45,6 +45,7 @@ axios.interceptors.response.use(
                             window.location.href = '/';
 						})
 						.catch((err) => {
+                            window.location.href = '/auth/login/';
 							console.log(err);
 						});
 				} else {
