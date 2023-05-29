@@ -166,36 +166,36 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         url: '/app/client',
         
     },
-    {
-        key: 'view_service',
-        label: 'Add Service',
-        isTitle: false,
-        icon: 'folder-plus',
-        url: '/app/service',
+    // {
+    //     key: 'view_service',
+    //     label: 'Add Service',
+    //     isTitle: false,
+    //     icon: 'folder-plus',
+    //     url: '/app/service',
         
-    },
-    {
-        key: 'payment',
-        label: 'Payment',
-        isTitle: false,
-        icon: 'dollar-sign',
-        children: [ 
-            {
-                key: 'view_paymentmodel',
-                label: 'Payments',
-                url: '/app/payment',
-                parentKey: 'payment',
-            },
-            {
-                key: 'add_paymentmodel',
-                label: 'Add Payment',
-                url: '/app/payment_form',
-                parentKey: 'payment',
-            },
-        ],
+    // },
+    // {
+    //     key: 'payment',
+    //     label: 'Payment',
+    //     isTitle: false,
+    //     icon: 'dollar-sign',
+    //     children: [ 
+    //         {
+    //             key: 'view_paymentmodel',
+    //             label: 'Payments',
+    //             url: '/app/payment',
+    //             parentKey: 'payment',
+    //         },
+    //         {
+    //             key: 'add_paymentmodel',
+    //             label: 'Add Payment',
+    //             url: '/app/payment_form',
+    //             parentKey: 'payment',
+    //         },
+    //     ],
         
         
-    },
+    // },
     {
         key: 'invoice',
         label: 'Invoice',
@@ -298,38 +298,38 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
         url: '/app/client',
         
     },
-    {
-        key: 'view_service',
-        label: 'Add Service',
-        isTitle: false,
-        icon: 'service',
-        url: '/app/service',
+    // {
+    //     key: 'view_service',
+    //     label: 'Add Service',
+    //     isTitle: false,
+    //     icon: 'service',
+    //     url: '/app/service',
         
-    },
-    {
-        key: 'payment',
-        label: 'Payment',
-        isTitle: false,
-        icon: 'payment',
-        children: [ 
-            {
-                key: 'view_paymentmodel',
-                label: 'Payments',
-                url: '/app/payment',
-                parentKey: 'payment',
-            },
-            {
-                key: 'add_paymentmodel',
-                label: 'Add Payment',
-                url: '/app/payment_form',
-                parentKey: 'payment',
-            },
+    // },
+    // {
+    //     key: 'payment',
+    //     label: 'Payment',
+    //     isTitle: false,
+    //     icon: 'payment',
+    //     children: [ 
+    //         {
+    //             key: 'view_paymentmodel',
+    //             label: 'Payments',
+    //             url: '/app/payment',
+    //             parentKey: 'payment',
+    //         },
+    //         {
+    //             key: 'add_paymentmodel',
+    //             label: 'Add Payment',
+    //             url: '/app/payment_form',
+    //             parentKey: 'payment',
+    //         },
             
             
-        ],
+    //     ],
         
         
-    },
+    // },
     {
         key: 'invoice',
         label: 'Invoice',

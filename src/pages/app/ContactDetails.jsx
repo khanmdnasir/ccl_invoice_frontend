@@ -13,11 +13,73 @@ import FeatherIcon from 'feather-icons-react';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, setContactSuccessAlert,  getContactService, updateContact, getClientBalance, getCountry, getAllKam } from '../../redux/actions';
-
+import { getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, setContactSuccessAlert,  getContactService, updateContact, getClientBalance, getCountry, getAllKam,getPayment, setPaymentSuccessAlert,getAllContact, getPaymentTypes, getDueInvoices,  addPayment, clearSubmitSuccessMessage, clearSubmitErrorMessage, resetPaymentReducerState, clearDueInvoices, getCompanySettingsByKey } from '../../redux/actions';
+// import moment from "moment";
 
 const api = new APICore()
 
+
+/* status column render */
+const StatusColumn = ({ row }) => {
+    return (
+        <React.Fragment>
+            <span style={{'width': '80px','fontSize': '12px'}}
+                className={classNames('badge', {
+                    'bg-soft-success text-success': row.original.status === 'success',
+                    'bg-soft-danger text-danger': row.original.status === 'canceled',
+                })}
+            >
+  
+                {(row.original.status).charAt(0).toUpperCase()+(row.original.status).slice(1)}
+            </span>
+        </React.Fragment>
+    );
+  };
+  
+  
+  // action column render
+  
+  const columns = [
+  
+  
+    {
+      Header: 'Name',
+      accessor: 'client_id.name',
+      sort: true,
+    },
+  
+    {
+        Header: 'Payment No',
+        accessor: 'payment_no',
+        sort: true,
+    },
+    {
+        Header: 'Payment Type',
+        accessor: 'payment_type.name',
+        sort: true,
+    },
+    {
+        Header: 'Date',
+        accessor: 'payment_date',
+        sort: true,
+    },
+    {
+        Header: 'Amount',
+        accessor: 'amount',
+        sort: true,
+    },
+    {
+        Header: 'Reference',
+        accessor: 'reference',
+        sort: true,
+    },
+    {
+        Header: 'Status',
+        accessor: 'status',
+        sort: true,
+        Cell: StatusColumn
+    },
+  ];
 
 const invoicesColumns = [
     {
@@ -117,6 +179,7 @@ const ContactDetails = withSwal(({ swal }) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const [contactId, setContactId] = useState();
+    // console.log("contactId",contactId)
     const [pageSize, setPageSize] = useState(10);
     const [invoiceSetting, setInvoiceSetting] = useState({
         "auto_approve": false,
@@ -131,6 +194,20 @@ const ContactDetails = withSwal(({ swal }) => {
             "days": []
         }
     });
+
+  
+  
+// console.log("paymentDatacontact",paymentData)
+
+    const payment = useSelector(state => state.Payment.payments);
+    console.log("payment ListContact",payment)
+    const previous = useSelector(state => state.Payment.previous);
+    const next = useSelector(state => state.Payment.next);
+    const current_page = useSelector(state => state.Payment.current_page);
+    const total_page = useSelector(state => state.Payment.total_page);
+    const active = useSelector(state => state.Payment.active);
+    const [paymentDate, setPaymentDate] = useState('');
+    console.log("paymentDateContact",paymentDate)
     const invoice_list = useSelector(state => state.Contact.invoice_list);
     const invoice_list_pagination_data = useSelector(state => state.Contact.invoice_list_pagination_data);
     const contact_details = useSelector(state => state.Contact.contact_details);
@@ -140,9 +217,9 @@ const ContactDetails = withSwal(({ swal }) => {
     const invoice_setting_success = useSelector(state => state.Contact.invoice_setting_success);
     const success = useSelector(state => state.Contact.success);
     const services = useSelector(state => state.Service.contact_services);
+    // console.log("services",services)
     const client_balance = useSelector(state => state.Payment.client_balance);
-
-
+   
     const user_role = useSelector((state) => state.Role.user_role);
     const all_kam = useSelector(state => state.Kam.all_kam);
     const country = useSelector(state => state.Location.country);
@@ -150,12 +227,17 @@ const ContactDetails = withSwal(({ swal }) => {
     const onCloseModal = () => setShowClientEditModal(false);
     const onOpenModal = () => setShowClientEditModal(true);
 
+    // console.log("ContactInvoiceData",invoicesData)
 
     const onSubmit = (formData) => {
         formData['id'] = contactId
         dispatch(updateContact(formData))
+      
         // onCloseModal()
     };
+
+    
+
 
     const onDelete = () => {
         swal.fire({
@@ -207,6 +289,7 @@ const ContactDetails = withSwal(({ swal }) => {
         } else {
             let client_id = localStorage.getItem('client_id');
             setContactId(parseInt(client_id));
+            
         }
         dispatch(getCountry());
         dispatch(getAllKam());
@@ -226,14 +309,18 @@ const ContactDetails = withSwal(({ swal }) => {
 
     const visitPage = (page) => {
         dispatch(getContactInvoice(contactId, pageSize, page));
+        dispatch(getPayment(contactId,pageSize, page));
+        // dispatch(getPayment(pageSize, page));
     };
 
     const previous_number = () => {
         dispatch(getContactInvoice(contactId, pageSize, invoice_list_pagination_data.previous));
+        dispatch(getPayment(contactId,pageSize, previous));
     };
 
     const next_number = () => {
         dispatch(getContactInvoice(contactId, pageSize, invoice_list_pagination_data.next));
+        dispatch(getPayment(contactId,pageSize, next));
     };
 
     // console.log("invoice_list_pagination_data", invoice_list_pagination_data)
@@ -248,9 +335,25 @@ const ContactDetails = withSwal(({ swal }) => {
             dispatch(getContactInvoiceSetting(contactId))
             dispatch(getContactService(contactId)); 
             dispatch(getClientBalance(contactId)); 
+            dispatch(getDueInvoices(contactId))
+            // dispatch(getDueInvoices(contactId))
         }
     }, [contactId])
 
+
+    useEffect (() => {
+        const paymentwithDate = payment.map((item) => {
+          // console.log(item)
+          let date = (item.payment_date.split("T"))[0];
+          item.payment_date=date;
+          return item;
+        });
+        setPaymentDate(paymentwithDate);
+      }, [payment])
+
+    useEffect(() => {
+        dispatch(getPayment(pageSize, 1));
+      }, [pageSize])
 
     useEffect(() => {
         if (invoice_setting !== undefined) {
@@ -353,7 +456,6 @@ const ContactDetails = withSwal(({ swal }) => {
     }
 
 
-
     return (
         <>
 
@@ -364,8 +466,11 @@ const ContactDetails = withSwal(({ swal }) => {
                 ]}
                 title={'Client Report'}
             />
+
+
+
             <Row>
-                <Col md={4} xl={4}>
+                <Col md={8} xl={8}>
                     {!loading && success && (
                         <Alert variant="success" className="my-2" onClose={() => dispatch(setContactSuccessAlert(''))} dismissible>
                             {success}
@@ -418,9 +523,6 @@ const ContactDetails = withSwal(({ swal }) => {
                                         <p>{contact_details?.contact_type}</p>
 
                                     </div>
-                                </div>
-
-                                <div className="row mb-4">
                                     <div className="col-sm">
                                         <h5 className='me-2'>Contact Person:</h5>
                                         <p>{contact_details?.contact_person}</p>
@@ -435,6 +537,21 @@ const ContactDetails = withSwal(({ swal }) => {
                                     </div>
                                 </div>
 
+                                {/* <div className="row mb-4">
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Contact Person:</h5>
+                                        <p>{contact_details?.contact_person}</p>
+                                    </div>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Phone:</h5>
+                                        <p>{contact_details?.phone}</p>
+                                    </div>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Email:</h5>
+                                        <p>{contact_details?.email}</p>
+                                    </div>
+                                </div> */}
+
                                 <div className="row mb-4">
                                     <div className="col-sm">
                                         <h5 className='me-2'>Country:</h5>
@@ -448,9 +565,6 @@ const ContactDetails = withSwal(({ swal }) => {
                                         <h5 className='me-2'>Billing Address:</h5>
                                         <p>{contact_details?.billing_address}</p>
                                     </div>
-                                </div>
-
-                                <div className="row mb-4">
                                     <div className="col-sm">
                                         <h5 className='me-2'>Kam:</h5>
                                         <p>{contact_details?.kam?.name}</p>
@@ -464,51 +578,27 @@ const ContactDetails = withSwal(({ swal }) => {
                                         <p>{client_balance}</p>
                                     </div>
                                 </div>
+
+                                {/* <div className="row mb-4">
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Kam:</h5>
+                                        <p>{contact_details?.kam?.name}</p>
+                                    </div>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Bin:</h5>
+                                        <p>{contact_details?.bin}</p>
+                                    </div>
+                                    <div className="col-sm">
+                                        <h5 className='me-2'>Balance</h5>
+                                        <p>{client_balance}</p>
+                                    </div>
+                                </div> */}
                             </div>
 
                         </Card.Body>
                     </Card>
                 </Col>
 
-                <Col md={8} xl={8}>
-                    <Card>
-                        <Card.Header>
-                            <div className='d-flex justify-content-between'>
-                                <p style={{ marginBottom: '0px !important' }}>Services List</p>
-
-                                <Link className="btn btn-primary" to={{ pathname: '/app/service_form', state: { 'services': services, 'contactId': contactId } }}>
-                                        <i className="mdi mdi-pencil me-1"></i> Edit
-                                    </Link>
-
-                               
-                            </div>
-                        </Card.Header>
-
-                        <Card.Body>
-                            {services.length > 0 ?
-                                <>
-                                    <Table
-                                        columns={servicesColumns}
-                                        data={services}
-                                        pageSize={pageSize}
-                                        isSortable={true}
-                                        pagination={false}
-                                        isSearchable={true}
-                                        tableClass="table-nowrap table-hover"
-                                        searchBoxClass=""
-                                    />
-                                    {/* <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={invoice_list_pagination_data.total_page} current_page={invoice_list_pagination_data.current_page} active={invoice_list_pagination_data.active} /> */}
-                                </>
-                                :
-                                'No data available!'}
-                        </Card.Body>
-                    </Card>
-
-                </Col>
-
-            </Row>
-
-            <Row>
                 <Col md={4} xl={4}>
                     <Card>
                         <Card.Header>
@@ -659,7 +749,11 @@ const ContactDetails = withSwal(({ swal }) => {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col md={8} xl={8}>
+
+            </Row>
+
+            <Row>
+                <Col md={12} xl={12}>
 
                     <Card>
                         <Card.Header>
@@ -681,6 +775,85 @@ const ContactDetails = withSwal(({ swal }) => {
                                         searchBoxClass=""
                                     />
                                     <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={invoice_list_pagination_data.total_page} current_page={invoice_list_pagination_data.current_page} active={invoice_list_pagination_data.active} />
+                                </>
+                                :
+                                'No data available!'}
+                        </Card.Body>
+                    </Card>
+
+                </Col>
+            </Row>
+             
+
+
+            <Row>
+                <Col md={12} xl={12}>
+                  <Card>
+                  <Card.Header>
+                            <div className='d-flex justify-content-between'>
+                                <p style={{ marginBottom: '0px !important' }}>Payment List</p>
+
+                                <Link className="btn btn-primary" to={{ pathname: '/app/payment_form', state: { 'contactId': contactId } }}>
+                                        <i className="mdi mdi-pencil me-1"></i> Edit
+                                    </Link>
+
+                               
+                            </div>
+                        </Card.Header>
+
+                        <Card.Body>
+
+                        {paymentDate.length > 0 ?
+                                        <>
+                                              <Table
+                                                columns={columns}
+                                                data={paymentDate}
+                                                pageSize={pageSize}
+                                                isSortable={true}
+                                                pagination={false}
+                                                isSearchable={true}
+                                                tableClass="table-nowrap table-hover"
+                                                searchBoxClass=""
+                                               />
+
+                                          </>
+                                        :
+                                        'No payments available!'}
+                        </Card.Body>
+                  </Card>
+                </Col>
+            </Row>
+         
+
+            <Row>
+            <Col md={12} xl={12}>
+                    <Card>
+                        <Card.Header>
+                            <div className='d-flex justify-content-between'>
+                                <p style={{ marginBottom: '0px !important' }}>Services List</p>
+
+                                <Link className="btn btn-primary" to={{ pathname: '/app/service_form', state: { 'services': services, 'contactId': contactId } }}>
+                                        <i className="mdi mdi-pencil me-1"></i> Edit
+                                    </Link>
+
+                               
+                            </div>
+                        </Card.Header>
+
+                        <Card.Body>
+                            {services.length > 0 ?
+                                <>
+                                    <Table
+                                        columns={servicesColumns}
+                                        data={services}
+                                        pageSize={pageSize}
+                                        isSortable={true}
+                                        pagination={false}
+                                        isSearchable={true}
+                                        tableClass="table-nowrap table-hover"
+                                        searchBoxClass=""
+                                    />
+                                    {/* <Pagination visitPage={visitPage} previous_number={previous_number} next_number={next_number} total_page={invoice_list_pagination_data.total_page} current_page={invoice_list_pagination_data.current_page} active={invoice_list_pagination_data.active} /> */}
                                 </>
                                 :
                                 'No data available!'}

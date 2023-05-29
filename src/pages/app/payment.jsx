@@ -83,6 +83,7 @@ const columns = [
 
 const Payment = () => {
   const dispatch = useDispatch();
+ 
   const payment = useSelector(state => state.Payment.payments);
   const previous = useSelector(state => state.Payment.previous);
   const next = useSelector(state => state.Payment.next);
@@ -94,7 +95,7 @@ const Payment = () => {
   const success = useSelector(state => state.Payment.success);
   const [pageSize, setPageSize] = useState(10);
   const [paymentDate, setPaymentDate] = useState('');
-
+  
 
   // const paymentwithDate = payment.map((curElem) =>{
   //   // let date = (curElem.payment_date.split("T"));
@@ -121,6 +122,9 @@ useEffect(() => {
 }, [pageSize])
 
 
+
+
+
 useEffect (() => {
   const paymentwithDate = payment.map((item) => {
     // console.log(item)
@@ -130,6 +134,8 @@ useEffect (() => {
   });
   setPaymentDate(paymentwithDate);
 }, [payment])
+
+console.log("payment Listpayment",payment)
 
 
   return (

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert, InputGroup } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
-import { useLocation } from 'react-router-dom';
+import { useLocation} from 'react-router-dom';
 // components
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
 import { getAllContact, getPaymentTypes, getDueInvoices, getClientBalance, addPayment, clearSubmitSuccessMessage, clearSubmitErrorMessage, resetPaymentReducerState, clearDueInvoices, getCompanySettingsByKey } from '../../redux/actions';
 import moment from "moment";
+
 const api = new APICore()
 
 
@@ -30,6 +31,7 @@ const PaymentForm = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [status, setStatus] = useState('draft');
+  const [contactId, setContactId] = useState('');
 
   const company_setting_by_key = useSelector(state => state.CompanySettings.company_setting_by_key);
 
@@ -40,10 +42,13 @@ const PaymentForm = () => {
     "total_invoice_amount": 0,
     "reference": "",
     "client_id": '',
-    "payment_type": ''
+    "payment_type": '',
+     
   })
 
   const [invoicesData, setInvoicesData] = useState({});
+  
+
 
   const onChange = (e) => {
     const newData = { ...paymentData }
@@ -52,7 +57,7 @@ const PaymentForm = () => {
   }
 
   const onChangeInvoice = (id, e) => {
-    const newInvoicesObj = { ...invoicesData }
+    const newInvoicesObj = { ...invoicesData}
     const changingObj = newInvoicesObj[id]
     const target = e.target.name
     let value = e.target.value
@@ -96,19 +101,54 @@ const PaymentForm = () => {
   }
 
 
-  // console.log("client_balance", client_balance)
+ 
 
   useEffect(() => {
-    // const state = location.state
-    dispatch(getAllContact());
-    dispatch(getPaymentTypes());
-    dispatch(getCompanySettingsByKey({
-      "key": "payment_invoice_map"
-    }));
-    return () => {
-      dispatch(resetPaymentReducerState())
-    }
+    const state = location.state;
+    console.log("State Testing ",state)
+    if(state) {
+      setContactId(state.contactId);
+      // const allItems = state.invoice.map((itemInv) => {
+      //   return {
+      //     id: itemInv.id,
+      //     contact_id: itemInv.contact_id.id,
+      //     total_amount: itemInv.total_amount,
+      //     invoice_no: itemInv.invoice_no,
+          
+      //   }
+      // })
+      // setOldInvoiceItems(allItems);
+      const newData = { ...paymentData }
+      newData['client_id'] = state.contactId
+      setContactId(state.contactId)
+      setPaymentData(newData)
+    } 
+
+      dispatch(getAllContact());
+      dispatch(getPaymentTypes());
+      dispatch(getCompanySettingsByKey({
+        "key": "payment_invoice_map"
+      }));
+      return () => {
+        dispatch(resetPaymentReducerState())
+      }
+   
+
   }, [])
+
+
+  useEffect(()=>{
+    console.log("your contact is has been changed.",contactId,"Setting: ",company_setting_by_key?.value_text)
+    if (contactId !== '' && contactId !== undefined && contactId !== null) {
+      dispatch(getClientBalance(contactId))
+      if (company_setting_by_key?.value_text === "1"){
+        dispatch(getDueInvoices(contactId))
+      }
+    }
+  },[contactId,company_setting_by_key])
+
+
+  // console.log("oldInvoiceItems",oldInvoiceItems)
 
   useEffect(() => {
     if (payment_success !== null) {
@@ -140,22 +180,27 @@ const PaymentForm = () => {
   }, [payment_success, payment_error])
 
   useEffect(() => {
+    loadDueInvoices(paymentData)
+  }, [paymentData?.client_id])
 
+  function loadDueInvoices(paymentData){
     setPaymentData({...paymentData,
       "total_invoice_amount": 0
     })
 
-    if (paymentData?.client_id !== '' && paymentData?.client_id !== undefined && paymentData?.client_id !== null) {
-      dispatch(getClientBalance(paymentData?.client_id))
-      if (company_setting_by_key?.value_text === "1"){
-        dispatch(getDueInvoices(paymentData?.client_id))
-      }
-    }
+    // if (paymentData?.client_id !== '' && paymentData?.client_id !== undefined && paymentData?.client_id !== null) {
+    //   dispatch(getClientBalance(paymentData?.client_id))
+    //   if (company_setting_by_key?.value_text === "1"){
+    //     dispatch(getDueInvoices(paymentData?.client_id))
+    //   }
+    // }
 
     return () => {
       dispatch(clearDueInvoices())
     }
-  }, [paymentData?.client_id])
+  }
+
+  // console.log("form",paymentData)
 
   useEffect(() => {
     if (due_invoices !== '' && due_invoices !== undefined && due_invoices !== null) {
@@ -174,6 +219,7 @@ const PaymentForm = () => {
         }
       });
       setInvoicesData(due_invoice_objects)
+      // setOldInvoiceItems(due_invoice_objects)
     }
   }, [due_invoices])
 
@@ -264,7 +310,7 @@ const PaymentForm = () => {
                   <Button style={{ textAlign: "left" }} variant="success" size="lg"><b>
                     Current Balance: {parseFloat(client_balance).toFixed(2)} {scurrency.symbol}
                     <br />
-                    New Balance: {parseFloat(parseFloat(client_balance) + (paymentData.amount === '' ? 0 : parseFloat(paymentData.amount)) - paymentData?.total_invoice_amount).toFixed(2)} {scurrency.symbol}</b></Button>
+                    Due: {parseFloat(parseFloat(client_balance) + (paymentData.amount === '' ? 0 : parseFloat(paymentData.amount)) - paymentData?.total_invoice_amount).toFixed(2)} {scurrency.symbol}</b></Button>
                 </div>
               </div>
 
@@ -273,8 +319,28 @@ const PaymentForm = () => {
                   <Row className='mb-3'>
                     <Form.Group as={Col}>
                       <Form.Label className='required'>Client</Form.Label>
+                         {contactId ? 
+                          <Form.Select
+                                            aria-label="Default select example"
+                                            required
+                                            onChange={(e) => onChange(e)}
+                                            disabled={contactId}
+                                            value={contactId}
+                                        >
+                                            {cloading ? <option value="" disabled>Loading...</option> :
+                                                <>
 
-                      <Form.Select
+                                                    <option value="" disabled>Select Client ...</option>
+                                                    {contacts.length > 0 && contacts?.map((item) => {
+                                                        return (
+                                                            <option key={'scontact' + item.id} value={item.id} >{item.name}</option>
+                                                        )
+                                                    })}
+
+                                                </>
+                                            }
+                                        </Form.Select> :
+                                        <Form.Select
                         aria-label="Default select example"
                         required
                         name="client_id"
@@ -294,6 +360,8 @@ const PaymentForm = () => {
                           </>
                         }
                       </Form.Select>
+                         }
+                     
 
                     </Form.Group>
 
@@ -364,6 +432,7 @@ const PaymentForm = () => {
                       </thead>
                     </>
                     : null}
+                    
                   <thead>
 
                     {Object.keys(invoicesData).length > 0 && Object.entries(invoicesData).map(inv => {
@@ -415,7 +484,7 @@ const PaymentForm = () => {
                     })}
                     {Object.keys(invoicesData).length < 1 ? <b> No due invoice found </b> : null}
                   </thead>
-
+              
                 </Table>
                 <Form.Group as={Col}>
                   <Form.Label >Note</Form.Label>
