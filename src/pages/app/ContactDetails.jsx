@@ -49,24 +49,33 @@ const invoicesColumns = [
         Header: 'Sub Total',
         accessor: 'sub_total',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.sub_total!==null?(row?.row?.original?.sub_total).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     {
         Header: 'Discount',
         accessor: 'discount',
         sort: true,
         Cell: (row) => {
-            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toFixed(2):0}</div>;
+            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
         }
     },
     {
         Header: 'Total Tax',
         accessor: 'total_tax',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.total_tax!==null?(row?.row?.original?.total_tax).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     {
         Header: 'Total Amount',
         accessor: 'total_amount',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     {
         Header: 'Status',
@@ -103,11 +112,17 @@ const servicesColumns = [
         Header: 'Tax Rate',
         accessor: 'tax_rate',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.tax_rate!==null?(row?.row?.original?.tax_rate).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     {
         Header: 'Unit Price',
         accessor: 'unit_price',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.unit_price!==null?(row?.row?.original?.unit_price).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
 
 ];
@@ -461,7 +476,7 @@ const ContactDetails = withSwal(({ swal }) => {
                                     </div>
                                     <div className="col-sm">
                                         <h5 className='me-2'>Balance</h5>
-                                        <p>{client_balance}</p>
+                                        <p>{client_balance.toLocaleString()}</p>
                                     </div>
                                 </div>
                             </div>

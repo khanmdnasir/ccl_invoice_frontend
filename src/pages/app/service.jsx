@@ -143,6 +143,9 @@ const columns = [
         Header: 'Unit Price',
         accessor: 'unit_price',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.unit_price!==null?(row?.row?.original?.unit_price).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     
 ];

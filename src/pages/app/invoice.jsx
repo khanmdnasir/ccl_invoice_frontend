@@ -190,24 +190,33 @@ const columns = [
         Header: 'Sub Total',
         accessor: 'sub_total',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.sub_total!==null?(row?.row?.original?.sub_total).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     {
         Header: 'Discount',
         accessor: 'discount',
         sort: true,
         Cell: (row) => {
-            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toFixed(2):0}</div>;
+            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
         }
     },
     {
         Header: 'Total Tax',
         accessor: 'total_tax',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.total_tax!==null?(row?.row?.original?.total_tax).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     {
         Header: 'Total Amount',
         accessor: 'total_amount',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     {
         Header: 'Status',
@@ -233,7 +242,7 @@ const Invoice = () => {
     const loading = useSelector(state => state.Invoice.loading);
     const error = useSelector(state => state.Invoice.error);
     const [pageSize, setPageSize] = useState(10);
-    const [activePage, setActivePage] = useState('all');
+    const [activePage, setActivePage] = useState('approve');
     /*
      *   modal handeling
      */
@@ -290,7 +299,7 @@ const Invoice = () => {
 
     useEffect(() => {
         setFilteredInvoices(invoices);
-        setActivePage('all');
+        setActivePage('approve');
     }, [invoices])
     return (
         <>
@@ -310,11 +319,6 @@ const Invoice = () => {
                     <Nav.Item as="li" key='draft'>
                         <Nav.Link active={activePage === "draft"} className="cursor-pointer" href="#" eventKey='draft' onClick={() => onClickEvent('draft')}>
                             Draft
-                        </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item as="li" key='approval'>
-                        <Nav.Link active={activePage === "approval"} className="cursor-pointer" href="#" eventKey='approval' onClick={() => onClickEvent('approval')}>
-                            Awaiting Approval
                         </Nav.Link>
                     </Nav.Item>
                     <Nav.Item as="li" key='approve'>

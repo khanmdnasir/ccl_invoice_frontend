@@ -142,8 +142,8 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                                             <td style={{fontSize: '12px',padding: '5px'}}>{item.date}</td>
                                                             <td style={{fontSize: '12px',padding: '5px'}}>{item.invoice_no ? item.invoice_no : item.payment_no}</td>
                                                             <td style={{fontSize: '12px',padding: '5px'}}>{item.payment_type}</td>
-                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item.total_amount}</td>
-                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item.amount}</td>
+                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item.total_amount.toLocaleString()}</td>
+                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item.amount.toLocaleString()}</td>
                                                             
                                                             
                                                         </tr>
@@ -161,19 +161,19 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                         <tbody>
                                             <tr>
                                                 <td style={tdStyleBold}> Total Invoice Amount:</td>
-                                                <td style={tdStyle}> {props.data?.summary?.total_invoice_amount}</td>
+                                                <td style={tdStyle}> {props.data?.summary?.total_invoice_amount.toLocaleString()}</td>
                                             </tr>
                                             <tr>
                                                 <td style={tdStyleBold}> Total Paid Amount:</td>
-                                                <td style={tdStyle}> {props.data?.summary?.total_paid_amount}</td>
+                                                <td style={tdStyle}> {props.data?.summary?.total_paid_amount.toLocaleString()}</td>
                                             </tr>
                                             <tr>
                                                 <td style={tdStyleBold}> Total Due:</td>
-                                                <td style={tdStyle}> {props.data?.summary?.total_due}</td>
+                                                <td style={tdStyle}> {props.data?.summary?.total_due.toLocaleString()}</td>
                                             </tr>
                                             <tr>
                                                 <td style={tdStyleBold}> Total Balance:</td>
-                                                <td style={tdStyle}> {props.data?.summary?.total_balance}</td>
+                                                <td style={tdStyle}> {props.data?.summary?.total_balance.toLocaleString()}</td>
                                             </tr>
                                         </tbody>
                                     </Table>

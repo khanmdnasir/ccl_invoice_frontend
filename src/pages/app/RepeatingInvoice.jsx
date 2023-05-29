@@ -151,24 +151,33 @@ const columns = [
         Header: 'Sub Total',
         accessor: 'sub_total',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.sub_total!==null?(row?.row?.original?.sub_total).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     {
         Header: 'Discount',
         accessor: 'discount',
         sort: true,
         Cell: (row) => {
-            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toFixed(2):0}</div>;
+            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
         }
     },
     {
         Header: 'Total Tax',
         accessor: 'total_tax',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.total_tax!==null?(row?.row?.original?.total_tax).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     {
         Header: 'Total Amount',
         accessor: 'total_amount',
         sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
     },
     {
         Header: 'Status',

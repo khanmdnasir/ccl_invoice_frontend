@@ -255,7 +255,7 @@ const Table = (props: TableProps) => {
                         {(rows || []).map((row: any, i: number) => {
                             dataTable.prepareRow(row);
                             return (
-                                <tr {...row.getRowProps()} >
+                                <tr {...row.getRowProps()} className={isDetails && 'table-cursor'}>
                                     {(row.cells || []).map((cell: any) => {
                                         
                                         return (
@@ -263,6 +263,7 @@ const Table = (props: TableProps) => {
                                                 {...cell.getCellProps([
                                                     {
                                                         className: cell.column.className,
+                                                        
                                                     },
                                                 ])}
                                                 onClick={()=> { cell.column.Header !== 'Status' && cell.column.Header !== 'Action' && handleClick(row.original.id)}}

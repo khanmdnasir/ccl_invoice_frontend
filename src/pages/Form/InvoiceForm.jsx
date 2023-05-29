@@ -6,10 +6,13 @@ import { useLocation } from 'react-router-dom';
 import { format } from 'date-fns'
 // components
 import PageTitle from '../../components/PageTitle';
+import ContactForm from '../Form/ContactForm';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact, getChartAccount, getContactService, getInvoiceDetails } from '../../redux/actions';
+import { getAllContact,addContact, getChartAccount, getContactService,getCountry,getAllKam,setContactErrorAlert,setContactSuccessAlert, getInvoiceDetails, getContact } from '../../redux/actions';
 import moment from "moment";
+import CreatableSelect from "react-select/creatable";
+
 
 const api = new APICore()
 
@@ -20,10 +23,14 @@ const InvoiceForm = () => {
     const location = useLocation();
     const history = useHistory();
     const scurrency = useSelector(state => state.Currency.selectedCurrency)
-
+    
     const dispatch = useDispatch();
+    const country = useSelector(state => state.Location.country);
+    const all_kam = useSelector(state => state.Kam.all_kam);
     const contacts = useSelector((state) => state.Contact.all_contact);
     const accounts = useSelector((state) => state.ChartAccount.accounts);
+    const csuccess = useSelector((state) => state.Contact.success);
+    const contact_details = useSelector((state) => state.Contact.contact_details);
     const cloading = useSelector((state) => state.Contact.loading);
     const chloading = useSelector((state) => state.ChartAccount.loading);
     const [rloading, setRloading] = useState(false);
@@ -34,6 +41,7 @@ const InvoiceForm = () => {
     const [oldItems, setOldItems] = useState([]);
     const invoice_details = useSelector((state) => state.Invoice.invoice_details);
     const contact_services = useSelector((state) => state.Service.contact_services);
+    const [contact, setContact] = useState();
     const [contactId, setContactId] = useState('');
     const [invoiceId, setInvoiceId] = useState(null);
     const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
@@ -49,6 +57,29 @@ const InvoiceForm = () => {
     const [total_amount, setTotalAmount] = useState('');
     const [deletedItems, setDeletedItems] = useState([]);
     const [taxGroup, setTaxGroup] = useState({});
+    const [show, setShow] = useState(false);
+    const onCloseModal = () => { setContact();setShow(false)};
+    const onOpenModal = () => { dispatch(setContactErrorAlert('')); setShow(true) };
+
+
+    const onContactSubmit = (formData) => {
+        // console.log("formData", formData)
+        dispatch(addContact(formData));
+        dispatch(getAllContact())
+        
+    };
+
+    useEffect(() => {
+        if (csuccess !== null && csuccess !== '') {
+            onCloseModal();
+            setContact({'label':contact_details['name'],'value':contact_details['id']})
+            
+        }
+
+        setTimeout(() => {
+            dispatch(setContactSuccessAlert(''));
+        }, 2000)
+    }, [csuccess])
 
     const [items, setItems] = useState({
         item: '',
@@ -65,9 +96,17 @@ const InvoiceForm = () => {
     const [newItems, setNewItems] = useState([]);
 
     const onContactChange = (e) => {
+        console.log('contact',e?.value)
         setNewItems([])
-        setContactId(e.target.value);
-        dispatch(getContactService(e.target.value));
+        setContact(e);
+        setContactId(e?.value);
+        dispatch(getContactService(e?.value));
+    }
+
+   
+    const handleCreateContact = (inputValue) => {
+        setContact({'label':inputValue,'value':''})
+        onOpenModal()
     }
 
     useEffect(()=>{
@@ -166,11 +205,11 @@ const InvoiceForm = () => {
 
     useEffect(() => {
         const groupOfTax = {}
-        let total_discount = 0
+        let total_discount = 0.0
         let total_subTotal = 0.00
-        let total_taxAmount = 0
+        let total_taxAmount = 0.0
         newItems.forEach((item) => {
-            total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
+            total_discount += parseFloat((parseFloat(item.unit_price*item.qty) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
             var item_tax_amount = 0;
             if (tax_type === 'inclusive') {
@@ -194,7 +233,7 @@ const InvoiceForm = () => {
 
 
         oldItems.forEach((item) => {
-            total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
+            total_discount += parseFloat((parseFloat(item.unit_price*item.qty) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
 
             var item_tax_amount = 0;
@@ -216,6 +255,7 @@ const InvoiceForm = () => {
                 groupOfTax[(item.tax_rate).toString()] = parseFloat(parseFloat(groupOfTax[(item.tax_rate).toString()]).toFixed(2))
             }
         })
+        
         setDiscount(parseFloat(parseFloat(total_discount).toFixed(2)));
         setSubTotal(parseFloat(parseFloat(total_subTotal).toFixed(2)));
         setTotalTax(parseFloat(parseFloat(total_taxAmount).toFixed(2)));
@@ -226,8 +266,11 @@ const InvoiceForm = () => {
 
     useEffect(() => {
         const state = location.state
+        
         dispatch(getAllContact());
         dispatch(getChartAccount());
+        dispatch(getCountry());
+        dispatch(getAllKam());
         if (state) {
             dispatch(getInvoiceDetails(state));
             setInvoiceId(state);
@@ -374,26 +417,23 @@ const InvoiceForm = () => {
                                         <Form.Group as={Col}>
                                             <Form.Label className='required'>Client</Form.Label>
 
-                                            <Form.Select
-                                                aria-label="Default select example"
-                                                disabled={invoiceId ? true : false}
+                                            <CreatableSelect
+                                                isClearable
+                                                isDisabled={cloading || invoiceId ? true : false}
+                                                isLoading={cloading}
+                                                onCreateOption={handleCreateContact}
                                                 required
                                                 onChange={(e) => onContactChange(e)}
-                                                value={contactId}
-                                            >
-                                                {cloading ? <option value="" disabled>Loading...</option> :
-                                                    <>
-
-                                                        <option value="" disabled>Select Client ...</option>
-                                                        {contacts.length > 0 && contacts?.map((item) => {
-                                                            return (
-                                                                <option key={'scontact' + item.id} value={item.id} >{item.name}</option>
-                                                            )
-                                                        })}
-
-                                                    </>
-                                                }
-                                            </Form.Select>
+                                                value={contact}
+                                                options={contacts.map((item) => {
+                                                return {
+                                                    label: item.name,
+                                                    value: item.id,
+                                                };
+                                                })}
+                                                isSearchable={true}
+                                                className="block w-full min-w-0 flex-1 sm:text-sm"
+                                            />
 
                                         </Form.Group>
 
@@ -544,8 +584,13 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                            
+                                                                step="any"
+                                                                min="0"
+                                                                max="100"
                                                                 name='discount'
+                                                                onKeyDown={(event) => {
+                                                                    event.preventDefault();
+                                                                  }}
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.discount}
                                                             >
@@ -584,8 +629,13 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                
+                                                                step="any"
+                                                                min="0"
+                                                                max="100"
                                                                 name='tax_rate'
+                                                                onKeyDown={(event) => {
+                                                                    event.preventDefault();
+                                                                  }}
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.tax_rate}
                                                             >
@@ -676,8 +726,13 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                
+                                                                step="any"
+                                                                min="0"
+                                                                max="100"
                                                                 name='discount'
+                                                                onKeyDown={(event) => {
+                                                                    event.preventDefault();
+                                                                  }}
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.discount}
                                                             >
@@ -716,8 +771,13 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                
+                                                                step="any"
+                                                                min="0"
+                                                                max="100"
                                                                 name='tax_rate'
+                                                                onKeyDown={(event) => {
+                                                                    event.preventDefault();
+                                                                  }}
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.tax_rate}
                                                             >
@@ -923,7 +983,11 @@ const InvoiceForm = () => {
                                     <div >
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Subtotal</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {sub_total}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {sub_total.toLocaleString()}</p>
+                                        </div>
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Discount</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {discount.toLocaleString()}</p>
                                         </div>
                                         {/* {newItems?.map((item)=>{
                                                 if(item.tax_rate > 0)
@@ -957,7 +1021,7 @@ const InvoiceForm = () => {
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {total_amount}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {total_amount.toLocaleString()}</p>
                                         </div>
                                         <hr></hr><hr></hr>
                                     </div>
@@ -990,6 +1054,8 @@ const InvoiceForm = () => {
                     </Card>
                 </Col>
             </Row>
+            {contact &&
+            <ContactForm show={show} onHide={onCloseModal} onSubmit={onContactSubmit} contact_name={contact?.label} countries={country} kamList={all_kam} />}
         </>
     );
 };

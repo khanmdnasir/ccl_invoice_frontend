@@ -552,7 +552,13 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
+                                                                step="any"
+                                                                min="0"
+                                                                max="100"
                                                                 
+                                                                onKeyDown={(event) => {
+                                                                    event.preventDefault();
+                                                                  }}
                                                                 name='discount'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.discount}
@@ -592,7 +598,13 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
+                                                                step="any"
+                                                                min="0"
+                                                                max="100"
                                                                 
+                                                                onKeyDown={(event) => {
+                                                                    event.preventDefault();
+                                                                  }}
                                                                 name='tax_rate'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.tax_rate}
@@ -672,6 +684,7 @@ const RepeatingInvoiceForm = () => {
                                                             <Form.Control
                                                                 type='number'
                                                                 required
+                                                                
                                                                 name='unit_price'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.unit_price}
@@ -684,7 +697,13 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
+                                                                step="any"
+                                                                min="0"
+                                                                max="100"
                                                                 
+                                                                onKeyDown={(event) => {
+                                                                    event.preventDefault();
+                                                                  }}
                                                                 name='discount'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.discount}
@@ -724,7 +743,13 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
+                                                                step="any"
+                                                                min="0"
+                                                                max="100"
                                                                 
+                                                                onKeyDown={(event) => {
+                                                                    event.preventDefault();
+                                                                  }}
                                                                 name='tax_rate'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
                                                                 value={item?.tax_rate}
@@ -738,7 +763,7 @@ const RepeatingInvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 readOnly={true}
-                                                                value={item?.total_amount}
+                                                                value={item?.total_amount.toLocaleString()}
                                                             >
 
                                                             </Form.Control>
@@ -931,7 +956,11 @@ const RepeatingInvoiceForm = () => {
                                     <div >
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Subtotal</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {sub_total}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {sub_total.toLocaleString()}</p>
+                                        </div>
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Discount</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {discount.toLocaleString()}</p>
                                         </div>
                                         {/* {newItems?.map((item)=>{
                                                 if(item.tax_rate > 0)
@@ -965,7 +994,7 @@ const RepeatingInvoiceForm = () => {
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {total_amount}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {total_amount.toLocaleString()}</p>
                                         </div>
                                         <hr></hr><hr></hr>
                                     </div>

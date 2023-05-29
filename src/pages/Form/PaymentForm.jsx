@@ -262,9 +262,9 @@ const PaymentForm = () => {
                 </Form.Group>
                 <div className='float-right'>
                   <Button style={{ textAlign: "left" }} variant="success" size="lg"><b>
-                    Current Balance: {parseFloat(client_balance).toFixed(2)} {scurrency.symbol}
+                    Current Balance: {parseFloat(client_balance).toLocaleString(undefined, {maximumFractionDigits:2})} {scurrency.symbol}
                     <br />
-                    New Balance: {parseFloat(parseFloat(client_balance) + (paymentData.amount === '' ? 0 : parseFloat(paymentData.amount)) - paymentData?.total_invoice_amount).toFixed(2)} {scurrency.symbol}</b></Button>
+                    New Balance: {parseFloat(parseFloat(client_balance) + (paymentData.amount === '' ? 0 : parseFloat(paymentData.amount)) - paymentData?.total_invoice_amount).toLocaleString(undefined, {maximumFractionDigits:2})} {scurrency.symbol}</b></Button>
                 </div>
               </div>
 
@@ -376,7 +376,7 @@ const PaymentForm = () => {
                               id={inv.id}
                               checked={inv[1].invoice_selected}
                               name="invoice_selected"
-                              label={`Invoice No: ${inv[1].invoice_no}, Total Amount: ${scurrency.symbol}${inv[1].total_amount}`}
+                              label={`Invoice No: ${inv[1].invoice_no}, Total Amount: ${scurrency.symbol}${inv[1].total_amount.toLocaleString()}`}
                               onChange={(e) => onChangeInvoice(inv[0], e)}
                             />
                           </td>

@@ -453,7 +453,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    value={item.unit_price}
+                                                                    value={item?.unit_price.toLocaleString()}
                                                                 >
 
                                                                 </Form.Control>
@@ -463,7 +463,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    value={item.discount}
+                                                                    value={item?.discount}
                                                                 >
 
                                                                 </Form.Control>
@@ -485,7 +485,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    value={item.tax_rate}
+                                                                    value={item?.tax_rate}
                                                                 >
 
                                                                 </Form.Control>
@@ -496,7 +496,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                                                             <Form.Group>
                                                                 <Form.Control
                                                                     readOnly={true}
-                                                                    value={item.total_amount}
+                                                                    value={item?.total_amount.toLocaleString()}
                                                                 >
 
                                                                 </Form.Control>
@@ -514,19 +514,19 @@ const InvoiceDetails = withSwal(({swal}) => {
                                     <div></div>
                                     <div >
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Subtotal (discount {scurrency?.symbol} {invoiceDetails?.discount} )</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.sub_total}</p>
+                                            <p style={{ fontSize: '20px' }}>Subtotal (discount {scurrency?.symbol} {invoiceDetails?.discount?.toLocaleString()} )</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.sub_total?.toLocaleString()}</p>
                                         </div>
 
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total Tax</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.total_tax}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.total_tax?.toLocaleString()}</p>
                                         </div>
 
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.total_amount}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.total_amount?.toLocaleString()}</p>
                                         </div>
                                         <hr></hr><hr></hr>
                                     </div>

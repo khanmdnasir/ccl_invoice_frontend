@@ -18,6 +18,8 @@ const Image = styled.img`
 `
 
 const StatisticsWidget = (props: StatisticsWidgetProps) => {
+    const formattedNumber = props['stats']?.toLocaleString()
+    
     return (
         <>
             <Card className="widget-rounded-circle" style={{backgroundColor: props['color'], borderRadius:"0.8rem"}}>
@@ -31,7 +33,7 @@ const StatisticsWidget = (props: StatisticsWidgetProps) => {
                                 
                                 <h3 className={classNames(props['variant'],'mt-1')}>
                                     <span>
-                                        <CountUp duration={1} end={props['stats']} {...props['counterOptions']} />
+                                        <CountUp duration={1} end={props['stats']} {...props['counterOptions']} formattingFn={() => formattedNumber}/>
                                     </span>
                                 </h3>
                                 

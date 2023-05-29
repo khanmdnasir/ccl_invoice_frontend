@@ -5,7 +5,7 @@ import { Row, Col } from 'react-bootstrap';
 import StatisticsWidget from '../../components/StatisticsWidget';
 
 const Statistics = ({summaryList, scurrency}) => {
-
+    
     return (
         <>
             <Row >
