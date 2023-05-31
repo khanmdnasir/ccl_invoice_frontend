@@ -108,98 +108,111 @@ const columns = [
 ];
 
 const invoicesColumns = [
-  {
-    Header: "Invoice No",
-    accessor: "invoice_no",
-    sort: true,
-  },
-  {
-    Header: "Client",
-    accessor: "contact_id.name",
-    sort: true,
-  },
-  {
-    Header: "Date",
-    accessor: "date",
-    sort: true,
-  },
-  {
-    Header: "Due Date",
-    accessor: "due_date",
-    sort: true,
-  },
-  {
-    Header: "Tax Type",
-    accessor: "tax_type",
-    sort: true,
-  },
-  {
-    Header: "Sub Total",
-    accessor: "sub_total",
-    sort: true,
-  },
-  {
-    Header: "Discount",
-    accessor: "discount",
-    sort: true,
-    Cell: (row) => {
-      return (
-        <div>
-          {row?.row?.original?.discount !== null
-            ? (row?.row?.original?.discount).toFixed(2)
-            : 0}
-        </div>
-      );
+
+    {
+        Header: 'Invoice No',
+        accessor: 'invoice_no',
+        sort: true,
     },
-  },
-  {
-    Header: "Total Tax",
-    accessor: "total_tax",
-    sort: true,
-  },
-  {
-    Header: "Total Amount",
-    accessor: "total_amount",
-    sort: true,
-  },
-  {
-    Header: "Status",
-    accessor: "status",
-    sort: true,
-  },
+    {
+        Header: 'Client',
+        accessor: 'contact_id.name',
+        sort: true,
+    },
+    {
+        Header: 'Date',
+        accessor: 'date',
+        sort: true,
+    },
+    {
+        Header: 'Due Date',
+        accessor: 'due_date',
+        sort: true,
+    },
+    {
+        Header: 'Tax Type',
+        accessor: 'tax_type',
+        sort: true,
+    },
+    {
+        Header: 'Sub Total',
+        accessor: 'sub_total',
+        sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.sub_total!==null?(row?.row?.original?.sub_total).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
+    },
+    {
+        Header: 'Discount',
+        accessor: 'discount',
+        sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
+    },
+    {
+        Header: 'Total Tax',
+        accessor: 'total_tax',
+        sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.total_tax!==null?(row?.row?.original?.total_tax).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
+    },
+    {
+        Header: 'Total Amount',
+        accessor: 'total_amount',
+        sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
+    },
+    {
+        Header: 'Status',
+        accessor: 'status',
+        sort: true,
+    },
+    
+
 ];
 
 const servicesColumns = [
-  {
-    Header: "Client",
-    accessor: "contact_id.name",
-    sort: true,
-  },
-  {
-    Header: "Service Type",
-    accessor: "service_type",
-    sort: true,
-  },
-  {
-    Header: "Client Mode",
-    accessor: "contact_mode",
-    sort: true,
-  },
-  {
-    Header: "Payment Terms",
-    accessor: "payment_terms",
-    sort: true,
-  },
-  {
-    Header: "Tax Rate",
-    accessor: "tax_rate",
-    sort: true,
-  },
-  {
-    Header: "Unit Price",
-    accessor: "unit_price",
-    sort: true,
-  },
+
+    {
+        Header: 'Client',
+        accessor: 'contact_id.name',
+        sort: true,
+    },
+    {
+        Header: 'Service Type',
+        accessor: 'service_type',
+        sort: true,
+    },
+    {
+        Header: 'Client Mode',
+        accessor: 'contact_mode',
+        sort: true,
+    },
+    {
+        Header: 'Payment Terms',
+        accessor: 'payment_terms',
+        sort: true,
+    },
+    {
+        Header: 'Tax Rate',
+        accessor: 'tax_rate',
+        sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.tax_rate!==null?(row?.row?.original?.tax_rate).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
+    },
+    {
+        Header: 'Unit Price',
+        accessor: 'unit_price',
+        sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.unit_price!==null?(row?.row?.original?.unit_price).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
+    },
 ];
 
 const ContactDetails = withSwal(({ swal }) => {
@@ -622,7 +635,7 @@ const ContactDetails = withSwal(({ swal }) => {
                                     </div>
                                     <div className="col-sm">
                                         <h5 className='me-2'>Balance</h5>
-                                        <p>{client_balance}</p>
+                                        <p>{client_balance.toLocaleString()}</p>
                                     </div>
                                 </div> */}
               </div>

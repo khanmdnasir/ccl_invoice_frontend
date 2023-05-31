@@ -282,15 +282,20 @@ const ServiceForm = () => {
                                                     </td>
                                                     <td>
                                                         <Form.Group>
-                                                            <Form.Control
-                                                                type='text'
+                                                            <Form.Select
+                                                                aria-label="Default select example"
                                                                 required
                                                                 name='payment_terms'
                                                                 onChange={(e) => onOldItemsChange(e, index)}
                                                                 value={item?.payment_terms}
                                                             >
 
-                                                            </Form.Control>
+                                                                <option value="" disabled>Select Payment Terms ...</option>
+                                                                <option value="weekly" >Weekly</option>
+                                                                <option value="monthly" >Monthly</option>
+                                                                <option value="yearly" >Yearly</option>
+
+                                                            </Form.Select>
                                                         </Form.Group>
                                                     </td>
                                                     <td>
@@ -364,17 +369,22 @@ const ServiceForm = () => {
                                                         </Form.Group>
                                                     </td>
                                                     <td>
+                                                        
                                                         <Form.Group>
-                                                            <Form.Control
-                                                                type='text'
+                                                            <Form.Select
+                                                                aria-label="Default select example"
                                                                 required
                                                                 name='payment_terms'
                                                                 onChange={(e) => onNewItemsChange(e, index)}
-                                                                value={item.payment_terms}
-
+                                                                value={item?.payment_terms}
                                                             >
 
-                                                            </Form.Control>
+                                                                <option value="" disabled>Select Payment Terms ...</option>
+                                                                <option value="weekly" >Weekly</option>
+                                                                <option value="monthly" >Monthly</option>
+                                                                <option value="yearly" >Yearly</option>
+
+                                                            </Form.Select>
                                                         </Form.Group>
                                                     </td>
                                                     <td>

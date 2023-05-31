@@ -57,9 +57,13 @@ const columns = [
     sort: true,
   },
   {
-    Header: "Amount",
-    accessor: "amount",
-    sort: true,
+      Header: 'Amount',
+      accessor: 'amount',
+      sort: true,
+      Cell: (row) => {
+        return <div>{row?.row?.original?.amount!==null?(row?.row?.original?.amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+    }
+
   },
   {
     Header: "Reference",

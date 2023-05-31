@@ -187,12 +187,12 @@ const PublicInvoice = () => {
                               <td>{item.qty}</td>
                               <td>
                                 
-                              <span style={{ fontSize: "18px" }}>৳</span> {item.unit_price} 
+                              <span style={{ fontSize: "18px" }}>৳</span> {item.unit_price.toLocaleString()} 
                               </td>
-                              <td>{item.discount}</td>
+                              <td>{item.discount.toLocaleString()}</td>
                               <td>{item.account_id.account_name}</td>
-                              <td>{item.tax_rate}</td>
-                              <td className="text-end"><span style={{ fontSize: "18px" }}>৳</span> {item.total_amount}</td>
+                              <td>{item.tax_rate.toLocaleString()}</td>
+                              <td className="text-end"><span style={{ fontSize: "18px" }}>৳</span> {item.total_amount.toLocaleString()}</td>
                             </tr>
                           );
                         })}
@@ -209,17 +209,17 @@ const PublicInvoice = () => {
                     <p>
                       <b>Sub-total:</b>{" "}
                       <span className="textalign">
-                      <span style={{ fontSize: "18px" }}>৳</span> {invoice_details.sub_total}
+                      <span style={{ fontSize: "18px" }}>৳</span> {invoice_details.sub_total.toLocaleString()}
                       </span>
                     </p>
                     <p>
                       <b>Total Tax:</b>{" "}
                       <span className="textalign">
-                        &nbsp; {invoice_details.total_tax}
+                        &nbsp; {invoice_details.total_tax.toLocaleString()}
                       </span>
                     </p>
                     <hr className="line" />
-                    <h4>Total Amount: <span style={{ fontSize: "18px" }}>৳</span> {invoice_details.total_amount}</h4>
+                    <h4>Total Amount: <span style={{ fontSize: "18px" }}>৳</span> {invoice_details.total_amount.toLocaleString()}</h4>
                   </div>
                   <div className="clearfix"></div>
                 </Col>

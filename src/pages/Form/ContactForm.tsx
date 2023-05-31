@@ -16,7 +16,7 @@ const api = new APICore();
 interface FormData {
     id: number;
     name: string;
-    contact_type: string;
+    contact_type: any;
     contact_person: string;
     phone: string;
     email: string;
@@ -32,15 +32,17 @@ interface AddContactProps {
     show: boolean;
     onHide: () => void;
     contact: FormData;
+    contact_name: string;
     countries: any;
     kamList: any;
     onSubmit: (value: any) => void;
 }
 
-const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddContactProps) => {
+const ContactForm = ({ show, onHide, onSubmit,contact,contact_name,countries, kamList }: AddContactProps) => {
     /*
     form validation schema
     */
+
     const dispatch = useDispatch<AppDispatch>();
     const error = useSelector((state:RootState) => state.Contact.error);
     const loading = useSelector((state:RootState) => state.Contact.loading);
@@ -48,16 +50,14 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
     const schemaResolver = yupResolver(
         yup.object().shape({
             name: yup.string().required('Please enter name'),
-            contact_type: yup.string().required('Please select client type').typeError('Please select client type'),
-            contact_person: yup.string().required('Please enter client person'),
+            email: yup.string().required('Please enter email'),
             bin: yup.string().required('Please enter bin'),
-            phone: yup.string().required('Please enter phone number').typeError('Please enter number'),
                               
         })
     );
 
     const methods = useForm<Partial<FormData>>({
-        defaultValues: {name:contact?.name,contact_person:contact?.contact_person,bin:contact?.bin,kam:contact?.kam?.id, phone:contact?.phone,email:contact?.email,city:contact?.city?.id,country:contact?.country?.id,billing_address:contact?.billing_address},
+        defaultValues: {name:contact? contact.name : contact_name ? contact_name : '',contact_person:contact?.contact_person,bin:contact?.bin,kam:contact?.kam?.id, phone:contact?.phone,email:contact?.email,city:contact?.city?.id,country:contact?.country?.id,billing_address:contact?.billing_address},
         resolver: schemaResolver,
     });
     const {
@@ -119,12 +119,11 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
                                 label="Client Type"
                                 type="select"
                                 name="contact_type"
-                                labelClassName='required'
                                 containerClass={'mb-3'} 
                                 register={register}
                                 errors={errors}
                                 control={control}
-                                defaultValue={contact ? contact.contact_type : ''}
+                                defaultValue={contact ? contact.contact_type : null}
                                 >    
                                     <option value="" disabled>Select Client Type ...</option>                         
                                     <option value="individual" >Individual</option>                         
@@ -148,7 +147,6 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
                                     label="Contact Person"
                                     type="text"
                                     name="contact_person"
-                                    labelClassName='required'
                                     placeholder="Enter Contact Person"
                                     containerClass={'mb-3'}
                                     register={register}
@@ -160,7 +158,6 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
                                     label="Phone"
                                     type="text"
                                     name="phone"
-                                    labelClassName='required'
                                     placeholder="ex: +8801XXXXXXX"
                                     containerClass={'mb-3'}
                                     register={register}
@@ -176,6 +173,7 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
                                     label="Email"
                                     type="text"
                                     name="email"
+                                    labelClassName='required'
                                     placeholder="Enter Email"
                                     containerClass={'mb-3'}
                                     register={register}
@@ -250,7 +248,6 @@ const ContactForm = ({ show, onHide, onSubmit,contact,countries, kamList }: AddC
                                 label="Kam"
                                 type="select"
                                 name="kam"
-                                labelClassName='required'
                                 containerClass={'mb-3'} 
                                 register={register}
                                 errors={errors}
