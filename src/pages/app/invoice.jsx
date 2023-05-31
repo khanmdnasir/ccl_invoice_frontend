@@ -14,9 +14,6 @@ import Pagination from '../../components/CustomPagination';
 
 
 
-// const ExcelFile = ReactExport.ExcelFile;
-// const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-// const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const api = new APICore();
 
@@ -129,9 +126,6 @@ export const StatusColumn2 = withSwal(({ row, swal }) => {
                                     'warning'
                                 );
                             }
-                            // setTimeout(() => {
-                            //     refreshPage();
-                            // }, 600);
                             dispatch(getInvoice(10, 1));
                         })
                         .catch(err => {
