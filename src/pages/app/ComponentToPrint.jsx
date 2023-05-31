@@ -142,8 +142,8 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                                                             <td style={{fontSize: '12px',padding: '5px'}}>{item.date}</td>
                                                             <td style={{fontSize: '12px',padding: '5px'}}>{item.invoice_no ? item.invoice_no : item.payment_no}</td>
                                                             <td style={{fontSize: '12px',padding: '5px'}}>{item.payment_type}</td>
-                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item.total_amount.toLocaleString()}</td>
-                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item.amount.toLocaleString()}</td>
+                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item?.total_amount?.toLocaleString()}</td>
+                                                            <td style={{fontSize: '12px',padding: '5px'}}>{item?.amount?.toLocaleString()}</td>
                                                             
                                                             
                                                         </tr>

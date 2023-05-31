@@ -143,11 +143,14 @@ const PaymentForm = () => {
 
   useEffect(() => {
     const state = location.state;
+    console.log('state',state)
     if (state) {
       const newData = { ...paymentData };
       newData["client_id"] = state.contactId;
+      
       setContactId(state.contactId);
       setPaymentData(newData);
+      
     }
 
     dispatch(getAllContact());
@@ -157,9 +160,9 @@ const PaymentForm = () => {
         key: "payment_invoice_map",
       })
     );
-    return () => {
-      dispatch(resetPaymentReducerState());
-    };
+    // return () => {
+    //   dispatch(resetPaymentReducerState());
+    // };
   }, []);
 
   useEffect(() => {
@@ -185,7 +188,7 @@ const PaymentForm = () => {
         client_id: "",
         payment_type: "",
       });
-      dispatch(resetPaymentReducerState());
+      // dispatch(resetPaymentReducerState());
       setTimeout(() => {
         setRloading(false);
         setSuccess("");
@@ -239,7 +242,11 @@ const PaymentForm = () => {
     }
   }, [due_invoices]);
 
+
+
+
   const onSubmit = (e) => {
+    
     e.preventDefault();
     setRloading(true);
     const selectedInvoices = Object.values(invoicesData).filter((inv) => {
@@ -288,7 +295,8 @@ const PaymentForm = () => {
 
     const finalPaymentData = { ...paymentData };
     finalPaymentData["invoices"] = finalSelectedInvoices;
-
+    finalPaymentData["client_id"] = contactId;
+    
     dispatch(addPayment(finalPaymentData));
   };
 
@@ -342,24 +350,18 @@ const PaymentForm = () => {
                 </Form.Group>
                 <div className="float-right">
                   <Button
-                    style={{ textAlign: "left" }}
+                    style={{ textAlign: "left"}}
                     variant="success"
                     size="lg"
                   >
-                    <b>
-                      Current Balance: {parseFloat(client_balance).toFixed(2)}{" "}
+                    <p>
+                      Current Balance: {client_balance >= 0 ? parseFloat(client_balance).toFixed(2) : 0.0}{" "}
                       {scurrency.symbol}
-                      <br />
-                      Due:{" "}
-                      {parseFloat(
-                        parseFloat(client_balance) +
-                          (paymentData.amount === ""
-                            ? 0
-                            : parseFloat(paymentData.amount)) -
-                          paymentData?.total_invoice_amount
-                      ).toFixed(2)}{" "}
+                      </p>
+                      <p style={{color: 'red'}}>
+                      Due: {client_balance < 0 ? parseFloat(client_balance).toFixed(2) : 0}{" "}
                       {scurrency.symbol}
-                    </b>
+                    </p>
                   </Button>
                 </div>
               </div>

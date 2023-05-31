@@ -63,7 +63,7 @@ const columns = [
         accessor: 'amount',
         sort: true,
         Cell: (row) => {
-            return <div>{row?.row?.original?.amount!==null?(row?.row?.original?.amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+            return <div>{row?.row?.original?.amount !== null && row?.row?.original?.amount !== undefined ? (row?.row?.original?.amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
         }
     }
 

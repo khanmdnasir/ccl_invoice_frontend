@@ -4,12 +4,13 @@ import { Link, useHistory } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
 import { format } from 'date-fns'
+import ContactForm from '../Form/ContactForm';
 // components
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact, getChartAccount, getContactService, getRepeatingInvoiceDetails } from '../../redux/actions';
-
+import { addContact, getAllContact, getAllKam, getChartAccount, getContactService, getCountry, getRepeatingInvoiceDetails, setContactErrorAlert, setContactSuccessAlert } from '../../redux/actions';
+import CreatableSelect from "react-select/creatable";
 
 const api = new APICore()
 
@@ -20,6 +21,8 @@ const RepeatingInvoiceForm = () => {
     const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch();
+    const country = useSelector(state => state.Location.country);
+    const all_kam = useSelector(state => state.Kam.all_kam);
     const contacts = useSelector((state) => state.Contact.all_contact);
     const accounts = useSelector((state) => state.ChartAccount.accounts);
     const cloading = useSelector((state) => state.Contact.loading);
@@ -34,6 +37,9 @@ const RepeatingInvoiceForm = () => {
     const contact_services = useSelector((state) => state.Service.contact_services);
     const [contactId, setContactId] = useState('');
     // const [invoiceNo, setInvoiceNo] = useState('');
+    const [contact, setContact] = useState();
+    const csuccess = useSelector((state) => state.Contact.success);
+    const contact_details = useSelector((state) => state.Contact.contact_details);
     const [invoiceId, setInvoiceId] = useState(null);
     const [date, setDate] = useState('');
     const [due_date, setDueDate] = useState('');
@@ -49,6 +55,37 @@ const RepeatingInvoiceForm = () => {
     const [total_amount, setTotalAmount] = useState('');
     const [deletedItems, setDeletedItems] = useState([]);
     const [taxGroup, setTaxGroup] = useState({});
+    const [show, setShow] = useState(false);
+    const onCloseModal = () => { setContact();setShow(false)};
+    const onOpenModal = () => { dispatch(setContactErrorAlert('')); setShow(true) };
+
+
+    const onContactSubmit = (formData) => {
+        // console.log("formData", formData)
+        dispatch(addContact(formData));
+        dispatch(getAllContact())
+        
+    };
+
+
+    useEffect(() => {
+        if (csuccess !== null && csuccess !== '') {
+            onCloseModal();
+            console.log('contact details',contact_details)
+            setContactId(contact_details['id'])
+            setContact({'label':contact_details['name'],'value':contact_details['id']})
+            
+        }
+
+        setTimeout(() => {
+            dispatch(setContactSuccessAlert(''));
+        }, 2000)
+    }, [csuccess])
+
+    const handleCreateContact = (inputValue) => {
+        setContact({'label':inputValue,'value':''})
+        onOpenModal()
+    }
 
     const [items, setItems] = useState({
         item: '',
@@ -158,7 +195,7 @@ const RepeatingInvoiceForm = () => {
         let total_subTotal = 0.00
         let total_taxAmount = 0
         newItems.forEach((item) => {
-            total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
+            total_discount += parseFloat((parseFloat(item.unit_price*item.qty) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
 
             var item_tax_amount = 0;
@@ -184,7 +221,7 @@ const RepeatingInvoiceForm = () => {
 
 
         oldItems.forEach((item) => {
-            total_discount += parseFloat((parseFloat(item.sub_total) / 100) * parseFloat(item.discount));
+            total_discount += parseFloat((parseFloat(item.unit_price*item.qty) / 100) * parseFloat(item.discount));
             total_subTotal += parseFloat(item.total_amount);
 
             var item_tax_amount = 0;
@@ -218,6 +255,8 @@ const RepeatingInvoiceForm = () => {
 
     useEffect(() => {
         const state = location.state
+        dispatch(getCountry());
+        dispatch(getAllKam());
         dispatch(getAllContact());
         dispatch(getChartAccount());
         if (state) {
@@ -363,26 +402,23 @@ const RepeatingInvoiceForm = () => {
                                         <Form.Group as={Col}>
                                             <Form.Label className='required'>Client</Form.Label>
 
-                                            <Form.Select
-                                                aria-label="Default select example"
-                                                disabled={invoiceId ? true : false}
+                                            <CreatableSelect
+                                                isClearable
+                                                isDisabled={cloading || invoiceId ? true : false}
+                                                isLoading={cloading}
+                                                onCreateOption={handleCreateContact}
                                                 required
                                                 onChange={(e) => onContactChange(e)}
-                                                value={contactId}
-                                            >
-                                                {cloading ? <option value="" disabled>Loading...</option> :
-                                                    <>
-
-                                                        <option value="" disabled>Select Client ...</option>
-                                                        {contacts.length > 0 && contacts?.map((item) => {
-                                                            return (
-                                                                <option key={'scontact' + item.id} value={item.id} >{item.name}</option>
-                                                            )
-                                                        })}
-
-                                                    </>
-                                                }
-                                            </Form.Select>
+                                                value={contact}
+                                                options={contacts.map((item) => {
+                                                return {
+                                                    label: item.name,
+                                                    value: item.id,
+                                                };
+                                                })}
+                                                isSearchable={true}
+                                                className="block w-full min-w-0 flex-1 sm:text-sm"
+                                            />
 
                                         </Form.Group>
                                         {/* <Form.Group as={Col}>
@@ -1027,6 +1063,8 @@ const RepeatingInvoiceForm = () => {
                     </Card>
                 </Col>
             </Row>
+            {contact &&
+            <ContactForm show={show} onHide={onCloseModal} onSubmit={onContactSubmit} contact_name={contact?.label} countries={country} kamList={all_kam} />}
         </>
     );
 };
