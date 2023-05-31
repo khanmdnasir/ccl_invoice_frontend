@@ -45,7 +45,6 @@ function* getContactService({ payload: {contact_id}}:ServiceData):SagaIterator {
 
 
 function* addService({ payload: {service} }: ServiceData):SagaIterator {
-    console.log(service)
     try {
         const response = yield call(addServiceApi,{service});
         const result = response.data;
