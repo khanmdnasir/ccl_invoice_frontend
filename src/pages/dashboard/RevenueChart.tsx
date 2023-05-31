@@ -8,6 +8,7 @@ import ChartStatistics from '../../components/ChartStatistics';
 const RevenueChart = ({summaryList, scurrency}:any) => {
     ChartjsDefaults.color = '#8391a2';
     ChartjsDefaults.scale.grid.color = '#8391a2';
+    console.log("summaryList",summaryList)
 
     // chart data
     const lineChartData = {

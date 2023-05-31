@@ -19,6 +19,7 @@ const ServiceForm = () => {
     const history = useHistory();
     const [oldItems, setOldItems] = useState([]);
     const [contactId, setContactId] = useState('');
+    // console.log("contactId",contactId)
     const [deletedItems, setDeletedItems] = useState([]);
     // const[isEdit,setIsEdit] = useState(false);
     // const user_role = useSelector((state:RootState)=> state.Role.user_role);
@@ -73,10 +74,11 @@ const ServiceForm = () => {
 
     useEffect(() => {
         const state = location.state
-        
+        console.log("service",state)
         if (state) {
             setContactId(state.contactId);
             const allItems = state.services.map((item) => {
+                console.log("itemservice",item)
                 return {
                     id: item.id,
                     contact_id: item.contact_id.id,

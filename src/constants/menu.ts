@@ -230,6 +230,7 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
         
     },
     {
+
         key: 'invoice',
         label: 'Invoice',
         isTitle: false,
