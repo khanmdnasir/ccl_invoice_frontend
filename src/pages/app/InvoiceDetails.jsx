@@ -297,7 +297,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                                     <div className="text-sm-end mt-2 mt-sm-0">
                                         {user_role.includes('change_invoice') ?
                                             (invoiceDetails?.status === 'draft' || invoiceDetails?.status === 'waiting') &&
-                                            <Link to={{ pathname: '/app/invoice_form', state: invoiceId }} className="btn btn-success me-2" >
+                                            <Link to={{ pathname: '/app/invoice_form', state: { invoiceId : invoiceId } }} className="btn btn-success me-2" >
                                                 <i className="mdi mdi-square-edit-outline me-1"></i>Edit
                                             </Link> :
                                             ''

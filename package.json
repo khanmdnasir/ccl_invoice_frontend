@@ -92,7 +92,7 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "HOST=192.168.50.6 react-scripts start",
     "build": "react-scripts build",
     "build-demo": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",

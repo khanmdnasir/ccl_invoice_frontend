@@ -267,7 +267,7 @@ const PaymentDetails = withSwal(({swal}) => {
                                             <Form.Label>Payment Amount</Form.Label>
                                             <Form.Control
                                                 readOnly={true}
-                                                defaultValue={paymentDetails?.amount.toLocaleString()}
+                                                defaultValue={paymentDetails?.amount?.toLocaleString()}
                                             >
 
                                             </Form.Control>

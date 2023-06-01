@@ -42,6 +42,7 @@ const InvoiceForm = () => {
     const invoice_details = useSelector((state) => state.Invoice.invoice_details);
     const contact_services = useSelector((state) => state.Service.contact_services);
     const [contact, setContact] = useState();
+    const [stateContact, setStateContact] = useState();
     const [contactId, setContactId] = useState('');
     const [invoiceId, setInvoiceId] = useState(null);
     const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
@@ -273,22 +274,33 @@ const InvoiceForm = () => {
         dispatch(getChartAccount());
         dispatch(getCountry());
         dispatch(getAllKam());
-        if (state) {
-            dispatch(getInvoiceDetails(state));
-            setInvoiceId(state);
-            setNewItems([]);
-
-        } else {
-            setNewItems([items]);
-            setOldItems([]);
-            setInvoiceId(null);
+        
+        if (state?.contactId) {
+            setNewItems([])
+            setStateContact(state.contactId);
+            setContactId(state.contactId);
+            dispatch(getContactService(state.contactId));
+        }else{
+            if (state?.invoiceId) {
+            
+                dispatch(getInvoiceDetails(state.invoiceId));
+                setInvoiceId(state.invoiceId);
+                setNewItems([]);
+    
+            } else {
+                setNewItems([items]);
+                setOldItems([]);
+                setInvoiceId(null);
+            }
         }
+        
 
     }, [])
 
     useEffect(() => {
         if (invoiceId) {
             setNewItems([]);
+            setStateContact(invoice_details?.contact_id?.id);
             setContactId(invoice_details?.contact_id?.id);
             setTaxType(invoice_details?.tax_type);
             setDate(invoice_details?.date);
@@ -418,7 +430,26 @@ const InvoiceForm = () => {
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
                                             <Form.Label className='required'>Client</Form.Label>
+                                            { stateContact ?
+                                            <Form.Select
+                                                aria-label="Default select example"
+                                                
+                                                disabled={contactId}
+                                                value={contactId}
+                                            >
+                                                {cloading ? <option value="" disabled>Loading...</option> :
+                                                    <>
 
+                                                        <option value="" disabled>Select Client ...</option>
+                                                        {contacts.length > 0 && contacts?.map((item) => {
+                                                            return (
+                                                                <option key={'scontact' + item.id} value={item.id} >{item.name}</option>
+                                                            )
+                                                        })}
+
+                                                    </>
+                                                }
+                                            </Form.Select> :
                                             <CreatableSelect
                                                 isClearable
                                                 isDisabled={cloading || invoiceId ? true : false}
@@ -435,7 +466,7 @@ const InvoiceForm = () => {
                                                 })}
                                                 isSearchable={true}
                                                 className="block w-full min-w-0 flex-1 sm:text-sm"
-                                            />
+                                            />}
 
                                         </Form.Group>
 
@@ -978,18 +1009,15 @@ const InvoiceForm = () => {
                                         
                                     </Card>                                    */}
                                 <div className="d-flex justify-content-between">
-
-                                    <Link to="#" className="btn-primary waves-effect waves-light" onClick={() => setNewItems([...newItems, items])} style={{ maxHeight: '25px', padding: '3px' }}>
+                                    <div>
+                                    <Button variant="primary" type="button"  className="waves-effect waves-light me-1" onClick={() => setNewItems([...newItems, items])} >
                                         Add a new line
-                                    </Link>
+                                    </Button>
+                                    </div>
                                     <div >
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Subtotal</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {sub_total.toLocaleString()}</p>
-                                        </div>
-                                        <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Discount</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {discount.toLocaleString()}</p>
+                                            <p style={{ fontSize: '20px' }}>Subtotal (discount {scurrency?.symbol} {discount?.toLocaleString()} )</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {sub_total?.toLocaleString()}</p>
                                         </div>
                                         {/* {newItems?.map((item)=>{
                                                 if(item.tax_rate > 0)

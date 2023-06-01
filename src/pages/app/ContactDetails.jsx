@@ -881,7 +881,18 @@ const ContactDetails = withSwal(({ swal }) => {
         <Col md={12} xl={12}>
           <Card>
             <Card.Header>
+            <div className="d-flex justify-content-between">
               <p style={{ marginBottom: "0px !important" }}>Invoice List</p>
+              <Link
+                  className="btn btn-primary"
+                  to={{
+                    pathname: "/app/invoice_form",
+                    state: { contactId: contactId },
+                  }}
+                >
+                  <i className="mdi mdi-pencil me-1"></i> Edit
+                </Link>
+              </div>
             </Card.Header>
 
             <Card.Body>
@@ -892,6 +903,8 @@ const ContactDetails = withSwal(({ swal }) => {
                     data={invoice_list}
                     pageSize={pageSize}
                     isSortable={true}
+                    isDetails={true}
+                    pathName='/app/invoice_details'
                     pagination={false}
                     isSearchable={true}
                     tableClass="table-nowrap table-hover"
@@ -940,6 +953,8 @@ const ContactDetails = withSwal(({ swal }) => {
                     columns={columns}
                     data={paymentDate}
                     pageSize={pageSize}
+                    isDetails={true}
+                    pathName='/app/payment_details'
                     isSortable={true}
                     pagination={false}
                     isSearchable={true}
@@ -981,6 +996,8 @@ const ContactDetails = withSwal(({ swal }) => {
                     columns={servicesColumns}
                     data={services}
                     pageSize={pageSize}
+                    isDetails={true}
+                    pathName='/app/service_details'
                     isSortable={true}
                     pagination={false}
                     isSearchable={true}
