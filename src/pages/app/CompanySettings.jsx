@@ -123,11 +123,6 @@ const columns = [
         sort: true,
     },
     {
-        Header: 'Key',
-        accessor: 'key',
-        sort: true,
-    },
-    {
         Header: 'Value',
         accessor: 'value',
         sort: true,
@@ -265,13 +260,13 @@ const CompanySettings = () => {
 
                                 <Col sm={8}>
                                     <div className="text-sm-end mt-2 mt-sm-0">
-                                        {user_role.includes('add_companysettings') ?
+                                        {/* {user_role.includes('add_companysettings') ?
                                             <Button className="btn btn-success mb-2 me-1" onClick={onOpenModal}>
                                                 <i className="mdi mdi-plus-circle me-1"></i> Add New
                                             </Button> :
                                             <>
                                             </>
-                                        }
+                                        } */}
 
                                         {/* <ExcelFile element={<Button className="btn btn-light mb-2">Export</Button>}>
                                             <ExcelSheet data={users} name="Users">

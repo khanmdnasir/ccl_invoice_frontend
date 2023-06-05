@@ -4,6 +4,7 @@ import { SagaIterator } from '@redux-saga/core';
 // helpers
 import {
     getRepeatingInvoice as getRepeatingInvoiceApi,    
+    getContactRepeatingInvoice as getContactRepeatingInvoiceApi,    
     getRepeatingInvoiceDetails as getRepeatingInvoiceDetailsApi,    
 } from '../../helpers';
 
@@ -26,6 +27,16 @@ function* getRepeatingInvoice({ payload: {limit,page}}:InvoiceData):SagaIterator
         
     }
 }
+function* getContactRepeatingInvoice({ payload }: any):SagaIterator {
+    try {
+        const response = yield call(getContactRepeatingInvoiceApi,{...payload});
+        const data = response.data;
+        yield put({type: 'GET_CONTACT_REPEATINGINVOICE_SUCCESS' , data: data});
+    } catch (error) {
+        yield put({type: 'GET_CONTACT_REPEATINGINVOICE_FAILED', error: error});
+        
+    }
+}
 
 function* getRepeatingInvoiceDetails({ payload }:InvoiceData):SagaIterator {
     try {
@@ -43,6 +54,10 @@ export function* watchGetRepeatingInvoice() {
     yield takeEvery('GET_REPEATINGINVOICE_REQUESTED', getRepeatingInvoice);
 }
 
+export function* watchGetContactRepeatingInvoice() {
+    yield takeEvery('GET_CONTACT_REPEATINGINVOICE_REQUESTED', getContactRepeatingInvoice);
+}
+
 export function* watchGetRepeatingInvoiceDetails() {
     yield takeEvery('GET_REPEATINGINVOICEDETAILS_REQUESTED', getRepeatingInvoiceDetails);
 }
@@ -50,7 +65,7 @@ export function* watchGetRepeatingInvoiceDetails() {
 
 
 function* repeatingInvoiceSaga() {
-    yield all([fork(watchGetRepeatingInvoice),fork(watchGetRepeatingInvoiceDetails)]);
+    yield all([fork(watchGetRepeatingInvoice),fork(watchGetContactRepeatingInvoice),fork(watchGetRepeatingInvoiceDetails)]);
 }
 
 export default repeatingInvoiceSaga;

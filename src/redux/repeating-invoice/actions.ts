@@ -11,6 +11,7 @@ export const getRepeatingInvoiceDetails = (id:number) => ({
     payload: id,
 });
 
-
-
-
+export const getContactRepeatingInvoice = (id:any, limit:any, page:any) => ({
+    type: type.GET_CONTACT_REPEATINGINVOICE_REQUESTED,
+    payload: {id, limit, page},
+});

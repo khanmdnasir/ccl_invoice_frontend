@@ -77,7 +77,7 @@ const ServiceForm = () => {
         console.log("service",state)
         if (state) {
             setContactId(state.contactId);
-            const allItems = state.services.map((item) => {
+            const allItems = state.services?.map((item) => {
                 console.log("itemservice",item)
                 return {
                     id: item.id,

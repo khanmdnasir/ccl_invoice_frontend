@@ -91,7 +91,7 @@ const Payment = () => {
   const loading = useSelector((state) => state.Payment.loading);
   const success = useSelector((state) => state.Payment.success);
   const [pageSize, setPageSize] = useState(10);
-  const [paymentDate, setPaymentDate] = useState("");
+  const [paymentData, setPaymentData] = useState("");
 
   const visitPage = (page) => {
     dispatch(getPayment(pageSize, page));
@@ -116,7 +116,7 @@ const Payment = () => {
       item.payment_date = date;
       return item;
     });
-    setPaymentDate(paymentwithDate);
+    setPaymentData(paymentwithDate);
   }, [payment]);
 
   return (
@@ -170,11 +170,11 @@ const Payment = () => {
                 <p>Loading...</p>
               ) : (
                 <>
-                  {paymentDate.length > 0 ? (
+                  {paymentData.length > 0 ? (
                     <>
                       <Table
                         columns={columns}
-                        data={paymentDate}
+                        data={paymentData}
                         pageSize={pageSize}
                         isSortable={true}
                         isDetails={true}

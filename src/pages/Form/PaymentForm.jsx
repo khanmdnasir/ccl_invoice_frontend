@@ -26,6 +26,7 @@ import {
   resetPaymentReducerState,
   clearDueInvoices,
   getCompanySettingsByKey,
+  addContact,
 } from "../../redux/actions";
 import moment from "moment";
 
@@ -172,7 +173,7 @@ const PaymentForm = () => {
         dispatch(getDueInvoices(contactId));
       }
     }
-  }, [contactId, company_setting_by_key]);
+  }, [contactId, company_setting_by_key,payment_success]);
 
   useEffect(() => {
     if (payment_success !== null) {
@@ -254,7 +255,7 @@ const PaymentForm = () => {
     });
 
     const current_balance =
-      parseFloat(client_balance) +
+      parseFloat(client_balance.balance) +
       parseFloat(paymentData.amount) -
       parseFloat(paymentData.total_invoice_amount);
     if (current_balance < 0) {
@@ -355,11 +356,11 @@ const PaymentForm = () => {
                     size="lg"
                   >
                     <p>
-                      Current Balance: {client_balance >= 0 ? parseFloat(client_balance).toFixed(2) : 0.0}{" "}
+                      Current Balance: {client_balance.balance !== null ? parseFloat(client_balance.balance).toFixed(2) : 0.0}{" "}
                       {scurrency.symbol}
                       </p>
                       <p style={{color: 'red'}}>
-                      Due: {client_balance < 0 ? parseFloat(client_balance).toFixed(2) : 0}{" "}
+                      Due: {client_balance.due !== null ? parseFloat(client_balance.due).toFixed(2) : 0}{" "}
                       {scurrency.symbol}
                     </p>
                   </Button>

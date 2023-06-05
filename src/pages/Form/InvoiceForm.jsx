@@ -9,7 +9,7 @@ import PageTitle from '../../components/PageTitle';
 import ContactForm from '../Form/ContactForm';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { getAllContact,addContact, getChartAccount, getContactService,getCountry,getAllKam,setContactErrorAlert,setContactSuccessAlert, getInvoiceDetails, getContact } from '../../redux/actions';
+import { getAllContact,addContact, getChartAccount, getContactService,getCountry,getAllKam,setContactErrorAlert,setContactSuccessAlert, getInvoiceDetails, getContact, getContactServices } from '../../redux/actions';
 import moment from "moment";
 import CreatableSelect from "react-select/creatable";
 
@@ -40,7 +40,7 @@ const InvoiceForm = () => {
 
     const [oldItems, setOldItems] = useState([]);
     const invoice_details = useSelector((state) => state.Invoice.invoice_details);
-    const contact_services = useSelector((state) => state.Service.contact_services);
+    const contact_services = useSelector((state) => state.Service.services);
     const [contact, setContact] = useState();
     const [stateContact, setStateContact] = useState();
     const [contactId, setContactId] = useState('');
@@ -103,7 +103,7 @@ const InvoiceForm = () => {
         setNewItems([])
         setContact(e);
         setContactId(e?.value);
-        dispatch(getContactService(e?.value));
+        dispatch(getContactServices(e?.value));
     }
 
    
@@ -279,7 +279,7 @@ const InvoiceForm = () => {
             setNewItems([])
             setStateContact(state.contactId);
             setContactId(state.contactId);
-            dispatch(getContactService(state.contactId));
+            dispatch(getContactServices(state.contactId));
         }else{
             if (state?.invoiceId) {
             
@@ -549,7 +549,7 @@ const InvoiceForm = () => {
                                             <th className='required'>Quantity</th>
                                             <th className='required'>Unit Price</th>
                                             <th >Discount %</th>
-                                            <th className='required'>Account</th>
+                                            <th className='required'>Chart Account</th>
                                             <th >Tax Rate %</th>
 
                                             <th >Total</th>

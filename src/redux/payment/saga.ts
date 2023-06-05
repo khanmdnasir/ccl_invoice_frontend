@@ -4,6 +4,7 @@ import { SagaIterator } from '@redux-saga/core';
 // helpers
 import {
     getPayment as getPaymentApi,    
+    getContactPayment as getContactPaymentApi,    
     getPaymentDetails as getPaymentDetailsApi,    
     getAllPayment as getAllPaymentApi,
     getPaymentTypes as getPaymentTypesApi,    
@@ -29,6 +30,18 @@ function* getPayment({ payload: {limit,page}}:PaymentData):SagaIterator {
         yield put({type: 'GET_PAYMENT_SUCCESS' , data: data});
     } catch (error) {
         yield put({type: 'GET_PAYMENT_FAILED', error: error});
+        
+    }
+}
+
+function* getContactPayment({ payload}: any):SagaIterator {
+    try {
+        const response = yield call(getContactPaymentApi,{...payload});
+        const data = response.data;
+        console.log('payments',data)
+        yield put({type: 'GET_CONTACT_PAYMENT_SUCCESS' , data: data});
+    } catch (error) {
+        yield put({type: 'GET_CONTACT_PAYMENT_FAILED', error: error});
         
     }
 }
@@ -128,6 +141,10 @@ export function* watchGetPayment() {
     yield takeEvery('GET_PAYMENT_REQUESTED', getPayment);
 }
 
+export function* watchGetContactPayment() {
+    yield takeEvery('GET_CONTACT_PAYMENT_REQUESTED', getContactPayment);
+}
+
 export function* watchGetPaymentDetails() {
     yield takeEvery('GET_PAYMENT_DETAILS_REQUESTED', getPaymentDetails);
 }
@@ -159,7 +176,7 @@ export function* watchAddInvoicePayment() {
 
 
 function* paymentSaga() {
-    yield all([fork(watchGetPayment),fork(watchGetPaymentDetails),fork(watchGetAllPayment), fork(watchGetPaymentTypes),fork(watchGetDueInvoices), fork(watchGetClientBalance), fork(watchAddPayment),fork(watchAddInvoicePayment)]);
+    yield all([fork(watchGetPayment),fork(watchGetContactPayment),fork(watchGetPaymentDetails),fork(watchGetAllPayment), fork(watchGetPaymentTypes),fork(watchGetDueInvoices), fork(watchGetClientBalance), fork(watchAddPayment),fork(watchAddInvoicePayment)]);
 }
 
 export default paymentSaga;

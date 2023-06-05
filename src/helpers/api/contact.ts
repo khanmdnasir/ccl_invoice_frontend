@@ -18,6 +18,25 @@ function getContactInvoice(params:any) {
     return api.get(`${baseUrl}`,null);
 }
 
+function getContactRepeatingInvoice(params:any) {
+    const baseUrl = `/api/repeating-invoice?contact_id=${params.id}&limit=${params.limit}&page=${params.page}`;
+    return api.get(`${baseUrl}`,null);
+}
+
+function getContactService(params:any) {
+    const baseUrl = `/api/service?contact_id=${params.id}&limit=${params.limit}&page=${params.page}`;
+    return api.get(`${baseUrl}`,null);
+}
+function getContactServices(params:any) {
+    const baseUrl = `/api/service?contact_id=${params.id}`;
+    return api.get(`${baseUrl}`,null);
+}
+
+function getContactPayment(params:any) {
+    const baseUrl = `/api/payment?contact_id=${params.id}&limit=${params.limit}&page=${params.page}`;
+    return api.get(`${baseUrl}`,null);
+}
+
 function getContactInvoiceSetting(params:any) {
     const baseUrl = `/api/invoice-setting?contact_id=${params.payload}`;
     return api.get(`${baseUrl}`,null);
@@ -49,4 +68,4 @@ function deleteContact(id:number) {
 }
 
 
-export { getContact, addContact,deleteContact,getAllContact, getContactInvoice, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, updateContact };
+export { getContact, addContact,deleteContact,getAllContact, getContactInvoice,getContactService,getContactServices,getContactRepeatingInvoice,getContactPayment, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, updateContact };

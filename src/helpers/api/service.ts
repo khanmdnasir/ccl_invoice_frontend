@@ -8,10 +8,10 @@ function getService(params: {limit: number,page:number}) {
     return api.get(`${baseUrl}`,params);
 }
 
-function getContactService(params: {contact_id:number}) {
-    const baseUrl = '/api/service/';
-    return api.get(`${baseUrl}`,params);
-}
+// function getContactService(params: {contact_id:number}) {
+//     const baseUrl = '/api/service/';
+//     return api.get(`${baseUrl}`,params);
+// }
 
 function addService(params: { service: any[] }) {
     const baseUrl = '/api/service/';
@@ -20,4 +20,4 @@ function addService(params: { service: any[] }) {
 
 
 
-export { getService, getContactService, addService };
+export { getService, addService };
