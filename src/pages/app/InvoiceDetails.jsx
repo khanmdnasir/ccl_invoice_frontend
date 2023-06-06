@@ -528,6 +528,8 @@ const InvoiceDetails = withSwal(({swal}) => {
                                             <p style={{ fontSize: '20px' }}>Total</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.total_amount?.toLocaleString()}</p>
                                         </div>
+                                        { invoiceDetails?.partial_paid_and_due?.partial_paid !== null && invoiceDetails?.partial_paid_and_due?.partial_paid > 0 &&
+                                        <>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Paid</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.partial_paid_and_due?.partial_paid !== null ? invoiceDetails?.partial_paid_and_due?.partial_paid.toLocaleString() : 0}</p>
@@ -536,6 +538,8 @@ const InvoiceDetails = withSwal(({swal}) => {
                                             <p style={{ fontSize: '20px' }}>Due</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.partial_paid_and_due?.due?.toLocaleString()}</p>
                                         </div>
+                                        </>
+                                        }
                                         <hr></hr><hr></hr>
                                     </div>
                                 </div>
