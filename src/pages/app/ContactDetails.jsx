@@ -891,8 +891,19 @@ const ContactDetails = withSwal(({ swal }) => {
             </Card.Body>
           </Card>
         </Col>
-
+        
         <Col md={4} xl={4}>
+            <div  style={{display: 'flex',justifyContent: 'flex-end'}}>
+              <Link to={{
+                    pathname: "/app/payment_form",
+                    state: { contactId: contactId, clientPayment: true},
+                  }} className="btn btn-success mb-2" >
+                  <i className="mdi mdi-cash me-1"></i>Payment
+              </Link> 
+            </div>
+            
+          
+        
           <Card>
             <Card.Header>
               <p>Invoice Setting</p>
