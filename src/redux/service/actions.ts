@@ -10,13 +10,19 @@ export const getService = (limit:number,page:number) => ({
     payload: {limit,page},
 });
 
-export const getContactService = (contact_id:number) => ({
-    type: type.GET_CONTACTSERVICE_REQUESTED,
-    payload: {contact_id},
-});
 
 export const addService = (service: ServiceForm) => ({
     type: type.ADD_SERVICE_REQUESTED,
     payload: service,
 });
 
+
+export const getContactService = (id:any, limit:any, page:any) => ({
+    type: type.GET_CONTACTSERVICE_REQUESTED,
+    payload: {id, limit, page},
+});
+
+export const getContactServices = (id:any) => ({
+    type: type.GET_CONTACTSERVICES_REQUESTED,
+    payload: {id}
+});

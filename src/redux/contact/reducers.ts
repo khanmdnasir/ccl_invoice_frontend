@@ -2,8 +2,6 @@ import * as type from './types';
 
 const INIT_STATE = {
     contact: [],
-    invoice_list: [],
-    invoice_list_pagination_data: {},
     invoice_setting: [],
     contact_details: [],
     all_contact: [],
@@ -51,35 +49,6 @@ const Contact = (state = INIT_STATE, action: any) => {
                 error: action.error,
             };
         }
-
-        case type.GET_CONTACT_INVOICE_REQUESTED: {
-            return {
-                ...state,
-                loading: true,
-            };
-        }
-        case type.GET_CONTACT_INVOICE_SUCCESS: {
-            return {
-                ...state,
-                loading: false,
-                invoice_list: action.data.results,
-                invoice_list_pagination_data: {
-                    previous: action.data.previous,
-                    next: action.data.next,
-                    current_page: action.data.current_page,
-                    total_page: action.data.total_page,
-                    active: action.data.current_page
-                }
-            };
-        }
-        case type.GET_CONTACT_INVOICE_FAILED: {
-            return {
-                ...state,
-                loading: false,
-                error: action.error,
-            };
-        }
-
 
         case type.GET_CONTACT_INVOICE_SETTING_REQUESTED: {
             return {

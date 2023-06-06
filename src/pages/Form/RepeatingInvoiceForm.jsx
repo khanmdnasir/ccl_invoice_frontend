@@ -9,7 +9,7 @@ import ContactForm from '../Form/ContactForm';
 import PageTitle from '../../components/PageTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { APICore } from '../../helpers/api/apiCore';
-import { addContact, getAllContact, getAllKam, getChartAccount, getContactService, getCountry, getRepeatingInvoiceDetails, setContactErrorAlert, setContactSuccessAlert } from '../../redux/actions';
+import { addContact, getAllContact, getAllKam, getChartAccount, getContactService, getContactServices, getCountry, getRepeatingInvoiceDetails, setContactErrorAlert, setContactSuccessAlert } from '../../redux/actions';
 import CreatableSelect from "react-select/creatable";
 
 const api = new APICore()
@@ -34,8 +34,9 @@ const RepeatingInvoiceForm = () => {
 
     const [oldItems, setOldItems] = useState([]);
     const repeating_invoice_details = useSelector((state) => state.RepeatingInvoice.repeating_invoice_details);
-    const contact_services = useSelector((state) => state.Service.contact_services);
+    const contact_services = useSelector((state) => state.Service.services);
     const [contactId, setContactId] = useState('');
+    const [stateContact, setStateContact] = useState();
     // const [invoiceNo, setInvoiceNo] = useState('');
     const [contact, setContact] = useState();
     const csuccess = useSelector((state) => state.Contact.success);
@@ -102,10 +103,13 @@ const RepeatingInvoiceForm = () => {
     const [newItems, setNewItems] = useState([]);
 
     const onContactChange = (e) => {
+        console.log('contact',e?.value)
         setNewItems([])
-        setContactId(e.target.value);
-        dispatch(getContactService(e.target.value));
+        setContact(e);
+        setContactId(e?.value);
+        dispatch(getContactServices(e?.value));
     }
+    
     useEffect(() => {
         let tempData = [];
         if (contact_services.length > 0) {
@@ -259,16 +263,26 @@ const RepeatingInvoiceForm = () => {
         dispatch(getAllKam());
         dispatch(getAllContact());
         dispatch(getChartAccount());
-        if (state) {
-            dispatch(getRepeatingInvoiceDetails(state));
-            setInvoiceId(state);
-            setNewItems([]);
 
-        } else {
-            setNewItems([items]);
-            setOldItems([]);
-            setInvoiceId(null);
+        if (state?.contactId) {
+            setNewItems([])
+            setStateContact(state.contactId);
+            setContactId(state.contactId);
+            dispatch(getContactServices(state.contactId));
+        }else{
+            if (state?.invoiceId) {
+            
+                dispatch(getRepeatingInvoiceDetails(state.invoiceId));
+                setInvoiceId(state.invoiceId);
+                setNewItems([]);
+    
+            } else {
+                setNewItems([items]);
+                setOldItems([]);
+                setInvoiceId(null);
+            }
         }
+        
 
     }, [])
 
@@ -401,7 +415,26 @@ const RepeatingInvoiceForm = () => {
                                     <Row className='mb-3'>
                                         <Form.Group as={Col}>
                                             <Form.Label className='required'>Client</Form.Label>
+                                            { stateContact ?
+                                            <Form.Select
+                                                aria-label="Default select example"
+                                                
+                                                disabled={contactId}
+                                                value={contactId}
+                                            >
+                                                {cloading ? <option value="" disabled>Loading...</option> :
+                                                    <>
 
+                                                        <option value="" disabled>Select Client ...</option>
+                                                        {contacts.length > 0 && contacts?.map((item) => {
+                                                            return (
+                                                                <option key={'scontact' + item.id} value={item.id} >{item.name}</option>
+                                                            )
+                                                        })}
+
+                                                    </>
+                                                }
+                                            </Form.Select> :
                                             <CreatableSelect
                                                 isClearable
                                                 isDisabled={cloading || invoiceId ? true : false}
@@ -418,7 +451,7 @@ const RepeatingInvoiceForm = () => {
                                                 })}
                                                 isSearchable={true}
                                                 className="block w-full min-w-0 flex-1 sm:text-sm"
-                                            />
+                                            />}
 
                                         </Form.Group>
                                         {/* <Form.Group as={Col}>

@@ -26,6 +26,7 @@ import {
   resetPaymentReducerState,
   clearDueInvoices,
   getCompanySettingsByKey,
+  addContact,
 } from "../../redux/actions";
 import moment from "moment";
 
@@ -49,6 +50,7 @@ const PaymentForm = () => {
   const [success, setSuccess] = useState(null);
   const [status, setStatus] = useState("draft");
   const [contactId, setContactId] = useState("");
+  const [clientPayment, setClientPayment] = useState("");
 
   const company_setting_by_key = useSelector(
     (state) => state.CompanySettings.company_setting_by_key
@@ -149,6 +151,10 @@ const PaymentForm = () => {
       newData["client_id"] = state.contactId;
       
       setContactId(state.contactId);
+      
+      if(state.clientPayment){
+        setClientPayment(state.clientPayment)
+      }
       setPaymentData(newData);
       
     }
@@ -172,7 +178,7 @@ const PaymentForm = () => {
         dispatch(getDueInvoices(contactId));
       }
     }
-  }, [contactId, company_setting_by_key]);
+  }, [contactId, company_setting_by_key,payment_success]);
 
   useEffect(() => {
     if (payment_success !== null) {
@@ -219,6 +225,7 @@ const PaymentForm = () => {
   // console.log("form",paymentData)
 
   useEffect(() => {
+    
     if (
       due_invoices !== "" &&
       due_invoices !== undefined &&
@@ -228,6 +235,7 @@ const PaymentForm = () => {
       due_invoices.forEach((element) => {
         const newElement = {};
         newElement["invoice_id"] = element.id;
+        newElement["client_id"] = element.contact_id.id;
         newElement["invoice_no"] = element.invoice_no;
         newElement["status"] = element.status;
         newElement["total_amount"] = element.payable;
@@ -238,6 +246,7 @@ const PaymentForm = () => {
           due_invoice_objects[element.id] = newElement;
         }
       });
+      
       setInvoicesData(due_invoice_objects);
     }
   }, [due_invoices]);
@@ -254,13 +263,13 @@ const PaymentForm = () => {
     });
 
     const current_balance =
-      parseFloat(client_balance) +
+      parseFloat(client_balance.balance) +
       parseFloat(paymentData.amount) -
       parseFloat(paymentData.total_invoice_amount);
     if (current_balance < 0) {
       setError("You don't have enough balance to make payment!");
     }
-
+    
     const finalSelectedInvoices = selectedInvoices.map((inv) => {
       const payingAmount =
         inv.paying_amount !== "" &&
@@ -281,7 +290,7 @@ const PaymentForm = () => {
 
       const newInv = {
         amount: payingAmount !== 0 ? payingAmount : "",
-        client_id: paymentData?.client_id,
+        client_id: contactId,
         invoice_id: inv?.invoice_id,
         adjustment_amount: adjAmount !== 0 ? adjAmount : "",
         invoice_status:
@@ -355,11 +364,11 @@ const PaymentForm = () => {
                     size="lg"
                   >
                     <p>
-                      Current Balance: {client_balance >= 0 ? parseFloat(client_balance).toFixed(2) : 0.0}{" "}
+                      Current Balance: {client_balance.balance !== null ? parseFloat(client_balance.balance).toFixed(2) : 0.0}{" "}
                       {scurrency.symbol}
                       </p>
                       <p style={{color: 'red'}}>
-                      Due: {client_balance < 0 ? parseFloat(client_balance).toFixed(2) : 0}{" "}
+                      Due: {client_balance.due !== null ? parseFloat(client_balance.due).toFixed(2) : 0}{" "}
                       {scurrency.symbol}
                     </p>
                   </Button>
@@ -436,6 +445,12 @@ const PaymentForm = () => {
                       )}
                     </Form.Group>
 
+                    {clientPayment ?
+                    <>
+                      <Form.Group as={Col}></Form.Group>
+                      <Form.Group as={Col}></Form.Group>
+                    </>:
+                    <>
                     <Form.Group as={Col}>
                       <Form.Label className="required">Payment Type</Form.Label>
 
@@ -490,7 +505,8 @@ const PaymentForm = () => {
                         onChange={(e) => onChange(e)}
                         value={paymentData?.reference}
                       ></Form.Control>
-                    </Form.Group>
+                    </Form.Group></>
+                    }
                   </Row>
                 </div>
                 <Table striped bordered hover>

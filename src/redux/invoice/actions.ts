@@ -11,6 +11,10 @@ export const getInvoiceDetails = (id:number) => ({
     payload: id,
 });
 
+export const getContactInvoice = (id:any, limit:any, page:any) => ({
+    type: type.GET_CONTACT_INVOICE_REQUESTED,
+    payload: {id, limit, page},
+});
 
 
 

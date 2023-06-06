@@ -528,6 +528,14 @@ const InvoiceDetails = withSwal(({swal}) => {
                                             <p style={{ fontSize: '20px' }}>Total</p>
                                             <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.total_amount?.toLocaleString()}</p>
                                         </div>
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Paid</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.partial_paid_and_due?.partial_paid !== null ? invoiceDetails?.partial_paid_and_due?.partial_paid.toLocaleString() : 0}</p>
+                                        </div>
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Due</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.partial_paid_and_due?.due?.toLocaleString()}</p>
+                                        </div>
                                         <hr></hr><hr></hr>
                                     </div>
                                 </div>
@@ -542,7 +550,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                 </Col>
             </Row>
             {invoiceDetails?
-                <PaymentModal show={show} onHide={onCloseModal} paymentSubmit={paymentSubmit} maxAmount={parseFloat(parseFloat(invoiceDetails?.payable).toFixed(2))} client_balance={client_balance} scurrency={scurrency} />:null
+                <PaymentModal show={show} onHide={onCloseModal} paymentSubmit={paymentSubmit} maxAmount={parseFloat(parseFloat(invoiceDetails?.payable).toFixed(2))} client_balance={client_balance.balance} scurrency={scurrency} />:null
             }
         </>
     );

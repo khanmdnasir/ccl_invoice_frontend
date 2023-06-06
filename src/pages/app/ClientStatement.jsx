@@ -54,8 +54,8 @@ const columns = [
         sort: true,
     },
     {
-        Header: 'Invoice Amoount',
-        accessor: 'total_amount',
+        Header: 'Invoice Paid Amount',
+        accessor: 'paid',
         sort: true,
     },
     {
@@ -239,6 +239,7 @@ const ClientStatement = () => {
                                                     <i className="mdi mdi-printer me-1"></i> Print
                                                 </Button>}
                                                 content={() => componentRef.current}
+                                                documentTitle={`qorum_invoice_${getCurrentDate()}`}
                                             />}
                                         <div className='d-none'>
                                             <ComponentToPrint ref={componentRef} data={clientLedger} />

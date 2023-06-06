@@ -80,6 +80,9 @@ export const resetPaymentReducerState = () => ({
     payload: {},
 });
 
-
+export const getContactPayment = (id:any, limit:any, page:any) => ({
+    type: type.GET_CONTACT_PAYMENT_REQUESTED,
+    payload: {id, limit, page},
+});
 
 

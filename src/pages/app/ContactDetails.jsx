@@ -43,6 +43,9 @@ import {
   resetPaymentReducerState,
   clearDueInvoices,
   getCompanySettingsByKey,
+  getRepeatingInvoice,
+  getContactPayment,
+  getContactRepeatingInvoice,
 } from "../../redux/actions";
 
 const api = new APICore();
@@ -62,6 +65,32 @@ const StatusColumn = ({ row }) => {
           row.original.status.slice(1)}
       </span>
     </React.Fragment>
+  );
+};
+
+const InvoiceStatusColumn = ({ row }) => {
+  let status = (row.original.status).split('_')
+
+  for (var i = 0; i < status.length; i++) {
+      status[i] = status[i].charAt(0).toUpperCase() + status[i].slice(1);
+  }
+  status = status.join(" ");
+
+  return (
+      <React.Fragment>
+          <span style={{width:"5rem",fontSize:12}}
+              className={classNames('badge', {
+                  'bg-soft-primary text-primary': row.original.status === "draft",
+                  'bg-soft-secondary text-secondary': row.original.status === "waiting",
+                  'bg-soft-success text-success': row.original.status === "approve",
+                  'bg-soft-warning text-warning': row.original.status === "partial_paid",
+                  'bg-soft-info text-info': row.original.status === "paid",
+              })}
+          >
+
+              {status}
+          </span>
+      </React.Fragment>
   );
 };
 
@@ -170,9 +199,176 @@ const invoicesColumns = [
         Header: 'Status',
         accessor: 'status',
         sort: true,
+        Cell: InvoiceStatusColumn,
     },
     
 
+];
+
+
+export const RepeatingInvoiceStatusColumn = withSwal(({ row, swal }) => {
+  /*
+   *   modal handeling
+   */
+  const dispatch = useDispatch();
+  const user_role = useSelector((state) => state.Role.user_role);
+
+  /*
+  handle form submission
+  */
+  const draftsOptions =
+      <>
+          <option selected={row.original.status === 'draft'} value='draft'>Draft</option>
+          <option selected={row.original.status === 'approve'} value='approve'>Approved</option>
+      </>
+
+  const approvesOptions =
+      <>
+          <option selected={row.original.status === 'approve'} value='approve'>Approved</option>
+      </>
+
+
+  var dropDown = (<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+      <Form.Select style={{ width: '70%' }} onChange={(e) => handleShow(row, e)}>
+          {row.original.status === "draft" ? (draftsOptions) : null}
+          {row.original.status === "approve" ? (approvesOptions) : null}
+      </Form.Select>
+  </div>)
+
+  const handleShow = (row, e) => {
+      const value = e.target.value;
+      const data = {
+          "status": value
+      }
+      swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#28bb4b',
+          cancelButtonColor: '#f34e4e',
+          confirmButtonText: 'Yes, change it!',
+      })
+          .then(function (result) {
+
+              if (result.value) {
+                  api.update(`/api/change-repeating-invoice-status/?id=${row.original.id}`, data)
+                      .then(res => {
+                          if (res) {
+                              swal.fire(
+                                  'Updated!',
+                                  'Repeating Invoice Status has been Updated.',
+                                  'success'
+                              );
+                          }
+                          else {
+                              swal.fire(
+                                  'Updated!',
+                                  'Repeating Invoice Status has not Updated.',
+                                  'warning'
+                              );
+                          }
+                          // setTimeout(() => {
+                          //     refreshPage();
+                          // }, 600);
+                          dispatch(getRepeatingInvoice(10, 1));
+                      })
+                      .catch(err => {
+                          console.log('err', err)
+                          dispatch(getRepeatingInvoice(10, 1));
+                          swal.fire({
+                              title: err,
+                          }
+                          );
+                      })
+              } else if (result.dismiss === 'cancel') {
+                  dispatch(getRepeatingInvoice(10, 1));
+              }
+          })
+          .catch(err => {
+              console.log('swal fire err', err)
+          })
+  };
+
+  return (
+      <>
+          {dropDown}
+
+      </>
+  );
+});
+
+const repeatingInvoiceColumns = [
+  {
+      Header: 'Invoice No',
+      accessor: 'invoice_no',
+      sort: true,
+  },
+  {
+      Header: 'Client',
+      accessor: 'contact_id.name',
+      sort: true,
+  },
+  {
+      Header: 'Day',
+      accessor: 'date',
+      sort: true,
+  },
+  {
+      Header: 'Due Day',
+      accessor: 'due_date',
+      sort: true,
+  },
+  {
+      Header: 'Repeat Day',
+      accessor: 'repeat_date',
+      sort: true,
+  },
+  {
+      Header: 'Tax Type',
+      accessor: 'tax_type',
+      sort: true,
+  },
+  {
+      Header: 'Sub Total',
+      accessor: 'sub_total',
+      sort: true,
+      Cell: (row) => {
+          return <div>{row?.row?.original?.sub_total!==null?(row?.row?.original?.sub_total).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+      }
+  },
+  {
+      Header: 'Discount',
+      accessor: 'discount',
+      sort: true,
+      Cell: (row) => {
+          return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+      }
+  },
+  {
+      Header: 'Total Tax',
+      accessor: 'total_tax',
+      sort: true,
+      Cell: (row) => {
+          return <div>{row?.row?.original?.total_tax!==null?(row?.row?.original?.total_tax).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+      }
+  },
+  {
+      Header: 'Total Amount',
+      accessor: 'total_amount',
+      sort: true,
+      Cell: (row) => {
+          return <div>{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+      }
+  },
+  {
+      Header: 'Status',
+      accessor: 'status',
+      sort: true,
+      Cell: RepeatingInvoiceStatusColumn,
+  },
+  
+  
 ];
 
 const servicesColumns = [
@@ -219,7 +415,10 @@ const ContactDetails = withSwal(({ swal }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [contactId, setContactId] = useState();
-  const [pageSize, setPageSize] = useState(10);
+  const [invoicePageSize, setInvoicePageSize] = useState(10);
+  const [repeatingInvoicePageSize, setRepeatingInvoicePageSize] = useState(10);
+  const [paymentPageSize, setPaymentPageSize] = useState(10);
+  const [servicePageSize, setServicePageSize] = useState(10);
   const [invoiceSetting, setInvoiceSetting] = useState({
     auto_approve: false,
     auto_invoice_send: false,
@@ -234,21 +433,43 @@ const ContactDetails = withSwal(({ swal }) => {
     },
   });
 
-  const payment = useSelector((state) => state.Payment.payments);
-  console.log("payment ListContact", payment);
-  const previous = useSelector((state) => state.Payment.previous);
-  const next = useSelector((state) => state.Payment.next);
-  const current_page = useSelector((state) => state.Payment.current_page);
-  const total_page = useSelector((state) => state.Payment.total_page);
-  const active = useSelector((state) => state.Payment.active);
-  const [paymentDate, setPaymentDate] = useState("");
-  const invoice_list = useSelector((state) => state.Contact.invoice_list);
-  const invoice_list_pagination_data = useSelector(
-    (state) => state.Contact.invoice_list_pagination_data
-  );
+  const invoice_list = useSelector((state) => state.Invoice.invoices);
+  const repeating_invoice_list = useSelector((state) => state.RepeatingInvoice.repeating_invoices);
+  const service_list = useSelector((state) => state.Service.services);
+  const payment_list = useSelector((state) => state.Payment.payments);
+  // console.log("payment ListContact", payment);
+  const invoice_previous = useSelector((state) => state.Invoice.previous);
+  const invoice_next = useSelector((state) => state.Invoice.next);
+  const repeating_invoice_previous = useSelector((state) => state.RepeatingInvoice.previous);
+  const repeating_invoice_next = useSelector((state) => state.RepeatingInvoice.next);
+  const service_previous = useSelector((state) => state.Service.previous);
+  const service_next = useSelector((state) => state.Service.next);
+  const payment_previous = useSelector((state) => state.Payment.previous);
+  const payment_next = useSelector((state) => state.Payment.next);
+  const invoice_current_page = useSelector((state) => state.Invoice.current_page);
+  const invoice_total_page = useSelector((state) => state.Invoice.total_page);
+  const invoice_active = useSelector((state) => state.Invoice.active);
+  const repeating_invoice_current_page = useSelector((state) => state.RepeatingInvoice.current_page);
+  const repeating_invoice_total_page = useSelector((state) => state.RepeatingInvoice.total_page);
+  const repeating_invoice_active = useSelector((state) => state.RepeatingInvoice.active);
+  const service_current_page = useSelector((state) => state.Service.current_page);
+  const service_total_page = useSelector((state) => state.Service.total_page);
+  const service_active = useSelector((state) => state.Service.active);
+  const payment_current_page = useSelector((state) => state.Payment.current_page);
+  const payment_total_page = useSelector((state) => state.Payment.total_page);
+  const payment_active = useSelector((state) => state.Payment.active);
+  const [paymentData, setPaymentData] = useState("");
+  // const invoice_list = useSelector((state) => state.Contact.invoice_list);
+  // const invoice_list_pagination_data = useSelector(
+  //   (state) => state.Contact.invoice_list_pagination_data
+  // );
   const contact_details = useSelector((state) => state.Contact.contact_details);
   const invoice_setting = useSelector((state) => state.Contact.invoice_setting);
   const loading = useSelector((state) => state.Contact.loading);
+  const invoiceLoading = useSelector((state) => state.Invoice.loading);
+  const repeatingInvoiceLoading = useSelector((state) => state.RepeatingInvoice.loading);
+  const serviceLoading = useSelector((state) => state.Service.loading);
+  const paymentLoading = useSelector((state) => state.Payment.loading);
   const invoice_setting_error = useSelector(
     (state) => state.Contact.invoice_setting_error
   );
@@ -256,7 +477,7 @@ const ContactDetails = withSwal(({ swal }) => {
     (state) => state.Contact.invoice_setting_success
   );
   const success = useSelector((state) => state.Contact.success);
-  const services = useSelector((state) => state.Service.contact_services);
+  // const services = useSelector((state) => state.Service.contact_services);
   const client_balance = useSelector((state) => state.Payment.client_balance);
 
   const user_role = useSelector((state) => state.Role.user_role);
@@ -326,52 +547,76 @@ const ContactDetails = withSwal(({ swal }) => {
     }, 2000);
   }, [success]);
 
-  const visitPage = (page) => {
-    dispatch(getContactInvoice(contactId, pageSize, page));
-    dispatch(getPayment(contactId, pageSize, page));
+  const visitInvoicePage = (page) => {
+    dispatch(getContactInvoice(contactId,invoicePageSize, page));
   };
 
-  const previous_number = () => {
-    dispatch(
-      getContactInvoice(
-        contactId,
-        pageSize,
-        invoice_list_pagination_data.previous
-      )
-    );
-    dispatch(getPayment(contactId, pageSize, previous));
+  const invoice_previous_number = () => {
+      dispatch(getContactInvoice(contactId,invoicePageSize, invoice_previous));
   };
 
-  const next_number = () => {
-    dispatch(
-      getContactInvoice(contactId, pageSize, invoice_list_pagination_data.next)
-    );
-    dispatch(getPayment(contactId, pageSize, next));
+  const invoice_next_number = () => {
+      dispatch(getContactInvoice(contactId,invoicePageSize, invoice_next));
+  };
+  const visitRepeatingInvoicePage = (page) => {
+    dispatch(getContactRepeatingInvoice(contactId,repeatingInvoicePageSize, page));
+  };
+
+  const repeating_invoice_previous_number = () => {
+      dispatch(getContactRepeatingInvoice(contactId,repeatingInvoicePageSize, repeating_invoice_previous));
+  };
+
+  const repeating_invoice_next_number = () => {
+      dispatch(getContactRepeatingInvoice(contactId,repeatingInvoicePageSize, repeating_invoice_next));
+  };
+  const visitServicePage = (page) => {
+    dispatch(getContactInvoice(contactId,servicePageSize, page));
+  };
+
+  const service_previous_number = () => {
+      dispatch(getContactService(contactId,servicePageSize, service_previous));
+  };
+
+  const service_next_number = () => {
+      dispatch(getContactService(contactId,servicePageSize, service_next));
+  };
+  const visitPaymentPage = (page) => {
+    dispatch(getContactPayment(contactId,paymentPageSize, page));
+  };
+
+  const payment_previous_number = () => {
+      dispatch(getContactPayment(contactId,paymentPageSize, payment_previous));
+  };
+
+  const payment_next_number = () => {
+      dispatch(getContactPayment(contactId,paymentPageSize, payment_next));
   };
 
   useEffect(() => {
     if (contactId !== undefined && contactId !== null) {
-      dispatch(getContactInvoice(contactId, pageSize, 1));
+      dispatch(getContactInvoice(contactId, invoicePageSize, 1));
+      dispatch(getContactRepeatingInvoice(contactId, repeatingInvoicePageSize, 1));
+      dispatch(getContactPayment(contactId, paymentPageSize, 1));
       dispatch(getContactDetails(contactId));
       dispatch(getContactInvoiceSetting(contactId));
-      dispatch(getContactService(contactId));
+      dispatch(getContactService(contactId,servicePageSize,1));
       dispatch(getClientBalance(contactId));
       dispatch(getDueInvoices(contactId));
     }
   }, [contactId]);
 
   useEffect(() => {
-    const paymentwithDate = payment.map((item) => {
+    const paymentwithDate = payment_list.map((item) => {
       let date = item.payment_date.split("T")[0];
       item.payment_date = date;
       return item;
     });
-    setPaymentDate(paymentwithDate);
-  }, [payment]);
+    setPaymentData(paymentwithDate);
+  }, [payment_list]);
 
-  useEffect(() => {
-    dispatch(getPayment(pageSize, 1));
-  }, [pageSize]);
+  // useEffect(() => {
+  //   dispatch(getPayment(pageSize, 1));
+  // }, [pageSize]);
 
   useEffect(() => {
     if (invoice_setting !== undefined) {
@@ -620,7 +865,11 @@ const ContactDetails = withSwal(({ swal }) => {
                   </div>
                   <div className="col-sm">
                     <h5 className="me-2">Balance</h5>
-                    <p>{client_balance}</p>
+                    <p>{client_balance.balance}</p>
+                  </div>
+                  <div className="col-sm">
+                    <h5 className="me-2">Due</h5>
+                    <p>{client_balance.due}</p>
                   </div>
                 </div>
 
@@ -642,8 +891,19 @@ const ContactDetails = withSwal(({ swal }) => {
             </Card.Body>
           </Card>
         </Col>
-
+        
         <Col md={4} xl={4}>
+            <div  style={{display: 'flex',justifyContent: 'flex-end'}}>
+              <Link to={{
+                    pathname: "/app/payment_form",
+                    state: { contactId: contactId, clientPayment: true},
+                  }} className="btn btn-success mb-2" >
+                  <i className="mdi mdi-cash me-1"></i>Payment
+              </Link> 
+            </div>
+            
+          
+        
           <Card>
             <Card.Header>
               <p>Invoice Setting</p>
@@ -890,18 +1150,20 @@ const ContactDetails = withSwal(({ swal }) => {
                     state: { contactId: contactId },
                   }}
                 >
-                  <i className="mdi mdi-pencil me-1"></i> Edit
+                  <i className="mdi mdi-pencil me-1"></i> Add
                 </Link>
               </div>
             </Card.Header>
 
             <Card.Body>
-              {invoice_list.length > 0 ? (
+            {invoiceLoading ? <p>Loading...</p> :
+            <>
+              {invoice_list?.length > 0 ? (
                 <>
                   <Table
                     columns={invoicesColumns}
                     data={invoice_list}
-                    pageSize={pageSize}
+                    pageSize={invoicePageSize}
                     isSortable={true}
                     isDetails={true}
                     pathName='/app/invoice_details'
@@ -911,17 +1173,70 @@ const ContactDetails = withSwal(({ swal }) => {
                     searchBoxClass=""
                   />
                   <Pagination
-                    visitPage={visitPage}
-                    previous_number={previous_number}
-                    next_number={next_number}
-                    total_page={invoice_list_pagination_data.total_page}
-                    current_page={invoice_list_pagination_data.current_page}
-                    active={invoice_list_pagination_data.active}
+                    visitPage={visitInvoicePage}
+                    previous_number={invoice_previous_number}
+                    next_number={invoice_next_number}
+                    total_page={invoice_total_page}
+                    current_page={invoice_current_page}
+                    active={invoice_active}
+                  />
+                </>
+              ) : (
+                "No data available!"
+              )}</>}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col md={12} xl={12}>
+          <Card>
+            <Card.Header>
+            <div className="d-flex justify-content-between">
+              <p style={{ marginBottom: "0px !important" }}>Repeating Invoice List</p>
+              <Link
+                  className="btn btn-primary"
+                  to={{
+                    pathname: "/app/repeating_invoice_form",
+                    state: { contactId: contactId },
+                  }}
+                >
+                  <i className="mdi mdi-pencil me-1"></i> Add
+                </Link>
+              </div>
+            </Card.Header>
+
+            <Card.Body>
+            {repeatingInvoiceLoading ? <p>Loading...</p> :
+            <>
+              {repeating_invoice_list?.length > 0 ? (
+                <>
+                  <Table
+                    columns={invoicesColumns}
+                    data={repeating_invoice_list}
+                    pageSize={repeatingInvoicePageSize}
+                    isSortable={true}
+                    isDetails={true}
+                    pathName='/app/invoice_details'
+                    pagination={false}
+                    isSearchable={true}
+                    tableClass="table-nowrap table-hover"
+                    searchBoxClass=""
+                  />
+                  <Pagination
+                    visitPage={visitRepeatingInvoicePage}
+                    previous_number={repeating_invoice_previous_number}
+                    next_number={repeating_invoice_next_number}
+                    total_page={repeating_invoice_total_page}
+                    current_page={repeating_invoice_current_page}
+                    active={repeating_invoice_active}
                   />
                 </>
               ) : (
                 "No data available!"
               )}
+              </>}
             </Card.Body>
           </Card>
         </Col>
@@ -941,18 +1256,20 @@ const ContactDetails = withSwal(({ swal }) => {
                     state: { contactId: contactId },
                   }}
                 >
-                  <i className="mdi mdi-pencil me-1"></i> Edit
+                  <i className="mdi mdi-pencil me-1"></i> Add
                 </Link>
               </div>
             </Card.Header>
 
             <Card.Body>
-              {paymentDate.length > 0 ? (
+            {paymentLoading ? <p>Loading...</p> :
+            <>
+              {paymentData?.length > 0 ? (
                 <>
                   <Table
                     columns={columns}
-                    data={paymentDate}
-                    pageSize={pageSize}
+                    data={paymentData}
+                    pageSize={paymentPageSize}
                     isDetails={true}
                     pathName='/app/payment_details'
                     isSortable={true}
@@ -961,10 +1278,19 @@ const ContactDetails = withSwal(({ swal }) => {
                     tableClass="table-nowrap table-hover"
                     searchBoxClass=""
                   />
+                  <Pagination
+                    visitPage={visitPaymentPage}
+                    previous_number={payment_previous_number}
+                    next_number={payment_next_number}
+                    total_page={payment_total_page}
+                    current_page={payment_current_page}
+                    active={payment_active}
+                  />
                 </>
               ) : (
                 "No payments available!"
               )}
+              </>}
             </Card.Body>
           </Card>
         </Col>
@@ -981,21 +1307,23 @@ const ContactDetails = withSwal(({ swal }) => {
                   className="btn btn-primary"
                   to={{
                     pathname: "/app/service_form",
-                    state: { services: services, contactId: contactId },
+                    state: { services: service_list, contactId: contactId },
                   }}
                 >
-                  <i className="mdi mdi-pencil me-1"></i> Edit
+                  <i className="mdi mdi-pencil me-1"></i> Add
                 </Link>
               </div>
             </Card.Header>
 
             <Card.Body>
-              {services.length > 0 ? (
+            {serviceLoading ? <p>Loading...</p> :
+            <>
+              {service_list?.length > 0 ? (
                 <>
                   <Table
                     columns={servicesColumns}
-                    data={services}
-                    pageSize={pageSize}
+                    data={service_list}
+                    pageSize={servicePageSize}
                     isDetails={true}
                     pathName='/app/service_details'
                     isSortable={true}
@@ -1004,10 +1332,19 @@ const ContactDetails = withSwal(({ swal }) => {
                     tableClass="table-nowrap table-hover"
                     searchBoxClass=""
                   />
+                  <Pagination
+                    visitPage={visitServicePage}
+                    previous_number={service_previous_number}
+                    next_number={service_next_number}
+                    total_page={service_total_page}
+                    current_page={service_current_page}
+                    active={service_active}
+                  />
                 </>
               ) : (
                 "No data available!"
               )}
+              </>}
             </Card.Body>
           </Card>
         </Col>

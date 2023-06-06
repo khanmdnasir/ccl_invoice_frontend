@@ -5,6 +5,7 @@ import { SagaIterator } from '@redux-saga/core';
 import {
     getService as getServiceApi,
     getContactService as getContactServiceApi,
+    getContactServices as getContactServicesApi,
     addService as addServiceApi,
     
 } from '../../helpers';
@@ -31,13 +32,25 @@ function* getService({ payload: {limit,page}}:ServiceData):SagaIterator {
     }
 }
 
-function* getContactService({ payload: {contact_id}}:ServiceData):SagaIterator {
+function* getContactService({ payload }:any):SagaIterator {
     try {
-        const response = yield call(getContactServiceApi,{contact_id});
+        const response = yield call(getContactServiceApi,{...payload});
         const data = response.data;
-        yield put({type: 'GET_CONTACTSERVICE_SUCCESS' , data: data.results});
+        yield put({type: 'GET_CONTACTSERVICE_SUCCESS' , data: data});
     } catch (error) {
         yield put({type: 'GET_CONTACTSERVICE_FAILED', error: error});
+        
+    }
+}
+
+function* getContactServices({ payload }:any):SagaIterator {
+    try {
+        const response = yield call(getContactServicesApi,{...payload});
+        const data = response.data;
+        console.log('services',data)
+        yield put({type: 'GET_CONTACTSERVICES_SUCCESS' , data: data});
+    } catch (error) {
+        yield put({type: 'GET_CONTACTSERVICES_FAILED', error: error});
         
     }
 }
@@ -70,6 +83,9 @@ export function* watchGetService() {
 export function* watchGetContactService() {
     yield takeEvery('GET_CONTACTSERVICE_REQUESTED', getContactService);
 }
+export function* watchGetContactServices() {
+    yield takeEvery('GET_CONTACTSERVICES_REQUESTED', getContactServices);
+}
 
 
 
@@ -80,7 +96,7 @@ export function* watchAddService() {
 
 
 function* serviceSaga() {
-    yield all([fork(watchGetService),fork(watchAddService),fork(watchGetContactService)]);
+    yield all([fork(watchGetService), fork(watchAddService),fork(watchGetContactService),fork(watchGetContactServices)]);
 }
 
 export default serviceSaga;

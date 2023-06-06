@@ -4,7 +4,6 @@ import { SagaIterator } from '@redux-saga/core';
 // helpers
 import {
     getContact as getContactApi,
-    getContactInvoice as getContactInvoiceApi,
     getContactInvoiceSetting as getContactInvoiceSettingApi,
     updateContactInvoiceSetting as updateContactInvoiceSettingApi,
     getContactDetails as getContactDetailsApi,
@@ -47,18 +46,6 @@ function* getContact({ payload: {limit,page}}:ContactData):SagaIterator {
 }
 
 
-function* getContactInvoice({ payload }:any):SagaIterator {
-    try {
-        const response = yield call(getContactInvoiceApi,{...payload});
-        const data = response.data;
-        // console.log("data",data)
-
-        yield put({type: 'GET_CONTACT_INVOICE_SUCCESS' , data: data});
-    } catch (error) {
-        yield put({type: 'GET_CONTACT_INVOICE_FAILED', error: error});
-        
-    }
-}
 
 
 function* getContactInvoiceSetting({ payload }:ContactData):SagaIterator {
@@ -185,10 +172,6 @@ export function* watchGetContact() {
 }
 
 
-export function* watchGetContactInvoice() {
-    yield takeEvery('GET_CONTACT_INVOICE_REQUESTED', getContactInvoice);
-}
-
 export function* watchGetContactInvoiceSetting() {
     yield takeEvery('GET_CONTACT_INVOICE_SETTING_REQUESTED', getContactInvoiceSetting);
 }
@@ -222,7 +205,7 @@ export function* watchDeleteContact() {
 
 
 function* contactSaga() {
-    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchUpdateContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactInvoice), fork(watchGetContactDetails), fork(watchGetContactInvoiceSetting), fork(watchUpdateContactInvoiceSetting),setContactSuccessAlert,setContactErrorAlert]);
+    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchUpdateContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactDetails), fork(watchGetContactInvoiceSetting), fork(watchUpdateContactInvoiceSetting),setContactSuccessAlert,setContactErrorAlert]);
 }
 
 export default contactSaga;
