@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { APICore } from '../../helpers/api/apiCore';
-import { Row, Col, Card, Form, Alert, Tab, Nav } from 'react-bootstrap';
+import { Row, Col, Card, Form, Alert, Tab, Nav, Dropdown, Button } from 'react-bootstrap';
 import { withSwal } from 'react-sweetalert2';
 
 // components
@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getInvoice } from '../../redux/actions';
 import Pagination from '../../components/CustomPagination';
+import RepeatingInvoice from './RepeatingInvoice';
 
 
 
@@ -46,6 +47,19 @@ const StatusColumn = ({ row }) => {
         </React.Fragment>
     );
 };
+
+const ClientNameColumn = ({ row }) => {
+    return (
+        <>
+            <Link to={{
+            pathname: "/app/client_details",
+            state: { contactId: row?.original?.contact_id?.id},
+            }}>
+                {row?.original?.contact_id?.name}
+            </Link>
+        </>
+    )
+}
 
 
 export const StatusColumn2 = withSwal(({ row, swal }) => {
@@ -164,6 +178,8 @@ const columns = [
         Header: 'Client',
         accessor: 'contact_id.name',
         sort: true,
+        Cell: ClientNameColumn
+
     },
     {
         Header: 'Date',
@@ -175,41 +191,29 @@ const columns = [
         accessor: 'due_date',
         sort: true,
     },
-    {
-        Header: 'Tax Type',
-        accessor: 'tax_type',
-        sort: true,
-    },
-    {
-        Header: 'Sub Total',
-        accessor: 'sub_total',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.sub_total!==null?(row?.row?.original?.sub_total).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
-    {
-        Header: 'Discount',
-        accessor: 'discount',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
-    {
-        Header: 'Total Tax',
-        accessor: 'total_tax',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.total_tax!==null?(row?.row?.original?.total_tax).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
+    
     {
         Header: 'Total Amount',
         accessor: 'total_amount',
         sort: true,
         Cell: (row) => {
             return <div>{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
+    },
+    {
+        Header: 'Paid',
+        accessor: 'partial_paid_and_due.partial_paid',
+        sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.partial_paid_and_due?.partial_paid !==null ? (row?.row?.original?.partial_paid_and_due?.partial_paid).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+        }
+    },
+    {
+        Header: 'Due',
+        accessor: 'partial_paid_and_due.due',
+        sort: true,
+        Cell: (row) => {
+            return <div>{row?.row?.original?.partial_paid_and_due?.due!==null?(row?.row?.original?.partial_paid_and_due?.due).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
         }
     },
     {
@@ -225,7 +229,6 @@ const columns = [
 
 const Invoice = () => {
     const dispatch = useDispatch();
-    const [filteredIncoices, setFilteredInvoices] = useState([]);
     const invoices = useSelector(state => state.Invoice.invoices);
     const previous = useSelector(state => state.Invoice.previous);
     const next = useSelector(state => state.Invoice.next);
@@ -242,15 +245,15 @@ const Invoice = () => {
      */
 
     const visitPage = (page) => {
-        dispatch(getInvoice(pageSize, page));
+        dispatch(getInvoice(pageSize, page,activePage));
     };
 
     const previous_number = () => {
-        dispatch(getInvoice(pageSize, previous));
+        dispatch(getInvoice(pageSize, previous,activePage));
     };
 
     const next_number = () => {
-        dispatch(getInvoice(pageSize, next));
+        dispatch(getInvoice(pageSize, next,activePage));
     };
 
     /*
@@ -260,41 +263,34 @@ const Invoice = () => {
     const onClickEvent = (value) => {
         if (value === 'all') {
             setActivePage('all');
-            setFilteredInvoices(invoices)
         } else if (value === 'draft') {
             setActivePage('draft');
-            setFilteredInvoices(invoices.filter((item) => item.status === 'draft'))
-
         } else if (value === 'approval') {
             setActivePage('approval');
-            setFilteredInvoices(invoices.filter((item) => item.status === 'waiting'))
-
         } else if (value === 'approve') {
             setActivePage('approve');
-            setFilteredInvoices(invoices.filter((item) => item.status === 'approve'))
-
         } else if (value === 'paid') {
             setActivePage('paid');
-            setFilteredInvoices(invoices.filter((item) => item.status === 'paid'))
-
         }
-        // else if(value === 'repeating'){
-        //     setFilteredInvoices(invoices)
-        // }
+        else if(value === 'repeating'){
+            setActivePage('repeating')
+        }
         else {
-            setFilteredInvoices(invoices)
+            
         }
     }
 
+    
+    useEffect(() => {
+        dispatch(getInvoice(pageSize, 1,activePage));
+    }, [activePage])
 
     useEffect(() => {
-        dispatch(getInvoice(pageSize, 1));
-    }, [pageSize])
+        dispatch(getInvoice(pageSize, 1,'approve'));
+    }, [])
 
-    useEffect(() => {
-        setFilteredInvoices(invoices);
-        setActivePage('approve');
-    }, [invoices])
+
+    
     return (
         <>
             <PageTitle
@@ -303,6 +299,30 @@ const Invoice = () => {
                 ]}
                 title={`Invoice`}
             />
+
+            <Dropdown  className="mb-4">
+            
+                <Dropdown.Toggle split variant='primary'>
+                    New  <i className="mdi mdi-chevron-down"></i>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    <Dropdown.Item eventKey="1" ><Link to='/app/invoice_form'>New Invoice</Link></Dropdown.Item>
+                    <Dropdown.Item eventKey="2" ><Link to='/app/repeating_invoice_form'>New Repeating Invoice</Link></Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+
+            {/* <Row className='mb-4'>
+            <Form.Group as={Col} className='col-md-2' onChange={redirectToCreate}>
+                <Form.Select style={{backgroundColor: '#dee2e6',color: '#0078C8'}}>
+                    <option selected={activePage !== 'repeating'} onClick={redirectToCreate}>New Invoice</option>
+                    <option selected={activePage === 'repeating'}>New Repeating Invoice</option>
+                </Form.Select>
+            </Form.Group>
+            <div className='col-md-10'></div>
+            </Row> */}
+            
+
             <Tab.Container>
                 <Nav as="ul" variant="tabs">
                     <Nav.Item as="li" key='all'>
@@ -325,11 +345,11 @@ const Invoice = () => {
                             Paid
                         </Nav.Link>
                     </Nav.Item>
-                    {/* <Nav.Item as="li" key='repeating'>
+                    <Nav.Item as="li" key='repeating'>
                         <Nav.Link className="cursor-pointer" href="#" eventKey='repeating' onClick={()=>onClickEvent('repeating')}>
                            Repeating
                         </Nav.Link>
-                    </Nav.Item>                         */}
+                    </Nav.Item>                        
                 </Nav>
 
                 {/* <Tab.Content>
@@ -356,7 +376,7 @@ const Invoice = () => {
                                     {error}
                                 </Alert>
                             )}
-                            <Row className="mb-2">
+                            {/* <Row className="mb-2">
                                 <Col sm={4}>
                                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                         <span className='me-2'>Show:</span>
@@ -378,26 +398,21 @@ const Invoice = () => {
                                             </>
                                         }
 
-                                        {/* <ExcelFile element={<Button className="btn btn-light mb-2">Export</Button>}>
-                                            <ExcelSheet data={users} name="Users">
-                                                <ExcelColumn label="Name" value="name"/>
-                                                <ExcelColumn label="Phone" value="phone"/>
-                                                <ExcelColumn label="Email" value="email"/>
-                                                <ExcelColumn label="Role" value={(col)=> col.groups[0].name}/>                                            
-                                            </ExcelSheet>
-                                        </ExcelFile> */}
+                                       
 
                                     </div>
                                 </Col>
-                            </Row>
+                            </Row> */}
 
+                            {activePage === 'repeating' ? <RepeatingInvoice/>:
+                            <>
                             {loading ? <p>Loading...</p> :
                                 <>
-                                    {filteredIncoices.length > 0 ?
+                                    {invoices.length > 0 ?
                                         <>
                                             <Table
                                                 columns={columns}
-                                                data={filteredIncoices}
+                                                data={invoices}
                                                 pageSize={pageSize}
                                                 isSortable={true}
                                                 isDetails = {true}
@@ -411,6 +426,7 @@ const Invoice = () => {
                                         </>
                                         :
                                         'No data available!'}</>}
+                                </>}
 
                         </Card.Body>
                     </Card>

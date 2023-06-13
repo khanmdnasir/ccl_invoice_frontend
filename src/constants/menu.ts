@@ -30,22 +30,8 @@ const MENU_ITEMS: MenuItemTypes[] = [
         label: 'Invoice',
         isTitle: false,
         icon: 'invoice',
-        children: [ 
-            {
-                key: 'view_invoice',
-                label: 'Invoice',
-                url: '/app/invoice',
-                parentKey: 'dashboards',
-            },
-            {
-                key: 'view_repeatinginvoice',
-                label: 'Repeating Invoice',
-                url: '/app/repeating_invoice',
-                parentKey: 'dashboards',
-            },
-            
-            
-        ],
+        url: '/app/invoice',
+        
     },
     {
         key: 'view_contact',
@@ -55,66 +41,8 @@ const MENU_ITEMS: MenuItemTypes[] = [
         url: '/app/client',
         
     },
-    {
-        key: 'general_ledger',
-        label: 'Reports',
-        isTitle: false,
-        icon: 'layers',
-        children: [ 
-            {
-                key: 'view_general_ledger',
-                label: 'General Report',
-                url: '/app/client_statement',
-                parentKey: 'general_ledger',
-            },
-        ],
-    },
-    {
-        key: 'settings',
-        label: 'Settings',
-        isTitle: false,
-        icon: 'settings',
-        children: [ 
-            {
-                key: 'view_group',
-                label: 'Roles',
-                url: '/app/roles',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_user',
-                label: 'Users',
-                url: '/app/users',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_currency',
-                label: 'Currency',
-                url: '/app/currency',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_companysettings',
-                label: 'Company Settings',
-                url: '/app/company_settings',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_chartofaccount',
-                label: 'Chart Of Accounts',
-                url: '/app/chart_of_accounts',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_kammodel',
-                label: 'Key Account Manager',
-                url: '/app/key_account_manager',
-                parentKey: 'settings',
-            },
-            
-            
-        ],
-    },  
+    
+    
     
 ];
 
@@ -132,22 +60,8 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         label: 'Invoice',
         isTitle: false,
         icon: 'file-minus',
-        children: [ 
-            {
-                key: 'view_invoice',
-                label: 'Invoice',
-                url: '/app/invoice',
-                parentKey: 'invoice',
-            },
-            {
-                key: 'view_repeatinginvoice',
-                label: 'Repeating Invoice',
-                url: '/app/repeating_invoice',
-                parentKey: 'invoice',
-            },
-            
-            
-        ],
+        url: '/app/invoice',
+        
     },
     {
         key: 'view_contact',
@@ -157,66 +71,8 @@ const HORIZONTAL_MENU_ITEMS: MenuItemTypes[] = [
         url: '/app/client',
         
     },
-    {
-        key: 'general_ledger',
-        label: 'Reports',
-        isTitle: false,
-        icon: 'layers',
-        children: [ 
-            {
-                key: 'view_general_ledger',
-                label: 'General Report',
-                url: '/app/client_statement',
-                parentKey: 'general_ledger',
-            },
-        ],
-    },
-    {
-        key: 'settings',
-        label: 'Settings',
-        isTitle: false,
-        icon: 'settings',
-        children: [ 
-            {
-                key: 'view_group',
-                label: 'Roles',
-                url: '/app/roles',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_user',
-                label: 'Users',
-                url: '/app/users',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_currency',
-                label: 'Currency',
-                url: '/app/currency',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_companysettings',
-                label: 'Company Settings',
-                url: '/app/company_settings',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_chartofaccount',
-                label: 'Chart Of Accounts',
-                url: '/app/chart_of_accounts',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_kammodel',
-                label: 'Key Account Manager',
-                url: '/app/key_account_manager',
-                parentKey: 'settings',
-            },
-            
-            
-        ],
-    },
+    
+    
     
 ];
 
@@ -235,21 +91,8 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
         label: 'Invoice',
         isTitle: false,
         icon: 'invoice',
-        children: [ 
-            {
-                key: 'view_invoice',
-                label: 'Invoice',
-                url: '/app/invoice',
-                parentKey: 'dashboards',
-            },
-            {
-                key: 'view_repeatinginvoice',
-                label: 'Repeating Invoice',
-                url: '/app/repeating_invoice',
-                parentKey: 'dashboards',
-            },
-            
-        ],
+        url: '/app/invoice',
+        
         
     },
     {
@@ -260,66 +103,7 @@ const TWO_COl_MENU_ITEMS: MenuItemTypes[] = [
         url: '/app/client',
         
     },
-    {
-        key: 'general_ledger',
-        label: 'Reports',
-        isTitle: false,
-        icon: 'layers',
-        children: [ 
-            {
-                key: 'view_general_ledger',
-                label: 'General Report',
-                url: '/app/client_statement',
-                parentKey: 'general_ledger',
-            },
-        ],
-    },
-    {
-        key: 'settings',
-        label: 'Settings',
-        isTitle: false,
-        icon: 'settings',
-        children: [ 
-            {
-                key: 'view_group',
-                label: 'Roles',
-                url: '/app/roles',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_user',
-                label: 'Users',
-                url: '/app/users',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_currency',
-                label: 'Currency',
-                url: '/app/currency',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_companysettings',
-                label: 'Company Settings',
-                url: '/app/company_settings',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_chartofaccount',
-                label: 'Chart Of Accounts',
-                url: '/app/chart_of_accounts',
-                parentKey: 'settings',
-            },
-            {
-                key: 'view_kammodel',
-                label: 'Key Account Manager',
-                url: '/app/key_account_manager',
-                parentKey: 'settings',
-            },
-            
-            
-        ],
-    },
+    
    
     
 ];

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { Form } from 'react-bootstrap';
+import FeatherIcon from 'feather-icons-react';
 // actions
 import { showRightSidebar, changeSidebarType, getUserRole, getCurrency, getLogo } from '../redux/actions';
 
@@ -20,7 +21,8 @@ import ProfileDropdown from '../components/ProfileDropdown';
 import CCL_Logo from '../assets/images/Qorum.svg';
 import NoImage from '../assets/images/no_image.jpg';
 
-
+// helpers
+import { getHorizontalMenuItems } from '../helpers/menu';
 
 export interface NotificationItem {
     id: number;
@@ -120,7 +122,9 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
         company_logo: state.CompanySettings.company_logo
     }));
 
-
+    let location = useLocation();
+    const menuItems = getHorizontalMenuItems()
+    
     // console.log("company_logo",company_logo)
 
     /**
@@ -186,7 +190,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                             </Link>
                         </div>
                     )}
-
+                    
                     <ul className="list-unstyled topnav-menu float-end mb-0">
                         {/* <li className="d-none d-lg-block">
                             <TopbarSearch items={SearchResults} />
@@ -204,21 +208,24 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         <li className="dropdown notification-list topbar-dropdown">
                             <ProfileDropdown
                                 profilePic={user ? (user?.profile_image !== 'null' ? user.profile_image : NoImage) : NoImage}
+                                firstName={user && user?.first_name !== 'null' && user?.first_name}
+                                lastName={user && user?.first_name !== 'null' && user?.last_name}
                                 menuItems={ProfileMenus}
                                 username={user?.first_name}
                                 userTitle={'Founder'}
                             />
                         </li>
-                        {/* <li className="dropdown notification-list">
-                            <button
+                        <li className="dropdown notification-list">
+                            <Link
                                 className="nav-link dropdown-toggle right-bar-toggle waves-effect waves-light btn btn-link shadow-none"
-                                onClick={handleRightSideBar}
+                                to='#'
                             >
-                                <i className="fe-settings noti-icon"></i>
-                            </button>
-                        </li> */}
+                                <i className="fe-settings noti-icon" style={{color: 'white'}}></i>
+                            </Link>
+                        </li>
                     </ul>
 
+                    
                     <ul className="list-unstyled topnav-menu topnav-menu-left m-0">
                         {layoutType !== LayoutTypes.LAYOUT_HORIZONTAL && (
                             <li>
@@ -230,6 +237,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                                 </button>
                             </li>
                         )}
+                        
 
                         <li>
                             <button
@@ -256,6 +264,55 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                                 </div>
                             </Link>
                         </li>
+                        
+                        
+                            
+                        <li>
+                        <Link
+                                to='/'
+                                
+                                className='nav-link d-none d-lg-block'
+                                
+                            >
+                                { location.pathname === '/dashboard' ?
+                                <span style={{color: 'grey',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Dashboard</span>:
+                                <span style={{color: 'white',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Dashboard</span>}
+                                
+                            </Link>
+                        </li>
+
+                        <li>
+                        <Link
+                                to='/app/invoice'
+                                
+                                className='nav-link d-none d-lg-block'
+                                
+                            >
+                                
+                                { location.pathname === '/app/invoice' ?
+                                <span style={{color: 'grey',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Invoice</span>:
+                                <span style={{color: 'white',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Invoice</span>}
+                            </Link>
+                        </li>
+
+                        <li>
+                        <Link
+                                to='/app/client'
+                                
+                                className='nav-link d-none d-lg-block'
+                                
+                            >
+                                
+                                { location.pathname === '/app/client' ?
+                                <span style={{color: 'grey',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Client</span>:
+                                <span style={{color: 'white',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Client</span>}
+                            </Link>
+                        </li>
+                        
+                            
+                        
+                        
+                        
 
                     </ul>
                 </div>

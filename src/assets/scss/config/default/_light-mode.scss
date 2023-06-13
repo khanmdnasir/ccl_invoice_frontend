@@ -301,7 +301,7 @@
 
     //Topbar Background
     --#{$variable-prefix}bg-topbar-light:                                 #{$white};
-    --#{$variable-prefix}bg-topbar-dark:                                  #{$white};
+    --#{$variable-prefix}bg-topbar-dark:                                  #0078C8;
 
     // Leftbar item shadow (Condensed item)
     --#{$variable-prefix}box-shadow-condensed:                            3px 5px 10px 0 #{rgba(154,161,171,.2)}; 

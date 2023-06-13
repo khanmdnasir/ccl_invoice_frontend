@@ -20,7 +20,18 @@ import Pagination from '../../components/CustomPagination';
 const api = new APICore();
 
 
-
+const ClientNameColumn = ({ row }) => {
+    return (
+        <>
+            <Link to={{
+            pathname: "/app/client_details",
+            state: { contactId: row?.original?.contact_id?.id},
+            }}>
+                {row?.original?.contact_id?.name}
+            </Link>
+        </>
+    )
+}
 
 export const StatusColumn = withSwal(({ row, swal }) => {
     /*
@@ -126,6 +137,7 @@ const columns = [
         Header: 'Client',
         accessor: 'contact_id.name',
         sort: true,
+        Cell: ClientNameColumn
     },
     {
         Header: 'Day',
@@ -142,35 +154,7 @@ const columns = [
         accessor: 'repeat_date',
         sort: true,
     },
-    {
-        Header: 'Tax Type',
-        accessor: 'tax_type',
-        sort: true,
-    },
-    {
-        Header: 'Sub Total',
-        accessor: 'sub_total',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.sub_total!==null?(row?.row?.original?.sub_total).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
-    {
-        Header: 'Discount',
-        accessor: 'discount',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
-    {
-        Header: 'Total Tax',
-        accessor: 'total_tax',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.total_tax!==null?(row?.row?.original?.total_tax).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
+    
     {
         Header: 'Total Amount',
         accessor: 'total_amount',
@@ -191,7 +175,6 @@ const columns = [
 
 const RepeatingInvoice = () => {
     const dispatch = useDispatch();
-    const [filteredIncoices,setFilteredInvoices] = useState([]);
     const invoices = useSelector(state => state.RepeatingInvoice.repeating_invoices);
     const previous = useSelector(state => state.RepeatingInvoice.previous);
     const next = useSelector(state => state.RepeatingInvoice.next);
@@ -210,15 +193,15 @@ const RepeatingInvoice = () => {
   
 
     const visitPage = (page) => {
-        dispatch(getRepeatingInvoice(pageSize,page));
+        dispatch(getRepeatingInvoice(pageSize,page,activePage));
     };
 
     const previous_number = () => {
-        dispatch(getRepeatingInvoice(pageSize,previous));
+        dispatch(getRepeatingInvoice(pageSize,previous,activePage));
     };
 
     const next_number = () => {
-        dispatch(getRepeatingInvoice(pageSize,next));
+        dispatch(getRepeatingInvoice(pageSize,next,activePage));
     };
 
     /*
@@ -228,37 +211,34 @@ const RepeatingInvoice = () => {
     const onClickEvent = (value) => {
         if (value === 'all') {
             setActivePage('all');
-            setFilteredInvoices(invoices)
         } else if (value === 'draft') {
             setActivePage('draft');
-            setFilteredInvoices(invoices.filter((item) => item.status === 'draft'))
-
         }else if (value === 'approve') {
             setActivePage('approve');
-            setFilteredInvoices(invoices.filter((item) => item.status === 'approve'))
         }
         else {
-            setFilteredInvoices(invoices)
+            
         }
     }
     
 
     useEffect(()=>{ 
-        dispatch(getRepeatingInvoice(pageSize,1));   
-    },[pageSize])
+        dispatch(getRepeatingInvoice(pageSize,1,activePage));   
+    },[activePage])
 
-    useEffect(()=>{
-        setFilteredInvoices(invoices);
-        setActivePage('all');
-    },[invoices])
+    useEffect(()=>{ 
+        dispatch(getRepeatingInvoice(pageSize,1));   
+    },[])
+
+
     return (
         <>
-            <PageTitle
+            {/* <PageTitle
                 breadCrumbItems={[
                     { label: 'Repeating Invoice', path: '/app/repeating_invoice', active: false },
                 ]}
                 title={`Repeating Invoice`}
-            />
+            /> */}
             <Tab.Container defaultActiveKey="all">
                 <Nav as="ul" variant="tabs">                    
                     <Nav.Item as="li" key='all'>
@@ -289,7 +269,7 @@ const RepeatingInvoice = () => {
                                 {error}
                             </Alert>
                         )}
-                            <Row className="mb-2">
+                            {/* <Row className="mb-2">
                                 <Col sm={4}>
                                     <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
                                         <span className='me-2'>Show:</span>
@@ -315,15 +295,15 @@ const RepeatingInvoice = () => {
   
                                     </div>
                                 </Col>
-                            </Row>
+                            </Row> */}
                             
                             {loading ? <p>Loading...</p>:
                             <>
-                            {filteredIncoices.length > 0 ?
+                            {invoices.length > 0 ?
                             <>
                             <Table
                                 columns={columns}
-                                data={filteredIncoices}
+                                data={invoices}
                                 pageSize={pageSize}
                                 isSortable={true}
                                 isDetails = {true}

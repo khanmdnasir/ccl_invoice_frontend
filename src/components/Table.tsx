@@ -266,7 +266,7 @@ const Table = (props: TableProps) => {
                                                         
                                                     },
                                                 ])}
-                                                onClick={()=> { cell.column.Header !== 'Status' && cell.column.Header !== 'Action' && handleClick(row.original.id)}}
+                                                onClick={()=> { cell.column.Header !== 'Status' && cell.column.Header !== 'Client' && cell.column.Header !== 'Action' && handleClick(row.original.id)}}
                                             >
                                                 {cell.render('Cell')}
                                             </td>
