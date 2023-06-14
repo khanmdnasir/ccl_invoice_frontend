@@ -205,6 +205,17 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         {/* <li className="dropdown notification-list topbar-dropdown">
                             <NotificationDropdown notifications={Notifications} />
                         </li> */}
+
+                        <li className="dropdown notification-list">
+                            <Link
+                                className="nav-link dropdown-toggle right-bar-toggle waves-effect waves-light btn btn-link shadow-none"
+                                to='/app/settings'
+                            >
+                                <i className="fe-settings noti-icon" style={{color: 'white'}}></i>
+                            </Link>
+                        </li>
+
+
                         <li className="dropdown notification-list topbar-dropdown">
                             <ProfileDropdown
                                 profilePic={user ? (user?.profile_image !== 'null' ? user.profile_image : NoImage) : NoImage}
@@ -215,14 +226,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                                 userTitle={'Founder'}
                             />
                         </li>
-                        <li className="dropdown notification-list">
-                            <Link
-                                className="nav-link dropdown-toggle right-bar-toggle waves-effect waves-light btn btn-link shadow-none"
-                                to='#'
-                            >
-                                <i className="fe-settings noti-icon" style={{color: 'white'}}></i>
-                            </Link>
-                        </li>
+                        
                     </ul>
 
                     

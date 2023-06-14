@@ -408,7 +408,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                                             <th>Quantity</th>
                                             <th>Unit Price</th>
                                             <th>Discount %</th>
-                                            <th>Account</th>
+                                            <th>Chart of Account</th>
                                             <th>Tax Rate %</th>
 
                                             <th>Total</th>

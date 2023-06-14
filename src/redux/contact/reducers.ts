@@ -22,6 +22,12 @@ const INIT_STATE = {
 
 const Contact = (state = INIT_STATE, action: any) => {
     switch (action.type) {
+        case type.CONTACT_DETAILS_CLEAR: {
+            return {
+                ...state,
+                contact_details: [],
+            };
+        }
         case type.GET_CONTACT_REQUESTED: {
             return {
                 ...state,
@@ -115,6 +121,7 @@ const Contact = (state = INIT_STATE, action: any) => {
             return {
                 ...state,
                 loading: false,
+                contact_details: [],
                 error: action.error,
             };
         }

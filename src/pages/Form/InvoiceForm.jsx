@@ -522,7 +522,7 @@ const InvoiceForm = () => {
                                             <th className='required'>Quantity</th>
                                             <th className='required'>Unit Price</th>
                                             <th >Discount %</th>
-                                            <th className='required'>Chart Account</th>
+                                            <th className='required'>Chart of Account</th>
                                             <th >Tax Rate %</th>
 
                                             <th >Total</th>
