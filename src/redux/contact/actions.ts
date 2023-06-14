@@ -31,6 +31,11 @@ export const getContactDetails = (id:number) =>{
     payload: id,
 });}
 
+export const contactDetailsClear = () =>{ 
+    return ({
+    type: type.CONTACT_DETAILS_CLEAR,
+});}
+
 
 export const updateContactInvoiceSetting = (data: any) => ({
     type: type.UPDATE_CONTACT_INVOICE_SETTING_REQUESTED,

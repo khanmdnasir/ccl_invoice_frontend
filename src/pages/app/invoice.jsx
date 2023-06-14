@@ -48,6 +48,18 @@ const StatusColumn = ({ row }) => {
     );
 };
 
+const ClientNameColumn = ({ row }) => {
+    return (
+        <>
+            <Link to={{
+            pathname: "/app/client_details",
+            state: { contactId: row?.original?.contact_id?.id},
+            }}>
+                {row?.original?.contact_id?.name}
+            </Link>
+        </>
+    )
+}
 
 export const StatusColumn2 = withSwal(({ row, swal }) => {
     /*
