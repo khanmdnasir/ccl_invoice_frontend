@@ -29,6 +29,8 @@ import Currency from '../pages/app/Currency';
 import PaymentDetails from '../pages/app/paymentDetails';
 import KeyAccountManager from '../pages/app/Kam/KeyAccountManager';
 import ClientStatement from '../pages/app/ClientStatement';
+import ContactForm from '../pages/Form/ContactForm';
+// import ContactsForm from '../pages/Form/ContactsForm';
 
 // lazy load all the views
 
@@ -127,6 +129,12 @@ const AppRoutes = {
             path: '/app/client',
             name: 'Client',
             component: Contact,
+            route: PrivateRoute,
+        },
+        {
+            path: '/app/client_form',
+            name: 'Client Form',
+            component: ContactForm,
             route: PrivateRoute,
         },
         {

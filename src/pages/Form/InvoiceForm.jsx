@@ -73,7 +73,6 @@ const InvoiceForm = () => {
     useEffect(() => {
         if (csuccess !== null && csuccess !== '') {
             onCloseModal();
-            console.log('contact details',contact_details)
             setContactId(contact_details['id'])
             setContact({'label':contact_details['name'],'value':contact_details['id']})
             
@@ -99,7 +98,6 @@ const InvoiceForm = () => {
     const [newItems, setNewItems] = useState([]);
 
     const onContactChange = (e) => {
-        console.log('contact',e?.value)
         setNewItems([])
         setContact(e);
         setContactId(e?.value);
@@ -1084,8 +1082,8 @@ const InvoiceForm = () => {
                     </Card>
                 </Col>
             </Row>
-            {contact &&
-            <ContactForm show={show} onHide={onCloseModal} onSubmit={onContactSubmit} contact_name={contact?.label} countries={country} kamList={all_kam} />}
+            {/* {contact &&
+            <ContactForm show={show} onHide={onCloseModal} onSubmit={onContactSubmit} contact_name={contact?.label} countries={country} kamList={all_kam} />} */}
         </>
     );
 };
