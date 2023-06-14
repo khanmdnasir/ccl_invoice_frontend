@@ -56,7 +56,7 @@ const InvoiceForm = () => {
     const [total_amount, setTotalAmount] = useState('');
     const [deletedItems, setDeletedItems] = useState([]);
     const [taxGroup, setTaxGroup] = useState({});
-   
+
 
     const [items, setItems] = useState({
         item: '',
@@ -73,7 +73,6 @@ const InvoiceForm = () => {
     const [newItems, setNewItems] = useState([]);
 
     const onContactChange = (e) => {
-        console.log('contact',e?.value)
         setNewItems([])
         setContact(e);
         setContactId(e?.value);
@@ -1058,7 +1057,7 @@ const InvoiceForm = () => {
                     </Card>
                 </Col>
             </Row>
-            
+
         </>
     );
 };

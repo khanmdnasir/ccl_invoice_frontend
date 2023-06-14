@@ -9,27 +9,7 @@ import PasswordReset from "../pages/auth/PasswordReset";
 import PasswordResetSuccess from "../pages/auth/PasswordResetSuccess";
 
 // components
-import PrivateRoute from "./PrivateRoute";
-import Root from "./Root";
-import Service from "../pages/app/service";
-import ServiceForm from "../pages/Form/ServiceForm";
-import ContactCard from "../pages/app/ContactCard";
-import Invoice from "../pages/app/invoice";
-import Payment from "../pages/app/payment";
-import PaymentForm from "../pages/Form/PaymentForm";
-import InvoiceForm from "../pages/Form/InvoiceForm";
-import InvoiceDetails from "../pages/app/InvoiceDetails";
-import RepeatingInvoiceDetails from "../pages/app/RepeatingInvoiceDetails";
-import RepeatingInvoiceForm from "../pages/Form/RepeatingInvoiceForm";
-import RepeatingInvoice from "../pages/app/RepeatingInvoice";
-import PublicInvoice from "../pages/app/PublicInvoice";
-import CompanySettings from "../pages/app/CompanySettings";
-import ChartOfAccount from "../pages/app/ChartOfAccount";
-import Currency from "../pages/app/Currency";
-import PaymentDetails from "../pages/app/paymentDetails";
-import KeyAccountManager from "../pages/app/Kam/KeyAccountManager";
-import ClientStatement from "../pages/app/ClientStatement";
-import Settings from "../pages/app/Settings";
+
 
 // lazy load all the views
 
@@ -84,9 +64,7 @@ const dashboardRoutes: RoutesProps = {
 
 //apps
 const AppRoutes = {
-  path: "/app",
-  name: "App",
-  route: PrivateRoute,
+
 
   children: [
     {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { APICore } from '../../helpers/api/apiCore';
 import ContactForm from '../Form/ContactForm';
-import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form, Alert, Breadcrumb, BreadcrumbItem } from 'react-bootstrap';
 import { withSwal } from 'react-sweetalert2';
 
 // components
@@ -22,6 +22,30 @@ const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const api = new APICore();
 
+// Split Name
+
+const SplitName = ({row}) => {
+    
+    let name = (row.original?.name).split(" ");
+
+//    
+    for(var i = 0; i < name.length; i++){
+        console.log(i-1)
+        name[i] = name[i].substring(i,2-i).charAt(0).toUpperCase();
+    }
+    return (
+        <React.Fragment>
+            <div className="col-auto">
+               <div className="avatar d-flex align-items-center text-center">
+                 <span className="avatar badge-soft-primary text-primary" style={{width:'32px', height: '32px', display:'inline-block', lineHeight: '2rem', marginRight: '12px', fontWeight: '700', borderRadius: '5px'}}>
+                   {name} 
+                 </span>
+                 <div>{row.original?.name}</div>
+               </div>
+            </div>
+        </React.Fragment>
+    )
+}
 
 // action column render
 // const ActionColumn = withSwal(({ row, swal }) => {
@@ -147,53 +171,19 @@ const columns = [
         Header: 'Name',
         accessor: 'name',
         sort: true,
+        Cell: SplitName
     },
     {
-        Header: 'Client Id',
-        accessor: 'client_id',
+        Header: 'Balance',
+        accessor: 'balance',
         sort: true,
     },
     {
-        Header: 'Client Type',
-        accessor: 'contact_type',
+        Header: 'Due',
+        accessor: 'due',
         sort: true,
     },
-    {
-        Header: 'Contact Person',
-        accessor: 'contact_person',
-        sort: true,
-    },
-    {
-        Header: 'Bin',
-        accessor: 'bin',
-        sort: true,
-    },
-    {
-        Header: 'KAM (Key Account Manager)',
-        accessor: 'kam.name',
-        sort: true,
-    },
-    {
-        Header: 'Phone',
-        accessor: 'phone',
-        sort: true,
-    },
-    {
-        Header: 'Email',
-        accessor: 'email',
-        sort: true,
-    },
-    {
-        Header: 'City',
-        accessor: 'city.name',
-        sort: true,
-    },
-    {
-        Header: 'country',
-        accessor: 'country.name',
-        sort: true,
-
-    }
+   
 ];
 
 const Contact = () => {
@@ -258,23 +248,44 @@ const Contact = () => {
     }, [pageSize])
     return (
         <>
-            <PageTitle
-                breadCrumbItems={[
-                    { label: 'Client', path: '/app/client', active: true },
-                ]}
-                title={'Client'}
-            />
+            <Row>
+                <Col sm={4}>
+                <div className="page-title-box" style={{marginTop: '40px'}}>
+            
+            <div className="page-title-left">
+             <Breadcrumb>
+             <Breadcrumb.Item href="/">Qorum</Breadcrumb.Item>
+             <Breadcrumb.Item active>Client</Breadcrumb.Item>
+             </Breadcrumb>
+            </div>
+            <h4 className="page-titles" style={{fontSize: '1.25rem', marginBottom: '40px', color: '#323a46'}}>All Clients</h4>
+            </div>
+                </Col>
 
+                <Col sm={8}>
+                                    <div className="text-sm-end mt-5">
+                                        {user_role.includes('add_contact') ?
+                                            <Link className="btn btn-success mb-2 me-1" to='/app/client_form'>
+                                                <i className="mdi mdi-plus-circle me-1"></i> Add New
+                                            </Link> :
+                                            <>
+                                            </>
+                                        }
+                                    </div>
+                                </Col>
+            </Row>
+             
+             
             <Row>
                 <Col>
                     <Card>
                         <Card.Body>
 
-                            {!loading && success && (
+                            {/* {!loading && success && (
                                 <Alert variant="success" className="my-2" onClose={() => dispatch(setContactSuccessAlert(''))} dismissible>
                                     {success}
                                 </Alert>
-                            )}
+                            )} */}
                             <Row className="mb-2">
                                 <Col sm={4}>
                                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -284,28 +295,6 @@ const Contact = () => {
                                             <option value='15'>20</option>
                                             <option value='20'>30</option>
                                         </Form.Select>
-                                    </div>
-                                </Col>
-
-                                <Col sm={8}>
-                                    <div className="text-sm-end mt-2 mt-sm-0">
-                                        {user_role.includes('add_contact') ?
-                                            <Button className="btn btn-success mb-2 me-1" onClick={onOpenModal}>
-                                                <i className="mdi mdi-plus-circle me-1"></i> Add New
-                                            </Button> :
-                                            <>
-                                            </>
-                                        }
-
-                                        {/* <ExcelFile element={<Button className="btn btn-light mb-2">Export</Button>}>
-                                            <ExcelSheet data={users} name="Users">
-                                                <ExcelColumn label="Name" value="name"/>
-                                                <ExcelColumn label="Phone" value="phone"/>
-                                                <ExcelColumn label="Email" value="email"/>
-                                                <ExcelColumn label="Role" value={(col)=> col.groups[0].name}/>                                            
-                                            </ExcelSheet>
-                                        </ExcelFile> */}
-
                                     </div>
                                 </Col>
                             </Row>
@@ -338,7 +327,7 @@ const Contact = () => {
 
             {/* add contact modal */}
 
-            <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} countries={country} kamList={all_kam} />
+            {/* <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} countries={country} kamList={all_kam} /> */}
 
 
 
