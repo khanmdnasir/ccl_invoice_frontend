@@ -3,7 +3,7 @@ import { APICore } from './apiCore';
 const api = new APICore();
 
 
-function getRepeatingInvoice(params: {limit: number,page:number}) {
+function getRepeatingInvoice(params: any) {
     const baseUrl = '/api/repeating-invoice/';
     return api.get(`${baseUrl}`,params);
 }

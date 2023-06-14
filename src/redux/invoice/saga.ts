@@ -13,13 +13,20 @@ interface InvoiceData {
         id: number;
         limit: number;
         page: number;
+        filter: string;
     };
     type: string;
 }
 
-function* getInvoice({ payload: {limit,page}}:InvoiceData):SagaIterator {
+function* getInvoice({ payload: {limit,page,filter}}:InvoiceData):SagaIterator {
     try {
-        const response = yield call(getInvoiceApi,{limit,page});
+        let response
+        if (typeof filter === 'undefined'){
+            response = yield call(getInvoiceApi,{limit,page});
+        }else{
+            response = yield call(getInvoiceApi,{limit,page,filter});
+        }
+        
         const data = response.data;
         yield put({type: 'GET_INVOICE_SUCCESS' , data: data});
     } catch (error) {

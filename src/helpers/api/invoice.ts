@@ -3,7 +3,7 @@ import { APICore } from './apiCore';
 const api = new APICore();
 
 
-function getInvoice(params: {limit: number,page:number}) {
+function getInvoice(params: any) {
     const baseUrl = '/api/invoice/';
     return api.get(`${baseUrl}`,params);
 }

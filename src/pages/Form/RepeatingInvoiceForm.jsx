@@ -39,8 +39,6 @@ const RepeatingInvoiceForm = () => {
     const [stateContact, setStateContact] = useState();
     // const [invoiceNo, setInvoiceNo] = useState('');
     const [contact, setContact] = useState();
-    const csuccess = useSelector((state) => state.Contact.success);
-    const contact_details = useSelector((state) => state.Contact.contact_details);
     const [invoiceId, setInvoiceId] = useState(null);
     const [date, setDate] = useState('');
     const [due_date, setDueDate] = useState('');
@@ -56,36 +54,10 @@ const RepeatingInvoiceForm = () => {
     const [total_amount, setTotalAmount] = useState('');
     const [deletedItems, setDeletedItems] = useState([]);
     const [taxGroup, setTaxGroup] = useState({});
-    const [show, setShow] = useState(false);
-    const onCloseModal = () => { setContact();setShow(false)};
-    const onOpenModal = () => { dispatch(setContactErrorAlert('')); setShow(true) };
-
-
-    const onContactSubmit = (formData) => {
-        // console.log("formData", formData)
-        dispatch(addContact(formData));
-        dispatch(getAllContact())
-        
-    };
-
-
-    useEffect(() => {
-        if (csuccess !== null && csuccess !== '') {
-            onCloseModal();
-            console.log('contact details',contact_details)
-            setContactId(contact_details['id'])
-            setContact({'label':contact_details['name'],'value':contact_details['id']})
-            
-        }
-
-        setTimeout(() => {
-            dispatch(setContactSuccessAlert(''));
-        }, 2000)
-    }, [csuccess])
 
     const handleCreateContact = (inputValue) => {
         setContact({'label':inputValue,'value':''})
-        onOpenModal()
+        setContactId(inputValue)
     }
 
     const [items, setItems] = useState({
@@ -1096,9 +1068,7 @@ const RepeatingInvoiceForm = () => {
                     </Card>
                 </Col>
             </Row>
-            {contact &&
-            <ContactForm show={show} onHide={onCloseModal} onSubmit={onContactSubmit} contact_name={contact?.label} countries={country} kamList={all_kam} />}
-        </>
+          </>
     );
 };
 

@@ -1,9 +1,9 @@
 import * as type from './types';
 
 
-export const getInvoice = (limit:number,page:number) => ({
+export const getInvoice = (limit:number,page:number,filter:string) => ({
     type: type.GET_INVOICE_REQUESTED,
-    payload: {limit,page},
+    payload: {limit,page,filter},
 });
 
 export const getInvoiceDetails = (id:number) => ({
