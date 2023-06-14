@@ -24,7 +24,7 @@ const refreshPage = () => {
 
 const StatusColumn = ({ row }) => {
     let status = (row.original.status).split('_')
-
+       
     for (var i = 0; i < status.length; i++) {
         status[i] = status[i].charAt(0).toUpperCase() + status[i].slice(1);
     }
@@ -47,19 +47,6 @@ const StatusColumn = ({ row }) => {
         </React.Fragment>
     );
 };
-
-const ClientNameColumn = ({ row }) => {
-    return (
-        <>
-            <Link to={{
-            pathname: "/app/client_details",
-            state: { contactId: row?.original?.contact_id?.id},
-            }}>
-                {row?.original?.contact_id?.name}
-            </Link>
-        </>
-    )
-}
 
 
 export const StatusColumn2 = withSwal(({ row, swal }) => {
