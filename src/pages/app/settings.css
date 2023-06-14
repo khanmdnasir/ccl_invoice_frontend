@@ -1,0 +1,34 @@
+.settings_page .card {
+  margin-bottom: 0;
+  border-top: 1px solid var(--ct-border-color) !important;
+  border-left: 1px solid var(--ct-border-color) !important;
+  border-right: 1px solid var(--ct-border-color) !important;
+  border-radius: 0;
+}
+
+.settings_page h6 {
+  font-size: 16px;
+  color: grey;
+}
+
+.settings_page h4 {
+  color: #0078c8;
+}
+.settings_page .card {
+  padding: 0px 13px !important;
+}
+
+.settings_page .card:hover {
+  cursor: pointer;
+  background-color: #f2f3f4;
+}
+
+.settings_page p {
+  color: rgba(0, 10, 30, 0.75);
+}
+
+/* @media only screen and (max-width: 511px) {
+  .settings_page .card {
+    padding: 0px 13px !important;
+  }
+} */

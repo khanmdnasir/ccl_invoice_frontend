@@ -4,6 +4,8 @@ import { Dropdown } from 'react-bootstrap';
 import classNames from 'classnames';
 import { logoutUser,resetAuth } from '../redux/actions';
 import { useDispatch } from 'react-redux';
+import Avatar from 'react-avatar';
+
 
 interface ProfileMenuItem {
     label: string;
@@ -16,15 +18,21 @@ interface ProfileDropdownProps {
     profilePic?: string;
     username: string;
     userTitle?: string;
+    firstName?: string;
+    lastName?: string;
 }
 
 const ProfileDropdown = (props: ProfileDropdownProps) => {
     const profilePic = props['profilePic'] || null;
+    const firstName = props['firstName'];
+    const lastName = props['lastName'];
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const dispatch = useDispatch();
     /*
      * toggle profile-dropdown
      */
+
+    console.log('first name', firstName,'lastname',lastName)
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
     };
@@ -42,9 +50,12 @@ const ProfileDropdown = (props: ProfileDropdownProps) => {
                 onClick={toggleDropdown}
                 className={classNames('nav-link nav-user me-0 waves-effect waves-light', { show: dropdownOpen })}
             >
-                <img src={profilePic!} className="rounded-circle" alt="" />
+                {/* <img src={profilePic!} className="rounded-circle" alt="" /> */}
+                <div>
+                    <Avatar name={firstName+" "+lastName} maxInitials={2} round="50px" size="50" textSizeRatio={1.9} color="#00A551"/>
+                </div>
                 <span className="pro-user-name ms-1">
-                    {props['username']} <i className="mdi mdi-chevron-down"></i>
+                    {props['username']} <i className="mdi mdi-chevron-down" style={{color: 'white'}}></i>
                 </span>
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdown-menu dropdown-menu-end profile-dropdown">
@@ -62,7 +73,7 @@ const ProfileDropdown = (props: ProfileDropdownProps) => {
                                     className="dropdown-item notify-item"
                                     key={i + '-profile-menu'}
                                 >
-                                    <i className={`${item.icon} me-1`}></i>
+                                    <i className={`${item.icon} me-1`} ></i>
                                     <span>{item.label}</span>
                                 </Link>
                             </React.Fragment>

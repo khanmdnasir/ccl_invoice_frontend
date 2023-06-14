@@ -60,7 +60,7 @@ const MaximizeScreen = () => {
                 onClick={toggleFullscreen}
                 className="nav-link waves-effect waves-light maximize-icon"
             >
-                <i className="fe-maximize noti-icon"></i>
+                <i className="fe-maximize noti-icon " style={{color: 'white'}}></i>
             </Dropdown.Toggle>
         </Dropdown>
     );

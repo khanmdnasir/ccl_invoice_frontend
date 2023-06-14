@@ -10,10 +10,10 @@ import { RootState } from '../redux/store';
 
 // All layouts containers
 import DefaultLayout from '../layouts/Default';
-import VerticalLayout from '../layouts/Vertical';
-import DetachedLayout from '../layouts/Detached';
+// import VerticalLayout from '../layouts/Vertical';
+// import DetachedLayout from '../layouts/Detached';
 import HorizontalLayout from '../layouts/Horizontal';
-import TwoColumnLayout from '../layouts/TwoColumn/';
+// import TwoColumnLayout from '../layouts/TwoColumn/';
 
 import { authProtectedFlattenRoutes, publicProtectedFlattenRoutes } from './index';
 
@@ -25,20 +25,20 @@ const Routes = (props: RoutesProps) => {
     }));
 
     const getLayout = () => {
-        let layoutCls = TwoColumnLayout;
+        let layoutCls = HorizontalLayout;
 
         switch (layout.layoutType) {
             case LayoutTypes.LAYOUT_HORIZONTAL:
                 layoutCls = HorizontalLayout;
                 break;
-            case LayoutTypes.LAYOUT_DETACHED:
-                layoutCls = DetachedLayout;
-                break;
-            case LayoutTypes.LAYOUT_VERTICAL:
-                layoutCls = VerticalLayout;
-                break;
+            // case LayoutTypes.LAYOUT_DETACHED:
+            //     layoutCls = DetachedLayout;
+            //     break;
+            // case LayoutTypes.LAYOUT_VERTICAL:
+            //     layoutCls = VerticalLayout;
+            //     break;
             default:
-                layoutCls = TwoColumnLayout;
+                layoutCls = HorizontalLayout;
                 break;
         }
         return layoutCls;

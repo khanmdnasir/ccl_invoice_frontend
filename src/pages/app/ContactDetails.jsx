@@ -8,6 +8,7 @@ import {
   Alert,
   InputGroup,
   Modal,
+  Dropdown,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Table from "../../components/Table";
@@ -739,62 +740,90 @@ const ContactDetails = withSwal(({ swal }) => {
               <div className="d-flex justify-content-between">
                 <span>Personal Details</span>
                 <div>
-                  {user_role.includes("view_general_ledger") ? (
-                    <Link
-                      data-bs-toggle="Client Statement"
-                      data-bs-placement="top"
-                      title="Client Statement"
-                      to={{
-                        pathname: "/app/client_statement",
-                        state: contactId,
-                      }}
-                      className="ms-1 btn btn-success"
-                    >
-                      <i className="mdi mdi-file"></i>
-                    </Link>
-                  ) : (
-                    ""
-                  )}
+                <Dropdown >
+                      <Dropdown.Toggle variant='primary'>
+                          Action <i className="mdi mdi-chevron-down"></i>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                            {user_role.includes("view_general_ledger") ? (
+                              <Dropdown.Item>
+                                  <Link
+                                    data-bs-toggle="Client Statement"
+                                    data-bs-placement="top"
+                                    title="Client Statement"
+                                    to={{
+                                      pathname: "/app/client_statement",
+                                      state: contactId,
+                                    }}
+                                    
+                                  >
+                                    <i className="mdi mdi-file"> Client Statement</i>
+                                  </Link>
+                              </Dropdown.Item>
+                              
+                            ) : (
+                              ""
+                            )}
 
-                  {user_role.includes("change_contact") ? (
-                    <Link
-                      to="#"
-                      data-bs-toggle="Edit"
-                      data-bs-placement="top"
-                      title="Edit"
-                      className="ms-2 btn btn-primary"
-                      onClick={() => onOpenModal()}
-                    >
-                      <i className="mdi mdi-square-edit-outline"></i>
-                    </Link>
-                  ) : (
-                    ""
-                  )}
+                            {user_role.includes("change_contact") ? (
+                              <Dropdown.Item>
+                                  <Link
+                                    to="#"
+                                    data-bs-toggle="Edit"
+                                    data-bs-placement="top"
+                                    title="Edit"
+                                    
+                                    onClick={() => onOpenModal()}
+                                  >
+                                    <i className="mdi mdi-square-edit-outline"> Edit</i>
+                                  </Link>
+                              </Dropdown.Item>
+                              
+                            ) : (
+                              ""
+                            )}
 
-                  {user_role.includes("delete_contact") ? (
-                    <Link
-                      to="#"
-                      data-bs-toggle="Delete"
-                      data-bs-placement="top"
-                      title="Delete"
-                      className="ms-2 btn btn-danger"
-                      onClick={() => onDelete()}
-                    >
-                      <i className="mdi mdi-delete"></i>
-                    </Link>
-                  ) : (
-                    ""
-                  )}
-                  {showClientEditModal ? (
-                    <ContactForm
-                      show={showClientEditModal}
-                      onHide={onCloseModal}
-                      onSubmit={onSubmit}
-                      contact={contact_details}
-                      countries={country}
-                      kamList={all_kam}
-                    />
-                  ) : null}
+                            {user_role.includes("delete_contact") ? (
+                              <Dropdown.Item>
+                                  <Link
+                                    to="#"
+                                    data-bs-toggle="Delete"
+                                    data-bs-placement="top"
+                                    title="Delete"
+                                    
+                                    onClick={() => onDelete()}
+                                  >
+                                    <i className="mdi mdi-delete"> Delete</i>
+                                  </Link>
+                              </Dropdown.Item>
+                              
+                            ) : (
+                              ""
+                            )}
+                            {showClientEditModal ? (
+                              <Dropdown.Item>
+                                  <ContactForm
+                                  show={showClientEditModal}
+                                  onHide={onCloseModal}
+                                  onSubmit={onSubmit}
+                                  contact={contact_details}
+                                  countries={country}
+                                  kamList={all_kam}
+                                />
+                              </Dropdown.Item>
+                              
+                            ) : null}
+                            <Dropdown.Item>
+                              <Link to={{
+                                    pathname: "/app/payment_form",
+                                    state: { contactId: contactId, clientPayment: true},
+                                  }}  >
+                                  <i className="mdi mdi-cash me-1"></i>Payment
+                              </Link> 
+                            </Dropdown.Item>
+                      </Dropdown.Menu>
+                  </Dropdown>
+                  
                 </div>
               </div>
             </Card.Header>
@@ -842,7 +871,7 @@ const ContactDetails = withSwal(({ swal }) => {
                                     </div>
                                 </div> */}
 
-                <div className="row mb-4">
+                <div className="row mb-2">
                   <div className="col-sm">
                     <h5 className="me-2">Country:</h5>
                     <p>{contact_details?.country?.name}</p>
@@ -893,22 +922,12 @@ const ContactDetails = withSwal(({ swal }) => {
         </Col>
         
         <Col md={4} xl={4}>
-            <div  style={{display: 'flex',justifyContent: 'flex-end'}}>
-              <Link to={{
-                    pathname: "/app/payment_form",
-                    state: { contactId: contactId, clientPayment: true},
-                  }} className="btn btn-success mb-2" >
-                  <i className="mdi mdi-cash me-1"></i>Payment
-              </Link> 
-            </div>
-            
-          
-        
           <Card>
             <Card.Header>
               <p>Invoice Setting</p>
             </Card.Header>
             <Card.Body>
+              <div className="container">
               {!loading && invoice_setting_error && !invoice_setting_success && (
                 <Alert variant="danger" className="my-2">
                   {invoice_setting_error}
@@ -1132,6 +1151,8 @@ const ContactDetails = withSwal(({ swal }) => {
               <Button variant="primary" onClick={() => finalSubmit()}>
                 Submit
               </Button>
+              </div>
+              
             </Card.Body>
           </Card>
         </Col>

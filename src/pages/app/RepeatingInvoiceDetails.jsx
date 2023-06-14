@@ -300,19 +300,19 @@ const RepeatingInvoiceDetails = withSwal(({ swal }) => {
                                     <div></div>
                                     <div >
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Subtotal (discount {scurrency?.symbol} {repeating_invoice_details?.discount.toLocaleString()} )</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.sub_total.toLocaleString()}</p>
+                                            <p style={{ fontSize: '20px' }}>Subtotal (discount {scurrency?.symbol} {repeating_invoice_details?.discount?.toLocaleString()} )</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.sub_total?.toLocaleString()}</p>
                                         </div>
 
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total Tax</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.total_tax.toLocaleString()}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.total_tax?.toLocaleString()}</p>
                                         </div>
 
                                         <hr></hr>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Total</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.total_amount.toLocaleString()}</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {repeating_invoice_details?.total_amount?.toLocaleString()}</p>
                                         </div>
                                         <hr></hr><hr></hr>
                                     </div>

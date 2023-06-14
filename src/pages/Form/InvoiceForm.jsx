@@ -29,8 +29,6 @@ const InvoiceForm = () => {
     const all_kam = useSelector(state => state.Kam.all_kam);
     const contacts = useSelector((state) => state.Contact.all_contact);
     const accounts = useSelector((state) => state.ChartAccount.accounts);
-    const csuccess = useSelector((state) => state.Contact.success);
-    const contact_details = useSelector((state) => state.Contact.contact_details);
     const cloading = useSelector((state) => state.Contact.loading);
     const chloading = useSelector((state) => state.ChartAccount.loading);
     const [rloading, setRloading] = useState(false);
@@ -58,30 +56,7 @@ const InvoiceForm = () => {
     const [total_amount, setTotalAmount] = useState('');
     const [deletedItems, setDeletedItems] = useState([]);
     const [taxGroup, setTaxGroup] = useState({});
-    const [show, setShow] = useState(false);
-    const onCloseModal = () => { setContact();setShow(false)};
-    const onOpenModal = () => { dispatch(setContactErrorAlert('')); setShow(true) };
 
-
-    const onContactSubmit = (formData) => {
-        // console.log("formData", formData)
-        dispatch(addContact(formData));
-        dispatch(getAllContact())
-        
-    };
-
-    useEffect(() => {
-        if (csuccess !== null && csuccess !== '') {
-            onCloseModal();
-            setContactId(contact_details['id'])
-            setContact({'label':contact_details['name'],'value':contact_details['id']})
-            
-        }
-
-        setTimeout(() => {
-            dispatch(setContactSuccessAlert(''));
-        }, 2000)
-    }, [csuccess])
 
     const [items, setItems] = useState({
         item: '',
@@ -107,7 +82,7 @@ const InvoiceForm = () => {
    
     const handleCreateContact = (inputValue) => {
         setContact({'label':inputValue,'value':''})
-        onOpenModal()
+        setContactId(inputValue)
     }
 
     useEffect(()=>{
@@ -1082,8 +1057,7 @@ const InvoiceForm = () => {
                     </Card>
                 </Col>
             </Row>
-            {/* {contact &&
-            <ContactForm show={show} onHide={onCloseModal} onSubmit={onContactSubmit} contact_name={contact?.label} countries={country} kamList={all_kam} />} */}
+
         </>
     );
 };
