@@ -3,12 +3,10 @@ import { Button,Row, Col, Form } from 'react-bootstrap';
 // components
 
 
-import AssetTypeChart from './AssetTypeChart';
+
 import Statistics from './Statistics';
 import CompanyDues from './CompanyDues';
-import { ReactSortable } from 'react-sortablejs';
 import { useEffect, useState } from 'react';
-import InvoiceChart from './InvoiceChart';
 import RevenueChart from './RevenueChart';
 import { useSelector, useDispatch } from 'react-redux';
 import { getDashboardSummary } from '../../redux/dashboard/actions';

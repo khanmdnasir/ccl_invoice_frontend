@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { APICore } from '../../helpers/api/apiCore';
-import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
+import { Row, Col, Card, Form, Alert } from 'react-bootstrap';
 
 
 // components
@@ -9,14 +9,10 @@ import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getContact } from '../../redux/actions';
-// import ReactExport from "react-export-excel";
 import Pagination from '../../components/CustomPagination';
 
 
 
-// const ExcelFile = ReactExport.ExcelFile;
-// const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-// const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const api = new APICore();
 
@@ -29,7 +25,6 @@ const ContactCard = () => {
     const next = useSelector(state => state.Contact.next);
     const current_page = useSelector(state => state.Contact.current_page);
     const total_page = useSelector(state => state.Contact.total_page);
-    const total_object = useSelector(state => state.Contact.total_object);
     const active = useSelector(state => state.Contact.active);
     const user_role = useSelector((state) => state.Role.user_role);
     const loading = useSelector(state => state.Contact.loading);
@@ -95,15 +90,7 @@ const ContactCard = () => {
                                 </>
                             }
 
-                            {/* <ExcelFile element={<Button className="btn btn-dark mb-2">Export</Button>}>
-                                        <ExcelSheet data={bo_accounts} name="BO Accounts">
-                                            <ExcelColumn label="Reference No" value="reference_no"/>
-                                            <ExcelColumn label="BO Id" value="bo_id"/>
-                                            <ExcelColumn label="Holder" value="holder"/>
-                                            <ExcelColumn label="Balance" value="balance"/>                                                
-                                            <ExcelColumn label="Currency" value={(col)=> col.currency.short_key}/>                                                
-                                        </ExcelSheet>
-                                    </ExcelFile> */}
+                            
                         </div>
                     </Col>
                 </Row>

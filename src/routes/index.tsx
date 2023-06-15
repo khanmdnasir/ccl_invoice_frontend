@@ -31,6 +31,7 @@ import KeyAccountManager from "../pages/app/Kam/KeyAccountManager";
 import ClientStatement from "../pages/app/ClientStatement";
 import Settings from "../pages/app/Settings";
 import ContactForm from "../pages/Form/ContactForm";
+import EditContactForm from "../pages/Form/EditContactForm";
 
 // lazy load all the views
 
@@ -51,7 +52,6 @@ const Users = React.lazy(() => import("../pages/app/user-management/Users"));
 const Role = React.lazy(() => import("../pages/app/user-management/Role"));
 
 //others
-const SearchResults = React.lazy(() => import("../pages/other/SearchResults/"));
 const Error404Alt = React.lazy(() => import("../pages/error/Error404Alt"));
 const Error500Two = React.lazy(() => import("../pages/error/Error500Two"));
 
@@ -124,6 +124,12 @@ const AppRoutes = {
       path: "/app/client",
       name: "Client",
       component: Contact,
+      route: PrivateRoute,
+    },
+    {
+      path: "/app/edit_client_form",
+      name: "Edit Client Form",
+      component: EditContactForm,
       route: PrivateRoute,
     },
     {
@@ -255,12 +261,7 @@ const extrapagesRoutes = {
   path: "/pages",
   name: "Pages",
   children: [
-    {
-      path: "/pages/serach-results",
-      name: "Search Results",
-      component: SearchResults,
-      route: PrivateRoute,
-    },
+    
     {
       path: "/pages/error-404-alt",
       name: "Error - 404-alt",

@@ -9,6 +9,7 @@ import {
   InputGroup,
   Modal,
   Dropdown,
+  Breadcrumb,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Table from "../../components/Table";
@@ -47,8 +48,10 @@ import {
   getRepeatingInvoice,
   getContactPayment,
   getContactRepeatingInvoice,
+  getContact,
 } from "../../redux/actions";
-
+import { ColumnSeries } from "@amcharts/amcharts4/charts";
+import { format } from 'date-fns'
 const api = new APICore();
 
 /* status column render */
@@ -70,28 +73,29 @@ const StatusColumn = ({ row }) => {
 };
 
 const InvoiceStatusColumn = ({ row }) => {
-  let status = (row.original.status).split('_')
+  let status = row.original.status.split("_");
 
   for (var i = 0; i < status.length; i++) {
-      status[i] = status[i].charAt(0).toUpperCase() + status[i].slice(1);
+    status[i] = status[i].charAt(0).toUpperCase() + status[i].slice(1);
   }
   status = status.join(" ");
 
   return (
-      <React.Fragment>
-          <span style={{width:"5rem",fontSize:12}}
-              className={classNames('badge', {
-                  'bg-soft-primary text-primary': row.original.status === "draft",
-                  'bg-soft-secondary text-secondary': row.original.status === "waiting",
-                  'bg-soft-success text-success': row.original.status === "approve",
-                  'bg-soft-warning text-warning': row.original.status === "partial_paid",
-                  'bg-soft-info text-info': row.original.status === "paid",
-              })}
-          >
-
-              {status}
-          </span>
-      </React.Fragment>
+    <React.Fragment>
+      <span
+        style={{ width: "5rem", fontSize: 12 }}
+        className={classNames("badge", {
+          "bg-soft-primary text-primary": row.original.status === "draft",
+          "bg-soft-secondary text-secondary": row.original.status === "waiting",
+          "bg-soft-success text-success": row.original.status === "approve",
+          "bg-soft-warning text-warning":
+            row.original.status === "partial_paid",
+          "bg-soft-info text-info": row.original.status === "paid",
+        })}
+      >
+        {status}
+      </span>
+    </React.Fragment>
   );
 };
 
@@ -138,74 +142,102 @@ const columns = [
 ];
 
 const invoicesColumns = [
-
-    {
-        Header: 'Invoice No',
-        accessor: 'invoice_no',
-        sort: true,
+  {
+    Header: "Invoice No",
+    accessor: "invoice_no",
+    sort: true,
+  },
+  {
+    Header: "Client",
+    accessor: "contact_id.name",
+    sort: true,
+  },
+  {
+    Header: "Date",
+    accessor: "date",
+    sort: true,
+  },
+  {
+    Header: "Due Date",
+    accessor: "due_date",
+    sort: true,
+  },
+  // {
+  //   Header: "Tax Type",
+  //   accessor: "tax_type",
+  //   sort: true,
+  // },
+  // {
+  //   Header: "Sub Total",
+  //   accessor: "sub_total",
+  //   sort: true,
+  //   Cell: (row) => {
+  //     return (
+  //       <div>
+  //         {row?.row?.original?.sub_total !== null
+  //           ? (row?.row?.original?.sub_total).toLocaleString(undefined, {
+  //               maximumFractionDigits: 2,
+  //             })
+  //           : 0}
+  //       </div>
+  //     );
+  //   },
+  // },
+  // {
+  //   Header: "Discount",
+  //   accessor: "discount",
+  //   sort: true,
+  //   Cell: (row) => {
+  //     return (
+  //       <div>
+  //         {row?.row?.original?.discount !== null
+  //           ? (row?.row?.original?.discount).toLocaleString(undefined, {
+  //               maximumFractionDigits: 2,
+  //             })
+  //           : 0}
+  //       </div>
+  //     );
+  //   },
+  // },
+  // {
+  //   Header: "Total Tax",
+  //   accessor: "total_tax",
+  //   sort: true,
+  //   Cell: (row) => {
+  //     return (
+  //       <div>
+  //         {row?.row?.original?.total_tax !== null
+  //           ? (row?.row?.original?.total_tax).toLocaleString(undefined, {
+  //               maximumFractionDigits: 2,
+  //             })
+  //           : 0}
+  //       </div>
+  //     );
+  //   },
+  // },
+  {
+    Header: "Total Amount",
+    accessor: "total_amount",
+    sort: true,
+    Cell: (row) => {
+      return (
+        <div>
+          {row?.row?.original?.total_amount !== null
+            ? (row?.row?.original?.total_amount).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })
+            : 0}
+        </div>
+      );
     },
-    {
-        Header: 'Client',
-        accessor: 'contact_id.name',
-        sort: true,
-    },
-    {
-        Header: 'Date',
-        accessor: 'date',
-        sort: true,
-    },
-    {
-        Header: 'Due Date',
-        accessor: 'due_date',
-        sort: true,
-    },
-    {
-        Header: 'Tax Type',
-        accessor: 'tax_type',
-        sort: true,
-    },
-    {
-        Header: 'Sub Total',
-        accessor: 'sub_total',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.sub_total!==null?(row?.row?.original?.sub_total).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
-    {
-        Header: 'Discount',
-        accessor: 'discount',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
-    {
-        Header: 'Total Tax',
-        accessor: 'total_tax',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.total_tax!==null?(row?.row?.original?.total_tax).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
-    {
-        Header: 'Total Amount',
-        accessor: 'total_amount',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
-    {
-        Header: 'Status',
-        accessor: 'status',
-        sort: true,
-        Cell: InvoiceStatusColumn,
-    },
-    
-
+  },
+  {
+    Header: "Status",
+    accessor: "status",
+    sort: true,
+    Cell: InvoiceStatusColumn,
+  },
 ];
-
 
 export const RepeatingInvoiceStatusColumn = withSwal(({ row, swal }) => {
   /*
@@ -217,205 +249,263 @@ export const RepeatingInvoiceStatusColumn = withSwal(({ row, swal }) => {
   /*
   handle form submission
   */
-  const draftsOptions =
-      <>
-          <option selected={row.original.status === 'draft'} value='draft'>Draft</option>
-          <option selected={row.original.status === 'approve'} value='approve'>Approved</option>
-      </>
+  const draftsOptions = (
+    <>
+      <option selected={row.original.status === "draft"} value="draft">
+        Draft
+      </option>
+      <option selected={row.original.status === "approve"} value="approve">
+        Approved
+      </option>
+    </>
+  );
 
-  const approvesOptions =
-      <>
-          <option selected={row.original.status === 'approve'} value='approve'>Approved</option>
-      </>
+  const approvesOptions = (
+    <>
+      <option selected={row.original.status === "approve"} value="approve">
+        Approved
+      </option>
+    </>
+  );
 
-
-  var dropDown = (<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-      <Form.Select style={{ width: '70%' }} onChange={(e) => handleShow(row, e)}>
-          {row.original.status === "draft" ? (draftsOptions) : null}
-          {row.original.status === "approve" ? (approvesOptions) : null}
+  var dropDown = (
+    <div
+      style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+    >
+      <Form.Select
+        style={{ width: "70%" }}
+        onChange={(e) => handleShow(row, e)}
+      >
+        {row.original.status === "draft" ? draftsOptions : null}
+        {row.original.status === "approve" ? approvesOptions : null}
       </Form.Select>
-  </div>)
+    </div>
+  );
 
   const handleShow = (row, e) => {
-      const value = e.target.value;
-      const data = {
-          "status": value
-      }
-      swal.fire({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#28bb4b',
-          cancelButtonColor: '#f34e4e',
-          confirmButtonText: 'Yes, change it!',
+    const value = e.target.value;
+    const data = {
+      status: value,
+    };
+    swal
+      .fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#28bb4b",
+        cancelButtonColor: "#f34e4e",
+        confirmButtonText: "Yes, change it!",
       })
-          .then(function (result) {
-
-              if (result.value) {
-                  api.update(`/api/change-repeating-invoice-status/?id=${row.original.id}`, data)
-                      .then(res => {
-                          if (res) {
-                              swal.fire(
-                                  'Updated!',
-                                  'Repeating Invoice Status has been Updated.',
-                                  'success'
-                              );
-                          }
-                          else {
-                              swal.fire(
-                                  'Updated!',
-                                  'Repeating Invoice Status has not Updated.',
-                                  'warning'
-                              );
-                          }
-                          // setTimeout(() => {
-                          //     refreshPage();
-                          // }, 600);
-                          dispatch(getRepeatingInvoice(10, 1));
-                      })
-                      .catch(err => {
-                          console.log('err', err)
-                          dispatch(getRepeatingInvoice(10, 1));
-                          swal.fire({
-                              title: err,
-                          }
-                          );
-                      })
-              } else if (result.dismiss === 'cancel') {
-                  dispatch(getRepeatingInvoice(10, 1));
+      .then(function (result) {
+        if (result.value) {
+          api
+            .update(
+              `/api/change-repeating-invoice-status/?id=${row.original.id}`,
+              data
+            )
+            .then((res) => {
+              if (res) {
+                swal.fire(
+                  "Updated!",
+                  "Repeating Invoice Status has been Updated.",
+                  "success"
+                );
+              } else {
+                swal.fire(
+                  "Updated!",
+                  "Repeating Invoice Status has not Updated.",
+                  "warning"
+                );
               }
-          })
-          .catch(err => {
-              console.log('swal fire err', err)
-          })
+              // setTimeout(() => {
+              //     refreshPage();
+              // }, 600);
+              dispatch(getRepeatingInvoice(10, 1));
+            })
+            .catch((err) => {
+              console.log("err", err);
+              dispatch(getRepeatingInvoice(10, 1));
+              swal.fire({
+                title: err,
+              });
+            });
+        } else if (result.dismiss === "cancel") {
+          dispatch(getRepeatingInvoice(10, 1));
+        }
+      })
+      .catch((err) => {
+        console.log("swal fire err", err);
+      });
   };
 
-  return (
-      <>
-          {dropDown}
-
-      </>
-  );
+  return <>{dropDown}</>;
 });
 
 const repeatingInvoiceColumns = [
   {
-      Header: 'Invoice No',
-      accessor: 'invoice_no',
-      sort: true,
+    Header: "Invoice No",
+    accessor: "invoice_no",
+    sort: true,
   },
   {
-      Header: 'Client',
-      accessor: 'contact_id.name',
-      sort: true,
+    Header: "Client",
+    accessor: "contact_id.name",
+    sort: true,
   },
   {
-      Header: 'Day',
-      accessor: 'date',
-      sort: true,
+    Header: "Day",
+    accessor: "date",
+    sort: true,
   },
   {
-      Header: 'Due Day',
-      accessor: 'due_date',
-      sort: true,
+    Header: "Due Day",
+    accessor: "due_date",
+    sort: true,
   },
   {
-      Header: 'Repeat Day',
-      accessor: 'repeat_date',
-      sort: true,
+    Header: "Repeat Day",
+    accessor: "repeat_date",
+    sort: true,
   },
   {
-      Header: 'Tax Type',
-      accessor: 'tax_type',
-      sort: true,
+    Header: "Tax Type",
+    accessor: "tax_type",
+    sort: true,
   },
   {
-      Header: 'Sub Total',
-      accessor: 'sub_total',
-      sort: true,
-      Cell: (row) => {
-          return <div>{row?.row?.original?.sub_total!==null?(row?.row?.original?.sub_total).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-      }
+    Header: "Sub Total",
+    accessor: "sub_total",
+    sort: true,
+    Cell: (row) => {
+      return (
+        <div>
+          {row?.row?.original?.sub_total !== null
+            ? (row?.row?.original?.sub_total).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })
+            : 0}
+        </div>
+      );
+    },
   },
   {
-      Header: 'Discount',
-      accessor: 'discount',
-      sort: true,
-      Cell: (row) => {
-          return <div>{row?.row?.original?.discount!==null?(row?.row?.original?.discount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-      }
+    Header: "Discount",
+    accessor: "discount",
+    sort: true,
+    Cell: (row) => {
+      return (
+        <div>
+          {row?.row?.original?.discount !== null
+            ? (row?.row?.original?.discount).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })
+            : 0}
+        </div>
+      );
+    },
   },
   {
-      Header: 'Total Tax',
-      accessor: 'total_tax',
-      sort: true,
-      Cell: (row) => {
-          return <div>{row?.row?.original?.total_tax!==null?(row?.row?.original?.total_tax).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-      }
+    Header: "Total Tax",
+    accessor: "total_tax",
+    sort: true,
+    Cell: (row) => {
+      return (
+        <div>
+          {row?.row?.original?.total_tax !== null
+            ? (row?.row?.original?.total_tax).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })
+            : 0}
+        </div>
+      );
+    },
   },
   {
-      Header: 'Total Amount',
-      accessor: 'total_amount',
-      sort: true,
-      Cell: (row) => {
-          return <div>{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-      }
+    Header: "Total Amount",
+    accessor: "total_amount",
+    sort: true,
+    Cell: (row) => {
+      return (
+        <div>
+          {row?.row?.original?.total_amount !== null
+            ? (row?.row?.original?.total_amount).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })
+            : 0}
+        </div>
+      );
+    },
   },
   {
-      Header: 'Status',
-      accessor: 'status',
-      sort: true,
-      Cell: RepeatingInvoiceStatusColumn,
+    Header: "Status",
+    accessor: "status",
+    sort: true,
+    Cell: RepeatingInvoiceStatusColumn,
   },
-  
-  
 ];
 
 const servicesColumns = [
-
-    {
-        Header: 'Client',
-        accessor: 'contact_id.name',
-        sort: true,
+  {
+    Header: "Client",
+    accessor: "contact_id.name",
+    sort: true,
+  },
+  {
+    Header: "Service Type",
+    accessor: "service_type",
+    sort: true,
+  },
+  {
+    Header: "Client Mode",
+    accessor: "contact_mode",
+    sort: true,
+  },
+  {
+    Header: "Payment Terms",
+    accessor: "payment_terms",
+    sort: true,
+  },
+  {
+    Header: "Tax Rate",
+    accessor: "tax_rate",
+    sort: true,
+    Cell: (row) => {
+      return (
+        <div>
+          {row?.row?.original?.tax_rate !== null
+            ? (row?.row?.original?.tax_rate).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })
+            : 0}
+        </div>
+      );
     },
-    {
-        Header: 'Service Type',
-        accessor: 'service_type',
-        sort: true,
+  },
+  {
+    Header: "Unit Price",
+    accessor: "unit_price",
+    sort: true,
+    Cell: (row) => {
+      return (
+        <div>
+          {row?.row?.original?.unit_price !== null
+            ? (row?.row?.original?.unit_price).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })
+            : 0}
+        </div>
+      );
     },
-    {
-        Header: 'Client Mode',
-        accessor: 'contact_mode',
-        sort: true,
-    },
-    {
-        Header: 'Payment Terms',
-        accessor: 'payment_terms',
-        sort: true,
-    },
-    {
-        Header: 'Tax Rate',
-        accessor: 'tax_rate',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.tax_rate!==null?(row?.row?.original?.tax_rate).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
-    {
-        Header: 'Unit Price',
-        accessor: 'unit_price',
-        sort: true,
-        Cell: (row) => {
-            return <div>{row?.row?.original?.unit_price!==null?(row?.row?.original?.unit_price).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
-        }
-    },
+  },
 ];
 
 const ContactDetails = withSwal(({ swal }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [contactId, setContactId] = useState();
+  console.log("contactId",contactId)
+  const [loadings, setLoading] = useState(false);
   const [invoicePageSize, setInvoicePageSize] = useState(10);
   const [repeatingInvoicePageSize, setRepeatingInvoicePageSize] = useState(10);
   const [paymentPageSize, setPaymentPageSize] = useState(10);
@@ -435,28 +525,46 @@ const ContactDetails = withSwal(({ swal }) => {
   });
 
   const invoice_list = useSelector((state) => state.Invoice.invoices);
-  const repeating_invoice_list = useSelector((state) => state.RepeatingInvoice.repeating_invoices);
+  const repeating_invoice_list = useSelector(
+    (state) => state.RepeatingInvoice.repeating_invoices
+  );
   const service_list = useSelector((state) => state.Service.services);
   const payment_list = useSelector((state) => state.Payment.payments);
   // console.log("payment ListContact", payment);
   const invoice_previous = useSelector((state) => state.Invoice.previous);
   const invoice_next = useSelector((state) => state.Invoice.next);
-  const repeating_invoice_previous = useSelector((state) => state.RepeatingInvoice.previous);
-  const repeating_invoice_next = useSelector((state) => state.RepeatingInvoice.next);
+  const repeating_invoice_previous = useSelector(
+    (state) => state.RepeatingInvoice.previous
+  );
+  const repeating_invoice_next = useSelector(
+    (state) => state.RepeatingInvoice.next
+  );
   const service_previous = useSelector((state) => state.Service.previous);
   const service_next = useSelector((state) => state.Service.next);
   const payment_previous = useSelector((state) => state.Payment.previous);
   const payment_next = useSelector((state) => state.Payment.next);
-  const invoice_current_page = useSelector((state) => state.Invoice.current_page);
+  const invoice_current_page = useSelector(
+    (state) => state.Invoice.current_page
+  );
   const invoice_total_page = useSelector((state) => state.Invoice.total_page);
   const invoice_active = useSelector((state) => state.Invoice.active);
-  const repeating_invoice_current_page = useSelector((state) => state.RepeatingInvoice.current_page);
-  const repeating_invoice_total_page = useSelector((state) => state.RepeatingInvoice.total_page);
-  const repeating_invoice_active = useSelector((state) => state.RepeatingInvoice.active);
-  const service_current_page = useSelector((state) => state.Service.current_page);
+  const repeating_invoice_current_page = useSelector(
+    (state) => state.RepeatingInvoice.current_page
+  );
+  const repeating_invoice_total_page = useSelector(
+    (state) => state.RepeatingInvoice.total_page
+  );
+  const repeating_invoice_active = useSelector(
+    (state) => state.RepeatingInvoice.active
+  );
+  const service_current_page = useSelector(
+    (state) => state.Service.current_page
+  );
   const service_total_page = useSelector((state) => state.Service.total_page);
   const service_active = useSelector((state) => state.Service.active);
-  const payment_current_page = useSelector((state) => state.Payment.current_page);
+  const payment_current_page = useSelector(
+    (state) => state.Payment.current_page
+  );
   const payment_total_page = useSelector((state) => state.Payment.total_page);
   const payment_active = useSelector((state) => state.Payment.active);
   const [paymentData, setPaymentData] = useState("");
@@ -468,7 +576,10 @@ const ContactDetails = withSwal(({ swal }) => {
   const invoice_setting = useSelector((state) => state.Contact.invoice_setting);
   const loading = useSelector((state) => state.Contact.loading);
   const invoiceLoading = useSelector((state) => state.Invoice.loading);
-  const repeatingInvoiceLoading = useSelector((state) => state.RepeatingInvoice.loading);
+  const [pageSize, setPageSize] = useState(10);
+  const repeatingInvoiceLoading = useSelector(
+    (state) => state.RepeatingInvoice.loading
+  );
   const serviceLoading = useSelector((state) => state.Service.loading);
   const paymentLoading = useSelector((state) => state.Payment.loading);
   const invoice_setting_error = useSelector(
@@ -487,12 +598,52 @@ const ContactDetails = withSwal(({ swal }) => {
   const [showClientEditModal, setShowClientEditModal] = useState(false);
   const onCloseModal = () => setShowClientEditModal(false);
   const onOpenModal = () => setShowClientEditModal(true);
+  const contacts = useSelector(state => state.Contact.contact);
+  console.log("clientContact",contacts.name)
+  const cloading = useSelector(state => state.Contact.loading);
+  
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [clientLedger, setClientLedger] = useState({});
+  const [error, setError] = useState("");
 
+  
   const onSubmit = (formData) => {
     formData["id"] = contactId;
     dispatch(updateContact(formData));
   };
+  const handleSearch = async (e) => {
+    e.preventDefault()
+    setLoading(true);
 
+    if (fromDate === '' || toDate === '') {
+        await api.get('/api/client-ledger', { client_id: contactId})
+            .then(response => {
+              console.log(response)
+                setLoading(false)
+                setError('')
+                setClientLedger(response.data.data)
+            })
+            .catch(err => {
+                const errorMsg = err?.data?.detail
+                setLoading(false)
+                setError(errorMsg)
+            })
+    } else {
+
+        await api.get('/api/client-ledger', { client_id: contactId,  start_date: format(new Date(fromDate), 'yyyy-MM-dd'), end_date: format(new Date(toDate), 'yyyy-MM-dd') })
+            .then(response => {
+                setLoading(false)
+                setError('')
+                setClientLedger(response.data.data)
+            })
+            .catch(err => {
+                const errorMsg = err?.data?.detail
+                setLoading(false)
+                setError(errorMsg)
+            })
+    }
+}
   const onDelete = () => {
     swal
       .fire({
@@ -525,7 +676,10 @@ const ContactDetails = withSwal(({ swal }) => {
         }
       });
   };
+  useEffect(() => {
+    dispatch(getContact(0, 1));
 
+}, [])
   useEffect(() => {
     const state = location.state;
     if (state) {
@@ -537,6 +691,7 @@ const ContactDetails = withSwal(({ swal }) => {
     }
     dispatch(getCountry());
     dispatch(getAllKam());
+    dispatch(getContact(pageSize, 1));
   }, []);
 
   useEffect(() => {
@@ -549,60 +704,77 @@ const ContactDetails = withSwal(({ swal }) => {
   }, [success]);
 
   const visitInvoicePage = (page) => {
-    dispatch(getContactInvoice(contactId,invoicePageSize, page));
+    dispatch(getContactInvoice(contactId, invoicePageSize, page));
   };
 
   const invoice_previous_number = () => {
-      dispatch(getContactInvoice(contactId,invoicePageSize, invoice_previous));
+    dispatch(getContactInvoice(contactId, invoicePageSize, invoice_previous));
   };
 
   const invoice_next_number = () => {
-      dispatch(getContactInvoice(contactId,invoicePageSize, invoice_next));
+    dispatch(getContactInvoice(contactId, invoicePageSize, invoice_next));
   };
   const visitRepeatingInvoicePage = (page) => {
-    dispatch(getContactRepeatingInvoice(contactId,repeatingInvoicePageSize, page));
+    dispatch(
+      getContactRepeatingInvoice(contactId, repeatingInvoicePageSize, page)
+    );
   };
 
   const repeating_invoice_previous_number = () => {
-      dispatch(getContactRepeatingInvoice(contactId,repeatingInvoicePageSize, repeating_invoice_previous));
+    dispatch(
+      getContactRepeatingInvoice(
+        contactId,
+        repeatingInvoicePageSize,
+        repeating_invoice_previous
+      )
+    );
   };
 
   const repeating_invoice_next_number = () => {
-      dispatch(getContactRepeatingInvoice(contactId,repeatingInvoicePageSize, repeating_invoice_next));
+    dispatch(
+      getContactRepeatingInvoice(
+        contactId,
+        repeatingInvoicePageSize,
+        repeating_invoice_next
+      )
+    );
   };
   const visitServicePage = (page) => {
-    dispatch(getContactInvoice(contactId,servicePageSize, page));
+    dispatch(getContactInvoice(contactId, servicePageSize, page));
   };
 
   const service_previous_number = () => {
-      dispatch(getContactService(contactId,servicePageSize, service_previous));
+    dispatch(getContactService(contactId, servicePageSize, service_previous));
   };
 
   const service_next_number = () => {
-      dispatch(getContactService(contactId,servicePageSize, service_next));
+    dispatch(getContactService(contactId, servicePageSize, service_next));
   };
   const visitPaymentPage = (page) => {
-    dispatch(getContactPayment(contactId,paymentPageSize, page));
+    dispatch(getContactPayment(contactId, paymentPageSize, page));
   };
 
   const payment_previous_number = () => {
-      dispatch(getContactPayment(contactId,paymentPageSize, payment_previous));
+    dispatch(getContactPayment(contactId, paymentPageSize, payment_previous));
   };
 
   const payment_next_number = () => {
-      dispatch(getContactPayment(contactId,paymentPageSize, payment_next));
+    dispatch(getContactPayment(contactId, paymentPageSize, payment_next));
   };
 
   useEffect(() => {
     if (contactId !== undefined && contactId !== null) {
       dispatch(getContactInvoice(contactId, invoicePageSize, 1));
-      dispatch(getContactRepeatingInvoice(contactId, repeatingInvoicePageSize, 1));
+      dispatch(
+        getContactRepeatingInvoice(contactId, repeatingInvoicePageSize, 1)
+      );
       dispatch(getContactPayment(contactId, paymentPageSize, 1));
       dispatch(getContactDetails(contactId));
       dispatch(getContactInvoiceSetting(contactId));
-      dispatch(getContactService(contactId,servicePageSize,1));
+      dispatch(getContactService(contactId, servicePageSize, 1));
       dispatch(getClientBalance(contactId));
       dispatch(getDueInvoices(contactId));
+
     }
   }, [contactId]);
 
@@ -657,6 +829,7 @@ const ContactDetails = withSwal(({ swal }) => {
 
   const [show, setShow] = useState(false);
 
+  
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [inputDate, setInputDate] = useState("");
@@ -711,7 +884,7 @@ const ContactDetails = withSwal(({ swal }) => {
 
   return (
     <>
-      <PageTitle
+      {/* <PageTitle
         breadCrumbItems={[
           { label: "Client", path: "/app/client", active: false },
           {
@@ -721,653 +894,635 @@ const ContactDetails = withSwal(({ swal }) => {
           },
         ]}
         title={"Client Report"}
-      />
+      /> */}
 
-      <Row>
-        <Col md={8} xl={8}>
-          {!loading && success && (
-            <Alert
-              variant="success"
-              className="my-2"
-              onClose={() => dispatch(setContactSuccessAlert(""))}
-              dismissible
-            >
-              {success}
-            </Alert>
-          )}
-          <Card>
-            <Card.Header>
-              <div className="d-flex justify-content-between">
-                <span>Personal Details</span>
-                <div>
-                <Dropdown >
-                      <Dropdown.Toggle variant='primary'>
-                          Action <i className="mdi mdi-chevron-down"></i>
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                            {user_role.includes("view_general_ledger") ? (
-                              <Dropdown.Item>
-                                  <Link
-                                    data-bs-toggle="Client Statement"
-                                    data-bs-placement="top"
-                                    title="Client Statement"
-                                    to={{
-                                      pathname: "/app/client_statement",
-                                      state: contactId,
-                                    }}
-                                    
-                                  >
-                                    <i className="mdi mdi-file"> Client Statement</i>
-                                  </Link>
-                              </Dropdown.Item>
-                              
-                            ) : (
-                              ""
-                            )}
+      <div className="page-title-box" style={{ paddingTop: "40px" }}>
+        <div className="page-title-left">
+          <Breadcrumb>
+            <Breadcrumb.Item href="/">Qorum</Breadcrumb.Item>
+            <Breadcrumb.Item href="/app/client">Clients</Breadcrumb.Item>
+            <Breadcrumb.Item active>Client Details</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+        <h4
+          className="page-titles"
+          style={{
+            fontSize: "1.25rem",
+            marginBottom: "40px",
+            color: "#323a46",
+          }}
+        >
+          {contact_details?.name}
+        </h4>
+      </div>
 
-                            {user_role.includes("change_contact") ? (
-                              <Dropdown.Item>
-                                  <Link
-                                    to="#"
-                                    data-bs-toggle="Edit"
-                                    data-bs-placement="top"
-                                    title="Edit"
-                                    
-                                    onClick={() => onOpenModal()}
-                                  >
-                                    <i className="mdi mdi-square-edit-outline"> Edit</i>
-                                  </Link>
-                              </Dropdown.Item>
-                              
-                            ) : (
-                              ""
-                            )}
+      <div className="d-flex justify-content-between">
+        <div>
+          <Dropdown style={{ marginBottom: "30px" }}>
+            <Dropdown.Toggle variant="primary" id="dropdown-basic ">
+              New <i className="mdi mdi-chevron-down"></i>
+            </Dropdown.Toggle>
 
-                            {user_role.includes("delete_contact") ? (
-                              <Dropdown.Item>
-                                  <Link
-                                    to="#"
-                                    data-bs-toggle="Delete"
-                                    data-bs-placement="top"
-                                    title="Delete"
-                                    
-                                    onClick={() => onDelete()}
-                                  >
-                                    <i className="mdi mdi-delete"> Delete</i>
-                                  </Link>
-                              </Dropdown.Item>
-                              
-                            ) : (
-                              ""
-                            )}
-                            {showClientEditModal ? (
-                              <Dropdown.Item>
-                                  <ContactForm
-                                  show={showClientEditModal}
-                                  onHide={onCloseModal}
-                                  onSubmit={onSubmit}
-                                  contact={contact_details}
-                                  countries={country}
-                                  kamList={all_kam}
-                                />
-                              </Dropdown.Item>
-                              
-                            ) : null}
-                            <Dropdown.Item>
-                              <Link to={{
-                                    pathname: "/app/payment_form",
-                                    state: { contactId: contactId, clientPayment: true},
-                                  }}  >
-                                  <i className="mdi mdi-cash me-1"></i>Payment
-                              </Link> 
-                            </Dropdown.Item>
-                      </Dropdown.Menu>
-                  </Dropdown>
-                  
-                </div>
-              </div>
-            </Card.Header>
-            <Card.Body>
-              <div className="container">
-                <div className="row mb-4">
-                  <div className="col-sm">
-                    <h5>Name: </h5>
-                    <p>{contact_details?.name}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">Client ID:</h5>
-                    <p>{contact_details?.client_id}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">Client Type:</h5>
-                    <p>{contact_details?.contact_type}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">Contact Person:</h5>
-                    <p>{contact_details?.contact_person}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">Phone:</h5>
-                    <p>{contact_details?.phone}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">Email:</h5>
-                    <p>{contact_details?.email}</p>
-                  </div>
-                </div>
-
-                {/* <div className="row mb-4">
-                                    <div className="col-sm">
-                                        <h5 className='me-2'>Contact Person:</h5>
-                                        <p>{contact_details?.contact_person}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <h5 className='me-2'>Phone:</h5>
-                                        <p>{contact_details?.phone}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <h5 className='me-2'>Email:</h5>
-                                        <p>{contact_details?.email}</p>
-                                    </div>
-                                </div> */}
-
-                <div className="row mb-2">
-                  <div className="col-sm">
-                    <h5 className="me-2">Country:</h5>
-                    <p>{contact_details?.country?.name}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">City:</h5>
-                    <p>{contact_details?.city?.name}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">Billing Address:</h5>
-                    <p>{contact_details?.billing_address}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">Kam:</h5>
-                    <p>{contact_details?.kam?.name}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">Bin:</h5>
-                    <p>{contact_details?.bin}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">Balance</h5>
-                    <p>{client_balance.balance}</p>
-                  </div>
-                  <div className="col-sm">
-                    <h5 className="me-2">Due</h5>
-                    <p>{client_balance.due}</p>
-                  </div>
-                </div>
-
-                {/* <div className="row mb-4">
-                                    <div className="col-sm">
-                                        <h5 className='me-2'>Kam:</h5>
-                                        <p>{contact_details?.kam?.name}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <h5 className='me-2'>Bin:</h5>
-                                        <p>{contact_details?.bin}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <h5 className='me-2'>Balance</h5>
-                                        <p>{client_balance.toLocaleString()}</p>
-                                    </div>
-                                </div> */}
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        
-        <Col md={4} xl={4}>
-          <Card>
-            <Card.Header>
-              <p>Invoice Setting</p>
-            </Card.Header>
-            <Card.Body>
-              <div className="container">
-              {!loading && invoice_setting_error && !invoice_setting_success && (
-                <Alert variant="danger" className="my-2">
-                  {invoice_setting_error}
-                </Alert>
-              )}
-
-              {!loading && invoice_setting_success && !invoice_setting_error && (
-                <Alert variant="success" className="my-2">
-                  {invoice_setting_success}
-                </Alert>
-              )}
-              <InputGroup className="mb-3">
-                <InputGroup.Text style={mystyle}>Auto Approve</InputGroup.Text>
-                <InputGroup.Checkbox
-                  checked={invoiceSetting?.auto_approve}
-                  name="auto_approve"
-                  onChange={(e) => invoiceSettingChange(e)}
-                />
-              </InputGroup>
-
-              <InputGroup className="mb-3">
-                <InputGroup.Text style={mystyle}>
-                  Auto Invoice Send
-                </InputGroup.Text>
-                <InputGroup.Checkbox
-                  checked={invoiceSetting?.auto_invoice_send}
-                  name="auto_invoice_send"
-                  onChange={(e) => invoiceSettingChange(e)}
-                />
-              </InputGroup>
-
-              <InputGroup className="mb-3">
-                <InputGroup.Text style={mystyle}>
-                  Reminder Service
-                </InputGroup.Text>
-                <InputGroup.Checkbox
-                  name="reminder_service"
-                  checked={invoiceSetting?.reminder_service}
-                  onChange={(e) => invoiceSettingChange(e)}
-                />
-              </InputGroup>
-
-              {invoiceSetting?.reminder_service ? (
-                <div style={{ marginLeft: "1rem" }}>
-                  <InputGroup className="mb-3">
-                    <InputGroup.Text style={mystyle}>
-                      Is Inclued Public Link
-                    </InputGroup.Text>
-                    <InputGroup.Checkbox
-                      name="is_include_public_link"
-                      checked={
-                        invoiceSetting?.reminder_settings
-                          ?.is_include_public_link
-                      }
-                      onChange={(e) => invoiceReminderSettingChange(e)}
-                    />
-                  </InputGroup>
-                  <InputGroup className="mb-3">
-                    <InputGroup.Text style={mystyle}>
-                      Is Inclued Pdf Link
-                    </InputGroup.Text>
-                    <InputGroup.Checkbox
-                      name="is_include_pdf_link"
-                      checked={
-                        invoiceSetting?.reminder_settings?.is_include_pdf_link
-                      }
-                      onChange={(e) => invoiceReminderSettingChange(e)}
-                    />
-                  </InputGroup>
-                  <InputGroup className="mb-3">
-                    <InputGroup.Text style={mystyle}>
-                      Minimum Invoice Amount
-                    </InputGroup.Text>
-                    <Form.Control
-                      type="number"
-                      name="minimum_invoice_amount"
-                      value={
-                        invoiceSetting?.reminder_settings
-                          ?.minimum_invoice_amount
-                      }
-                      onChange={(e) => invoiceReminderSettingChange(e)}
-                    />
-                  </InputGroup>
-                  <InputGroup className="mb-3">
-                    <InputGroup.Text style={mystyle}>
-                      Reminder Type
-                    </InputGroup.Text>
-                    <Form.Check
-                      type="radio"
-                      name="reminder_type"
-                      checked={
-                        invoiceSetting?.reminder_settings?.reminder_type ===
-                        "due_in"
-                      }
-                      onChange={(e) => invoiceReminderSettingChange(e)}
-                      label="Due In"
-                      value="due_in"
-                      style={{
-                        marginRight: "1rem",
-                        marginLeft: "1rem",
-                        marginTop: "0.5rem",
-                      }}
-                    />
-                    <Form.Check
-                      type="radio"
-                      name="reminder_type"
-                      checked={
-                        invoiceSetting?.reminder_settings?.reminder_type ===
-                        "over_due"
-                      }
-                      onChange={(e) => invoiceReminderSettingChange(e)}
-                      label="Over Due"
-                      value="over_due"
-                      style={{ marginRight: "1rem", marginTop: "0.5rem" }}
-                    />
-                  </InputGroup>
-                  <InputGroup className="mb-3">
-                    <InputGroup.Text style={{ width: "6rem" }}>
-                      Days
-                    </InputGroup.Text>
-                    {invoiceSetting?.reminder_settings?.days?.map((day) => (
-                      <div key={day} style={{ margin: "0 5px" }}>
-                        <div>
-                          <InputGroup.Text style={{ width: "6rem" }}>
-                            {day} days{" "}
-                            <i
-                              onClick={() => deleteDay(day)}
-                              style={{
-                                marginLeft: ".8rem",
-                                color: "red",
-                                cursor: "pointer",
-                              }}
-                              className="fe-delete"
-                            ></i>
-                          </InputGroup.Text>
-                        </div>
-                      </div>
-                    ))}
-                    <>
-                      <Button variant="primary" onClick={handleShow}>
-                        Add
-                      </Button>
-
-                      {/* <MyVerticallyCenteredModal
-                                                    show={show}
-                                                    onHide={handleClose}
-                                                /> */}
-
-                      <Modal
-                        show={show}
-                        size="sm"
-                        aria-labelledby="contained-modal-title-vcenter"
-                        centered
-                      >
-                        <Modal.Header>
-                          <Modal.Title id="contained-modal-title-vcenter">
-                            Add Reminder Days
-                          </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                          <Form>
-                            <Form.Group
-                              className="mb-3"
-                              controlId="exampleForm.ControlInput1"
-                            >
-                              <Form.Label>Reminder Type</Form.Label>
-                              <Form.Select
-                                disabled
-                                aria-label="Default select example"
-                              >
-                                <option
-                                  selected={
-                                    invoiceSetting?.reminder_settings
-                                      ?.reminder_type === "due_in"
-                                  }
-                                  value="due_in"
-                                >
-                                  Due In
-                                </option>
-                                <option
-                                  selected={
-                                    invoiceSetting?.reminder_settings
-                                      ?.reminder_type === "over_due"
-                                  }
-                                  value="over_due"
-                                >
-                                  Over Due
-                                </option>
-                              </Form.Select>
-                            </Form.Group>
-                            <Form.Group
-                              className="mb-3"
-                              controlId="exampleForm.ControlTextarea1"
-                            >
-                              <Form.Label>Day</Form.Label>
-                              <Form.Control
-                                onChange={(e) => {
-                                  setInputDate(e.target.value);
-                                }}
-                                type="number"
-                              />
-                            </Form.Group>
-                          </Form>
-                        </Modal.Body>
-                        <Modal.Footer>
-                          <Button variant="secondary" onClick={handleClose}>
-                            Close
-                          </Button>
-                          <Button variant="primary" onClick={() => daySubmit()}>
-                            Submit
-                          </Button>
-                        </Modal.Footer>
-                      </Modal>
-                    </>
-                  </InputGroup>
-                </div>
-              ) : (
-                <></>
-              )}
-
-              <Button variant="primary" onClick={() => finalSubmit()}>
-                Submit
-              </Button>
-              </div>
-              
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col md={12} xl={12}>
-          <Card>
-            <Card.Header>
-            <div className="d-flex justify-content-between">
-              <p style={{ marginBottom: "0px !important" }}>Invoice List</p>
-              <Link
-                  className="btn btn-primary"
+            <Dropdown.Menu>
+              <Dropdown.Item>
+                <Link
                   to={{
                     pathname: "/app/invoice_form",
                     state: { contactId: contactId },
                   }}
                 >
-                  <i className="mdi mdi-pencil me-1"></i> Add
+                  Create Invoice
                 </Link>
-              </div>
-            </Card.Header>
-
-            <Card.Body>
-            {invoiceLoading ? <p>Loading...</p> :
-            <>
-              {invoice_list?.length > 0 ? (
-                <>
-                  <Table
-                    columns={invoicesColumns}
-                    data={invoice_list}
-                    pageSize={invoicePageSize}
-                    isSortable={true}
-                    isDetails={true}
-                    pathName='/app/invoice_details'
-                    pagination={false}
-                    isSearchable={true}
-                    tableClass="table-nowrap table-hover"
-                    searchBoxClass=""
-                  />
-                  <Pagination
-                    visitPage={visitInvoicePage}
-                    previous_number={invoice_previous_number}
-                    next_number={invoice_next_number}
-                    total_page={invoice_total_page}
-                    current_page={invoice_current_page}
-                    active={invoice_active}
-                  />
-                </>
-              ) : (
-                "No data available!"
-              )}</>}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col md={12} xl={12}>
-          <Card>
-            <Card.Header>
-            <div className="d-flex justify-content-between">
-              <p style={{ marginBottom: "0px !important" }}>Repeating Invoice List</p>
-              <Link
-                  className="btn btn-primary"
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link
                   to={{
                     pathname: "/app/repeating_invoice_form",
                     state: { contactId: contactId },
                   }}
                 >
-                  <i className="mdi mdi-pencil me-1"></i> Add
+                  Create Repeating Invoice
                 </Link>
-              </div>
-            </Card.Header>
-
-            <Card.Body>
-            {repeatingInvoiceLoading ? <p>Loading...</p> :
-            <>
-              {repeating_invoice_list?.length > 0 ? (
-                <>
-                  <Table
-                    columns={invoicesColumns}
-                    data={repeating_invoice_list}
-                    pageSize={repeatingInvoicePageSize}
-                    isSortable={true}
-                    isDetails={true}
-                    pathName='/app/invoice_details'
-                    pagination={false}
-                    isSearchable={true}
-                    tableClass="table-nowrap table-hover"
-                    searchBoxClass=""
-                  />
-                  <Pagination
-                    visitPage={visitRepeatingInvoicePage}
-                    previous_number={repeating_invoice_previous_number}
-                    next_number={repeating_invoice_next_number}
-                    total_page={repeating_invoice_total_page}
-                    current_page={repeating_invoice_current_page}
-                    active={repeating_invoice_active}
-                  />
-                </>
-              ) : (
-                "No data available!"
-              )}
-              </>}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col md={12} xl={12}>
-          <Card>
-            <Card.Header>
-              <div className="d-flex justify-content-between">
-                <p style={{ marginBottom: "0px !important" }}>Payment List</p>
-
+              </Dropdown.Item>
+              <Dropdown.Item>
+                {" "}
                 <Link
-                  className="btn btn-primary"
-                  to={{
-                    pathname: "/app/payment_form",
-                    state: { contactId: contactId },
-                  }}
-                >
-                  <i className="mdi mdi-pencil me-1"></i> Add
-                </Link>
-              </div>
-            </Card.Header>
-
-            <Card.Body>
-            {paymentLoading ? <p>Loading...</p> :
-            <>
-              {paymentData?.length > 0 ? (
-                <>
-                  <Table
-                    columns={columns}
-                    data={paymentData}
-                    pageSize={paymentPageSize}
-                    isDetails={true}
-                    pathName='/app/payment_details'
-                    isSortable={true}
-                    pagination={false}
-                    isSearchable={true}
-                    tableClass="table-nowrap table-hover"
-                    searchBoxClass=""
-                  />
-                  <Pagination
-                    visitPage={visitPaymentPage}
-                    previous_number={payment_previous_number}
-                    next_number={payment_next_number}
-                    total_page={payment_total_page}
-                    current_page={payment_current_page}
-                    active={payment_active}
-                  />
-                </>
-              ) : (
-                "No payments available!"
-              )}
-              </>}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col md={12} xl={12}>
-          <Card>
-            <Card.Header>
-              <div className="d-flex justify-content-between">
-                <p style={{ marginBottom: "0px !important" }}>Services List</p>
-
-                <Link
-                  className="btn btn-primary"
                   to={{
                     pathname: "/app/service_form",
                     state: { services: service_list, contactId: contactId },
                   }}
                 >
-                  <i className="mdi mdi-pencil me-1"></i> Add
+                  Create Service
                 </Link>
-              </div>
-            </Card.Header>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                {" "}
+                <Link
+                  to={{
+                    pathname: "/app/payment_form",
+                    state: { contactId: contactId },
+                  }}
+                >
+                  Create Payment
+                </Link>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+        <div>
+          <Dropdown style={{ marginBottom: "30px" }}>
+            <Dropdown.Toggle variant="primary" id="dropdown-basic ">
+              Options <i className="mdi mdi-chevron-down"></i>
+            </Dropdown.Toggle>
 
-            <Card.Body>
-            {serviceLoading ? <p>Loading...</p> :
-            <>
-              {service_list?.length > 0 ? (
-                <>
-                  <Table
-                    columns={servicesColumns}
-                    data={service_list}
-                    pageSize={servicePageSize}
-                    isDetails={true}
-                    pathName='/app/service_details'
-                    isSortable={true}
-                    pagination={false}
-                    isSearchable={true}
-                    tableClass="table-nowrap table-hover"
-                    searchBoxClass=""
-                  />
-                  <Pagination
-                    visitPage={visitServicePage}
-                    previous_number={service_previous_number}
-                    next_number={service_next_number}
-                    total_page={service_total_page}
-                    current_page={service_current_page}
-                    active={service_active}
-                  />
-                </>
-              ) : (
-                "No data available!"
-              )}
-              </>}
-            </Card.Body>
-          </Card>
+            <Dropdown.Menu>
+              <Dropdown.Item>
+                <Link
+                  to={{
+                    pathname: "/app/edit_client_form",
+                    state: { contactId: contactId },
+                  }}
+                >
+                  Edit
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link
+                  to='#'
+                  onClick={handleShow}
+                >
+                  Client Statement
+                </Link>
+              </Dropdown.Item>
+            
+             
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      </div>
+
+{/*  Statement modal */}
+<div>
+
+
+      <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal.Header closeButton>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <form onSubmit={(e) => handleSearch(e)} className='mb-4'>
+                                       
+                                
+
+
+                                            <Form.Group as={Col}>
+                                                <Form.Label >From</Form.Label>
+                                                <Form.Control
+                                                    type='date'
+                                                    name='from_date'
+                                                    onChange={(e) => setFromDate(e.target.value)}
+
+                                                >
+
+                                                </Form.Control>
+                                            </Form.Group>
+                                            <Form.Group as={Col}>
+                                                <Form.Label >To</Form.Label>
+                                                <Form.Control
+                                                    type='date'
+                                                    name='to_date'
+                                                    onChange={(e) => setToDate(e.target.value)}
+
+                                                >
+
+                                                </Form.Control>
+                                            </Form.Group>
+
+
+
+
+
+                                     
+
+                                        <Link type='submit' className='mt-2 btn btn-primary waves-effect waves-light me-2' to="/app/client_statement">Submit</Link>
+
+                                    </form>
+        </Modal.Body>
+        {/* <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer> */}
+      </Modal>
+</div>
+   
+      <Row>
+        <Col md={9} xl={9}>
+          <Row>
+            <Col>
+              <Card>
+                <Card.Header>
+                  <div className="d-flex justify-content-between">
+                    <p style={{ marginBottom: "0px !important" }}>
+                      Invoice List
+                    </p>
+                  </div>
+                </Card.Header>
+
+                <Card.Body>
+                  {invoiceLoading ? (
+                    <p>Loading...</p>
+                  ) : (
+                    <>
+                      {invoice_list?.length > 0 ? (
+                        <>
+                          <Table
+                            columns={invoicesColumns}
+                            data={invoice_list}
+                            pageSize={invoicePageSize}
+                            isSortable={true}
+                            isDetails={true}
+                            pathName="/app/invoice_details"
+                            pagination={false}
+                            isSearchable={true}
+                            tableClass="table-nowrap table-hover"
+                            searchBoxClass=""
+                          />
+                          <Pagination
+                            visitPage={visitInvoicePage}
+                            previous_number={invoice_previous_number}
+                            next_number={invoice_next_number}
+                            total_page={invoice_total_page}
+                            current_page={invoice_current_page}
+                            active={invoice_active}
+                          />
+                        </>
+                      ) : (
+                        "No data available!"
+                      )}
+                    </>
+                  )}
+                </Card.Body>
+              </Card>
+            </Col>
+
+          </Row>
+
+          <Row>
+            <Col>
+              <Card>
+                <Card.Header>
+                  <div className="d-flex justify-content-between">
+                    <p style={{ marginBottom: "0px !important" }}>
+                      Repeating Invoice List
+                    </p>
+                  </div>
+                </Card.Header>
+
+                <Card.Body>
+                  {repeatingInvoiceLoading ? (
+                    <p>Loading...</p>
+                  ) : (
+                    <>
+                      {repeating_invoice_list?.length > 0 ? (
+                        <>
+                          <Table
+                            columns={invoicesColumns}
+                            data={repeating_invoice_list}
+                            pageSize={repeatingInvoicePageSize}
+                            isSortable={true}
+                            isDetails={true}
+                            pathName="/app/invoice_details"
+                            pagination={false}
+                            isSearchable={true}
+                            tableClass="table-nowrap table-hover"
+                            searchBoxClass=""
+                          />
+                          <Pagination
+                            visitPage={visitRepeatingInvoicePage}
+                            previous_number={repeating_invoice_previous_number}
+                            next_number={repeating_invoice_next_number}
+                            total_page={repeating_invoice_total_page}
+                            current_page={repeating_invoice_current_page}
+                            active={repeating_invoice_active}
+                          />
+                        </>
+                      ) : (
+                        "No data available!"
+                      )}
+                    </>
+                  )}
+                </Card.Body>
+              </Card>
+            </Col>
+           
+          </Row>
+
+          <Row>
+            <Col>
+              <Card>
+                <Card.Header>
+                  <div className="d-flex justify-content-between">
+                    <p style={{ marginBottom: "0px !important" }}>
+                      Payment List
+                    </p>
+                  </div>
+                </Card.Header>
+
+                <Card.Body>
+                  {paymentLoading ? (
+                    <p>Loading...</p>
+                  ) : (
+                    <>
+                      {paymentData?.length > 0 ? (
+                        <>
+                          <Table
+                            columns={columns}
+                            data={paymentData}
+                            pageSize={paymentPageSize}
+                            isDetails={true}
+                            pathName="/app/payment_details"
+                            isSortable={true}
+                            pagination={false}
+                            isSearchable={true}
+                            tableClass="table-nowrap table-hover"
+                            searchBoxClass=""
+                          />
+                          <Pagination
+                            visitPage={visitPaymentPage}
+                            previous_number={payment_previous_number}
+                            next_number={payment_next_number}
+                            total_page={payment_total_page}
+                            current_page={payment_current_page}
+                            active={payment_active}
+                          />
+                        </>
+                      ) : (
+                        "No payments available!"
+                      )}
+                    </>
+                  )}
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <Card>
+                <Card.Header>
+                  <div className="d-flex justify-content-between">
+                    <p style={{ marginBottom: "0px !important" }}>
+                      Services List
+                    </p>
+                  </div>
+                </Card.Header>
+
+                <Card.Body>
+                  {serviceLoading ? (
+                    <p>Loading...</p>
+                  ) : (
+                    <>
+                      {service_list?.length > 0 ? (
+                        <>
+                          <Table
+                            columns={servicesColumns}
+                            data={service_list}
+                            pageSize={servicePageSize}
+                            isDetails={true}
+                            pathName="/app/service_details"
+                            isSortable={true}
+                            pagination={false}
+                            isSearchable={true}
+                            tableClass="table-nowrap table-hover"
+                            searchBoxClass=""
+                          />
+                          <Pagination
+                            visitPage={visitServicePage}
+                            previous_number={service_previous_number}
+                            next_number={service_next_number}
+                            total_page={service_total_page}
+                            current_page={service_current_page}
+                            active={service_active}
+                          />
+                        </>
+                      ) : (
+                        "No data available!"
+                      )}
+                    </>
+                  )}
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Col>
+
+        <Col md={3} xl={3}>
+          <Row>
+            <Col>
+              <Card>
+                <Card.Header>
+                  <h5>Contact Details</h5>
+                </Card.Header>
+                <Card.Body>
+                  <p style={{ fontSize: "14px" }}>
+                    {" "}
+                    click 'Edit' for show details or change
+                  </p>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <Card>
+                <Card.Header>
+                  <h5>Invoice Setting</h5>
+                </Card.Header>
+                <Card.Body>
+                  <div className="container">
+                    {!loading &&
+                      invoice_setting_error &&
+                      !invoice_setting_success && (
+                        <Alert variant="danger" className="my-2">
+                          {invoice_setting_error}
+                        </Alert>
+                      )}
+
+                    {!loading &&
+                      invoice_setting_success &&
+                      !invoice_setting_error && (
+                        <Alert variant="success" className="my-2">
+                          {invoice_setting_success}
+                        </Alert>
+                      )}
+                    <InputGroup className="mb-3">
+                      <InputGroup.Text style={mystyle}>
+                        Auto Approve
+                      </InputGroup.Text>
+                      <InputGroup.Checkbox
+                        checked={invoiceSetting?.auto_approve}
+                        name="auto_approve"
+                        onChange={(e) => invoiceSettingChange(e)}
+                      />
+                    </InputGroup>
+
+                    <InputGroup className="mb-3">
+                      <InputGroup.Text style={mystyle}>
+                        Auto Invoice Send
+                      </InputGroup.Text>
+                      <InputGroup.Checkbox
+                        checked={invoiceSetting?.auto_invoice_send}
+                        name="auto_invoice_send"
+                        onChange={(e) => invoiceSettingChange(e)}
+                      />
+                    </InputGroup>
+
+                    <InputGroup className="mb-3">
+                      <InputGroup.Text style={mystyle}>
+                        Reminder Service
+                      </InputGroup.Text>
+                      <InputGroup.Checkbox
+                        name="reminder_service"
+                        checked={invoiceSetting?.reminder_service}
+                        onChange={(e) => invoiceSettingChange(e)}
+                      />
+                    </InputGroup>
+
+                    {invoiceSetting?.reminder_service ? (
+                      <div style={{ marginLeft: "1rem" }}>
+                        <InputGroup className="mb-3">
+                          <InputGroup.Text style={mystyle}>
+                            Is Inclued Public Link
+                          </InputGroup.Text>
+                          <InputGroup.Checkbox
+                            name="is_include_public_link"
+                            checked={
+                              invoiceSetting?.reminder_settings
+                                ?.is_include_public_link
+                            }
+                            onChange={(e) => invoiceReminderSettingChange(e)}
+                          />
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroup.Text style={mystyle}>
+                            Is Inclued Pdf Link
+                          </InputGroup.Text>
+                          <InputGroup.Checkbox
+                            name="is_include_pdf_link"
+                            checked={
+                              invoiceSetting?.reminder_settings
+                                ?.is_include_pdf_link
+                            }
+                            onChange={(e) => invoiceReminderSettingChange(e)}
+                          />
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroup.Text style={mystyle}>
+                            Minimum Invoice Amount
+                          </InputGroup.Text>
+                          <Form.Control
+                            type="number"
+                            name="minimum_invoice_amount"
+                            value={
+                              invoiceSetting?.reminder_settings
+                                ?.minimum_invoice_amount
+                            }
+                            onChange={(e) => invoiceReminderSettingChange(e)}
+                          />
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroup.Text style={mystyle}>
+                            Reminder Type
+                          </InputGroup.Text>
+                          <Form.Check
+                            type="radio"
+                            name="reminder_type"
+                            checked={
+                              invoiceSetting?.reminder_settings
+                                ?.reminder_type === "due_in"
+                            }
+                            onChange={(e) => invoiceReminderSettingChange(e)}
+                            label="Due In"
+                            value="due_in"
+                            style={{
+                              marginRight: "1rem",
+                              marginLeft: "1rem",
+                              marginTop: "0.5rem",
+                            }}
+                          />
+                          <Form.Check
+                            type="radio"
+                            name="reminder_type"
+                            checked={
+                              invoiceSetting?.reminder_settings
+                                ?.reminder_type === "over_due"
+                            }
+                            onChange={(e) => invoiceReminderSettingChange(e)}
+                            label="Over Due"
+                            value="over_due"
+                            style={{ marginRight: "1rem", marginTop: "0.5rem" }}
+                          />
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroup.Text style={{ width: "6rem" }}>
+                            Days
+                          </InputGroup.Text>
+                          {invoiceSetting?.reminder_settings?.days?.map(
+                            (day) => (
+                              <div key={day} style={{ margin: "0 5px" }}>
+                                <div>
+                                  <InputGroup.Text style={{ width: "6rem" }}>
+                                    {day} days{" "}
+                                    <i
+                                      onClick={() => deleteDay(day)}
+                                      style={{
+                                        marginLeft: ".8rem",
+                                        color: "red",
+                                        cursor: "pointer",
+                                      }}
+                                      className="fe-delete"
+                                    ></i>
+                                  </InputGroup.Text>
+                                </div>
+                              </div>
+                            )
+                          )}
+                          <>
+                            <Button variant="primary" onClick={handleShow}>
+                              Add
+                            </Button>
+
+                            <Modal
+                              show={show}
+                              size="sm"
+                              aria-labelledby="contained-modal-title-vcenter"
+                              centered
+                            >
+                              <Modal.Header>
+                                <Modal.Title id="contained-modal-title-vcenter">
+                                  Add Reminder Days
+                                </Modal.Title>
+                              </Modal.Header>
+                              <Modal.Body>
+                                <Form>
+                                  <Form.Group
+                                    className="mb-3"
+                                    controlId="exampleForm.ControlInput1"
+                                  >
+                                    <Form.Label>Reminder Type</Form.Label>
+                                    <Form.Select
+                                      disabled
+                                      aria-label="Default select example"
+                                    >
+                                      <option
+                                        selected={
+                                          invoiceSetting?.reminder_settings
+                                            ?.reminder_type === "due_in"
+                                        }
+                                        value="due_in"
+                                      >
+                                        Due In
+                                      </option>
+                                      <option
+                                        selected={
+                                          invoiceSetting?.reminder_settings
+                                            ?.reminder_type === "over_due"
+                                        }
+                                        value="over_due"
+                                      >
+                                        Over Due
+                                      </option>
+                                    </Form.Select>
+                                  </Form.Group>
+                                  <Form.Group
+                                    className="mb-3"
+                                    controlId="exampleForm.ControlTextarea1"
+                                  >
+                                    <Form.Label>Day</Form.Label>
+                                    <Form.Control
+                                      onChange={(e) => {
+                                        setInputDate(e.target.value);
+                                      }}
+                                      type="number"
+                                    />
+                                  </Form.Group>
+                                </Form>
+                              </Modal.Body>
+                              <Modal.Footer>
+                                <Button
+                                  variant="secondary"
+                                  onClick={handleClose}
+                                >
+                                  Close
+                                </Button>
+                                <Button
+                                  variant="primary"
+                                  onClick={() => daySubmit()}
+                                >
+                                  Submit
+                                </Button>
+                              </Modal.Footer>
+                            </Modal>
+                          </>
+                        </InputGroup>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+
+                    <Button variant="primary" onClick={() => finalSubmit()}>
+                      Submit
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </>
