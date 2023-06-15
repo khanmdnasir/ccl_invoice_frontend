@@ -74,11 +74,13 @@ const ClientStatement = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const contacts = useSelector(state => state.Contact.contact);
+    console.log("client",contacts.name)
     const cloading = useSelector(state => state.Contact.loading);
     const [contactId, setContactId] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [clientLedger, setClientLedger] = useState({});
+   
     const [error, setError] = useState("");
 
     const [loading, setLoading] = useState(false);
@@ -177,7 +179,7 @@ const ClientStatement = () => {
                                                     aria-label="Default select example"
                                                     required
                                                     onChange={(e) => setContactId(e.target.value)}
-                                                    value={contactId}
+                                                    defaultValue={contacts ? contacts.name : ''}
                                                 >
                                                     {cloading ? <option value="" disabled>Loading...</option> :
                                                         <>
@@ -203,7 +205,7 @@ const ClientStatement = () => {
                                                     type='date'
                                                     name='from_date'
                                                     onChange={(e) => setFromDate(e.target.value)}
-
+                                                    defaultValue={fromDate}
                                                 >
 
                                                 </Form.Control>
@@ -214,7 +216,7 @@ const ClientStatement = () => {
                                                     type='date'
                                                     name='to_date'
                                                     onChange={(e) => setToDate(e.target.value)}
-
+                                                    defaultValue={toDate}
                                                 >
 
                                                 </Form.Control>

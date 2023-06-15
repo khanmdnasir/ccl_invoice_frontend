@@ -26,13 +26,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCity, getCountry } from "../../redux/location/actions";
 import {
   addContact,
-  updateContact,
   getAllKam,
   getContact,
   setContactErrorAlert,
   setContactSuccessAlert,
-  getContactDetails,
-  contactDetailsClear,
 } from "../../redux/actions";
 import { Link, useHistory } from "react-router-dom";
 
@@ -63,30 +60,30 @@ const api = new APICore();
 //     onSubmit: (value: any) => void;
 // }
 
-const ContactForm = () => {
+const EditContactForm = () => {
   /*
     form validation schema
     */
 
   const dispatch = useDispatch();
   const history = useHistory();
+  const contact = useSelector((state) => state.Contact.contact);
   // console.log("contactForm", contact);
-  const contact = useSelector((state) => state.Contact.contact_details)
   const all_kam = useSelector((state) => state.Kam.all_kam);
   const country = useSelector((state) => state.Location.country);
-  // console.log("contactFormCountry", country);
+  console.log("contactFormCountry", country);
   // console.log("contactFormCountry", country[0]?.country_code);
+  const [pageSize, setPageSize] = useState(10);
   const cities = useSelector((state) => state.Location.city);
   const success = useSelector((state) => state.Contact.success);
   const error = useSelector((state) => state.Contact.error);
   const loading = useSelector((state) => state.Contact.loading);
-  const countryCodeLength = contact?.phone ? contact?.phone?.length - 11 : 0
-  const [countryCode, setCountryCode] = useState(contact?.phone ? contact?.phone?.substr(0, countryCodeLength) : "");
-  const [phone, setPhone] = useState(contact?.phone ? contact?.phone?.substr(countryCodeLength, contact?.phone?.length) : "");
-  const [active,setActive] = useState('details');
+  const [show, setShow] = useState(false);
+  const [phone, setPhone] = useState("");
   // console.log("phone",phone)
-  
-
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const onCloseModal = () => setShow(false);
   const schemaResolver = yupResolver(
     yup.object().shape({
       name: yup.string().required("Please enter name"),
@@ -101,6 +98,7 @@ const ContactForm = () => {
       contact_person: contact?.contact_person,
       bin: contact?.bin,
       kam: contact?.kam?.id,
+      phone: contact?.phone,
       email: contact?.email,
       city: contact?.city?.id,
       country: contact?.country?.id,
@@ -117,63 +115,40 @@ const ContactForm = () => {
     formState: { errors },
   } = methods;
 
-  
+  useEffect(() => {
+    if (contact?.country) {
+      dispatch(getCity(contact?.country?.id));
+    }
+  }, [contact?.country]);
 
   const onSubmit = (formData) => {
     const newFormData = { ...formData };
-    newFormData["phone"] = countryCode.concat(phone);
-    if (contact.id){
-      newFormData["id"] = contact.id
-      dispatch(updateContact(newFormData));
-    }else{
-      dispatch(addContact(newFormData));
-    }
+    newFormData["phone"] = country[0].country_code.concat(phone);
+    dispatch(addContact(newFormData));
   };
 
-  
+  const disable = () => {
+    setIsSubmit(true);
+    setIsDisabled(true);
+  };
 
   useEffect(() => {
     setTimeout(() => {
       dispatch(setContactSuccessAlert(""));
-      dispatch(setContactErrorAlert(""));
     }, 2000);
-    if(success !== null ){
-      if(success === 'Client Created Successfully'){
-        setActive('address');
-      }
-      
-      if(success === 'Client Updated Successfully'){
-        setTimeout(() => {
-          history.push('/app/client');
-        },2000)
-        
-      }
-      
+    if (success !== "") {
+      onCloseModal();
+      setTimeout(() => {
+        history.push("/app/client");
+      }, 2000);
     }
-    
   }, [success]);
 
   useEffect(() => {
-    dispatch(contactDetailsClear());
+    dispatch(getContact(pageSize, 1));
     dispatch(getCountry());
     dispatch(getAllKam());
-  }, []);
-
-  useEffect(() => {
-    const countryCodeLength = contact?.phone ? contact?.phone?.length - 11 : 0
-    setCountryCode(contact?.phone ? contact?.phone?.substr(0, countryCodeLength) : "+88");
-    setPhone(contact?.phone ? contact?.phone?.substr(countryCodeLength, contact?.phone?.length) : "");
-    reset({
-      name: contact ? contact.name : "",
-      contact_person: contact?.contact_person,
-      bin: contact?.bin,
-      kam: contact?.kam?.id,
-      email: contact?.email,
-      city: contact?.city?.id,
-      country: contact?.country?.id,
-      billing_address: contact?.billing_address,
-    })
-  },[contact])
+  }, [pageSize]);
 
   return (
     <>
@@ -196,7 +171,7 @@ const ContactForm = () => {
             color: "#323a46",
           }}
         >
-     Add Client
+          Add Client
         </h4>
       </div>
       {!loading && success && (
@@ -245,8 +220,8 @@ const ContactForm = () => {
                     <Nav.Link
                       className="active-border"
                       eventKey="first"
-                      active={active === 'details'}
-                      onClick={()=>setActive('details')}
+                      active={!isSubmit}
+                      onClick={() => setIsSubmit(false)}
                     >
                       Client details
                     </Nav.Link>
@@ -256,9 +231,9 @@ const ContactForm = () => {
                     <Nav.Link
                       className="active-border"
                       eventKey="second"
-                      active={active === 'address'}
-                      onClick={()=>setActive('address')}
-                      disabled={!contact?.id}
+                      active={isSubmit}
+                      onClick={() => setIsSubmit(true)}
+                      disabled={!isDisabled}
                     >
                       Addresses
                     </Nav.Link>
@@ -268,7 +243,7 @@ const ContactForm = () => {
               <Col sm={9} className="p-0">
                 <Form onSubmit={handleSubmit(onSubmit)}>
                   <Tab.Content className="first-tab">
-                    <Tab.Pane eventKey="second" active={active === 'address'}>
+                    <Tab.Pane eventKey="second" active={isSubmit}>
                       <div className="main-tab">
                         <div className="tab-header">
                           <h4>Addresses</h4>
@@ -287,7 +262,7 @@ const ContactForm = () => {
                               register={register}
                               errors={errors}
                               control={control}
-                              // defaultValue={contact ? contact?.country?.id : ""}
+                              defaultValue={contact ? contact?.country?.id : ""}
                               onChange={(e) => {
                                 dispatch(getCity(e.target.value));
                                 if (
@@ -319,7 +294,7 @@ const ContactForm = () => {
                                   errors && errors["city"] ? true : false
                                 }
                                 {...register("city")}
-                                // defaultValue={contact ? contact?.city?.id : ""}
+                                defaultValue={contact ? contact?.city?.id : ""}
                               >
                                 <option value="">Select City ...</option>
                                 {cities?.map((item) => {
@@ -368,7 +343,7 @@ const ContactForm = () => {
                       </div>
                     </Tab.Pane>
 
-                    <Tab.Pane eventKey="first" active={active === 'details'}>
+                    <Tab.Pane eventKey="first" active={!isSubmit}>
                       <div className="main-tab">
                         <div className="tab-header">
                           <h4>Client Details</h4>
@@ -392,7 +367,6 @@ const ContactForm = () => {
                               errors={errors}
                               control={control}
                               style={{ height: "42px" }}
-                              defaultValue={contact? contact.name : ''}
                             />
 
                             <FormInput
@@ -452,7 +426,7 @@ const ContactForm = () => {
                               register={register}
                               errors={errors}
                               control={control}
-                              // defaultValue={contact ? contact?.kam?.id : ""}
+                              defaultValue={contact ? contact?.kam?.id : ""}
                               style={{ height: "42px" }}
                               className="mb-3"
                             >
@@ -471,14 +445,10 @@ const ContactForm = () => {
                             <InputGroup>
                            
 
-                              <Form.Select
-                               size="sm"
-                               value={countryCode}
-                               onChange={(e)=>setCountryCode(e.target.value)}
-                               >
+                              <Form.Select size="sm" defaultValue="+88">
                               {country.map((code) => {
                                 return(
-                                  <option value={code?.country_code}>{code?.country_code}</option>
+                                  <option>{code?.country_code}</option>
                                 )
                               })
 
@@ -512,7 +482,7 @@ const ContactForm = () => {
                       >
                         Cancel
                       </Link>
-                     
+                      {isSubmit === true ? (
                         <Button
                           variant="success"
                           type="submit"
@@ -520,7 +490,18 @@ const ContactForm = () => {
                         >
                           Save
                         </Button>
-                      
+                      ) : (
+                        <Link
+                          to="#"
+                          className="btn btn-success waves-effect waves-light me-2"
+                          onClick={() => {
+                            disable();
+                          }}
+                          // style={{pointerEvents: isDisabled === true ? "auto" : "none"}}
+                        >
+                          Save
+                        </Link>
+                      )}
                     </div>
                   </Tab.Content>
                 </Form>
@@ -533,4 +514,4 @@ const ContactForm = () => {
   );
 };
 
-export default ContactForm;
+export default EditContactForm;

@@ -30,7 +30,7 @@ const SplitName = ({row}) => {
 
 //    
     for(var i = 0; i < name.length; i++){
-        console.log(i-1)
+        
         name[i] = name[i].substring(i,2-i).charAt(0).toUpperCase();
     }
     return (
