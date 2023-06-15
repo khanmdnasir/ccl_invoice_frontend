@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { APICore } from "../../helpers/api/apiCore";
-import { Row, Col, Card, Button, Form, Alert, Badge } from "react-bootstrap";
-import { withSwal } from "react-sweetalert2";
+import { Row, Col, Card, Button, Form, Alert } from "react-bootstrap";
 
 // components
 import Table from "../../components/Table";
 import classNames from "classnames";
 import PageTitle from "../../components/PageTitle";
-import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Pagination from "../../components/CustomPagination";
 import { getPayment, setPaymentSuccessAlert } from "../../redux/actions";

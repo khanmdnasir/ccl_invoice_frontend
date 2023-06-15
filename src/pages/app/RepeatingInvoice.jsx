@@ -5,17 +5,12 @@ import { withSwal } from 'react-sweetalert2';
 
 // components
 import Table from '../../components/Table';
-import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getRepeatingInvoice } from '../../redux/actions';
 import Pagination from '../../components/CustomPagination';
 
 
-
-// const ExcelFile = ReactExport.ExcelFile;
-// const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-// const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const api = new APICore();
 
@@ -269,33 +264,7 @@ const RepeatingInvoice = () => {
                                 {error}
                             </Alert>
                         )}
-                            {/* <Row className="mb-2">
-                                <Col sm={4}>
-                                    <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
-                                        <span className='me-2'>Show:</span>
-                                        <Form.Select style={{width: '40%'}} onChange={(e)=>{setPageSize(e.target.value);getRepeatingInvoice(pageSize,1)}}>
-                                            <option value='10'>10</option>
-                                            <option value='15'>20</option>
-                                            <option value='20'>30</option>
-                                        </Form.Select>
-                                    </div>
-                                </Col>
-
-                                <Col sm={8}>
-                                    <div className="text-sm-end mt-2 mt-sm-0">
-                                        { user_role.includes('add_repeatinginvoice') ?
-                                            <Link className="btn btn-success mb-2 me-1" to='/app/repeating_invoice_form'>
-                                            <i className="mdi mdi-plus-circle me-1"></i> Add
-                                            </Link>:
-                                            <>
-                                            </>
-                                        }
-                                        
-                                        
-  
-                                    </div>
-                                </Col>
-                            </Row> */}
+                            
                             
                             {loading ? <p>Loading...</p>:
                             <>

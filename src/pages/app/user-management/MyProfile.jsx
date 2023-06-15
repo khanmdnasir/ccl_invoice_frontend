@@ -1,4 +1,4 @@
-import React,{ useEffect, useState } from 'react';
+import React,{ useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
 import FeatherIcon from 'feather-icons-react';
 import FileUploader from '../../../components/FileUploader';
@@ -9,7 +9,7 @@ import { useSelector,useDispatch } from 'react-redux';
 import { APICore } from '../../../helpers/api/apiCore';
 import { setAuthErrorAlert, setAuthSuccessAlert, UpdateProfile, UpdateProfileImage} from '../../../redux/actions';
 
-const api = new APICore()
+
 
 
 const MyProfile = () => {

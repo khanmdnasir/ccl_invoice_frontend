@@ -5,7 +5,7 @@ import { withSwal } from 'react-sweetalert2';
 
 
 
-import { getKam,setKamSuccessAlert,setKamErrorAlert, addKam, updateError, resetAuth } from "../../../redux/actions";
+import { getKam,setKamSuccessAlert,setKamErrorAlert, addKam } from "../../../redux/actions";
 import Table from "../../../components/Table";
 import PageTitle from "../../../components/PageTitle";
 import { Link } from 'react-router-dom';

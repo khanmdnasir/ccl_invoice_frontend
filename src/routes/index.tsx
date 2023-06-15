@@ -51,7 +51,6 @@ const Users = React.lazy(() => import("../pages/app/user-management/Users"));
 const Role = React.lazy(() => import("../pages/app/user-management/Role"));
 
 //others
-const SearchResults = React.lazy(() => import("../pages/other/SearchResults/"));
 const Error404Alt = React.lazy(() => import("../pages/error/Error404Alt"));
 const Error500Two = React.lazy(() => import("../pages/error/Error500Two"));
 
@@ -255,12 +254,7 @@ const extrapagesRoutes = {
   path: "/pages",
   name: "Pages",
   children: [
-    {
-      path: "/pages/serach-results",
-      name: "Search Results",
-      component: SearchResults,
-      route: PrivateRoute,
-    },
+    
     {
       path: "/pages/error-404-alt",
       name: "Error - 404-alt",

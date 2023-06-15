@@ -1,26 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { APICore } from '../../helpers/api/apiCore';
-import ContactForm from '../Form/ContactForm';
-import { Row, Col, Card, Button, Form, Alert, Breadcrumb, BreadcrumbItem } from 'react-bootstrap';
-import { withSwal } from 'react-sweetalert2';
+import { Row, Col, Card, Form, Breadcrumb } from 'react-bootstrap';
 
 // components
 import Table from '../../components/Table';
-import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact, deleteContact, getContact, setContactErrorAlert, setContactSuccessAlert } from '../../redux/actions';
-import ReactExport from "react-export-excel";
+import { addContact, getContact, setContactErrorAlert, setContactSuccessAlert } from '../../redux/actions';
 import Pagination from '../../components/CustomPagination';
 import { getCountry } from '../../redux/location/actions';
 import { getAllKam } from '../../redux/kam/actions';
 
 
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
-const api = new APICore();
 
 // Split Name
 
@@ -47,123 +38,7 @@ const SplitName = ({row}) => {
     )
 }
 
-// action column render
-// const ActionColumn = withSwal(({ row, swal }) => {
-//     /*
-//      *   modal handeling
-//      */
-//     const dispatch = useDispatch();
-//     const country = useSelector(state => state.Location.country);
-//     const user_role = useSelector((state) => state.Role.user_role);
-//     const [show, setShow] = useState(false);
-//     const onCloseModal = () => setShow(false);
-//     const onOpenModal = () => setShow(true);
-//     const all_kam = useSelector(state => state.Kam.all_kam);
-//     /*
-//     handle form submission
-//     */
-//     const onSubmit = (formData) => {
 
-//         api.updatePatch(`/api/contact/${row.original.id}/`, formData)
-//             .then(res => {
-
-//                 if (res.data.success) {
-//                     dispatch(getContact(10, 1));
-//                 } else {
-//                     swal.fire({
-//                         title: res.data.error,
-//                     })
-
-//                 }
-
-//             })
-//             .catch(err => {
-//                 swal.fire({
-//                     title: err,
-//                 })
-//             })
-//         onCloseModal()
-//     };
-
-//     const onDelete = () => {
-//         swal.fire({
-//             title: 'Are you sure?',
-//             text: "You won't be able to revert this!",
-//             icon: 'warning',
-//             showCancelButton: true,
-//             confirmButtonColor: '#28bb4b',
-//             cancelButtonColor: '#f34e4e',
-//             confirmButtonText: 'Yes, delete it!',
-//         })
-//             .then(function (result) {
-//                 if (result.value) {
-//                     // dispatch(deleteContact(row.original.id))
-//                     api.delete(`/api/contact/${row.original.id}/`)
-//                         .then(res => {
-//                             dispatch(getContact(10, 1))
-//                             if (res.data.success) {
-//                                 swal.fire(
-//                                     'Deleted!',
-//                                     'Account has been deleted.',
-//                                     'success'
-//                                 );
-//                             } else {
-//                                 swal.fire(
-//                                     'Error',
-//                                     res.data.error,
-//                                     'warning'
-
-//                                 );
-//                             }
-
-//                         })
-//                         .catch(err => {
-//                             swal.fire({
-//                                 title: err,
-//                             }
-//                             );
-//                         })
-//                 } else if (result.dismiss === 'cancel') {
-//                     console.log('cancel')
-//                 }
-//             })
-//     }
-
-//     return (
-//         <>
-//             {/* <Link to={{ pathname: '/app/client_details', state: row.original.id }} className="action-icon" >
-//                 <i className="mdi mdi-eye"></i>
-//             </Link> */}
-//             {user_role.includes('view_general_ledger') ?
-//             <Link to={{ pathname: '/app/client_statement', state: row.original.id }} className="action-icon" >
-//                 <i className="mdi mdi-file"></i>
-//             </Link>:""}
-
-//             {user_role.includes('change_contact') ?
-//                 <Link to="#" className="action-icon" onClick={() => onOpenModal()}>
-//                     <i className="mdi mdi-square-edit-outline"></i>
-//                 </Link> :
-//                 <Link to="#" className="action-icon" style={{ pointerEvents: 'none' }}>
-//                     <i className="mdi mdi-square-edit-outline"></i>
-//                 </Link>
-//             }
-
-//             {user_role.includes('delete_contact') ?
-//                 <Link to="#" className="action-icon" onClick={() => onDelete()}>
-//                     <i className="mdi mdi-delete"></i>
-//                 </Link> :
-//                 <Link to="#" className="action-icon" style={{ pointerEvents: 'none' }}>
-//                     <i className="mdi mdi-delete"></i>
-//                 </Link>
-//             }
-//             {
-//                 show ?
-//                     <ContactForm show={show} onHide={onCloseModal} onSubmit={onSubmit} contact={row.original} countries={country} kamList={all_kam} />
-//                     : null
-//             }
-//         </>
-//     );
-// });
 
 const columns = [
 
