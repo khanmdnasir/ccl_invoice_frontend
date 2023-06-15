@@ -32,7 +32,7 @@ const ProfileDropdown = (props: ProfileDropdownProps) => {
      * toggle profile-dropdown
      */
 
-    console.log('first name', firstName,'lastname',lastName)
+    // console.log('first name', firstName,'lastname',lastName)
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
     };

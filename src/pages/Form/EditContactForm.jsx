@@ -63,18 +63,19 @@ const api = new APICore();
 //     onSubmit: (value: any) => void;
 // }
 
-const ContactForm = () => {
+const EditContactForm = () => {
   /*
     form validation schema
     */
 
   const dispatch = useDispatch();
   const history = useHistory();
-  // console.log("contactForm", contact);
+  
   const contact = useSelector((state) => state.Contact.contact_details)
+  console.log("contactForm", contact);
   const all_kam = useSelector((state) => state.Kam.all_kam);
   const country = useSelector((state) => state.Location.country);
-  // console.log("contactFormCountry", country);
+  console.log("contactFormCountry", country);
   // console.log("contactFormCountry", country[0]?.country_code);
   const cities = useSelector((state) => state.Location.city);
   const success = useSelector((state) => state.Contact.success);
@@ -138,7 +139,7 @@ const ContactForm = () => {
       dispatch(setContactErrorAlert(""));
     }, 2000);
     if(success !== null ){
-      if(success === 'Client Created Successfully'){
+      if(success === 'Client Edited Successfully'){
         setActive('address');
       }
       
@@ -185,7 +186,8 @@ const ContactForm = () => {
           <Breadcrumb>
             <Breadcrumb.Item href="/">Qorum</Breadcrumb.Item>
             <Breadcrumb.Item href="/app/client">Clients</Breadcrumb.Item>
-            <Breadcrumb.Item active>Add Clients</Breadcrumb.Item>
+            <Breadcrumb.Item href="/app/client_details"> Client Details</Breadcrumb.Item>
+            <Breadcrumb.Item active> Edit Client</Breadcrumb.Item>
           </Breadcrumb>
         </div>
         <h4
@@ -196,7 +198,7 @@ const ContactForm = () => {
             color: "#323a46",
           }}
         >
-     Add Client
+      {contact ? contact.name : ""}
         </h4>
       </div>
       {!loading && success && (
@@ -287,7 +289,7 @@ const ContactForm = () => {
                               register={register}
                               errors={errors}
                               control={control}
-                              // defaultValue={contact ? contact?.country?.id : ""}
+                              defaultValue={contact ? contact?.country?.id : ""}
                               onChange={(e) => {
                                 dispatch(getCity(e.target.value));
                                 if (
@@ -319,7 +321,7 @@ const ContactForm = () => {
                                   errors && errors["city"] ? true : false
                                 }
                                 {...register("city")}
-                                // defaultValue={contact ? contact?.city?.id : ""}
+                                defaultValue={contact ? contact?.city?.id : ""}
                               >
                                 <option value="">Select City ...</option>
                                 {cities?.map((item) => {
@@ -391,8 +393,8 @@ const ContactForm = () => {
                               register={register}
                               errors={errors}
                               control={control}
+                              defaultValue={contact ? contact.name : ""}
                               style={{ height: "42px" }}
-                              defaultValue={contact? contact.name : ''}
                             />
 
                             <FormInput
@@ -407,6 +409,7 @@ const ContactForm = () => {
                               control={control}
                               style={{ height: "42px" }}
                               className="mb-3"
+                              defaultValue={contact ? contact.email : ""}
                             />
 
                             <FormInput
@@ -442,6 +445,7 @@ const ContactForm = () => {
                               control={control}
                               style={{ height: "42px" }}
                               className="mb-3"
+                              defaultValue={contact ? contact.bin : ""}
                             />
 
                             <FormInput
@@ -452,7 +456,7 @@ const ContactForm = () => {
                               register={register}
                               errors={errors}
                               control={control}
-                              // defaultValue={contact ? contact?.kam?.id : ""}
+                              defaultValue={contact ? contact?.kam?.id : ""}
                               style={{ height: "42px" }}
                               className="mb-3"
                             >
@@ -495,7 +499,8 @@ const ContactForm = () => {
                                 register={register}
                                 errors={errors}
                                 onChange={(e) => setPhone(e.target.value)}
-                                value={phone}
+                               
+                                defaultValue={contact ? contact.phone : ""}
                               />
                             </InputGroup>
                           </div>
@@ -533,4 +538,4 @@ const ContactForm = () => {
   );
 };
 
-export default ContactForm;
+export default EditContactForm;

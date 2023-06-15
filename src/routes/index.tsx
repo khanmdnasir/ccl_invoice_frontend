@@ -31,6 +31,7 @@ import KeyAccountManager from "../pages/app/Kam/KeyAccountManager";
 import ClientStatement from "../pages/app/ClientStatement";
 import Settings from "../pages/app/Settings";
 import ContactForm from "../pages/Form/ContactForm";
+import EditContactForm from "../pages/Form/EditContactForm";
 
 // lazy load all the views
 
@@ -123,6 +124,12 @@ const AppRoutes = {
       path: "/app/client",
       name: "Client",
       component: Contact,
+      route: PrivateRoute,
+    },
+    {
+      path: "/app/edit_client_form",
+      name: "Edit Client Form",
+      component: EditContactForm,
       route: PrivateRoute,
     },
     {
