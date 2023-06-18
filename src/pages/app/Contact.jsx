@@ -64,6 +64,7 @@ const columns = [
 const Contact = () => {
     const dispatch = useDispatch();
     const contact = useSelector(state => state.Contact.contact);
+    
     const country = useSelector(state => state.Location.country);
     const all_kam = useSelector(state => state.Kam.all_kam);
     const previous = useSelector(state => state.Contact.previous);
@@ -140,7 +141,7 @@ const Contact = () => {
                 <Col sm={8}>
                                     <div className="text-sm-end mt-2">
                                         {user_role.includes('add_contact') ?
-                                            <Link className="btn btn-success mb-2 me-1" to='/app/client_form'>
+                                            <Link className="btn btn-primary mb-2 me-1" to='/app/client_form'>
                                                 <i className="mdi mdi-plus-circle me-1"></i> Add New
                                             </Link> :
                                             <>

@@ -137,6 +137,22 @@ function* updateContact({ payload:{id, name,client_id,contact_type,contact_perso
     }
 }
 
+function* editedContact({ payload:{id, name,client_id,contact_type,contact_person,bin,kam,phone,email,city,country,billing_address} }:any):SagaIterator {
+    try {
+        const response = yield call(updateContactApi,{id, name,client_id,contact_type,contact_person,bin,kam,phone,email,city,country,billing_address,});
+        const data = response.data;
+        if(data.success){
+            yield put({type: 'EDITED_CONTACT_SUCCESS' , data: data.data});
+        }else{
+            yield put({type: 'UPDATE_CONTACT_FAILED', error: data.error});
+        }
+    } catch (error) {
+        console.log("error",error)
+        yield put({type: 'UPDATE_CONTACT_FAILED', error: error});
+        
+    }
+}
+
 
 function* deleteContact({ payload: {id} }: ContactData):SagaIterator {
     try {
@@ -197,7 +213,9 @@ export function* watchAddContact() {
 export function* watchUpdateContact() {
     yield takeEvery('UPDATE_CONTACT_REQUESTED', updateContact);
 }
-
+export function* watchEditedContact() {
+    yield takeEvery('UPDATE_CONTACT_REQUESTED', updateContact);
+}
 export function* watchDeleteContact() {
     yield takeEvery('DELETE_CONTACT_REQUESTED', deleteContact);
 }
@@ -205,7 +223,7 @@ export function* watchDeleteContact() {
 
 
 function* contactSaga() {
-    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchUpdateContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactDetails), fork(watchGetContactInvoiceSetting), fork(watchUpdateContactInvoiceSetting),setContactSuccessAlert,setContactErrorAlert]);
+    yield all([fork(watchGetContact),fork(watchAddContact),fork(watchUpdateContact),fork(watchEditedContact),fork(watchDeleteContact),fork(watchGetAllContact), fork(watchGetContactDetails), fork(watchGetContactInvoiceSetting), fork(watchUpdateContactInvoiceSetting),setContactSuccessAlert,setContactErrorAlert]);
 }
 
 export default contactSaga;

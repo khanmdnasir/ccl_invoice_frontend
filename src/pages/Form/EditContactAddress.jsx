@@ -83,6 +83,7 @@ const EditContactForm = () => {
   // console.log("phone",phone)
   const [isSubmit, setIsSubmit] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [contactId, setContactId] = useState('');
   const onCloseModal = () => setShow(false);
   const schemaResolver = yupResolver(
     yup.object().shape({
@@ -124,7 +125,10 @@ const EditContactForm = () => {
   const onSubmit = (formData) => {
     const newFormData = { ...formData };
     newFormData["phone"] = country[0].country_code.concat(phone);
-    dispatch(addContact(newFormData));
+    if(contactId){
+      newFormData["id"] = contactId;
+      dispatch(addContact(newFormData));
+    }
   };
 
   const disable = () => {
@@ -143,6 +147,15 @@ const EditContactForm = () => {
       }, 2000);
     }
   }, [success]);
+
+  useEffect(() => {
+    const state = location.state;
+    if(state){
+        setContactId(parseInt(state.contactId));
+        
+    }
+    console.log("EditContact", state);
+  })
 
   useEffect(() => {
     dispatch(getContact(pageSize, 1));

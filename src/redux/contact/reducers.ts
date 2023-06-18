@@ -194,6 +194,18 @@ const Contact = (state = INIT_STATE, action: any) => {
             };
         }
 
+
+        case type.EDITED_CONTACT_SUCCESS: {
+            return {
+                ...state,
+                loading: false,
+                contact_details: action.data,
+                success:'Client Edited Successfully'
+                
+            };
+        }
+
+
         case type.UPDATE_CONTACT_FAILED: {
             return {
                 ...state,

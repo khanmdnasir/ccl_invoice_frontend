@@ -34,7 +34,7 @@ import {
   getContactDetails,
   contactDetailsClear,
 } from "../../redux/actions";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 
 const api = new APICore();
 
@@ -70,12 +70,12 @@ const EditContactForm = () => {
 
   const dispatch = useDispatch();
   const history = useHistory();
-  
+  const location = useLocation();
   const contact = useSelector((state) => state.Contact.contact_details)
-  console.log("contactForm", contact);
+  console.log("contactForm", contact.name);
   const all_kam = useSelector((state) => state.Kam.all_kam);
   const country = useSelector((state) => state.Location.country);
-  console.log("contactFormCountry", country);
+  // console.log("contactFormCountry", country);
   // console.log("contactFormCountry", country[0]?.country_code);
   const cities = useSelector((state) => state.Location.city);
   const success = useSelector((state) => state.Contact.success);
@@ -85,8 +85,9 @@ const EditContactForm = () => {
   const [countryCode, setCountryCode] = useState(contact?.phone ? contact?.phone?.substr(0, countryCodeLength) : "");
   const [phone, setPhone] = useState(contact?.phone ? contact?.phone?.substr(countryCodeLength, contact?.phone?.length) : "");
   const [active,setActive] = useState('details');
-  // console.log("phone",phone)
-  
+  const [contactId, setContactId] = useState('');
+  const [editSuccess,setEditSuccess] = useState(null);
+  const [editName,setEditName] = useState('')
 
   const schemaResolver = yupResolver(
     yup.object().shape({
@@ -122,9 +123,10 @@ const EditContactForm = () => {
 
   const onSubmit = (formData) => {
     const newFormData = { ...formData };
+    console.log("newFormData",newFormData)
     newFormData["phone"] = countryCode.concat(phone);
-    if (contact.id){
-      newFormData["id"] = contact.id
+    if (contactId){
+      newFormData["id"] = contactId;
       dispatch(updateContact(newFormData));
     }else{
       dispatch(addContact(newFormData));
@@ -139,7 +141,8 @@ const EditContactForm = () => {
       dispatch(setContactErrorAlert(""));
     }, 2000);
     if(success !== null ){
-      if(success === 'Client Edited Successfully'){
+      if(editSuccess == null){
+        setEditSuccess('Client Edited Successfully');
         setActive('address');
       }
       
@@ -155,7 +158,17 @@ const EditContactForm = () => {
   }, [success]);
 
   useEffect(() => {
-    dispatch(contactDetailsClear());
+    const state = location.state;
+    if(state){
+        setContactId(parseInt(state.contactId),);
+        setEditName(state.name);
+        
+    }
+    // console.log("EditContact", state);
+  })
+
+  useEffect(() => {
+    // dispatch(contactDetailsClear());
     dispatch(getCountry());
     dispatch(getAllKam());
   }, []);
@@ -187,7 +200,7 @@ const EditContactForm = () => {
             <Breadcrumb.Item href="/">Qorum</Breadcrumb.Item>
             <Breadcrumb.Item href="/app/client">Clients</Breadcrumb.Item>
             <Breadcrumb.Item href="/app/client_details"> Client Details</Breadcrumb.Item>
-            <Breadcrumb.Item active> Edit Client</Breadcrumb.Item>
+            <Breadcrumb.Item active> {editName}</Breadcrumb.Item>
           </Breadcrumb>
         </div>
         <h4
@@ -198,7 +211,7 @@ const EditContactForm = () => {
             color: "#323a46",
           }}
         >
-      {contact ? contact.name : ""}
+      Edit Client
         </h4>
       </div>
       {!loading && success && (

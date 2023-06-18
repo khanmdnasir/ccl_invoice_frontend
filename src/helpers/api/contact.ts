@@ -67,5 +67,9 @@ function deleteContact(id:number) {
     return api.delete(`${baseUrl}`);
 }
 
+function editedContact(params: { id: any, name:string,client_id:string,contact_type:string,contact_person:string,phone:string,bin:string,kam:string,email:string,city:string,country:string,billing_address:string }) {
+    const baseUrl = `/api/contact/${params?.id}/`;
+    return api.updatePatch(`${baseUrl}`,params);
+}
 
-export { getContact, addContact,deleteContact,getAllContact, getContactInvoice,getContactService,getContactServices,getContactRepeatingInvoice,getContactPayment, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, updateContact };
+export { getContact, addContact,deleteContact,getAllContact, getContactInvoice,getContactService,getContactServices,getContactRepeatingInvoice,getContactPayment, getContactDetails, getContactInvoiceSetting, updateContactInvoiceSetting, updateContact,editedContact };
