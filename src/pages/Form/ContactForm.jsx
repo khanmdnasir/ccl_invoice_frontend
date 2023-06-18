@@ -70,8 +70,9 @@ const ContactForm = () => {
 
   const dispatch = useDispatch();
   const history = useHistory();
-  // console.log("contactForm", contact);
+  
   const contact = useSelector((state) => state.Contact.contact_details)
+  console.log("contactForm", contact);
   const all_kam = useSelector((state) => state.Kam.all_kam);
   const country = useSelector((state) => state.Location.country);
   // console.log("contactFormCountry", country);
@@ -138,6 +139,7 @@ const ContactForm = () => {
       dispatch(setContactErrorAlert(""));
     }, 2000);
     if(success !== null ){
+    // console.log("contact",success)
       if(success === 'Client Created Successfully'){
         setActive('address');
       }
@@ -392,7 +394,7 @@ const ContactForm = () => {
                               errors={errors}
                               control={control}
                               style={{ height: "42px" }}
-                              defaultValue={contact? contact.name : ''}
+                              
                             />
 
                             <FormInput

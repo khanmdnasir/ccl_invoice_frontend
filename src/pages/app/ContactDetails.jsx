@@ -51,7 +51,7 @@ import {
   getContact,
 } from "../../redux/actions";
 import { ColumnSeries } from "@amcharts/amcharts4/charts";
-import { format } from 'date-fns'
+import { format } from "date-fns";
 const api = new APICore();
 
 /* status column render */
@@ -504,7 +504,7 @@ const ContactDetails = withSwal(({ swal }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [contactId, setContactId] = useState();
-  console.log("contactId",contactId)
+  console.log("contactId", contactId);
   const [loadings, setLoading] = useState(false);
   const [invoicePageSize, setInvoicePageSize] = useState(10);
   const [repeatingInvoicePageSize, setRepeatingInvoicePageSize] = useState(10);
@@ -598,52 +598,54 @@ const ContactDetails = withSwal(({ swal }) => {
   const [showClientEditModal, setShowClientEditModal] = useState(false);
   const onCloseModal = () => setShowClientEditModal(false);
   const onOpenModal = () => setShowClientEditModal(true);
-  const contacts = useSelector(state => state.Contact.contact);
-  console.log("clientContact",contacts.name)
-  const cloading = useSelector(state => state.Contact.loading);
-  
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+  const contacts = useSelector((state) => state.Contact.contact);
+  const cloading = useSelector((state) => state.Contact.loading);
+
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
   const [clientLedger, setClientLedger] = useState({});
   const [error, setError] = useState("");
 
-  
   const onSubmit = (formData) => {
     formData["id"] = contactId;
     dispatch(updateContact(formData));
   };
   const handleSearch = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setLoading(true);
 
-    if (fromDate === '' || toDate === '') {
-        await api.get('/api/client-ledger', { client_id: contactId})
-            .then(response => {
-              console.log(response)
-                setLoading(false)
-                setError('')
-                setClientLedger(response.data.data)
-            })
-            .catch(err => {
-                const errorMsg = err?.data?.detail
-                setLoading(false)
-                setError(errorMsg)
-            })
+    if (fromDate === "" || toDate === "") {
+      await api
+        .get("/api/client-ledger", { client_id: contactId })
+        .then((response) => {
+          setLoading(false);
+          setError("");
+          setClientLedger(response.data.data);
+        })
+        .catch((err) => {
+          const errorMsg = err?.data?.detail;
+          setLoading(false);
+          setError(errorMsg);
+        });
     } else {
-
-        await api.get('/api/client-ledger', { client_id: contactId,  start_date: format(new Date(fromDate), 'yyyy-MM-dd'), end_date: format(new Date(toDate), 'yyyy-MM-dd') })
-            .then(response => {
-                setLoading(false)
-                setError('')
-                setClientLedger(response.data.data)
-            })
-            .catch(err => {
-                const errorMsg = err?.data?.detail
-                setLoading(false)
-                setError(errorMsg)
-            })
+      await api
+        .get("/api/client-ledger", {
+          client_id: contactId,
+          start_date: format(new Date(fromDate), "yyyy-MM-dd"),
+          end_date: format(new Date(toDate), "yyyy-MM-dd"),
+        })
+        .then((response) => {
+          setLoading(false);
+          setError("");
+          setClientLedger(response.data.data);
+        })
+        .catch((err) => {
+          const errorMsg = err?.data?.detail;
+          setLoading(false);
+          setError(errorMsg);
+        });
     }
-}
+  };
   const onDelete = () => {
     swal
       .fire({
@@ -678,8 +680,7 @@ const ContactDetails = withSwal(({ swal }) => {
   };
   useEffect(() => {
     dispatch(getContact(0, 1));
-
-}, [])
+  }, []);
   useEffect(() => {
     const state = location.state;
     if (state) {
@@ -691,7 +692,7 @@ const ContactDetails = withSwal(({ swal }) => {
     }
     dispatch(getCountry());
     dispatch(getAllKam());
-    dispatch(getContact(pageSize, 1));
+   
   }, []);
 
   useEffect(() => {
@@ -774,7 +775,8 @@ const ContactDetails = withSwal(({ swal }) => {
       dispatch(getContactService(contactId, servicePageSize, 1));
       dispatch(getClientBalance(contactId));
       dispatch(getDueInvoices(contactId));
-
+      dispatch(getContact(contactId))
+      dispatch(updateContact(contactId))
     }
   }, [contactId]);
 
@@ -829,7 +831,6 @@ const ContactDetails = withSwal(({ swal }) => {
 
   const [show, setShow] = useState(false);
 
-  
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [inputDate, setInputDate] = useState("");
@@ -931,7 +932,7 @@ const ContactDetails = withSwal(({ swal }) => {
                     state: { contactId: contactId },
                   }}
                 >
-                  Create Invoice
+                  New Invoice
                 </Link>
               </Dropdown.Item>
               <Dropdown.Item>
@@ -941,7 +942,7 @@ const ContactDetails = withSwal(({ swal }) => {
                     state: { contactId: contactId },
                   }}
                 >
-                  Create Repeating Invoice
+                  New Repeating Invoice
                 </Link>
               </Dropdown.Item>
               <Dropdown.Item>
@@ -952,7 +953,7 @@ const ContactDetails = withSwal(({ swal }) => {
                     state: { services: service_list, contactId: contactId },
                   }}
                 >
-                  Create Service
+                  New Service
                 </Link>
               </Dropdown.Item>
               <Dropdown.Item>
@@ -963,7 +964,7 @@ const ContactDetails = withSwal(({ swal }) => {
                     state: { contactId: contactId },
                   }}
                 >
-                  Create Payment
+                 New Payment
                 </Link>
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -980,75 +981,69 @@ const ContactDetails = withSwal(({ swal }) => {
                 <Link
                   to={{
                     pathname: "/app/edit_client_form",
-                    state: { contactId: contactId },
+                    state: { contactId: contactId, name: contact_details?.name},
                   }}
                 >
                   Edit
                 </Link>
               </Dropdown.Item>
               <Dropdown.Item>
-                <Link
-                  to='#'
-                  onClick={handleShow}
-                >
+                <Link to="#" onClick={handleShow}>
                   Client Statement
                 </Link>
               </Dropdown.Item>
-            
-             
             </Dropdown.Menu>
           </Dropdown>
         </div>
       </div>
 
-{/*  Statement modal */}
-<div>
+      {/*  Statement modal */}
+      <div>
+        <Modal
+          show={show}
+          onHide={handleClose}
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title></Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form onSubmit={(e) => handleSearch(e)} className="mb-4">
+              <Form.Group as={Col}>
+                <Form.Label>From</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="from_date"
+                  onChange={(e) => setFromDate(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+              <Form.Group as={Col}>
+                <Form.Label>To</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="to_date"
+                  onChange={(e) => setToDate(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-
-      <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title></Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-        <form onSubmit={(e) => handleSearch(e)} className='mb-4'>
-                                       
-                                
-
-
-                                            <Form.Group as={Col}>
-                                                <Form.Label >From</Form.Label>
-                                                <Form.Control
-                                                    type='date'
-                                                    name='from_date'
-                                                    onChange={(e) => setFromDate(e.target.value)}
-
-                                                >
-
-                                                </Form.Control>
-                                            </Form.Group>
-                                            <Form.Group as={Col}>
-                                                <Form.Label >To</Form.Label>
-                                                <Form.Control
-                                                    type='date'
-                                                    name='to_date'
-                                                    onChange={(e) => setToDate(e.target.value)}
-
-                                                >
-
-                                                </Form.Control>
-                                            </Form.Group>
-
-
-
-
-
-                                     
-
-                                        <Link type='submit' className='mt-2 btn btn-primary waves-effect waves-light me-2' to="/app/client_statement">Submit</Link>
-
-                                    </form>
-        </Modal.Body>
-        {/* <Modal.Footer>
+              <Link
+                type="submit"
+                className="mt-2 btn btn-primary waves-effect waves-light me-2"
+                to={{
+                  pathname: "/app/client_statement",
+                  state: {
+                    contactId: contactId,
+                    start_date: fromDate,
+                    end_date: toDate,
+                  },
+                }}
+              >
+                Submit
+              </Link>
+            </form>
+          </Modal.Body>
+          {/* <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
@@ -1056,9 +1051,9 @@ const ContactDetails = withSwal(({ swal }) => {
             Save Changes
           </Button>
         </Modal.Footer> */}
-      </Modal>
-</div>
-   
+        </Modal>
+      </div>
+
       <Row>
         <Col md={9} xl={9}>
           <Row>
@@ -1108,7 +1103,6 @@ const ContactDetails = withSwal(({ swal }) => {
                 </Card.Body>
               </Card>
             </Col>
-
           </Row>
 
           <Row>
@@ -1158,7 +1152,6 @@ const ContactDetails = withSwal(({ swal }) => {
                 </Card.Body>
               </Card>
             </Col>
-           
           </Row>
 
           <Row>
@@ -1270,7 +1263,7 @@ const ContactDetails = withSwal(({ swal }) => {
                 <Card.Body>
                   <p style={{ fontSize: "14px" }}>
                     {" "}
-                    click 'Edit' for show details or change
+                    Click <b>' Options <i class="bi bi-arrow-right"></i> Edit <i class="bi bi-arrow-right"></i> Client Statement '</b> for show details or change
                   </p>
                 </Card.Body>
               </Card>

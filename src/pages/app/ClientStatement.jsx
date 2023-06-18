@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
-import { format } from 'date-fns'
+import { format, set } from 'date-fns'
 
 // components
 import Table from '../../components/Table';
@@ -73,24 +73,25 @@ const ClientStatement = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const contacts = useSelector(state => state.Contact.contact);
-    console.log("client",contacts.name)
     const cloading = useSelector(state => state.Contact.loading);
     const [contactId, setContactId] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [clientLedger, setClientLedger] = useState({});
-   
     const [error, setError] = useState("");
 
     const [loading, setLoading] = useState(false);
 
     useEffect(async () => {
-        const state = location.state
+        const state = location.state;
+        console.log("report",state.start_date)
         if (state) {
 
-            setContactId(parseInt(state));
+            setContactId(parseInt(state.contactId));
+            setFromDate(state.start_date);
+            setToDate(state.end_date)
             setLoading(true);
-            const response = await api.get('/api/client-ledger', { client_id: parseInt(state) })
+            const response = await api.get('/api/client-ledger', { client_id: parseInt(state.contactId,state.start_date,state.end_date) })
 
             if (response.data.success) {
 
@@ -144,6 +145,7 @@ const ClientStatement = () => {
     }
 
     useEffect(() => {
+       
         dispatch(getContact(0, 1));
         // dispatch(getPayment(pageSize,1));
 
@@ -178,7 +180,7 @@ const ClientStatement = () => {
                                                     aria-label="Default select example"
                                                     required
                                                     onChange={(e) => setContactId(e.target.value)}
-                                                    defaultValue={contacts ? contacts.name : ''}
+                                                    value={contactId}
                                                 >
                                                     {cloading ? <option value="" disabled>Loading...</option> :
                                                         <>
@@ -204,7 +206,7 @@ const ClientStatement = () => {
                                                     type='date'
                                                     name='from_date'
                                                     onChange={(e) => setFromDate(e.target.value)}
-                                                    defaultValue={fromDate}
+                                                    value={fromDate}
                                                 >
 
                                                 </Form.Control>
@@ -215,7 +217,7 @@ const ClientStatement = () => {
                                                     type='date'
                                                     name='to_date'
                                                     onChange={(e) => setToDate(e.target.value)}
-                                                    defaultValue={toDate}
+                                                    value={toDate}
                                                 >
 
                                                 </Form.Control>

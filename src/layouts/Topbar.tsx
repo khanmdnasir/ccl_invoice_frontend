@@ -279,8 +279,8 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                                 
                             >
                                 { location.pathname === '/dashboard' ?
-                                <span style={{color: 'grey',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Dashboard</span>:
-                                <span style={{color: 'white',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Dashboard</span>}
+                                <span style={{color: '#FFFFFF',fontSize: '18px',fontWeight: 'bold', alignItems: 'center',borderBottom: '2px solid white',paddingBottom: '10px'}}>Dashboard</span>:
+                                <span style={{color: '#E8E8E8',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Dashboard</span>}
                                 
                             </Link>
                         </li>
@@ -294,8 +294,8 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                             >
                                 
                                 { location.pathname === '/app/invoice' ?
-                                <span style={{color: 'grey',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Invoice</span>:
-                                <span style={{color: 'white',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Invoice</span>}
+                                <span style={{color: '#FFFFFF',fontSize: '18px',fontWeight: 'bold', alignItems: 'center',borderBottom: '2px solid white',paddingBottom: '10px'}}>Invoice</span>:
+                                <span style={{color: '#E8E8E8',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Invoice</span>}
                             </Link>
                         </li>
 
@@ -308,8 +308,8 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                             >
                                 
                                 { location.pathname === '/app/client' ?
-                                <span style={{color: 'grey',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Client</span>:
-                                <span style={{color: 'white',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Client</span>}
+                                <span style={{color: '#FFFFFF',fontSize: '18px',fontWeight: 'bold', alignItems: 'center',borderBottom: '2px solid white',paddingBottom: '10px'}}>Client</span>:
+                                <span style={{color: '#E8E8E8',fontSize: '18px',fontWeight: 'bold', alignItems: 'center'}}>Client</span>}
                             </Link>
                         </li>
                         
