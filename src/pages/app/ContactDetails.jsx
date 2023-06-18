@@ -897,7 +897,7 @@ const ContactDetails = withSwal(({ swal }) => {
         title={"Client Report"}
       /> */}
 
-      <div className="page-title-box" style={{ paddingTop: "40px" }}>
+      <div className="page-title-box" style={{ paddingTop: "10px" }}>
         <div className="page-title-left">
           <Breadcrumb>
             <Breadcrumb.Item href="/">Qorum</Breadcrumb.Item>

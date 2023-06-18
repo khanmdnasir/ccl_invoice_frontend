@@ -275,7 +275,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         <Link
                                 to='/'
                                 
-                                className='nav-link d-none d-lg-block'
+                                className='nav-link nav-menu-item d-none d-lg-block'
                                 
                             >
                                 { location.pathname === '/dashboard' ?
@@ -289,7 +289,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         <Link
                                 to='/app/invoice'
                                 
-                                className='nav-link d-none d-lg-block'
+                                className='nav-link nav-menu-item d-none d-lg-block'
                                 
                             >
                                 
@@ -303,7 +303,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         <Link
                                 to='/app/client'
                                 
-                                className='nav-link d-none d-lg-block'
+                                className='nav-link nav-menu-item d-none d-lg-block'
                                 
                             >
                                 

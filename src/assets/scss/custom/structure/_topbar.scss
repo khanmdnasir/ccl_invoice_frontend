@@ -73,11 +73,7 @@
             text-align: center;
             max-height: $topbar-height;
 
-            span:hover {
-                color: white;
-                border-bottom: 2px solid white;
-                padding-bottom: 10px;
-            }
+            
         }
     }
 
@@ -159,6 +155,14 @@
     .button-menu-mobile.disable-btn {
         display: none;
     }
+}
+
+.nav-menu-item span:hover{
+    
+    color: white;
+    border-bottom: 2px solid white;
+    padding-bottom: 10px;
+    
 }
 
 /* Notification */
