@@ -149,7 +149,10 @@ const EditContactForm = () => {
       
       if(success === 'Client Updated Successfully'){
         setTimeout(() => {
-          history.push('/app/client');
+          history.push({
+            pathname: '/app/client_details',
+            state: contactId
+          });
         },2000)
         
       }
