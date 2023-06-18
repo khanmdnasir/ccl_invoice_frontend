@@ -72,6 +72,12 @@
             line-height: $topbar-height;
             text-align: center;
             max-height: $topbar-height;
+
+            span:hover {
+                color: white;
+                border-bottom: 2px solid white;
+                padding-bottom: 10px;
+            }
         }
     }
 
@@ -408,7 +414,7 @@ body[data-layout-mode="horizontal"] {
 
     .logo-box {
         width: auto;
-        padding-right: 50px;
+        padding-right: 5px;
         background-color: transparent;
     }
 

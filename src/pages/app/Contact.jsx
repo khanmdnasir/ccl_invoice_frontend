@@ -125,7 +125,7 @@ const Contact = () => {
         <>
             <Row>
                 <Col sm={4}>
-                <div className="page-title-box" style={{marginTop: '40px'}}>
+                <div className="page-title-box" style={{marginTop: '10px'}}>
             
             <div className="page-title-left">
              <Breadcrumb>
@@ -138,7 +138,7 @@ const Contact = () => {
                 </Col>
 
                 <Col sm={8}>
-                                    <div className="text-sm-end mt-5">
+                                    <div className="text-sm-end mt-2">
                                         {user_role.includes('add_contact') ?
                                             <Link className="btn btn-success mb-2 me-1" to='/app/client_form'>
                                                 <i className="mdi mdi-plus-circle me-1"></i> Add New
