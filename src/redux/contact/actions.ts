@@ -58,6 +58,11 @@ export const updateContact = (formData: any) => ({
     payload: formData,
 });
 
+export const editedContact = (formData: any) => ({
+    type: type.EDITED_CONTACT_SUCCESS,
+    payload: formData,
+});
+
 export const deleteContact = (id: number) => ({
     type: type.DELETE_CONTACT_REQUESTED,
     payload: id,
