@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React,{ useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
 import FeatherIcon from 'feather-icons-react';
 import FileUploader from '../../../components/FileUploader';
@@ -37,6 +37,15 @@ const MyProfile = () => {
     dispatch(UpdateProfileImage({profile_image}));
     setIsImageEdit(!isImageEdit);
    }
+
+
+   useEffect(() => {
+    setTimeout(() => {
+      dispatch(setAuthSuccessAlert(null));
+      dispatch(setAuthErrorAlert(null));
+    }, 2000);
+    
+  }, [success]);
 
     return (
         <>

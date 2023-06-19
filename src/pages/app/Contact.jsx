@@ -11,7 +11,12 @@ import { getCountry } from '../../redux/location/actions';
 import { getAllKam } from '../../redux/kam/actions';
 
 
-
+function randomColor() {
+    let hex = Math.floor(Math.random() * 0xFFFFFF);
+    let color = "#" + hex.toString(16);
+  
+    return color;
+  }
 
 // Split Name
 
@@ -28,7 +33,7 @@ const SplitName = ({row}) => {
         <React.Fragment>
             <div className="col-auto">
                <div className="avatar d-flex align-items-center text-center">
-                 <span className="avatar badge-soft-primary text-primary" style={{width:'32px', height: '32px', display:'inline-block', lineHeight: '2rem', marginRight: '12px', fontWeight: '700', borderRadius: '5px'}}>
+                 <span className="avatar " style={{width:'32px', height: '32px', display:'inline-block', lineHeight: '2rem', marginRight: '12px', fontWeight: '700', borderRadius: '5px',color: 'white', backgroundColor: randomColor()}}>
                    {name} 
                  </span>
                  <div>{row.original?.name}</div>
