@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { APICore } from '../../helpers/api/apiCore';
 import CompanySettingsForm from '../Form/CompanySettingsForm';
-import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
+import { Row, Col, Card, Form, Alert } from 'react-bootstrap';
 import { withSwal } from 'react-sweetalert2';
 
 // components
@@ -10,7 +10,6 @@ import PageTitle from '../../components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { addCompanySetting, getCompanySettings, setCompanySettingsSuccessAlert, setCompanySettingsErrorAlert, setLogo } from '../../redux/actions';
-import ReactExport from "react-export-excel";
 import Pagination from '../../components/CustomPagination';
 
 

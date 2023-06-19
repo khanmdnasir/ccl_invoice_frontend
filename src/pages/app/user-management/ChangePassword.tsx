@@ -1,4 +1,4 @@
-import React,{ useEffect, useState } from 'react';
+import React,{ useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
 import FeatherIcon from 'feather-icons-react';
 import { APICore } from '../../../helpers/api/apiCore';
@@ -76,20 +76,20 @@ const ChangePassword = () => {
                                             <Form.Label  >
                                                 Old Password
                                             </Form.Label>
-                                            <Form.Control type="password" name="old_password" value={old_password}  placeholder="Enter Old Password"   size='lg' onChange={(e)=>setOldPassword(e.target.value)}/>
+                                            <Form.Control type="password" name="old_password" value={old_password}  placeholder="Enter Old Password"   size='sm' onChange={(e)=>setOldPassword(e.target.value)}/>
                                         </Form.Group>
                                         <Form.Group  className="mb-3">
                                             <Form.Label  >
                                                 New Password
                                             </Form.Label>
-                                            <Form.Control type="password" name="new_password" value={new_password}  placeholder="Enter New Password"   size='lg' onChange={(e)=>setNewPassword(e.target.value)}/>
+                                            <Form.Control type="password" name="new_password" value={new_password}  placeholder="Enter New Password"   size='sm' onChange={(e)=>setNewPassword(e.target.value)}/>
                                             {new_password.length > 0 && new_password.length < 4 && <p style={{color: 'red'}}>Password must be minimum 4 characters</p>}
                                         </Form.Group>
                                         <Form.Group  className="mb-3">
                                             <Form.Label  >
                                                 Confirm Password
                                             </Form.Label>
-                                            <Form.Control type="password" name="confirm_password" value={confirm_password}  placeholder="Confirm Password"   size='lg' onChange={(e)=>setConfirmPassword(e.target.value)}/>
+                                            <Form.Control type="password" name="confirm_password" value={confirm_password}  placeholder="Confirm Password"   size='sm' onChange={(e)=>setConfirmPassword(e.target.value)}/>
                                             {confirm_password.length > 0 && new_password !== confirm_password && <p style={{color: 'red'}}>Password not match</p>}
                                         </Form.Group>                                            
                                             

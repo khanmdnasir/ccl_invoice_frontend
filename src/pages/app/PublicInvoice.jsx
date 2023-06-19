@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { APICore } from "../../helpers/api/apiCore";
 import { Link } from "react-router-dom";
 
 // components
-import PageTitle from "../../components/PageTitle";
 import CCL_Logo from "../../assets/images/Qorum.svg";
 const api = new APICore();
 

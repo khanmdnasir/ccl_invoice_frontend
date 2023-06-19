@@ -8,8 +8,8 @@ import { Link } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import { APICore } from '../../../helpers/api/apiCore';
 import { setAuthErrorAlert, setAuthSuccessAlert, UpdateProfile, UpdateProfileImage} from '../../../redux/actions';
+import Avatar from 'react-avatar';
 
-const api = new APICore()
 
 
 const MyProfile = () => {
@@ -37,6 +37,15 @@ const MyProfile = () => {
     dispatch(UpdateProfileImage({profile_image}));
     setIsImageEdit(!isImageEdit);
    }
+
+
+   useEffect(() => {
+    setTimeout(() => {
+      dispatch(setAuthSuccessAlert(null));
+      dispatch(setAuthErrorAlert(null));
+    }, 2000);
+    
+  }, [success]);
 
     return (
         <>
@@ -80,11 +89,9 @@ const MyProfile = () => {
                                     <Row style={{marginBottom: '40px'}}>
                                         <Col sm={1} style={{position: 'relative'}}>
                                             
-                                            <img src={user.profile_image}   style={{width: '100px',height:'100px',objectFit: 'cover',borderRadius: '100%'}} alt="" />
-                                            <Button  variant="primary" type='button'  style={{width:'40px',height: '40px',borderRadius: '100%',display: 'flex',justifyContent: 'center',alignItems:'center',position: 'absolute',bottom: -8,right:-8}} onClick={()=>setIsImageEdit(!isImageEdit)}>
-                                                <FeatherIcon icon="edit" size={15} />
-                                            </Button>
+                                            {/* <img src={user.profile_image}   style={{width: '100px',height:'100px',objectFit: 'cover',borderRadius: '100%'}} alt="" /> */}
                                             
+                                            <Avatar name={first_name+" "+last_name} maxInitials={2} round="50px" size="80" textSizeRatio={1.9} color="#00A551"/>
                                         
                                         </Col>
                                         <Col sm={11}>
@@ -128,13 +135,13 @@ const MyProfile = () => {
                                                     <Form.Label  >
                                                         First Name
                                                     </Form.Label>
-                                                    <Form.Control type="text" name="first_name"  placeholder="Enter First Name" value={first_name} readOnly={isEdit ? false:true} size='lg' onChange={(e)=>setFirstName(e.target.value)}/>
+                                                    <Form.Control type="text" name="first_name"  placeholder="Enter First Name" value={first_name} readOnly={isEdit ? false:true} size='sm' onChange={(e)=>setFirstName(e.target.value)}/>
                                                 </Form.Group>
                                                 <Form.Group  className="mb-3">
                                                     <Form.Label  >
                                                         Last Name
                                                     </Form.Label>
-                                                    <Form.Control type="text" name="last_name"  placeholder="Enter Last Name" value={last_name} readOnly={isEdit ? false:true} size='lg' onChange={(e)=>setLastName(e.target.value)}/>
+                                                    <Form.Control type="text" name="last_name"  placeholder="Enter Last Name" value={last_name} readOnly={isEdit ? false:true} size='sm' onChange={(e)=>setLastName(e.target.value)}/>
                                                 </Form.Group>
                                             </Col>
                                             <Col>
@@ -142,13 +149,13 @@ const MyProfile = () => {
                                                     <Form.Label  >
                                                         Email
                                                     </Form.Label>
-                                                    <Form.Control type="email" name="email"  placeholder="Enter Email" value={email} readOnly={isEdit ? false:true} size='lg' onChange={(e)=>setEmail(e.target.value)}/>
+                                                    <Form.Control type="email" name="email"  placeholder="Enter Email" value={email} readOnly={isEdit ? false:true} size='sm' onChange={(e)=>setEmail(e.target.value)}/>
                                                 </Form.Group>
                                                 <Form.Group  className="mb-3">
                                                     <Form.Label  >
                                                         Phone
                                                     </Form.Label>
-                                                    <Form.Control type="text" name="phone"  placeholder="Enter Phone" value={phone} readOnly={isEdit ? false:true} size='lg' onChange={(e)=>setPhone(e.target.value)}/>
+                                                    <Form.Control type="text" name="phone"  placeholder="Enter Phone" value={phone} readOnly={isEdit ? false:true} size='sm' onChange={(e)=>setPhone(e.target.value)}/>
                                                 </Form.Group>
                                             </Col>
                                         </Row>

@@ -10,7 +10,7 @@ import { APICore } from '../../helpers/api/apiCore';
 
 import { isNumber } from '@amcharts/amcharts4/core';
 import { withSwal } from 'react-sweetalert2';
-import { getPaymentDetails, getPaymentDetailsSuccessMsg, setPaymentSuccessAlert } from '../../redux/actions';
+import { getPaymentDetails, getPaymentDetailsSuccessMsg } from '../../redux/actions';
 
 const api = new APICore()
 

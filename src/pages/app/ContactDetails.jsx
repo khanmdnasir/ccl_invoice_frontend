@@ -54,6 +54,16 @@ import { ColumnSeries } from "@amcharts/amcharts4/charts";
 import { format } from "date-fns";
 const api = new APICore();
 
+
+const customCapitalize = (client_mode) => {
+    const arr = client_mode.split('-')
+    for(var i = 0; i < arr.length; i++){
+      arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+    }
+
+    const str2 = arr.join(" ");
+    return str2
+}
 /* status column render */
 const StatusColumn = ({ row }) => {
   return (
@@ -102,11 +112,7 @@ const InvoiceStatusColumn = ({ row }) => {
 // action column render
 
 const columns = [
-  {
-    Header: "Name",
-    accessor: "client_id.name",
-    sort: true,
-  },
+
 
   {
     Header: "Payment No",
@@ -128,11 +134,7 @@ const columns = [
     accessor: "amount",
     sort: true,
   },
-  {
-    Header: "Reference",
-    accessor: "reference",
-    sort: true,
-  },
+
   {
     Header: "Status",
     accessor: "status",
@@ -145,11 +147,6 @@ const invoicesColumns = [
   {
     Header: "Invoice No",
     accessor: "invoice_no",
-    sort: true,
-  },
-  {
-    Header: "Client",
-    accessor: "contact_id.name",
     sort: true,
   },
   {
@@ -349,11 +346,6 @@ const repeatingInvoiceColumns = [
     sort: true,
   },
   {
-    Header: "Client",
-    accessor: "contact_id.name",
-    sort: true,
-  },
-  {
     Header: "Day",
     accessor: "date",
     sort: true,
@@ -368,59 +360,7 @@ const repeatingInvoiceColumns = [
     accessor: "repeat_date",
     sort: true,
   },
-  {
-    Header: "Tax Type",
-    accessor: "tax_type",
-    sort: true,
-  },
-  {
-    Header: "Sub Total",
-    accessor: "sub_total",
-    sort: true,
-    Cell: (row) => {
-      return (
-        <div>
-          {row?.row?.original?.sub_total !== null
-            ? (row?.row?.original?.sub_total).toLocaleString(undefined, {
-                maximumFractionDigits: 2,
-              })
-            : 0}
-        </div>
-      );
-    },
-  },
-  {
-    Header: "Discount",
-    accessor: "discount",
-    sort: true,
-    Cell: (row) => {
-      return (
-        <div>
-          {row?.row?.original?.discount !== null
-            ? (row?.row?.original?.discount).toLocaleString(undefined, {
-                maximumFractionDigits: 2,
-              })
-            : 0}
-        </div>
-      );
-    },
-  },
-  {
-    Header: "Total Tax",
-    accessor: "total_tax",
-    sort: true,
-    Cell: (row) => {
-      return (
-        <div>
-          {row?.row?.original?.total_tax !== null
-            ? (row?.row?.original?.total_tax).toLocaleString(undefined, {
-                maximumFractionDigits: 2,
-              })
-            : 0}
-        </div>
-      );
-    },
-  },
+  
   {
     Header: "Total Amount",
     accessor: "total_amount",
@@ -447,11 +387,6 @@ const repeatingInvoiceColumns = [
 
 const servicesColumns = [
   {
-    Header: "Client",
-    accessor: "contact_id.name",
-    sort: true,
-  },
-  {
     Header: "Service Type",
     accessor: "service_type",
     sort: true,
@@ -460,11 +395,29 @@ const servicesColumns = [
     Header: "Client Mode",
     accessor: "contact_mode",
     sort: true,
+    Cell: (row) => {
+      return (
+        <div>
+          {row?.row?.original?.contact_mode !== null
+            ? customCapitalize(row?.row?.original?.contact_mode)
+            : 0}
+        </div>
+      );
+    },
   },
   {
     Header: "Payment Terms",
     accessor: "payment_terms",
     sort: true,
+    Cell: (row) => {
+      return (
+        <div>
+          {row?.row?.original?.payment_terms !== null
+            ? ((row?.row?.original?.payment_terms).charAt(0).toUpperCase() + (row?.row?.original?.payment_terms).slice(1))
+            : 0}
+        </div>
+      );
+    },
   },
   {
     Header: "Tax Rate",
@@ -894,7 +847,7 @@ const ContactDetails = withSwal(({ swal }) => {
         title={"Client Report"}
       /> */}
 
-      <div className="page-title-box" style={{ paddingTop: "40px" }}>
+      <div className="page-title-box" style={{ paddingTop: "10px" }}>
         <div className="page-title-left">
           <Breadcrumb>
             <Breadcrumb.Item href="/">Qorum</Breadcrumb.Item>
@@ -929,7 +882,7 @@ const ContactDetails = withSwal(({ swal }) => {
                     state: { contactId: contactId },
                   }}
                 >
-                  New Invoice
+                  Invoice
                 </Link>
               </Dropdown.Item>
               <Dropdown.Item>
@@ -939,7 +892,7 @@ const ContactDetails = withSwal(({ swal }) => {
                     state: { contactId: contactId },
                   }}
                 >
-                  New Repeating Invoice
+                  Repeating Invoice
                 </Link>
               </Dropdown.Item>
               <Dropdown.Item>
@@ -950,7 +903,7 @@ const ContactDetails = withSwal(({ swal }) => {
                     state: { services: service_list, contactId: contactId },
                   }}
                 >
-                  New Service
+                  Service
                 </Link>
               </Dropdown.Item>
               <Dropdown.Item>
@@ -961,7 +914,7 @@ const ContactDetails = withSwal(({ swal }) => {
                     state: { contactId: contactId },
                   }}
                 >
-                  New Payment
+                 Payment
                 </Link>
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -1124,7 +1077,7 @@ const ContactDetails = withSwal(({ swal }) => {
                       {repeating_invoice_list?.length > 0 ? (
                         <>
                           <Table
-                            columns={invoicesColumns}
+                            columns={repeatingInvoiceColumns}
                             data={repeating_invoice_list}
                             pageSize={repeatingInvoicePageSize}
                             isSortable={true}

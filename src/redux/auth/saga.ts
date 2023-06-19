@@ -91,12 +91,13 @@ function* updateProfile({ payload: { first_name,last_name, email, phone } }: Use
     try {
         const response = yield call(updateProfileApi, { first_name,last_name, email, phone });
         const result = response.data
+        console.log(result)
         if(result.success){
-            const profile = JSON.parse(localStorage.getItem('itracker_user') || '{}');
+            const profile = JSON.parse(localStorage.getItem('ccl_user') || '{}');
             Object.keys({ first_name,last_name, email, phone }).forEach((key) => {
                 profile[key] = { first_name,last_name, email, phone }[key];
             });
-            localStorage.setItem('itracker_user', JSON.stringify(profile));
+            localStorage.setItem('ccl_user', JSON.stringify(profile));
             yield put(authApiResponseSuccess(AuthActionTypes.UPDATE_PROFILE, response.data));
         }else{
             yield put(authApiResponseError(AuthActionTypes.UPDATE_PROFILE, result.error));

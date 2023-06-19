@@ -115,7 +115,7 @@ const EditContactForm = () => {
     }, 2000);
     
     if(success !== null && success !== ''){
-      if(editSuccess !== ''){
+      if(editSuccess == null){
         setEditSuccess('Client Edited Successfully');
         setActive('address');
       }
@@ -123,7 +123,10 @@ const EditContactForm = () => {
       if(success === 'Client Updated Successfully'){
         
         setTimeout(() => {
-          history.push('/app/client');
+          history.push({
+            pathname: '/app/client_details',
+            state: contactId
+          });
         },2000)
         
       }
@@ -173,7 +176,7 @@ const EditContactForm = () => {
     <>
       <div
         className="page-title-box"
-        style={{ maxWidth: "1200px", margin: "auto", paddingTop: "40px" }}
+        style={{ maxWidth: "1200px", margin: "auto", paddingTop: "10px" }}
       >
         <div className="page-title-left">
           <Breadcrumb>
