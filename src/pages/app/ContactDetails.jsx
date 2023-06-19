@@ -457,7 +457,6 @@ const ContactDetails = withSwal(({ swal }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [contactId, setContactId] = useState();
-  console.log("contactId", contactId);
   const [loadings, setLoading] = useState(false);
   const [invoicePageSize, setInvoicePageSize] = useState(10);
   const [repeatingInvoicePageSize, setRepeatingInvoicePageSize] = useState(10);
@@ -483,7 +482,6 @@ const ContactDetails = withSwal(({ swal }) => {
   );
   const service_list = useSelector((state) => state.Service.services);
   const payment_list = useSelector((state) => state.Payment.payments);
-  // console.log("payment ListContact", payment);
   const invoice_previous = useSelector((state) => state.Invoice.previous);
   const invoice_next = useSelector((state) => state.Invoice.next);
   const repeating_invoice_previous = useSelector(
@@ -645,7 +643,6 @@ const ContactDetails = withSwal(({ swal }) => {
     }
     dispatch(getCountry());
     dispatch(getAllKam());
-   
   }, []);
 
   useEffect(() => {
@@ -728,8 +725,8 @@ const ContactDetails = withSwal(({ swal }) => {
       dispatch(getContactService(contactId, servicePageSize, 1));
       dispatch(getClientBalance(contactId));
       dispatch(getDueInvoices(contactId));
-      dispatch(getContact(contactId))
-      dispatch(updateContact(contactId))
+      dispatch(getContact(contactId, pageSize, 1));
+      dispatch(updateContact(contactId));
     }
   }, [contactId]);
 
@@ -934,7 +931,10 @@ const ContactDetails = withSwal(({ swal }) => {
                 <Link
                   to={{
                     pathname: "/app/edit_client_form",
-                    state: { contactId: contactId, name: contact_details?.name},
+                    state: {
+                      contactId: contactId,
+                      name: contact_details?.name,
+                    },
                   }}
                 >
                   Edit
@@ -1216,7 +1216,12 @@ const ContactDetails = withSwal(({ swal }) => {
                 <Card.Body>
                   <p style={{ fontSize: "14px" }}>
                     {" "}
-                    Click <b>' Options <i class="bi bi-arrow-right"></i> Edit <i class="bi bi-arrow-right"></i> Client Statement '</b> for show details or change
+                    Click{" "}
+                    <b>
+                      ' Options <i class="bi bi-arrow-right"></i> Edit{" "}
+                      <i class="bi bi-arrow-right"></i> Client Statement '
+                    </b>{" "}
+                    for show details or change
                   </p>
                 </Card.Body>
               </Card>

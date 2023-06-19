@@ -443,16 +443,10 @@ const ContactForm = () => {
 
                             <Form.Label>Phone</Form.Label>
                             <InputGroup>
-                           
-
                               <Form.Select size="sm" defaultValue="+88">
-                              {country.map((code) => {
-                                return(
-                                  <option>{code?.country_code}</option>
-                                )
-                              })
-
-                              }
+                                {country.map((code) => {
+                                  return <option>{code?.country_code}</option>;
+                                })}
                               </Form.Select>
                               <Form.Control
                                 className="inputs"

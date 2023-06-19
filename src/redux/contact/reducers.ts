@@ -200,7 +200,7 @@ const Contact = (state = INIT_STATE, action: any) => {
                 ...state,
                 loading: false,
                 contact_details: action.data,
-                success:'Client Edited Successfully'
+                edit_success:'Client Edited Successfully'
                 
             };
         }
