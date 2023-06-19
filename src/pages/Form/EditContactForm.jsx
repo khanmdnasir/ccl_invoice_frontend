@@ -33,35 +33,11 @@ import {
   setContactSuccessAlert,
   getContactDetails,
   contactDetailsClear,
+  editedContact,
 } from "../../redux/actions";
 import { Link, useHistory, useLocation } from "react-router-dom";
 
 const api = new APICore();
-
-// interface FormData {
-//     id: number;
-//     name: string;
-//     contact_type: any;
-//     contact_person: string;
-//     phone: string;
-//     email: string;
-//     bin: string;
-//     kam: any;
-//     balance: any;
-//     city: any;
-//     country: any;
-//     billing_address: string;
-// }
-
-// interface AddContactProps {
-//     show: boolean;
-//     onHide: () => void;
-//     contact: FormData;
-//     contact_name: string;
-//     countries: any;
-//     kamList: any;
-//     onSubmit: (value: any) => void;
-// }
 
 const EditContactForm = () => {
   /*
@@ -71,12 +47,9 @@ const EditContactForm = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  const contact = useSelector((state) => state.Contact.contact_details)
-  console.log("contactForm", contact.name);
+  const contact = useSelector((state) => state.Contact.contact_details);
   const all_kam = useSelector((state) => state.Kam.all_kam);
   const country = useSelector((state) => state.Location.country);
-  // console.log("contactFormCountry", country);
-  // console.log("contactFormCountry", country[0]?.country_code);
   const cities = useSelector((state) => state.Location.city);
   const success = useSelector((state) => state.Contact.success);
   const error = useSelector((state) => state.Contact.error);
@@ -88,6 +61,7 @@ const EditContactForm = () => {
   const [contactId, setContactId] = useState('');
   const [editSuccess,setEditSuccess] = useState(null);
   const [editName,setEditName] = useState('')
+  const edit_success = useSelector((state) => state.Contact.edit_success);
 
   const schemaResolver = yupResolver(
     yup.object().shape({
@@ -123,7 +97,6 @@ const EditContactForm = () => {
 
   const onSubmit = (formData) => {
     const newFormData = { ...formData };
-    console.log("newFormData",newFormData)
     newFormData["phone"] = countryCode.concat(phone);
     if (contactId){
       newFormData["id"] = contactId;
@@ -140,13 +113,15 @@ const EditContactForm = () => {
       dispatch(setContactSuccessAlert(""));
       dispatch(setContactErrorAlert(""));
     }, 2000);
-    if(success !== null ){
-      if(editSuccess == null){
+    
+    if(success !== null && success !== ''){
+      if(editSuccess !== ''){
         setEditSuccess('Client Edited Successfully');
         setActive('address');
       }
       
       if(success === 'Client Updated Successfully'){
+        
         setTimeout(() => {
           history.push('/app/client');
         },2000)
@@ -159,13 +134,18 @@ const EditContactForm = () => {
 
   useEffect(() => {
     const state = location.state;
-    if(state){
-        setContactId(parseInt(state.contactId),);
+    if(state?.contactId){
+        setContactId(parseInt(state.contactId));
         setEditName(state.name);
-        
-    }
-    // console.log("EditContact", state);
-  })
+        localStorage.setItem("contact_id",parseInt(state.contactId));
+        dispatch(getContactDetails(parseInt(state.contactId)));
+       }else{
+        let contact_id = localStorage.getItem("contact_id");
+        setContactId(parseInt(contact_id));
+        dispatch(getContactDetails(parseInt(contact_id)));
+       }
+   
+  },[])
 
   useEffect(() => {
     // dispatch(contactDetailsClear());

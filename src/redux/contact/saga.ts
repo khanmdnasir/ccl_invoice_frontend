@@ -10,7 +10,8 @@ import {
     getAllContact as getAllContactApi,
     addContact as addContactApi,
     updateContact as updateContactApi,
-    deleteContact as deleteContactApi
+    deleteContact as deleteContactApi,
+    editedContact as editedContactApi
     
 } from '../../helpers';
 
@@ -139,9 +140,10 @@ function* updateContact({ payload:{id, name,client_id,contact_type,contact_perso
 
 function* editedContact({ payload:{id, name,client_id,contact_type,contact_person,bin,kam,phone,email,city,country,billing_address} }:any):SagaIterator {
     try {
-        const response = yield call(updateContactApi,{id, name,client_id,contact_type,contact_person,bin,kam,phone,email,city,country,billing_address,});
+        const response = yield call(editedContactApi,{id, name,client_id,contact_type,contact_person,bin,kam,phone,email,city,country,billing_address,});
         const data = response.data;
         if(data.success){
+           
             yield put({type: 'EDITED_CONTACT_SUCCESS' , data: data.data});
         }else{
             yield put({type: 'UPDATE_CONTACT_FAILED', error: data.error});

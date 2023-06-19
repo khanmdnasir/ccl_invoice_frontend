@@ -71,8 +71,6 @@ const EditContactForm = () => {
   // console.log("contactForm", contact);
   const all_kam = useSelector((state) => state.Kam.all_kam);
   const country = useSelector((state) => state.Location.country);
-  console.log("contactFormCountry", country);
-  // console.log("contactFormCountry", country[0]?.country_code);
   const [pageSize, setPageSize] = useState(10);
   const cities = useSelector((state) => state.Location.city);
   const success = useSelector((state) => state.Contact.success);
@@ -80,7 +78,6 @@ const EditContactForm = () => {
   const loading = useSelector((state) => state.Contact.loading);
   const [show, setShow] = useState(false);
   const [phone, setPhone] = useState("");
-  // console.log("phone",phone)
   const [isSubmit, setIsSubmit] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [contactId, setContactId] = useState('');
@@ -150,7 +147,7 @@ const EditContactForm = () => {
 
   useEffect(() => {
     const state = location.state;
-    if(state){
+    if(state?.contactId){
         setContactId(parseInt(state.contactId));
         
     }

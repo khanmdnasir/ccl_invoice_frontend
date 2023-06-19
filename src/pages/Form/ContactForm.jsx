@@ -38,30 +38,7 @@ import { Link, useHistory } from "react-router-dom";
 
 const api = new APICore();
 
-// interface FormData {
-//     id: number;
-//     name: string;
-//     contact_type: any;
-//     contact_person: string;
-//     phone: string;
-//     email: string;
-//     bin: string;
-//     kam: any;
-//     balance: any;
-//     city: any;
-//     country: any;
-//     billing_address: string;
-// }
 
-// interface AddContactProps {
-//     show: boolean;
-//     onHide: () => void;
-//     contact: FormData;
-//     contact_name: string;
-//     countries: any;
-//     kamList: any;
-//     onSubmit: (value: any) => void;
-// }
 
 const ContactForm = () => {
   /*
@@ -71,12 +48,9 @@ const ContactForm = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   
-  const contact = useSelector((state) => state.Contact.contact_details)
-  console.log("contactForm", contact);
+  const contact = useSelector((state) => state.Contact.contact_details);
   const all_kam = useSelector((state) => state.Kam.all_kam);
   const country = useSelector((state) => state.Location.country);
-  // console.log("contactFormCountry", country);
-  // console.log("contactFormCountry", country[0]?.country_code);
   const cities = useSelector((state) => state.Location.city);
   const success = useSelector((state) => state.Contact.success);
   const error = useSelector((state) => state.Contact.error);
@@ -85,7 +59,6 @@ const ContactForm = () => {
   const [countryCode, setCountryCode] = useState(contact?.phone ? contact?.phone?.substr(0, countryCodeLength) : "");
   const [phone, setPhone] = useState(contact?.phone ? contact?.phone?.substr(countryCodeLength, contact?.phone?.length) : "");
   const [active,setActive] = useState('details');
-  // console.log("phone",phone)
   
 
   const schemaResolver = yupResolver(
@@ -139,7 +112,6 @@ const ContactForm = () => {
       dispatch(setContactErrorAlert(""));
     }, 2000);
     if(success !== null ){
-    // console.log("contact",success)
       if(success === 'Client Created Successfully'){
         setActive('address');
       }
