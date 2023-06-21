@@ -4,6 +4,7 @@ const INIT_STATE = {
     company_settings: [],
     company_setting_by_key: null,
     company_logo: null,
+    company_login_page_logo: null,
     previous: '',
     next: '',
     current_page: '',
@@ -82,6 +83,27 @@ const CompanySettings = (state = INIT_STATE, action: any) => {
             };
         }
         case type.GET_LOGO_FAILED: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+            };
+        }
+        case type.GET_LOGIN_PAGE_LOGO_REQUESTED: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case type.GET_LOGIN_PAGE_LOGO_SUCCESS: {
+            return {
+                ...state,
+                loading: false,
+                company_login_page_logo: action?.data?.data
+
+            };
+        }
+        case type.GET_LOGIN_PAGE_LOGO_FAILED: {
             return {
                 ...state,
                 loading: false,

@@ -166,25 +166,25 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         <div className="logo-box">
                             <Link to="/" className="logo logo-dark text-center">
                                 <span className="logo-sm">
-                                    <img src={company_logo?.value_file} alt="" height="60" />
+                                    <img src={company_logo?.value_file} alt="" height="50" />
                                 </span>
                                 <span className="logo-lg">
                                     <img
                                         src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? company_logo?.value_file : company_logo?.value_file}
                                         alt="logo"
-                                        height="60"
+                                        height="75"
                                     />
                                 </span>
                             </Link>
                             <Link to="/" className="logo logo-light text-center">
                                 <span className="logo-sm">
-                                    <img src={company_logo?.value_file} alt="" height="30" />
+                                    <img src={company_logo?.value_file} alt="" height="50" />
                                 </span>
                                 <span className="logo-lg">
                                     <img
                                         src={layoutType === LayoutTypes.LAYOUT_TWO_COLUMN ? company_logo?.value_file : company_logo?.value_file}
                                         alt="logo"
-                                        height="60"
+                                        height="75"
                                     />
                                 </span>
                             </Link>

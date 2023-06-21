@@ -12,17 +12,24 @@ import { getAllKam } from '../../redux/kam/actions';
 
 
 function randomColor() {
-    let hex = Math.floor(Math.random() * 0xFFFFFF);
-    let color = "#" + hex.toString(16);
+  let hex;
+  let color;
   
-    return color;
+  do {
+    hex = Math.floor(Math.random() * 0xFFFFFF);
+    color = "#" + hex.toString(16).toUpperCase();
+  } while (color === "#FFF" );
+  
+  return color;
+    
   }
 
 // Split Name
 
 const SplitName = ({ row }) => {
   let name = (row.original?.name).split(" ");
-
+  let color = randomColor()
+  console.log(row?.original?.name,color)
 //    
     for(var i = 0; i < name.length; i++){
         
@@ -55,11 +62,19 @@ const columns = [
     Header: "Balance",
     accessor: "balance",
     sort: true,
+    Cell: (row) => {
+      const scurrency = useSelector(state => state.Currency.selectedCurrency)
+      return <div>{scurrency?.symbol}{row?.row?.original?.balance!==null?(row?.row?.original?.balance).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+  }
   },
   {
     Header: "Due",
     accessor: "due",
     sort: true,
+    Cell: (row) => {
+      const scurrency = useSelector(state => state.Currency.selectedCurrency)
+      return <div>{scurrency?.symbol}{row?.row?.original?.due!==null?(row?.row?.original?.due).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+  }
   },
 ];
 

@@ -1,9 +1,11 @@
 import React from 'react';
 import { Card, Row, Col, ProgressBar } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 // componets
 
 const CompanyDues = ({ summaryList, scurrency }: any) => {
+    console.log('summary list',summaryList)
     return (
         <>
             <Card>
@@ -18,7 +20,7 @@ const CompanyDues = ({ summaryList, scurrency }: any) => {
                                 <>
                                     <div className="mt-4">
                                         <h6 className="text-uppercase">
-                                            {due?.contact_id__name} <span className="float-end">{scurrency?.symbol}{due?.net_due_amount.toLocaleString()}</span>
+                                            <Link to={{pathname: '/app/client_details',state: due?.contact_id}}>{due?.contact_id__name}</Link> <span className="float-end">{scurrency?.symbol}{due?.net_due_amount.toLocaleString()}</span>
                                         </h6>
 
                                         <ProgressBar

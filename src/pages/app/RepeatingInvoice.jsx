@@ -155,7 +155,8 @@ const columns = [
         accessor: 'total_amount',
         sort: true,
         Cell: (row) => {
-            return <div>{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+            const scurrency = useSelector(state => state.Currency.selectedCurrency)
+            return <div>{scurrency?.symbol}{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
         }
     },
     {

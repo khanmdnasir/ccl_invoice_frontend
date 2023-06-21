@@ -15,7 +15,6 @@ import { Link } from "react-router-dom";
 import Table from "../../components/Table";
 import { useLocation } from "react-router-dom";
 import { withSwal } from "react-sweetalert2";
-import ContactForm from "../Form/ContactForm";
 
 import Pagination from "../../components/CustomPagination";
 import classNames from "classnames";
@@ -34,23 +33,12 @@ import {
   getClientBalance,
   getCountry,
   getAllKam,
-  getPayment,
-  setPaymentSuccessAlert,
-  getAllContact,
-  getPaymentTypes,
   getDueInvoices,
-  addPayment,
-  clearSubmitSuccessMessage,
-  clearSubmitErrorMessage,
-  resetPaymentReducerState,
-  clearDueInvoices,
-  getCompanySettingsByKey,
   getRepeatingInvoice,
   getContactPayment,
   getContactRepeatingInvoice,
   getContact,
 } from "../../redux/actions";
-import { ColumnSeries } from "@amcharts/amcharts4/charts";
 import { format } from "date-fns";
 const api = new APICore();
 
@@ -133,6 +121,18 @@ const columns = [
     Header: "Amount",
     accessor: "amount",
     sort: true,
+    Cell: (row) => {
+      const scurrency = useSelector(state => state.Currency.selectedCurrency)
+      return (
+        <div>
+          {scurrency?.symbol}{row?.row?.original?.amount !== null
+            ? (row?.row?.original?.amount).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })
+            : 0}
+        </div>
+      );
+    },
   },
 
   {
@@ -159,67 +159,16 @@ const invoicesColumns = [
     accessor: "due_date",
     sort: true,
   },
-  // {
-  //   Header: "Tax Type",
-  //   accessor: "tax_type",
-  //   sort: true,
-  // },
-  // {
-  //   Header: "Sub Total",
-  //   accessor: "sub_total",
-  //   sort: true,
-  //   Cell: (row) => {
-  //     return (
-  //       <div>
-  //         {row?.row?.original?.sub_total !== null
-  //           ? (row?.row?.original?.sub_total).toLocaleString(undefined, {
-  //               maximumFractionDigits: 2,
-  //             })
-  //           : 0}
-  //       </div>
-  //     );
-  //   },
-  // },
-  // {
-  //   Header: "Discount",
-  //   accessor: "discount",
-  //   sort: true,
-  //   Cell: (row) => {
-  //     return (
-  //       <div>
-  //         {row?.row?.original?.discount !== null
-  //           ? (row?.row?.original?.discount).toLocaleString(undefined, {
-  //               maximumFractionDigits: 2,
-  //             })
-  //           : 0}
-  //       </div>
-  //     );
-  //   },
-  // },
-  // {
-  //   Header: "Total Tax",
-  //   accessor: "total_tax",
-  //   sort: true,
-  //   Cell: (row) => {
-  //     return (
-  //       <div>
-  //         {row?.row?.original?.total_tax !== null
-  //           ? (row?.row?.original?.total_tax).toLocaleString(undefined, {
-  //               maximumFractionDigits: 2,
-  //             })
-  //           : 0}
-  //       </div>
-  //     );
-  //   },
-  // },
+
   {
     Header: "Total Amount",
     accessor: "total_amount",
     sort: true,
     Cell: (row) => {
+      const scurrency = useSelector(state => state.Currency.selectedCurrency)
       return (
         <div>
-          {row?.row?.original?.total_amount !== null
+          {scurrency?.symbol}{row?.row?.original?.total_amount !== null
             ? (row?.row?.original?.total_amount).toLocaleString(undefined, {
                 maximumFractionDigits: 2,
               })
@@ -241,7 +190,6 @@ export const RepeatingInvoiceStatusColumn = withSwal(({ row, swal }) => {
    *   modal handeling
    */
   const dispatch = useDispatch();
-  const user_role = useSelector((state) => state.Role.user_role);
 
   /*
   handle form submission
@@ -366,9 +314,10 @@ const repeatingInvoiceColumns = [
     accessor: "total_amount",
     sort: true,
     Cell: (row) => {
+      const scurrency = useSelector(state => state.Currency.selectedCurrency)
       return (
         <div>
-          {row?.row?.original?.total_amount !== null
+          {scurrency?.symbol}{row?.row?.original?.total_amount !== null
             ? (row?.row?.original?.total_amount).toLocaleString(undefined, {
                 maximumFractionDigits: 2,
               })
@@ -430,7 +379,7 @@ const servicesColumns = [
             ? (row?.row?.original?.tax_rate).toLocaleString(undefined, {
                 maximumFractionDigits: 2,
               })
-            : 0}
+            : 0}%
         </div>
       );
     },
@@ -440,9 +389,10 @@ const servicesColumns = [
     accessor: "unit_price",
     sort: true,
     Cell: (row) => {
+      const scurrency = useSelector(state => state.Currency.selectedCurrency)
       return (
         <div>
-          {row?.row?.original?.unit_price !== null
+          {scurrency?.symbol}{row?.row?.original?.unit_price !== null
             ? (row?.row?.original?.unit_price).toLocaleString(undefined, {
                 maximumFractionDigits: 2,
               })
@@ -519,10 +469,7 @@ const ContactDetails = withSwal(({ swal }) => {
   const payment_total_page = useSelector((state) => state.Payment.total_page);
   const payment_active = useSelector((state) => state.Payment.active);
   const [paymentData, setPaymentData] = useState("");
-  // const invoice_list = useSelector((state) => state.Contact.invoice_list);
-  // const invoice_list_pagination_data = useSelector(
-  //   (state) => state.Contact.invoice_list_pagination_data
-  // );
+
   const contact_details = useSelector((state) => state.Contact.contact_details);
   const invoice_setting = useSelector((state) => state.Contact.invoice_setting);
   const loading = useSelector((state) => state.Contact.loading);
@@ -540,27 +487,16 @@ const ContactDetails = withSwal(({ swal }) => {
     (state) => state.Contact.invoice_setting_success
   );
   const success = useSelector((state) => state.Contact.success);
-  // const services = useSelector((state) => state.Service.contact_services);
-  const client_balance = useSelector((state) => state.Payment.client_balance);
 
-  const user_role = useSelector((state) => state.Role.user_role);
-  const all_kam = useSelector((state) => state.Kam.all_kam);
-  const country = useSelector((state) => state.Location.country);
   const [showClientEditModal, setShowClientEditModal] = useState(false);
   const onCloseModal = () => setShowClientEditModal(false);
-  const onOpenModal = () => setShowClientEditModal(true);
-  const contacts = useSelector((state) => state.Contact.contact);
-  const cloading = useSelector((state) => state.Contact.loading);
+
 
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const [clientLedger, setClientLedger] = useState({});
-  const [error, setError] = useState("");
 
-  const onSubmit = (formData) => {
-    formData["id"] = contactId;
-    dispatch(updateContact(formData));
-  };
+
+
   const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -570,13 +506,13 @@ const ContactDetails = withSwal(({ swal }) => {
         .get("/api/client-ledger", { client_id: contactId })
         .then((response) => {
           setLoading(false);
-          setError("");
-          setClientLedger(response.data.data);
+         
+         
         })
         .catch((err) => {
           const errorMsg = err?.data?.detail;
           setLoading(false);
-          setError(errorMsg);
+          
         });
     } else {
       await api
@@ -587,48 +523,17 @@ const ContactDetails = withSwal(({ swal }) => {
         })
         .then((response) => {
           setLoading(false);
-          setError("");
-          setClientLedger(response.data.data);
+          
+          
         })
         .catch((err) => {
           const errorMsg = err?.data?.detail;
           setLoading(false);
-          setError(errorMsg);
+          
         });
     }
   };
-  const onDelete = () => {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#28bb4b",
-        cancelButtonColor: "#f34e4e",
-        confirmButtonText: "Yes, delete it!",
-      })
-      .then(function (result) {
-        if (result.value) {
-          api
-            .delete(`/api/contact/${contactId}/`)
-            .then((res) => {
-              if (res.data.success) {
-                swal.fire("Deleted!", "Account has been deleted.", "success");
-              } else {
-                swal.fire("Error", res.data.error, "warning");
-              }
-            })
-            .catch((err) => {
-              swal.fire({
-                title: err,
-              });
-            });
-        } else if (result.dismiss === "cancel") {
-          console.log("cancel");
-        }
-      });
-  };
+
   useEffect(() => {
     dispatch(getContact(0, 1));
   }, []);
@@ -1219,7 +1124,7 @@ const ContactDetails = withSwal(({ swal }) => {
                     Click{" "}
                     <b>
                       ' Options <i class="bi bi-arrow-right"></i> Edit{" "}
-                      <i class="bi bi-arrow-right"></i> Client Statement '
+                      <i class="bi bi-arrow-right"></i> '
                     </b>{" "}
                     for show details or change
                   </p>
@@ -1232,7 +1137,7 @@ const ContactDetails = withSwal(({ swal }) => {
             <Col>
               <Card>
                 <Card.Header>
-                  <h5>Invoice Setting</h5>
+                  <h5>Invoice Settings</h5>
                 </Card.Header>
                 <Card.Body>
                   <div className="container">

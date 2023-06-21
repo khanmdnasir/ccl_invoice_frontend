@@ -23,6 +23,11 @@ export const getLogo = () => ({
     payload: null,
 });
 
+export const getLoginPageLogo = () => ({
+    type: type.GET_LOGIN_PAGE_LOGO_REQUESTED,
+    payload: null,
+});
+
 export const addCompanySetting = (company_setting: CompanySettingForm) => ({
     type: type.ADD_COMPANY_SETTINGS_REQUESTED,
     payload: company_setting,
