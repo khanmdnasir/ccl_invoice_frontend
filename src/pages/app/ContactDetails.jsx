@@ -524,6 +524,7 @@ const ContactDetails = withSwal(({ swal }) => {
   //   (state) => state.Contact.invoice_list_pagination_data
   // );
   const contact_details = useSelector((state) => state.Contact.contact_details);
+  console.log("contact_details",contact_details)
   const invoice_setting = useSelector((state) => state.Contact.invoice_setting);
   const loading = useSelector((state) => state.Contact.loading);
   const invoiceLoading = useSelector((state) => state.Invoice.loading);
@@ -835,17 +836,7 @@ const ContactDetails = withSwal(({ swal }) => {
 
   return (
     <>
-      {/* <PageTitle
-        breadCrumbItems={[
-          { label: "Client", path: "/app/client", active: false },
-          {
-            label: "Client Details",
-            path: "/app/client_details",
-            active: true,
-          },
-        ]}
-        title={"Client Report"}
-      /> */}
+   
 
       <div className="page-title-box" style={{ paddingTop: "10px" }}>
         <div className="page-title-left">
@@ -1223,6 +1214,26 @@ const ContactDetails = withSwal(({ swal }) => {
                     </b>{" "}
                     for show details or change
                   </p>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <Card>
+                <Card.Header>
+                  <h5>Account Details</h5>
+                </Card.Header>
+                <Card.Body>
+                  <div className="d-flex justify-content-between">
+                    <p style={{fontSize: '16px'}}>
+                    <b style={{marginRight: '5px'}}>Balance</b> <span>{contact_details?.balance}</span> 
+                    </p>
+                    <p style={{fontSize: '16px'}}>
+                    <b style={{marginRight: '5px'}}>Due</b> <span>{contact_details?.due}</span> 
+                    </p>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
