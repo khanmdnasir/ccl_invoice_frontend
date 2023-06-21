@@ -531,8 +531,12 @@ const InvoiceDetails = withSwal(({swal}) => {
                                         { invoiceDetails?.partial_paid_and_due?.partial_paid !== null && invoiceDetails?.partial_paid_and_due?.partial_paid > 0 &&
                                         <>
                                         <div className="d-flex justify-content-between">
-                                            <p style={{ fontSize: '20px' }}>Paid</p>
-                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.partial_paid_and_due?.partial_paid !== null ? invoiceDetails?.partial_paid_and_due?.partial_paid.toLocaleString() : 0}</p>
+                                            <p style={{ fontSize: '20px' }}>Paid ( Regular )</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.partial_paid_and_due?.regular_paid !== null ? invoiceDetails?.partial_paid_and_due?.regular_paid.toLocaleString() : 0}</p>
+                                        </div>
+                                        <div className="d-flex justify-content-between">
+                                            <p style={{ fontSize: '20px' }}>Paid ( Adjustment )</p>
+                                            <p style={{ fontSize: '20px', paddingLeft: '50px' }}>{scurrency?.symbol} {invoiceDetails?.partial_paid_and_due?.adjustment_amount !== null ? invoiceDetails?.partial_paid_and_due?.adjustment_amount.toLocaleString() : 0}</p>
                                         </div>
                                         <div className="d-flex justify-content-between">
                                             <p style={{ fontSize: '20px' }}>Due</p>

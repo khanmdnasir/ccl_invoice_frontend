@@ -21,6 +21,11 @@ function getLogo() {
     return api.get(`${baseUrl}`,{});
 }
 
+function getLoginPageLogo() {
+    const baseUrl = '/api/get-login-page-logo';
+    return api.get(`${baseUrl}`,{});
+}
+
 function addCompanySetting(params:any) {
     const baseUrl = '/api/company_settings/';
     if(params.type === 'text')
@@ -29,4 +34,4 @@ function addCompanySetting(params:any) {
 }
 
 
-export { getCompanySettings, addCompanySetting, getCompanySettingsByKey, getLogo };
+export { getCompanySettings, addCompanySetting, getCompanySettingsByKey, getLogo,getLoginPageLogo };

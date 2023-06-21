@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getLogo } from '../../redux/actions';
+import { getLoginPageLogo, getLogo } from '../../redux/actions';
 
 
 import CCL_Logo from '../../assets/images/Qorum.svg';
@@ -24,11 +24,11 @@ const AuthLayout = ({ helpText, bottomLinks, children, isCombineForm }: AccountL
     const dispatch = useDispatch<AppDispatch>();
 
     const { company_logo } = useSelector((state: RootState) => ({
-        company_logo: state.CompanySettings.company_logo
+        company_logo: state.CompanySettings.company_login_page_logo
     }));
 
     useEffect(()=>{
-        dispatch(getLogo())
+        dispatch(getLoginPageLogo())
     },[])
 
     useEffect(() => {

@@ -196,7 +196,8 @@ const columns = [
         accessor: 'total_amount',
         sort: true,
         Cell: (row) => {
-            return <div>{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+            const scurrency = useSelector(state => state.Currency.selectedCurrency)
+            return <div>{scurrency?.symbol}{row?.row?.original?.total_amount!==null?(row?.row?.original?.total_amount).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
         }
     },
     {
@@ -204,7 +205,8 @@ const columns = [
         accessor: 'partial_paid_and_due.partial_paid',
         sort: true,
         Cell: (row) => {
-            return <div>{row?.row?.original?.partial_paid_and_due?.partial_paid !==null ? (row?.row?.original?.partial_paid_and_due?.partial_paid).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+            const scurrency = useSelector(state => state.Currency.selectedCurrency)
+            return <div>{scurrency?.symbol}{row?.row?.original?.partial_paid_and_due?.partial_paid !==null ? (row?.row?.original?.partial_paid_and_due?.partial_paid).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
         }
     },
     {
@@ -212,7 +214,8 @@ const columns = [
         accessor: 'partial_paid_and_due.due',
         sort: true,
         Cell: (row) => {
-            return <div>{row?.row?.original?.partial_paid_and_due?.due!==null?(row?.row?.original?.partial_paid_and_due?.due).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+            const scurrency = useSelector(state => state.Currency.selectedCurrency)
+            return <div>{scurrency?.symbol}{row?.row?.original?.partial_paid_and_due?.due!==null?(row?.row?.original?.partial_paid_and_due?.due).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
         }
     },
     {

@@ -7,6 +7,7 @@ import {
     addCompanySetting as addCompanySettingApi,
     getCompanySettingsByKey as getCompanySettingsByKeyApi,
     getLogo as getLogoApi,
+    getLoginPageLogo as getLoginPageLogoApi,
     
 } from '../../helpers';
 
@@ -54,6 +55,17 @@ function* getLogo():SagaIterator {
     }
 }
 
+function* getLoginPageLogo():SagaIterator {
+    try {
+        const response = yield call(getLoginPageLogoApi);
+        const data = response.data;
+        yield put({type: 'GET_LOGIN_PAGE_LOGO_SUCCESS' , data: data});
+    } catch (error) {
+        yield put({type: 'GET_LOGIN_PAGE_LOGO_FAILED', error: error});
+        
+    }
+}
+
 function* addCompanySetting({ payload: company_settings }: companySettingsData):SagaIterator {
     try {
         const response = yield call(addCompanySettingApi, company_settings);
@@ -93,10 +105,13 @@ export function* watchGetCompanySettingsByKey() {
 export function* watchGetLogo() {
     yield takeEvery('GET_LOGO_REQUESTED', getLogo);
 }
+export function* watchGetLoginPageLogo() {
+    yield takeEvery('GET_LOGIN_PAGE_LOGO_REQUESTED', getLoginPageLogo);
+}
 
 
 function* companySettingsSaga() {
-    yield all([fork(watchGetCompanySettings),fork(watchAddCompanySetting), fork(watchGetCompanySettingsByKey), fork(watchGetLogo)]);
+    yield all([fork(watchGetCompanySettings),fork(watchAddCompanySetting), fork(watchGetCompanySettingsByKey), fork(watchGetLogo),fork(watchGetLoginPageLogo)]);
 }
 
 export default companySettingsSaga;

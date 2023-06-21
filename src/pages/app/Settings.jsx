@@ -15,7 +15,7 @@ const Settings = () => {
                 borderBottom: "1px solid #dee2e6",
               }}
             >
-              <h4>Organization Detail</h4>
+              <h4>Organization Details</h4>
               <p>Address, Logo & basic financial information </p>
             </div>
           </Link>

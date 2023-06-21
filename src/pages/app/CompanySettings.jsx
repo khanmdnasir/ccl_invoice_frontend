@@ -231,9 +231,9 @@ const CompanySettings = () => {
         <>
             <PageTitle
                 breadCrumbItems={[
-                    { label: 'Company Settings', path: '/app/company_settings', active: true },
+                    { label: 'Organization Details', path: '/app/company_settings', active: true },
                 ]}
-                title={'Company Settings'}
+                title={'Organization Details'}
             />
 
             <Row>
