@@ -492,6 +492,7 @@ const ContactDetails = withSwal(({ swal }) => {
   const [showClientEditModal, setShowClientEditModal] = useState(false);
   const onCloseModal = () => setShowClientEditModal(false);
 
+  const scurrency = useSelector(state => state.Currency.selectedCurrency)
 
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -1134,10 +1135,10 @@ const ContactDetails = withSwal(({ swal }) => {
                 <Card.Body>
                   <div className="d-flex justify-content-between">
                     <p style={{fontSize: '16px'}}>
-                    <b style={{marginRight: '5px'}}>Balance</b> <span>{contact_details?.balance}</span> 
+                    <b style={{marginRight: '5px'}}>Balance</b> <span>{scurrency?.symbol}{contact_details?.balance}</span> 
                     </p>
                     <p style={{fontSize: '16px'}}>
-                    <b style={{marginRight: '5px'}}>Due</b> <span>{contact_details?.due}</span> 
+                    <b style={{marginRight: '5px'}}>Due</b> <span>{scurrency?.symbol}{contact_details?.due}</span> 
                     </p>
                   </div>
                 </Card.Body>
