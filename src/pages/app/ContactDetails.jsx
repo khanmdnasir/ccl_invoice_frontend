@@ -1135,10 +1135,10 @@ const ContactDetails = withSwal(({ swal }) => {
                 <Card.Body>
                   <div className="d-flex justify-content-between">
                     <p style={{fontSize: '16px'}}>
-                    <b style={{marginRight: '5px'}}>Balance</b> <span>{scurrency?.symbol}{contact_details?.balance}</span> 
+                    <b style={{marginRight: '5px'}}>Balance</b> <span>{scurrency?.symbol}{contact_details?.balance?.toLocaleString(undefined, {maximumFractionDigits:2})}</span> 
                     </p>
                     <p style={{fontSize: '16px'}}>
-                    <b style={{marginRight: '5px'}}>Due</b> <span>{scurrency?.symbol}{contact_details?.due}</span> 
+                    <b style={{marginRight: '5px'}}>Due</b> <span>{scurrency?.symbol}{contact_details?.due?.toLocaleString(undefined, {maximumFractionDigits:2})}</span> 
                     </p>
                   </div>
                 </Card.Body>

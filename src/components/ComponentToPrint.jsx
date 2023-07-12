@@ -1,38 +1,42 @@
 import { Row, Col, Card, Table } from 'react-bootstrap';
-import logo from '../../assets/images/Qorum.svg'
-
 // components
-import { forwardRef } from 'react';
-import { getCurrentDate } from '../../utils/getCurrentDate';
+import { forwardRef, useEffect } from 'react';
+import { getCurrentDate } from '../utils/getCurrentDate';
+import { useDispatch, useSelector } from 'react-redux';
+import { getLoginPageLogo } from '../redux/actions';
 
 // invoice component
 const ComponentToPrint = forwardRef(( props, ref) => {
-    
+    const dispatch = useDispatch()
+    const { company_logo } = useSelector((state) => ({
+        company_logo: state.CompanySettings.company_login_page_logo
+    }));
     const tdStyle =  { fontSize: '12px', padding: '5px' }
     const tdStyleBold = {
         fontSize: '12px', padding: '5px', color: '#6c757d', fontWeight:"bold" }
 
-    
+    useEffect(()=>{
+        dispatch(getLoginPageLogo())
+    },[])
     return (
         <div ref={ref} className='container'>
             
 
-            <Row className='container'>
+            <Row >
                 <Col>
-                    <Card>
-                        <Card.Body>                            
+                                              
                                 
                             <Row className='mt-2'>
                                 <Col>
                                     <div className="auth-logo">
                                         <div className="logo logo-dark">
                                             <span className="logo-lg">
-                                                <img src={logo} alt="" height="70" />
+                                                <img src={company_logo?.value_file} alt="" height="70" />
                                             </span>
                                         </div>
                                         <div className="logo logo-light">
                                             <span className="logo-lg">
-                                                <img src={logo} alt="" height="70" />
+                                                <img src={company_logo?.value_file} alt="" height="70" />
                                             </span>
                                         </div>
                                     </div>
@@ -181,10 +185,13 @@ const ComponentToPrint = forwardRef(( props, ref) => {
                             </Row>
                             
                             
-                        </Card.Body>
-                    </Card>
+                       
                 </Col>
             </Row>
+            <div style={{textAlign: 'center'}}>
+            <p >This is computer generated invoice no signature required</p>
+            </div>
+            
         </div>
     );
 });

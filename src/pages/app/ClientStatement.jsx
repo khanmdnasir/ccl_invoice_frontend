@@ -8,12 +8,12 @@ import Table from "../../components/Table";
 import PageTitle from "../../components/PageTitle";
 import { useSelector, useDispatch } from "react-redux";
 import { getContact } from "../../redux/actions";
-import ComponentToPrint from "./ComponentToPrint";
 import ReactToPrint from "react-to-print";
 import { APICore } from "../../helpers/api/apiCore";
 import { getCurrentDate } from "../../utils/getCurrentDate";
 import classNames from "classnames";
 import { useLocation } from "react-router-dom";
+import ComponentToPrint from "../../components/ComponentToPrint";
 
 
 // action column render

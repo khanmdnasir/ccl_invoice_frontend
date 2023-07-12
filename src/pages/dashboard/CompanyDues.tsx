@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 // componets
 
 const CompanyDues = ({ summaryList, scurrency }: any) => {
-    console.log('summary list',summaryList)
+    
     return (
         <>
             <Card>
