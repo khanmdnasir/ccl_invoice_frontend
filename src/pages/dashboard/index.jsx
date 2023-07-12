@@ -10,6 +10,10 @@ import { useEffect, useState } from 'react';
 import RevenueChart from './RevenueChart';
 import { useSelector, useDispatch } from 'react-redux';
 import { getDashboardSummary } from '../../redux/dashboard/actions';
+import SalesAnalyticsChart from './SalesAnalyticsChart';
+import MonthlyOverviewChart from './MonthlyOverviewChart';
+import ServiceTypeChart from './ServiceTypeChart';
+import HorizontalBarCharts from './HorizontalBarCharts';
 
 
 const Dashboard = () => {   
@@ -50,22 +54,26 @@ const Dashboard = () => {
 
                 <Row>
                 
-                    <Col  xl={6}>
-                        
-                        <RevenueChart summaryList={summaryList} scurrency={scurrency}/>
-                        
+                <Col  xl={6}>                        
+                        <ServiceTypeChart summaryList={summaryList}/>                        
+                    </Col>
+                    <Col  xl={6}>                        
+                        <SalesAnalyticsChart summaryList={summaryList}/>                        
                     </Col>
                     <Col  xl={6}>
-                    <CompanyDues summaryList={summaryList} scurrency={scurrency}/>
-                        {/* <AssetTypeChart/> */}
-                        
+                        <MonthlyOverviewChart summaryList={summaryList}/>              
                     </Col>
-                
-                
+                    <Col  xl={6}>
+                        <HorizontalBarCharts summaryList={summaryList}/>              
+                    </Col>
+                    {/* <Col  xl={6}>                        
+                        <RevenueChart summaryList={summaryList} scurrency={scurrency}/>                        
+                    </Col> */}
+                    {/* <Col  xl={6}>
+                        <CompanyDues summaryList={summaryList} scurrency={scurrency}/>                        
+                    </Col> */}
+                                    
                 </Row>
-
-
-            
         </div>
     );
 };

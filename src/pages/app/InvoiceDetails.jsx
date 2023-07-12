@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Form, Alert } from 'react-bootstrap';
+import { Row, Col, Card, Form, Alert,Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
@@ -11,6 +11,9 @@ import { getInvoiceDetails, addInvoicePayment, clearSubmitSuccessMessage, getCom
 import { isNumber } from '@amcharts/amcharts4/core';
 import { withSwal } from 'react-sweetalert2';
 import PaymentModal from '../Form/PaymentModal'
+
+
+
 const api = new APICore()
 
 
@@ -33,6 +36,8 @@ const InvoiceDetails = withSwal(({swal}) => {
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
     const onOpenModal = () => setShow(true);
+
+    const componentRef = React.useRef();
 
     useEffect(() => {
         const state = location.state
@@ -174,6 +179,37 @@ const InvoiceDetails = withSwal(({swal}) => {
             })
     }
 
+    const openPdf = () => {
+        const data = {
+            "contact_id":invoiceDetails?.contact_id?.id,
+            "invoice_id":invoiceId,
+        }
+                 
+        api.getFile(`/api/generatePdf/`, data)
+        .then(res=>{
+            let fileUrl = window.URL.createObjectURL(new Blob([res?.data], { type: 'application/pdf'}))
+            let iframe = document.createElement("iframe");
+            iframe.src = fileUrl;
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            iframe.onload = function(){
+                iframe.contentWindow.print();
+                // document.body.removeChild(iframe);
+            }
+            // let fileUrl = window.URL.createObjectURL(new Blob([res?.data]))
+            // let link = document.createElement("a");
+            // link.href = fileUrl;
+            // link.setAttribute("download",`filename.pdf`);
+            // document.body.appendChild(link);
+            // link.click();
+
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+                       
+    }
+
     const draftsOptions =
         <>
             <option disabled selected={invoiceDetails?.status === 'draft'} value='draft'>Draft</option>
@@ -295,6 +331,12 @@ const InvoiceDetails = withSwal(({swal}) => {
                                 <Col sm={8}>
                                     <Form.Label></Form.Label>
                                     <div className="text-sm-end mt-2 mt-sm-0">
+                                        
+                                            <Button className="btn btn-primary me-2" onClick={()=> openPdf()}>
+                                            <i className="mdi mdi-printer me-1"></i> Print
+                                            </Button>
+                                        
+                                        
                                         {user_role.includes('change_invoice') ?
                                             (invoiceDetails?.status === 'draft' || invoiceDetails?.status === 'waiting') &&
                                             <Link to={{ pathname: '/app/invoice_form', state: { invoiceId : invoiceId } }} className="btn btn-success me-2" >
