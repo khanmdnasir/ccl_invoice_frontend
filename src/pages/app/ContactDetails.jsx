@@ -687,9 +687,12 @@ const ContactDetails = withSwal(({ swal }) => {
   };
 
   const [show, setShow] = useState(false);
+  const [statementShow, setStatementShow] = useState(false);
 
   const handleClose = () => setShow(false);
+  const handleStatementClose = () => setStatementShow(false);
   const handleShow = () => setShow(true);
+  const handleStatementShow = () => setStatementShow(true);
   const [inputDate, setInputDate] = useState("");
 
   const daySubmit = () => {
@@ -772,75 +775,77 @@ const ContactDetails = withSwal(({ swal }) => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item>
-                <Link
-                  to={{
-                    pathname: "/app/invoice_form",
-                    state: { contactId: contactId },
-                  }}
-                >
+              <Dropdown.Item as={Link}
+                to={{
+                  pathname: "/app/invoice_form",
+                  state: { contactId: contactId },
+                }}
+              >
+          
                   Invoice
-                </Link>
+                
               </Dropdown.Item>
-              <Dropdown.Item>
-                <Link
-                  to={{
-                    pathname: "/app/repeating_invoice_form",
-                    state: { contactId: contactId },
-                  }}
-                >
+              <Dropdown.Item as={Link}
+              to={{
+                pathname: "/app/repeating_invoice_form",
+                state: { contactId: contactId },
+              }}
+              >
+                
                   Repeating Invoice
-                </Link>
+                
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item as={Link}
+              to={{
+                pathname: "/app/service_form",
+                state: { services: service_list, contactId: contactId },
+              }}
+              >
                 {" "}
-                <Link
-                  to={{
-                    pathname: "/app/service_form",
-                    state: { services: service_list, contactId: contactId },
-                  }}
-                >
+                
                   Service
-                </Link>
+                
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item as={Link}
+              to={{
+                pathname: "/app/payment_form",
+                state: { contactId: contactId },
+              }}
+              >
                 {" "}
-                <Link
-                  to={{
-                    pathname: "/app/payment_form",
-                    state: { contactId: contactId },
-                  }}
-                >
+                
                  Payment
-                </Link>
+               
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>
         <div>
           <Dropdown style={{ marginBottom: "30px" }}>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic ">
+            <Dropdown.Toggle variant="primary" id="client_statement_dropdown">
               Options <i className="mdi mdi-chevron-down"></i>
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item>
-                <Link
-                  to={{
-                    pathname: "/app/edit_client_form",
-                    state: {
-                      contactId: contactId,
-                      name: contact_details?.name,
-                    },
-                  }}
-                >
+              <Dropdown.Item as={Link} to=
+              {{
+                pathname: "/app/edit_client_form",
+                state: {
+                  contactId: contactId,
+                  name: contact_details?.name,
+                },
+              }}
+              >
+                
                   Edit
-                </Link>
+               
               </Dropdown.Item>
-              <Dropdown.Item>
-                <Link to="#" onClick={handleShow}>
+              <Dropdown.Item onClick={handleStatementShow}
+
+              >
+               
                   Client Statement
-                </Link>
+                
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -850,8 +855,8 @@ const ContactDetails = withSwal(({ swal }) => {
       {/*  Statement modal */}
       <div>
         <Modal
-          show={show}
-          onHide={handleClose}
+          show={statementShow}
+          onHide={handleStatementClose}
           aria-labelledby="contained-modal-title-vcenter"
           centered
         >

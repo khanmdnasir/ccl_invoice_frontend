@@ -11,6 +11,7 @@ import { getInvoiceDetails, addInvoicePayment, clearSubmitSuccessMessage, getCom
 import { isNumber } from '@amcharts/amcharts4/core';
 import { withSwal } from 'react-sweetalert2';
 import PaymentModal from '../Form/PaymentModal'
+import Spinner from '../../components/Spinner';
 
 
 
@@ -33,6 +34,7 @@ const InvoiceDetails = withSwal(({swal}) => {
     
     const invoice_payment_success = useSelector(state => state.Payment.invoice_payment_success);
     const company_setting_by_key = useSelector(state => state.CompanySettings.company_setting_by_key);
+    const [printLoading, setPrintLoading] = useState(false);
     const [show, setShow] = useState(false);
     const onCloseModal = () => setShow(false);
     const onOpenModal = () => setShow(true);
@@ -180,6 +182,7 @@ const InvoiceDetails = withSwal(({swal}) => {
     }
 
     const openPdf = () => {
+        setPrintLoading(true);
         const data = {
             "contact_id":invoiceDetails?.contact_id?.id,
             "invoice_id":invoiceId,
@@ -194,6 +197,7 @@ const InvoiceDetails = withSwal(({swal}) => {
             document.body.appendChild(iframe);
             iframe.onload = function(){
                 iframe.contentWindow.print();
+                setPrintLoading(false);
                 // document.body.removeChild(iframe);
             }
             // let fileUrl = window.URL.createObjectURL(new Blob([res?.data]))
@@ -332,8 +336,11 @@ const InvoiceDetails = withSwal(({swal}) => {
                                     <Form.Label></Form.Label>
                                     <div className="text-sm-end mt-2 mt-sm-0">
                                         
-                                            <Button className="btn btn-primary me-2" onClick={()=> openPdf()}>
-                                            <i className="mdi mdi-printer me-1"></i> Print
+                                            <Button className="btn btn-primary me-2 " style={{height: '38px', width: '100px'}} onClick={()=> openPdf()} disabled={printLoading}>
+                                                {printLoading ?
+                                                <Spinner color='success' />:    
+                                            <>
+                                            <i className="mdi mdi-printer me-1"></i> Print</>}
                                             </Button>
                                         
                                         
