@@ -197,7 +197,10 @@ const InvoiceDetails = withSwal(({swal}) => {
             document.body.appendChild(iframe);
             iframe.onload = function(){
                 iframe.contentWindow.print();
-                setPrintLoading(false);
+                setTimeout(()=>{
+                    setPrintLoading(false);
+                },2000)
+                
                 // document.body.removeChild(iframe);
             }
             // let fileUrl = window.URL.createObjectURL(new Blob([res?.data]))

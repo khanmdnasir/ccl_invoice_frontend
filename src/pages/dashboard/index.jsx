@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getDashboardSummary } from '../../redux/dashboard/actions';
 import SalesAnalyticsChart from './SalesAnalyticsChart';
 import MonthlyOverviewChart from './MonthlyOverviewChart';
-import ServiceTypeChart from './ServiceTypeChart';
+import ServiceTypeChart from './InvoiceSummary';
 import HorizontalBarCharts from './HorizontalBarCharts';
 
 

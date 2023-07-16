@@ -7,7 +7,7 @@ import { withSwal } from 'react-sweetalert2';
 import classNames from 'classnames';
 import Table from '../../components/Table';
 import PageTitle from '../../components/PageTitle';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getInvoice } from '../../redux/actions';
 import Pagination from '../../components/CustomPagination';
@@ -230,6 +230,7 @@ const columns = [
 
 
 const Invoice = () => {
+    const location = useLocation();
     const dispatch = useDispatch();
     const invoices = useSelector(state => state.Invoice.invoices);
     const previous = useSelector(state => state.Invoice.previous);
@@ -282,17 +283,23 @@ const Invoice = () => {
         }
     }
 
-    
+    useEffect(()=>{
+        
+    },[])
+
     useEffect(() => {
-        dispatch(getInvoice(pageSize, 1,activePage));
+        const state = location.state;
+        if(state){
+            setActivePage(state);
+            dispatch(getInvoice(pageSize, 1,state));
+        }
+        else{
+            dispatch(getInvoice(pageSize, 1,activePage));
+        }
+        
     }, [activePage])
 
-    useEffect(() => {
-        dispatch(getInvoice(pageSize, 1,'approve'));
-    }, [])
-
-
-    
+       
     return (
         <>
             <PageTitle
