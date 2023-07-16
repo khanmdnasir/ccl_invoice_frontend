@@ -4,7 +4,7 @@ import { ApexOptions } from 'apexcharts';
 import { Card } from 'react-bootstrap';
 
 
-const ServiceTypeChart = () => {
+const InvoiceSummary = ({summaryList}:any) => {
     const apexOpts: ApexOptions = {
         chart: {
             type: 'donut',
@@ -37,13 +37,13 @@ const ServiceTypeChart = () => {
         legend: {
             show: false,
         },
-        labels: ['Total Sales', 'Campaign Send', 'Daily Sales'],
+        labels: ['Draft', 'Approve', 'Paid'],
         tooltip: {
             enabled: false,
         },
     };
 
-    const apexData = [12, 30, 20];
+    const apexData = summaryList?.invoice_summary;
 
     return (
         <>
@@ -51,7 +51,7 @@ const ServiceTypeChart = () => {
                 <Card.Body>
                     
 
-                    <h4 className="header-title mb-3">Upcoming...</h4>
+                    <h4 className="header-title mb-3">Invoice Summary</h4>
 
                     <div dir="ltr">
                         <Chart
@@ -68,4 +68,4 @@ const ServiceTypeChart = () => {
     );
 };
 
-export default ServiceTypeChart;
+export default InvoiceSummary;

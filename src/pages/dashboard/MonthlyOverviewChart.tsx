@@ -7,7 +7,7 @@ import { Bar, defaults as ChartjsDefaults } from 'react-chartjs-2';
 const MonthlyOverviewChart = ({summaryList}:any) => {
     ChartjsDefaults.color = '#8391a2';
     ChartjsDefaults.scale.grid.color = '#8391a2';
-    console.log('summary list',summaryList)
+    // console.log('summary list',summaryList)
     // chart data
     const barChartData = {
         labels: summaryList?.monthly_summary?.month_list,

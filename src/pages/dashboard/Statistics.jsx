@@ -3,13 +3,14 @@ import { Row, Col } from 'react-bootstrap';
 
 // componets
 import StatisticsWidget from '../../components/StatisticsWidget';
+import { Link } from 'react-router-dom';
 
 const Statistics = ({summaryList, scurrency}) => {
     
     return (
         <>
             <Row >
-                <Col  >
+                <Col as={Link} to='/app/client'>
                     <StatisticsWidget
                         variant="text-secondary"
                         counterOptions={{
@@ -21,7 +22,7 @@ const Statistics = ({summaryList, scurrency}) => {
                         color="#fff"
                     />
                 </Col>
-                <Col>
+                <Col as={Link} to={{pathname:'/app/invoice',state: 'draft'}}>
                     <StatisticsWidget
                         variant="text-muted"
                         description={`Draft (${summaryList.draft_invoice ? summaryList.draft_invoice.total_data:0})`}
@@ -33,7 +34,7 @@ const Statistics = ({summaryList, scurrency}) => {
                         color="#fff"
                     />
                 </Col>
-                <Col  >
+                {/* <Col  >
                     <StatisticsWidget
                         variant="text-info"
                         description={`Awaiting Approval (${summaryList.waiting_invoice ? summaryList.waiting_invoice.total_data:0})`}
@@ -44,8 +45,8 @@ const Statistics = ({summaryList, scurrency}) => {
                         stats={summaryList.waiting_invoice ? summaryList.waiting_invoice.total_amount:0}
                         color="#fff"
                     />
-                </Col>
-                <Col  >
+                </Col> */}
+                <Col  as={Link} to={{pathname:'/app/invoice',state: 'approve'}}>
                     <StatisticsWidget 
                         variant="text-warning" 
                         description={`Awaiting Payment (${summaryList.approve_invoice ? summaryList.approve_invoice.total_data:0})`}
@@ -57,7 +58,7 @@ const Statistics = ({summaryList, scurrency}) => {
                         color="#fff" 
                     />
                 </Col>
-                <Col  >
+                <Col  as={Link} to={{pathname:'/app/invoice',state: 'paid'}}>
                 <StatisticsWidget 
                     variant="text-success" 
                     description={`Paid (${summaryList.paid_invoice ? summaryList.paid_invoice.total_data:0})`}
