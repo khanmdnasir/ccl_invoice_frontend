@@ -12,8 +12,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getDashboardSummary } from '../../redux/dashboard/actions';
 import SalesAnalyticsChart from './SalesAnalyticsChart';
 import MonthlyOverviewChart from './MonthlyOverviewChart';
-import ServiceTypeChart from './InvoiceSummary';
 import HorizontalBarCharts from './HorizontalBarCharts';
+import InvoiceChart from './InvoiceChart';
 
 
 const Dashboard = () => {   
@@ -55,7 +55,7 @@ const Dashboard = () => {
                 <Row>
                 
                 <Col  xl={6}>                        
-                        <ServiceTypeChart summaryList={summaryList}/>                        
+                        <InvoiceChart summaryList={summaryList}/>
                     </Col>
                     <Col  xl={6}>                        
                         <SalesAnalyticsChart summaryList={summaryList}/>                        
