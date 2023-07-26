@@ -19,7 +19,7 @@ const InvoiceChart = () => {
     am4core.addLicense("ch-custom-attribution");
   let chart = am4core.create("invoiceChart", am4charts.PieChart);
   
-  api.get(`/api/dashboard/invoice_summary?month=${month+1}`)
+  api.get(`/api/dashboard/invoice_summary?month=${parseInt(month)+1}`)
       .then(res => {
           
           if(res?.data?.status){
@@ -86,7 +86,7 @@ const InvoiceChart = () => {
           </div>
           
           
-          <div id="invoiceChart" style={{ width: "100%", height: "350px" }}></div>
+          <div id="invoiceChart" style={{ width: "100%", height: "375px" }}></div>
           
           {/* {!asset_type.length > 0 &&
           <p>No asset type available</p>} */}
