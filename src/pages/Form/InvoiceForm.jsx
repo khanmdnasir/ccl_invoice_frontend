@@ -591,13 +591,16 @@ const InvoiceForm = () => {
                                                             <Form.Control
                                                                 type='number'
                                                                 step="any"
-                                                                min="0"
-                                                                max="100"
                                                                 name='discount'
-                                                                onKeyDown={(event) => {
-                                                                    event.preventDefault();
-                                                                  }}
-                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                onChange={(e) => {
+                                                                    if(parseInt(e.target.value) > 99){
+                                                                        e.target.value = 99;
+                                                                    }
+                                                                    
+                                                                    if(parseInt(e.target.value) < 0){
+                                                                        e.target.value = 0;
+                                                                    }                                                                    
+                                                                    onNewItemsChange(e, index);}}
                                                                 value={item?.discount}
                                                             >
 
@@ -635,14 +638,17 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                step="any"
-                                                                min="0"
-                                                                max="100"
+                                                                step='any'
                                                                 name='tax_rate'
-                                                                onKeyDown={(event) => {
-                                                                    event.preventDefault();
-                                                                  }}
-                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                onChange={(e) => {
+                                                                    if(parseInt(e.target.value) > 99){
+                                                                        e.target.value = 99;
+                                                                    }
+                                                                    
+                                                                    if(parseInt(e.target.value) < 0){
+                                                                        e.target.value = 0;
+                                                                    }                                                                    
+                                                                    onNewItemsChange(e, index);}}
                                                                 value={item?.tax_rate}
                                                             >
 
@@ -732,14 +738,17 @@ const InvoiceForm = () => {
                                                         <Form.Group>
                                                             <Form.Control
                                                                 type='number'
-                                                                step="any"
-                                                                min="0"
-                                                                max="100"
+                                                                step="any"                                                                
                                                                 name='discount'
-                                                                onKeyDown={(event) => {
-                                                                    event.preventDefault();
-                                                                  }}
-                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                onChange={(e) => {
+                                                                    if(parseInt(e.target.value) > 99){
+                                                                        e.target.value = 99;
+                                                                    }
+                                                                    
+                                                                    if(parseInt(e.target.value) < 0){
+                                                                        e.target.value = 0;
+                                                                    }                                                                    
+                                                                    onNewItemsChange(e, index);}}
                                                                 value={item?.discount}
                                                             >
 
@@ -778,13 +787,16 @@ const InvoiceForm = () => {
                                                             <Form.Control
                                                                 type='number'
                                                                 step="any"
-                                                                min="0"
-                                                                max="100"
-                                                                name='tax_rate'
-                                                                onKeyDown={(event) => {
-                                                                    event.preventDefault();
-                                                                  }}
-                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                name='tax_rate'                                                    
+                                                                onChange={(e) => {
+                                                                    if(parseInt(e.target.value) > 99){
+                                                                        e.target.value = 99;
+                                                                    }
+                                                                    
+                                                                    if(parseInt(e.target.value) < 0){
+                                                                        e.target.value = 0;
+                                                                    }                                                                    
+                                                                    onNewItemsChange(e, index);}}
                                                                 value={item?.tax_rate}
                                                             >
 
