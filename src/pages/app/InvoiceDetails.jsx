@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Form, Alert,Button } from 'react-bootstrap';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
 // components
@@ -21,10 +21,12 @@ const api = new APICore()
 
 
 const InvoiceDetails = withSwal(({swal}) => {
-    const location = useLocation();
+    const { invoiceId } = useParams();
+    console.log('invoice params',invoiceId)
+    // const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch();
-    const [invoiceId, setInvoiceId] = useState('');
+    // const [invoiceId, setInvoiceId] = useState('');
     const invoiceDetails = useSelector(state => state.Invoice.invoice_details);
     const client_balance = useSelector(state => state.Payment.client_balance);
     const loading = useSelector(state => state.Invoice.loading);
@@ -42,14 +44,14 @@ const InvoiceDetails = withSwal(({swal}) => {
     const componentRef = React.useRef();
 
     useEffect(() => {
-        const state = location.state
-        if(state){
-            setInvoiceId(parseInt(state));
-            localStorage.setItem('invoice_id',parseInt(state));
-        }else{
-            let invoice_id = localStorage.getItem('invoice_id');
-            setInvoiceId(parseInt(invoice_id));
-        }
+        // const state = location.state
+        // if(state){
+        //     setInvoiceId(parseInt(state));
+        //     localStorage.setItem('invoice_id',parseInt(state));
+        // }else{
+        //     let invoice_id = localStorage.getItem('invoice_id');
+        //     setInvoiceId(parseInt(invoice_id));
+        // }
         dispatch(getCompanySettingsByKey({
             "key": "payment_invoice_map"
         }))
@@ -93,11 +95,11 @@ const InvoiceDetails = withSwal(({swal}) => {
 
 
     useEffect(() => {
-        if(isNumber(invoiceId)){
-            dispatch(getInvoiceDetails(invoiceId))
-        }
         
-    }, [invoiceId])
+            dispatch(getInvoiceDetails(invoiceId))
+        
+        
+    }, [])
 
     const onDelete = () => {
         swal.fire({

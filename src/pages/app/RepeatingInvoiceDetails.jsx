@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
 // components
@@ -16,10 +16,11 @@ const api = new APICore()
 
 
 const RepeatingInvoiceDetails = withSwal(({ swal }) => {
-    const location = useLocation();
+    // const location = useLocation();
+    const { invoiceId } = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
-    const [invoiceId, setInvoiceId] = useState({});
+    // const [invoiceId, setInvoiceId] = useState({});
     const user_role = useSelector((state) => state.Role.user_role);
     const repeating_invoice_details = useSelector((state) => state.RepeatingInvoice.repeating_invoice_details);
     const loading = useSelector(state => state.Invoice.loading);
@@ -60,10 +61,10 @@ const RepeatingInvoiceDetails = withSwal(({ swal }) => {
             })
     }
 
-    useEffect(() => {
-        const state = location.state
-        setInvoiceId(state);
-    }, [])
+    // useEffect(() => {
+    //     const state = location.state
+    //     setInvoiceId(state);
+    // }, [])
 
     useEffect(() => {
         dispatch(getRepeatingInvoiceDetails(invoiceId))

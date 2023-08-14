@@ -52,8 +52,7 @@ const ClientNameColumn = ({ row }) => {
     return (
         <>
             <Link to={{
-            pathname: "/app/client_details",
-            state: row?.original?.contact_id?.id,
+            pathname: `/app/client_details/${row?.original?.contact_id?.id}`,
             }}>
                 {row?.original?.contact_id?.name}
             </Link>

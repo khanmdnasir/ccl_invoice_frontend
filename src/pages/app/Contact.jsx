@@ -29,7 +29,7 @@ function randomColor() {
 const SplitName = ({ row }) => {
   let name = (row.original?.name).split(" ");
   let color = randomColor()
-  console.log(row?.original?.name,color)
+  // console.log(row?.original?.name,color)
 //    
     for(var i = 0; i < name.length; i++){
         
