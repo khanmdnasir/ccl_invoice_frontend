@@ -139,7 +139,7 @@ const AppRoutes = {
       route: PrivateRoute,
     },
     {
-      path: "/app/client_details",
+      path: "/app/client_details/:client_id",
       name: "Client Details",
       component: ContactDetails,
       route: PrivateRoute,
@@ -181,7 +181,7 @@ const AppRoutes = {
       route: PrivateRoute,
     },
     {
-      path: "/app/payment_details",
+      path: "/app/payment_details/:paymentId",
       name: "Payments Details",
       component: PaymentDetails,
       route: PrivateRoute,
@@ -211,14 +211,14 @@ const AppRoutes = {
       route: PrivateRoute,
     },
     {
-      path: "/app/invoice_details",
+      path: "/app/invoice_details/:invoiceId",
       name: "Invoice Details",
       component: InvoiceDetails,
       route: PrivateRoute,
     },
 
     {
-      path: "/app/repeating_invoice_details",
+      path: "/app/repeating_invoice_details/:invoiceId",
       name: "Repeating Invoice Details",
       component: RepeatingInvoiceDetails,
       route: PrivateRoute,

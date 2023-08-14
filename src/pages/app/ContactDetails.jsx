@@ -11,7 +11,7 @@ import {
   Dropdown,
   Breadcrumb,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Table from "../../components/Table";
 import { useLocation } from "react-router-dom";
 import { withSwal } from "react-sweetalert2";
@@ -37,7 +37,6 @@ import {
   getRepeatingInvoice,
   getContactPayment,
   getContactRepeatingInvoice,
-  getContact,
 } from "../../redux/actions";
 import { format } from "date-fns";
 const api = new APICore();
@@ -404,9 +403,10 @@ const servicesColumns = [
 ];
 
 const ContactDetails = withSwal(({ swal }) => {
-  const location = useLocation();
+  const { client_id } = useParams();
+  // const location = useLocation();
   const dispatch = useDispatch();
-  const [contactId, setContactId] = useState();
+  // const [contactId, setContactId] = useState();
   const [loadings, setLoading] = useState(false);
   const [invoicePageSize, setInvoicePageSize] = useState(10);
   const [repeatingInvoicePageSize, setRepeatingInvoicePageSize] = useState(10);
@@ -416,7 +416,7 @@ const ContactDetails = withSwal(({ swal }) => {
     auto_approve: false,
     auto_invoice_send: false,
     reminder_service: false,
-    contact_id: contactId,
+    contact_id: client_id,
     reminder_settings: {
       is_include_public_link: false,
       is_include_pdf_link: false,
@@ -471,7 +471,7 @@ const ContactDetails = withSwal(({ swal }) => {
   const [paymentData, setPaymentData] = useState("");
 
   const contact_details = useSelector((state) => state.Contact.contact_details);
-  console.log("contact_details",contact_details)
+  // console.log("contact_details",contact_details)
   const invoice_setting = useSelector((state) => state.Contact.invoice_setting);
   const loading = useSelector((state) => state.Contact.loading);
   const invoiceLoading = useSelector((state) => state.Invoice.loading);
@@ -505,7 +505,7 @@ const ContactDetails = withSwal(({ swal }) => {
 
     if (fromDate === "" || toDate === "") {
       await api
-        .get("/api/client-ledger", { client_id: contactId })
+        .get("/api/client-ledger", { client_id: client_id })
         .then((response) => {
           setLoading(false);
          
@@ -519,7 +519,7 @@ const ContactDetails = withSwal(({ swal }) => {
     } else {
       await api
         .get("/api/client-ledger", {
-          client_id: contactId,
+          client_id: client_id,
           start_date: format(new Date(fromDate), "yyyy-MM-dd"),
           end_date: format(new Date(toDate), "yyyy-MM-dd"),
         })
@@ -536,18 +536,19 @@ const ContactDetails = withSwal(({ swal }) => {
     }
   };
 
+ 
+  // useEffect(() => {
+  //   dispatch(getContact(0, 1));
+  // }, []);
   useEffect(() => {
-    dispatch(getContact(0, 1));
-  }, []);
-  useEffect(() => {
-    const state = location.state;
-    if (state) {
-      setContactId(parseInt(state));
-      localStorage.setItem("client_id", parseInt(state));
-    } else {
-      let client_id = localStorage.getItem("client_id");
-      setContactId(parseInt(client_id));
-    }
+    // const state = location.state;
+    // if (client_id) {
+    //   setContactId(parseInt(state));
+    //   localStorage.setItem("client_id", parseInt(state));
+    // } else {
+    //   let client_id = localStorage.getItem("client_id");
+    //   setContactId(parseInt(client_id));
+    // }
     dispatch(getCountry());
     dispatch(getAllKam());
   }, []);
@@ -562,26 +563,26 @@ const ContactDetails = withSwal(({ swal }) => {
   }, [success]);
 
   const visitInvoicePage = (page) => {
-    dispatch(getContactInvoice(contactId, invoicePageSize, page));
+    dispatch(getContactInvoice(client_id, invoicePageSize, page));
   };
 
   const invoice_previous_number = () => {
-    dispatch(getContactInvoice(contactId, invoicePageSize, invoice_previous));
+    dispatch(getContactInvoice(client_id, invoicePageSize, invoice_previous));
   };
 
   const invoice_next_number = () => {
-    dispatch(getContactInvoice(contactId, invoicePageSize, invoice_next));
+    dispatch(getContactInvoice(client_id, invoicePageSize, invoice_next));
   };
   const visitRepeatingInvoicePage = (page) => {
     dispatch(
-      getContactRepeatingInvoice(contactId, repeatingInvoicePageSize, page)
+      getContactRepeatingInvoice(client_id, repeatingInvoicePageSize, page)
     );
   };
 
   const repeating_invoice_previous_number = () => {
     dispatch(
       getContactRepeatingInvoice(
-        contactId,
+        client_id,
         repeatingInvoicePageSize,
         repeating_invoice_previous
       )
@@ -591,51 +592,51 @@ const ContactDetails = withSwal(({ swal }) => {
   const repeating_invoice_next_number = () => {
     dispatch(
       getContactRepeatingInvoice(
-        contactId,
+        client_id,
         repeatingInvoicePageSize,
         repeating_invoice_next
       )
     );
   };
   const visitServicePage = (page) => {
-    dispatch(getContactInvoice(contactId, servicePageSize, page));
+    dispatch(getContactInvoice(client_id, servicePageSize, page));
   };
 
   const service_previous_number = () => {
-    dispatch(getContactService(contactId, servicePageSize, service_previous));
+    dispatch(getContactService(client_id, servicePageSize, service_previous));
   };
 
   const service_next_number = () => {
-    dispatch(getContactService(contactId, servicePageSize, service_next));
+    dispatch(getContactService(client_id, servicePageSize, service_next));
   };
   const visitPaymentPage = (page) => {
-    dispatch(getContactPayment(contactId, paymentPageSize, page));
+    dispatch(getContactPayment(client_id, paymentPageSize, page));
   };
 
   const payment_previous_number = () => {
-    dispatch(getContactPayment(contactId, paymentPageSize, payment_previous));
+    dispatch(getContactPayment(client_id, paymentPageSize, payment_previous));
   };
 
   const payment_next_number = () => {
-    dispatch(getContactPayment(contactId, paymentPageSize, payment_next));
+    dispatch(getContactPayment(client_id, paymentPageSize, payment_next));
   };
 
   useEffect(() => {
-    if (contactId !== undefined && contactId !== null) {
-      dispatch(getContactInvoice(contactId, invoicePageSize, 1));
+    if (client_id !== undefined && client_id !== null) {
+      dispatch(getContactInvoice(client_id, invoicePageSize, 1));
       dispatch(
-        getContactRepeatingInvoice(contactId, repeatingInvoicePageSize, 1)
+        getContactRepeatingInvoice(client_id, repeatingInvoicePageSize, 1)
       );
-      dispatch(getContactPayment(contactId, paymentPageSize, 1));
-      dispatch(getContactDetails(contactId));
-      dispatch(getContactInvoiceSetting(contactId));
-      dispatch(getContactService(contactId, servicePageSize, 1));
-      dispatch(getClientBalance(contactId));
-      dispatch(getDueInvoices(contactId));
-      dispatch(getContact(contactId, pageSize, 1));
-      dispatch(updateContact(contactId));
+      dispatch(getContactPayment(client_id, paymentPageSize, 1));
+      dispatch(getContactDetails(client_id));
+      dispatch(getContactInvoiceSetting(client_id));
+      dispatch(getContactService(client_id, servicePageSize, 1));
+      dispatch(getClientBalance(client_id));
+      dispatch(getDueInvoices(client_id));
+      // dispatch(getContact(client_id, pageSize, 1));
+      dispatch(updateContact(client_id));
     }
-  }, [contactId]);
+  }, []);
 
   useEffect(() => {
     const paymentwithDate = payment_list.map((item) => {
@@ -738,8 +739,8 @@ const ContactDetails = withSwal(({ swal }) => {
 
   const finalSubmit = () => {
     const newData = { ...invoiceSetting };
-    newData["contact_id"] = contactId;
-    newData["reminder_settings"]["contact_id"] = contactId;
+    newData["contact_id"] = client_id;
+    newData["reminder_settings"]["contact_id"] = client_id;
     dispatch(updateContactInvoiceSetting(newData));
   };
 
@@ -778,7 +779,7 @@ const ContactDetails = withSwal(({ swal }) => {
               <Dropdown.Item as={Link}
                 to={{
                   pathname: "/app/invoice_form",
-                  state: { contactId: contactId },
+                  state: { contactId: client_id },
                 }}
               >
           
@@ -788,7 +789,7 @@ const ContactDetails = withSwal(({ swal }) => {
               <Dropdown.Item as={Link}
               to={{
                 pathname: "/app/repeating_invoice_form",
-                state: { contactId: contactId },
+                state: { contactId: client_id },
               }}
               >
                 
@@ -798,7 +799,7 @@ const ContactDetails = withSwal(({ swal }) => {
               <Dropdown.Item as={Link}
               to={{
                 pathname: "/app/service_form",
-                state: { services: service_list, contactId: contactId },
+                state: { services: service_list, contactId: client_id },
               }}
               >
                 {" "}
@@ -809,7 +810,7 @@ const ContactDetails = withSwal(({ swal }) => {
               <Dropdown.Item as={Link}
               to={{
                 pathname: "/app/payment_form",
-                state: { contactId: contactId },
+                state: { contactId: client_id },
               }}
               >
                 {" "}
@@ -831,7 +832,7 @@ const ContactDetails = withSwal(({ swal }) => {
               {{
                 pathname: "/app/edit_client_form",
                 state: {
-                  contactId: contactId,
+                  contactId: client_id,
                   name: contact_details?.name,
                 },
               }}
@@ -888,7 +889,7 @@ const ContactDetails = withSwal(({ swal }) => {
                 to={{
                   pathname: "/app/client_statement",
                   state: {
-                    contactId: contactId,
+                    contactId: client_id,
                     start_date: fromDate,
                     end_date: toDate,
                   },
@@ -1080,7 +1081,7 @@ const ContactDetails = withSwal(({ swal }) => {
                             columns={servicesColumns}
                             data={service_list}
                             pageSize={servicePageSize}
-                            isDetails={true}
+                            isDetails={false}
                             pathName="/app/service_details"
                             isSortable={true}
                             pagination={false}

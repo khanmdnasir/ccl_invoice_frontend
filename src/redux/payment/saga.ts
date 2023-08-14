@@ -38,7 +38,7 @@ function* getContactPayment({ payload}: any):SagaIterator {
     try {
         const response = yield call(getContactPaymentApi,{...payload});
         const data = response.data;
-        console.log('payments',data)
+        // console.log('payments',data)
         yield put({type: 'GET_CONTACT_PAYMENT_SUCCESS' , data: data});
     } catch (error) {
         yield put({type: 'GET_CONTACT_PAYMENT_FAILED', error: error});

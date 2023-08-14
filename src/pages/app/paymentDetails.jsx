@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Form, Alert, Badge } from 'react-bootstrap';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
 // components
@@ -18,10 +18,11 @@ const api = new APICore()
 
 
 const PaymentDetails = withSwal(({swal}) => {
-    const location = useLocation();
+    // const location = useLocation();
+    const { paymentId } = useParams();
     const history = useHistory();
     const dispatch = useDispatch();
-    const [paymentId, setPaymentId] = useState({});
+    // const [paymentId, setPaymentId] = useState({});
     const paymentDetails = useSelector(state => state.Payment.payment_details);
    
     // console.log("paymentDetails",paymentDetails?.status)
@@ -37,22 +38,22 @@ const PaymentDetails = withSwal(({swal}) => {
     // console.log(date);
 
 
-    useEffect(() => {
-        const state = location.state
+    // useEffect(() => {
+    //     const state = location.state
         
-        setPaymentId(parseInt(state));
+    //     setPaymentId(parseInt(state));
         
         
-    }, [])
+    // }, [])
 
     
 
     useEffect(() => {
-        if(isNumber(paymentId)){
-            dispatch(getPaymentDetails(paymentId))
-        }
         
-    }, [paymentId])
+            dispatch(getPaymentDetails(paymentId))
+        
+        
+    }, [])
 
 
     const onCancel = () => {

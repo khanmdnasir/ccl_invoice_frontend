@@ -594,14 +594,17 @@ const RepeatingInvoiceForm = () => {
                                                             <Form.Control
                                                                 type='number'
                                                                 step="any"
-                                                                min="0"
-                                                                max="100"
                                                                 
-                                                                onKeyDown={(event) => {
-                                                                    event.preventDefault();
-                                                                  }}
                                                                 name='discount'
-                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                onChange={(e) => {
+                                                                    if(parseInt(e.target.value) > 99){
+                                                                        e.target.value = 99;
+                                                                    }
+                                                                    
+                                                                    if(parseInt(e.target.value) < 0){
+                                                                        e.target.value = 0;
+                                                                    }                                                                    
+                                                                    onOldItemsChange(e, index);}}
                                                                 value={item?.discount}
                                                             >
 
@@ -640,14 +643,17 @@ const RepeatingInvoiceForm = () => {
                                                             <Form.Control
                                                                 type='number'
                                                                 step="any"
-                                                                min="0"
-                                                                max="100"
                                                                 
-                                                                onKeyDown={(event) => {
-                                                                    event.preventDefault();
-                                                                  }}
                                                                 name='tax_rate'
-                                                                onChange={(e) => onOldItemsChange(e, index)}
+                                                                onChange={(e) => {
+                                                                    if(parseInt(e.target.value) > 99){
+                                                                        e.target.value = 99;
+                                                                    }
+                                                                    
+                                                                    if(parseInt(e.target.value) < 0){
+                                                                        e.target.value = 0;
+                                                                    }                                                                    
+                                                                    onOldItemsChange(e, index);}}
                                                                 value={item?.tax_rate}
                                                             >
 
@@ -739,14 +745,17 @@ const RepeatingInvoiceForm = () => {
                                                             <Form.Control
                                                                 type='number'
                                                                 step="any"
-                                                                min="0"
-                                                                max="100"
-                                                                
-                                                                onKeyDown={(event) => {
-                                                                    event.preventDefault();
-                                                                  }}
+                                                                onChange={(e) => {
+                                                                    if(parseInt(e.target.value) > 99){
+                                                                        e.target.value = 99;
+                                                                    }
+                                                                    
+                                                                    if(parseInt(e.target.value) < 0){
+                                                                        e.target.value = 0;
+                                                                    }                                                                    
+                                                                    onNewItemsChange(e, index);}}
                                                                 name='discount'
-                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                
                                                                 value={item?.discount}
                                                             >
 
@@ -785,14 +794,17 @@ const RepeatingInvoiceForm = () => {
                                                             <Form.Control
                                                                 type='number'
                                                                 step="any"
-                                                                min="0"
-                                                                max="100"
                                                                 
-                                                                onKeyDown={(event) => {
-                                                                    event.preventDefault();
-                                                                  }}
                                                                 name='tax_rate'
-                                                                onChange={(e) => onNewItemsChange(e, index)}
+                                                                onChange={(e) => {
+                                                                    if(parseInt(e.target.value) > 99){
+                                                                        e.target.value = 99;
+                                                                    }
+                                                                    
+                                                                    if(parseInt(e.target.value) < 0){
+                                                                        e.target.value = 0;
+                                                                    }                                                                    
+                                                                    onNewItemsChange(e, index);}}
                                                                 value={item?.tax_rate}
                                                             >
 

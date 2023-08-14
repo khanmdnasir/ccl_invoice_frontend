@@ -13,7 +13,7 @@ import classNames from 'classnames';
 
 // components
 import Pagination from './Pagination';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 
 interface GlobalFilterProps {
     preGlobalFilteredRows: any;
@@ -113,7 +113,6 @@ const Table = (props: TableProps) => {
     const isSelectable = props['isSelectable'] || false;
     const isExpandable = props['isExpandable'] || false;
     const sizePerPageList = props['sizePerPageList'] || [];
-
     let otherProps: any = {};
 
     if (isSearchable) {
@@ -201,19 +200,19 @@ const Table = (props: TableProps) => {
 
     let rows = pagination ? dataTable.page : dataTable.rows;
     
-    const handleClick = (id:any) => {
-        if(isDetails){
-            history.push({
-                pathname: pathName,
-                state: id
-            })
+    // const handleClick = (id:any) => {
+    //     if(isDetails){
+    //         history.push({
+    //             pathname: pathName,
+    //             state: id
+    //         })
             
 
             
-        }
+    //     }
     
         
-    }
+    // }
     return (
         <>
             <div>
@@ -255,21 +254,47 @@ const Table = (props: TableProps) => {
                         {(rows || []).map((row: any, i: number) => {
                             dataTable.prepareRow(row);
                             return (
-                                <tr {...row.getRowProps()} className={isDetails && 'table-cursor'}>
+                                
+                                <tr {...row.getRowProps()}  >
                                     {(row.cells || []).map((cell: any) => {
-                                        
                                         return (
-                                            <td
+                                            
+                                            isDetails && cell.column.Header !== 'Status' && cell.column.Header !== 'Client' && cell.column.Header !== 'Action' ?
+                                            <Link 
+                                            to={
+                                                
+                                                pathName+`/${row.original.id}`
+                                            }
+                                           
+                                            style={{display: 'table-cell',textDecoration: 'none',color: 'inherit'}}
                                                 {...cell.getCellProps([
                                                     {
                                                         className: cell.column.className,
                                                         
                                                     },
                                                 ])}
-                                                onClick={()=> { cell.column.Header !== 'Status' && cell.column.Header !== 'Client' && cell.column.Header !== 'Action' && handleClick(row.original.id)}}
+                                                
                                             >
+                                                
                                                 {cell.render('Cell')}
-                                            </td>
+                                                
+                                            </Link>:
+                                            <div
+                                           
+                                            style={{display: 'table-cell'}}
+                                                {...cell.getCellProps([
+                                                    {
+                                                        className: cell.column.className,
+                                                        
+                                                    },
+                                                ])}
+                                                
+                                            >
+                                                
+                                                {cell.render('Cell')}
+                                                
+                                            </div>
+                                            
                                         );
                                     })}
                                 </tr>

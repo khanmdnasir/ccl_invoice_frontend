@@ -25,6 +25,10 @@ th {
 .table-cursor {
     cursor: pointer;
 }
+
+.table-disabled {
+    pointer-events: none;
+}
 // Custom table components (Custom)
 .table {
     .table-user {
