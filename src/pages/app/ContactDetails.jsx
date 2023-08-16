@@ -30,7 +30,6 @@ import {
   setContactSuccessAlert,
   getContactService,
   updateContact,
-  getClientBalance,
   getCountry,
   getAllKam,
   getDueInvoices,
@@ -649,7 +648,7 @@ const ContactDetails = withSwal(({ swal }) => {
       dispatch(getContactDetails(client_id));
       dispatch(getContactInvoiceSetting(client_id));
       dispatch(getContactService(client_id, servicePageSize, 1));
-      dispatch(getClientBalance(client_id));
+      // dispatch(getClientBalance(client_id));
       dispatch(getDueInvoices(client_id));
       // dispatch(getContact(client_id, pageSize, 1));
       dispatch(updateContact(client_id));
@@ -1159,7 +1158,7 @@ const ContactDetails = withSwal(({ swal }) => {
                 <Card.Body>
                   <div className="d-flex justify-content-between">
                     <p style={{fontSize: '16px'}}>
-                    <b style={{marginRight: '5px'}}>Balance</b> <span>{scurrency?.symbol}{contact_details?.balance?.toLocaleString(undefined, {maximumFractionDigits:2})}</span> 
+                    <b style={{marginRight: '5px'}}>Balance</b> <span>{scurrency?.symbol}{contact_details?.client_balance?.toLocaleString(undefined, {maximumFractionDigits:2})}</span> 
                     </p>
                     <p style={{fontSize: '16px'}}>
                     <b style={{marginRight: '5px'}}>Due</b> <span>{scurrency?.symbol}{contact_details?.due?.toLocaleString(undefined, {maximumFractionDigits:2})}</span> 
