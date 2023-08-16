@@ -22,7 +22,7 @@ const api = new APICore()
 
 const InvoiceDetails = withSwal(({swal}) => {
     const { invoiceId } = useParams();
-    console.log('invoice params',invoiceId)
+   
     // const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch();
