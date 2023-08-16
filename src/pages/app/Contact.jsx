@@ -64,7 +64,7 @@ const columns = [
     sort: true,
     Cell: (row) => {
       const scurrency = useSelector(state => state.Currency.selectedCurrency)
-      return <div>{scurrency?.symbol}{row?.row?.original?.balance!==null?(row?.row?.original?.balance).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
+      return <div>{scurrency?.symbol}{row?.row?.original?.client_balance!==null?(row?.row?.original?.client_balance).toLocaleString(undefined, {maximumFractionDigits:2}):0}</div>;
   }
   },
   {
