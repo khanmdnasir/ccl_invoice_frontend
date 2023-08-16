@@ -178,11 +178,17 @@ const ChartOfAccounts = () => {
     };
 
     const previous_number = () => {
+        if(previous !== null){
         dispatch(getChartAccount(pageSize,previous));
+
+        }
     };
 
     const next_number = () => {
+        if(next !== null){
         dispatch(getChartAccount(pageSize,next));
+
+        }
     };
 
     useEffect(() => {

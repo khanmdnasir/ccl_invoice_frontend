@@ -168,11 +168,17 @@ const CompanySettings = () => {
     };
 
     const previous_number = () => {
+        if(previous !== null){
         dispatch(getCompanySettings(pageSize, previous));
+
+        }
     };
 
     const next_number = () => {
+        if(next !== null){
         dispatch(getCompanySettings(pageSize, next));
+
+        }
     };
 
     useEffect(() => {

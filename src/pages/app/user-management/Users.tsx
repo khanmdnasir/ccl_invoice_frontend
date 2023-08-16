@@ -231,11 +231,17 @@ const Users = () => {
     };
 
     const previous_number = () => {
+        if(previous !== null){
         dispatch(getUser(pageSize,previous));
+
+        }
     };
 
     const next_number = () => {
-        dispatch(getUser(pageSize,next));
+        if(next !== null){
+            dispatch(getUser(pageSize,next));
+
+        }
     };
 
     /*
