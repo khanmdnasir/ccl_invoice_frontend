@@ -180,11 +180,17 @@ const KeyAccountManager = () => {
 };
 
 const previous_number = () => {
+  if(previous !== null){
     dispatch(getKam(pageSize,previous));
+
+  }
 };
 
 const next_number = () => {
+  if(next !== null){
     dispatch(getKam(pageSize,next));
+
+  }
 };
 
 useEffect(()=>{

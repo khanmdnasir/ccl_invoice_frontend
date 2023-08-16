@@ -128,11 +128,17 @@ const Role = () => {
     };
 
     const previous_number = () => {
-        dispatch(getRoles(pageSize,previous));
+        if(previous !== null){
+            dispatch(getRoles(pageSize,previous));
+
+        }
     };
 
     const next_number = () => {
-        dispatch(getRoles(pageSize,next));
+        if(next !== null){
+            dispatch(getRoles(pageSize,next));
+
+        }
     };
 
     useEffect(()=>{

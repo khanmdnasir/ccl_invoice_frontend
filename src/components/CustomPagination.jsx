@@ -5,13 +5,14 @@ import classNames from 'classnames';
 
 const Pagination = ({visitPage, previous_number ,next_number ,total_page ,current_page ,active}) => {
     
+    
     const filterPages = useCallback(
         (visiblePages, totalPages) => {
             return visiblePages.filter((page) => page <= totalPages);
         },
         [total_page]
     );
-
+    
     const getVisiblePages = useCallback(
         (page, total) => {
             if (total < 7) {

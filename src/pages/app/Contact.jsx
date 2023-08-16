@@ -109,11 +109,17 @@ const Contact = () => {
   };
 
   const previous_number = () => {
+    if(previous !== null){
     dispatch(getContact(pageSize, previous));
+
+    }
   };
 
   const next_number = () => {
+    if(next !== null){
     dispatch(getContact(pageSize, next));
+
+    }
   };
 
   /*

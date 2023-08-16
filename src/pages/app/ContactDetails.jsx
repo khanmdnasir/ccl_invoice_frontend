@@ -567,11 +567,15 @@ const ContactDetails = withSwal(({ swal }) => {
   };
 
   const invoice_previous_number = () => {
+    if(invoice_previous !== null){
     dispatch(getContactInvoice(client_id, invoicePageSize, invoice_previous));
+    }
   };
 
   const invoice_next_number = () => {
+    if(invoice_next !== null){
     dispatch(getContactInvoice(client_id, invoicePageSize, invoice_next));
+    }
   };
   const visitRepeatingInvoicePage = (page) => {
     dispatch(
@@ -580,6 +584,7 @@ const ContactDetails = withSwal(({ swal }) => {
   };
 
   const repeating_invoice_previous_number = () => {
+    if(repeating_invoice_previous !== null){
     dispatch(
       getContactRepeatingInvoice(
         client_id,
@@ -587,9 +592,11 @@ const ContactDetails = withSwal(({ swal }) => {
         repeating_invoice_previous
       )
     );
+      }
   };
 
   const repeating_invoice_next_number = () => {
+    if(repeating_invoice_next !== null){
     dispatch(
       getContactRepeatingInvoice(
         client_id,
@@ -597,28 +604,39 @@ const ContactDetails = withSwal(({ swal }) => {
         repeating_invoice_next
       )
     );
+      }
   };
   const visitServicePage = (page) => {
     dispatch(getContactInvoice(client_id, servicePageSize, page));
   };
 
   const service_previous_number = () => {
+    if(service_previous !== null){
     dispatch(getContactService(client_id, servicePageSize, service_previous));
+    }
   };
 
   const service_next_number = () => {
+    if(service_next !== null){
     dispatch(getContactService(client_id, servicePageSize, service_next));
+    }
   };
   const visitPaymentPage = (page) => {
     dispatch(getContactPayment(client_id, paymentPageSize, page));
   };
 
   const payment_previous_number = () => {
-    dispatch(getContactPayment(client_id, paymentPageSize, payment_previous));
+    if(payment_previous !== null){
+      dispatch(getContactPayment(client_id, paymentPageSize, payment_previous));
+    }
+    
   };
 
   const payment_next_number = () => {
-    dispatch(getContactPayment(client_id, paymentPageSize, payment_next));
+    if(payment_next !== null){
+      dispatch(getContactPayment(client_id, paymentPageSize, payment_next));
+    }
+    
   };
 
   useEffect(() => {

@@ -245,17 +245,23 @@ const Invoice = () => {
     /*
      *   modal handeling
      */
-
+    
     const visitPage = (page) => {
         dispatch(getInvoice(pageSize, page,activePage));
     };
 
     const previous_number = () => {
-        dispatch(getInvoice(pageSize, previous,activePage));
+        if(previous !== null){
+            dispatch(getInvoice(pageSize, previous,activePage));
+        }
+        
     };
 
     const next_number = () => {
-        dispatch(getInvoice(pageSize, next,activePage));
+        if(next !== null){
+            dispatch(getInvoice(pageSize, next,activePage));
+        }
+        
     };
 
     /*
