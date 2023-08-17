@@ -87,6 +87,7 @@ const InvoiceStatusColumn = ({ row }) => {
           "bg-soft-warning text-warning":
             row.original.status === "partial_paid",
           "bg-soft-info text-info": row.original.status === "paid",
+          "bg-soft-danger text-info": row.original.status === "void",
         })}
       >
         {status}
