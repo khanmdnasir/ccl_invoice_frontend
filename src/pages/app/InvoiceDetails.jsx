@@ -335,14 +335,14 @@ const InvoiceDetails = withSwal(({swal}) => {
                                 <Dropdown.Item onClick={()=>handleStatusChange('approve')}
 
                                 >
-                                Approve                                    
+                                <i className="mdi mdi-check me-1"></i>Approve                                    
                                 </Dropdown.Item>
                                 }
                                 {invoiceDetails?.status === "approve" &&
                                 <Dropdown.Item onClick={()=>handleStatusChange('void')}
 
                                 >
-                                Void                                    
+                                <i className="mdi mdi-cancel me-1"></i>Void                                    
                                 </Dropdown.Item>
                                 }
 
