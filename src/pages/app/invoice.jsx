@@ -39,6 +39,7 @@ const StatusColumn = ({ row }) => {
                     'bg-soft-success text-success': row.original.status === "approve",
                     'bg-soft-warning text-warning': row.original.status === "partial_paid",
                     'bg-soft-info text-info': row.original.status === "paid",
+                    'bg-soft-danger text-info': row.original.status === "void",
                 })}
             >
 
@@ -280,6 +281,9 @@ const Invoice = () => {
         } else if (value === 'paid') {
             setActivePage('paid');
         }
+        else if(value === 'void'){
+            setActivePage('void')
+        }
         else if(value === 'repeating'){
             setActivePage('repeating')
         }
@@ -357,6 +361,11 @@ const Invoice = () => {
                     <Nav.Item as="li" key='paid'>
                         <Nav.Link active={activePage === "paid"} className="cursor-pointer" href="#" eventKey='paid' onClick={() => onClickEvent('paid')}>
                             Paid
+                        </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item as="li" key='void'>
+                        <Nav.Link active={activePage === "void"} className="cursor-pointer" href="#" eventKey='void' onClick={() => onClickEvent('void')}>
+                            Void
                         </Nav.Link>
                     </Nav.Item>
                     <Nav.Item as="li" key='repeating'>

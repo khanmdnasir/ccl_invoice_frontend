@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Form, Alert,Button } from 'react-bootstrap';
+import { Row, Col, Card, Form, Alert,Button, Dropdown } from 'react-bootstrap';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useLocation } from 'react-router-dom';
@@ -219,40 +219,45 @@ const InvoiceDetails = withSwal(({swal}) => {
                        
     }
 
-    const draftsOptions =
-        <>
-            <option disabled selected={invoiceDetails?.status === 'draft'} value='draft'>Draft</option>
-            <option selected={invoiceDetails?.status === 'waiting'} value='waiting'>Waiting</option>
-            <option selected={invoiceDetails?.status === 'approve'} value='approve'>Approved</option>
-        </>
+    // const draftsOptions =
+    //     <>
+    //         <option disabled selected={invoiceDetails?.status === 'draft'} value='draft'>Draft</option>
+    //         <option selected={invoiceDetails?.status === 'void'} value='void'>Void</option>
+    //         <option selected={invoiceDetails?.status === 'approve'} value='approve'>Approved</option>
+    //     </>
 
-    const waitingsOptions =
-        <>
-            <option disabled selected={invoiceDetails?.status === 'waiting'} value='waiting'>Waiting</option>
-            <option selected={invoiceDetails?.status === 'approve'} value='approve'>Approved</option>
-        </>
+    // const voidOptions =
+    //     <>
+    //         <option disabled selected={invoiceDetails?.status === 'void'} value='void'>Void</option>
+    //         <option selected={invoiceDetails?.status === 'draft'} value='draft'>Draft</option>
+    //         <option selected={invoiceDetails?.status === 'approve'} value='approve'>Approved</option>
+    //         {/* <option selected={invoiceDetails?.status === 'partial_paid'} value='partial_paid'>Partial Paid</option>
+    //         <option selected={invoiceDetails?.status === 'paid'} value='paid'>Paid</option> */}
+    //     </>
 
-    const approvesOptions =
-        <>
-            <option disabled selected={invoiceDetails?.status === 'approve'} value='approve'>Approved</option>
-            <option selected={invoiceDetails?.status === 'partial_paid'} value='partial_paid'>Partial Paid</option>
-            <option selected={invoiceDetails?.status === 'paid'} value='paid'>Paid</option>
-        </>
+    // const approvesOptions =
+    //     <>
+    //         <option disabled selected={invoiceDetails?.status === 'approve'} value='approve'>Approved</option>
+    //         <option selected={invoiceDetails?.status === 'void'} value='void'>Void</option>
+    //         {/* <option selected={invoiceDetails?.status === 'draft'} value='draft'>Draft</option> */}
+    //         {/* <option selected={invoiceDetails?.status === 'partial_paid'} value='partial_paid'>Partial Paid</option>
+    //         <option selected={invoiceDetails?.status === 'paid'} value='paid'>Paid</option> */}
+    //     </>
 
-    const partialPaidsOptions =
-        <>
-            <option disabled selected={invoiceDetails?.status === 'partial_paid'} value='partial_paid'>Partial Paid</option>
-            <option selected={invoiceDetails?.status === 'paid'} value='paid'>Paid</option>
-        </>
+    // const partialPaidsOptions =
+    //     <>
+    //         <option disabled selected={invoiceDetails?.status === 'partial_paid'} value='partial_paid'>Partial Paid</option>
+    //         {/* <option selected={invoiceDetails?.status === 'paid'} value='paid'>Paid</option> */}
+    //     </>
 
-    const paidsOptions =
-        <>
-            <option disabled selected={invoiceDetails?.status === 'paid'} value='paid'>Paid</option>
-        </>
+    // const paidsOptions =
+    //     <>
+    //         <option disabled selected={invoiceDetails?.status === 'paid'} value='paid'>Paid</option>
+    //     </>
 
-    const handleStatusChange = (e) => {
+    const handleStatusChange = (value) => {
 
-        const value = e.target.value;
+        // const value = e.target.value;
         const data = {
             "status": value
         }
@@ -276,9 +281,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                                     'Invoice Status has been Updated.',
                                     'success'
                                 );
-                                if (isNumber(invoiceId)) {
-                                    dispatch(getInvoiceDetails(invoiceId))
-                                }
+                                history.push({pathname:'/app/invoice',state: value})
                             }
                             else {
                                 swal.fire(
@@ -320,15 +323,91 @@ const InvoiceDetails = withSwal(({swal}) => {
                         <Card.Body>
                             {loading ? <p>Loading...</p> :
                             <>
-                            <Row className="mb-3">
-                                <Col sm={4}>
-                                    {/* <span>{invoiceDetails?.status}</span> */}
-                                            {((invoiceDetails?.status === "draft" || invoiceDetails?.status === "waiting") || (company_setting_by_key?.value_text !== "1")) && invoiceDetails?.status !== "paid" ? 
+                            <div className="mb-3 d-flex justify-content-end">
+                            <Dropdown style={{ marginBottom: "30px" }}>
+                                <Dropdown.Toggle variant="primary" id="client_statement_dropdown">
+                                Actions <i className="mdi mdi-chevron-down"></i>
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                
+                                {invoiceDetails?.status === "draft" &&
+                                <Dropdown.Item onClick={()=>handleStatusChange('approve')}
+
+                                >
+                                Approve                                    
+                                </Dropdown.Item>
+                                }
+                                {invoiceDetails?.status === "approve" &&
+                                <Dropdown.Item onClick={()=>handleStatusChange('void')}
+
+                                >
+                                Void                                    
+                                </Dropdown.Item>
+                                }
+
+                                <Dropdown.Item onClick={()=> openPdf()} disabled={printLoading}
+
+                                >
+                                
+                                {printLoading ?
+                                                <Spinner color='success' />:    
+                                            <>
+                                            <i className="mdi mdi-printer me-1"></i> Print</>}
+                                    
+                                </Dropdown.Item>
+
+                                {user_role.includes('change_invoice') && invoiceDetails?.status === 'draft' && 
+                                <Dropdown.Item as={Link} to={{ pathname: '/app/invoice_form', state: { invoiceId : invoiceId } }}
+
+                                >
+                                
+                                <i className="mdi mdi-square-edit-outline me-1"></i>Edit
+                                    
+                                </Dropdown.Item>
+                                }
+
+                                {user_role.includes('delete_invoice') && invoiceDetails?.status === 'draft' && 
+                                <Dropdown.Item onClick={() => onDelete()}
+
+                                >
+                                
+                                <i className="mdi mdi-delete me-1"></i>Delete
+                                    
+                                </Dropdown.Item>
+                                }
+
+                                { !loading && (invoiceDetails?.status === "approve" || invoiceDetails?.status === "partial_paid") && (company_setting_by_key?.value_text === "1") &&
+                                <Dropdown.Item onClick={() => onOpenModal()}
+
+                                >
+                                
+                                <i className="mdi mdi-cash me-1"></i>Payment
+                                    
+                                </Dropdown.Item>
+                                }
+
+                                {invoiceDetails?.status === "approve" &&  user_role.includes('can_send_mail') &&
+                                <Dropdown.Item onClick={() => sendEmail()}
+
+                                >
+                                
+                                <i className="mdi mdi-email me-1"></i>Mail
+                                    
+                                </Dropdown.Item>
+                                }
+
+                                </Dropdown.Menu>
+                            </Dropdown>
+                                {/* <Col sm={2}>
+                                    
+                                    
+                                            {((invoiceDetails?.status === "draft" || invoiceDetails?.status === "approve") || (company_setting_by_key?.value_text !== "1")) && invoiceDetails?.status !== "paid" ? 
                                 <>
                                     <Form.Label>Status Change to</Form.Label>
-                                    <Form.Select value={invoiceStatus} onChange={(e) => handleStatusChange(e)}>
+                                    <Form.Select value={invoiceStatus} onChange={(e) => handleStatusChange(e)} styles={{width: '50% !important'}}>
                                         {invoiceDetails?.status === "draft" ? (draftsOptions) : null}
-                                        {invoiceDetails?.status === "waiting" ? (waitingsOptions) : null}
+                                        {invoiceDetails?.status === "void" ? (voidOptions) : null}
                                         {invoiceDetails?.status === "approve" ? (approvesOptions) : null}
                                         {invoiceDetails?.status === "partial_paid" ? (partialPaidsOptions) : null}
                                         {invoiceDetails?.status === "paid" ? (paidsOptions) : null}
@@ -337,8 +416,8 @@ const InvoiceDetails = withSwal(({swal}) => {
                                  : null}
                                 </Col>
 
-                                <Col sm={8}>
-                                    <Form.Label></Form.Label>
+                                <Col sm={10}>
+                                    
                                     <div className="text-sm-end mt-2 mt-sm-0">
                                         
                                             <Button className="btn btn-primary me-2 " style={{height: '38px', width: '100px'}} onClick={()=> openPdf()} disabled={printLoading}>
@@ -380,8 +459,8 @@ const InvoiceDetails = withSwal(({swal}) => {
                                         }
 
                                     </div>
-                                </Col>
-                            </Row>
+                                </Col> */}
+                            </div>
                             <Form>
                                 <div className='mb-4'>
                                         {!loading && invoice_payment_success && (
