@@ -41,7 +41,7 @@ const InvoiceForm = () => {
     const contact_services = useSelector((state) => state.Service.services);
     const [contact, setContact] = useState();
     const [stateContact, setStateContact] = useState();
-    const [contactId, setContactId] = useState('');
+    const [contactId, setContactId] = useState(false);
     const [invoiceId, setInvoiceId] = useState(null);
     const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
     const [due_date, setDueDate] = useState('');
@@ -314,29 +314,35 @@ const InvoiceForm = () => {
         setSuccess(null);
         let formatDate = format(new Date(date), 'yyyy-MM-dd');
         let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
-        if(newItems.length > 0){
-            api.create(`/api/invoice/`, { 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
-            .then(res => {
-
-                if (res.data.success) {
-                    setSuccess('Data Saved Successfully');
-                    setRloading(false);
-                    setTimeout(() => {
-                        history.push('/app/invoice')
-                    }, 2000);
-                } else {
-                    setError(res.data.error)
-                    setRloading(false);
-
-                }
-
-            })
-            .catch(err => {
-                setError(err)
-            })
+        console.log('contact ',contactId)
+        if(contactId){
+            if(newItems.length > 0){
+                api.create(`/api/invoice/`, { 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
+                .then(res => {
+    
+                    if (res.data.success) {
+                        setSuccess('Data Saved Successfully');
+                        setRloading(false);
+                        setTimeout(() => {
+                            history.push('/app/invoice')
+                        }, 2000);
+                    } else {
+                        setError(res.data.error)
+                        setRloading(false);
+    
+                    }
+    
+                })
+                .catch(err => {
+                    setError(err)
+                })
+            }else{
+                setError("Please add at least one service")
+            }
         }else{
-            setError("Please add at least one service")
+            setError("Please select a client")
         }
+        
         
     }
 
@@ -348,7 +354,9 @@ const InvoiceForm = () => {
         let formatDate = format(new Date(date), 'yyyy-MM-dd');
         let formatDueDate = format(new Date(due_date), 'yyyy-MM-dd');
 
+        if(contactId){
         if(oldItems.length > 0){
+            
             api.updatePatch(`/api/invoice/${invoiceId}/`, { 'contact_id': contactId, 'date': formatDate, 'due_date': formatDueDate, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
             .then(res => {
 
@@ -372,6 +380,9 @@ const InvoiceForm = () => {
             setRloading(false)
             setError("You have to add at least one service")
         }
+    }else{
+        setError("Please select a client")
+    }
         
     }
     return (
@@ -406,7 +417,6 @@ const InvoiceForm = () => {
                                             { stateContact ?
                                             <Form.Select
                                                 aria-label="Default select example"
-                                                
                                                 disabled={contactId}
                                                 value={contactId}
                                             >
@@ -475,6 +485,7 @@ const InvoiceForm = () => {
                                                 type='date'
                                                 required
                                                 name='due_date'
+                                                min={date}
                                                 onChange={(e) => setDueDate(e.target.value)}
                                                 value={due_date}
                                             >
@@ -865,8 +876,9 @@ const InvoiceForm = () => {
                                     <Button variant="info" type="submit" className="waves-effect waves-light me-1" >
                                         Save
                                     </Button>
+                                   
                                     <div>
-                                        <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading} onClick={() => setStatus('approve')}>
+                                        <Button variant="success" type="submit" className="waves-effect waves-light me-1" disabled={rloading || (oldItems.length > 0 && status === 'approve')} onClick={() => setStatus('approve')}>
                                             {rloading ? 'Loading...' : 'Approve'}
                                         </Button>
                                         <Link
@@ -877,6 +889,7 @@ const InvoiceForm = () => {
                                             Cancel
                                         </Link>
                                     </div>
+                                    
                                 </div>
 
 

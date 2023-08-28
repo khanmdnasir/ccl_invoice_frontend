@@ -35,7 +35,7 @@ const RepeatingInvoiceForm = () => {
     const [oldItems, setOldItems] = useState([]);
     const repeating_invoice_details = useSelector((state) => state.RepeatingInvoice.repeating_invoice_details);
     const contact_services = useSelector((state) => state.Service.services);
-    const [contactId, setContactId] = useState('');
+    const [contactId, setContactId] = useState(false);
     const [stateContact, setStateContact] = useState();
     // const [invoiceNo, setInvoiceNo] = useState('');
     const [contact, setContact] = useState();
@@ -301,28 +301,33 @@ const RepeatingInvoiceForm = () => {
         setRloading(true);
         setError(null);
         setSuccess(null);
-        if(newItems.length > 0){
-            api.create(`/api/repeating-invoice/`, { 'contact_id': contactId, 'date': date, 'due_date': due_date, 'repeat_date': repeat_date, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
-            .then(res => {
+        if(contactId){
 
-                if (res.data.success) {
-                    setSuccess('Data Saved Successfully');
+            if(newItems.length > 0){
+                api.create(`/api/repeating-invoice/`, { 'contact_id': contactId, 'date': date, 'due_date': due_date, 'repeat_date': repeat_date, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': newItems })
+                .then(res => {
+    
+                    if (res.data.success) {
+                        setSuccess('Data Saved Successfully');
+                        setRloading(false);
+                        setTimeout(() => {
+                            history.push('/app/repeating_invoice')
+                        }, 2000);
+                    } else {
+                        setError(res.data.error)
+    
+                    }
+    
+                })
+                .catch(err => {
+                    setError(err)
                     setRloading(false);
-                    setTimeout(() => {
-                        history.push('/app/repeating_invoice')
-                    }, 2000);
-                } else {
-                    setError(res.data.error)
-
-                }
-
-            })
-            .catch(err => {
-                setError(err)
-                setRloading(false);
-            })
+                })
+            }else{
+                setError('Please add at least one service');
+            }
         }else{
-            setError('Please add at least one service');
+            setError("Please select a client")
         }
         
     }
@@ -332,28 +337,33 @@ const RepeatingInvoiceForm = () => {
         setRloading(true);
         setError(null);
         setSuccess(null);
-        if(newItems.length > 0 || oldItems.length > 0){
-            api.updatePatch(`/api/repeating-invoice/${invoiceId}/`, {'contact_id': contactId, 'date': date, 'due_date': due_date, 'repeat_date': repeat_date, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
-            .then(res => {
+        if(contactId){
 
-                if (res.data.success) {
-                    setSuccess('Data Updated Successfully');
-                    setRloading(false);
-                    setTimeout(() => {
-                        history.push('/app/repeating_invoice')
-                    }, 2000);
-                } else {
-                    setError(res.data.error)
-                    setRloading(false)
-                }
-
-            })
-            .catch(err => {
-                setError(err)
-            })
+            if(newItems.length > 0 || oldItems.length > 0){
+                api.updatePatch(`/api/repeating-invoice/${invoiceId}/`, {'contact_id': contactId, 'date': date, 'due_date': due_date, 'repeat_date': repeat_date, 'reference': reference, 'currency': currency, 'tax_type': tax_type, 'sub_total': sub_total, 'discount': discount, 'total_tax': total_tax, 'status': status, 'total_amount': total_amount, 'items': oldItems, 'new_items': newItems, 'deleted_items': deletedItems })
+                .then(res => {
+    
+                    if (res.data.success) {
+                        setSuccess('Data Updated Successfully');
+                        setRloading(false);
+                        setTimeout(() => {
+                            history.push('/app/repeating_invoice')
+                        }, 2000);
+                    } else {
+                        setError(res.data.error)
+                        setRloading(false)
+                    }
+    
+                })
+                .catch(err => {
+                    setError(err)
+                })
+            }else{
+                setRloading(false)
+                setError('You have to add at least one service');
+            }
         }else{
-            setRloading(false)
-            setError('You have to add at least one service');
+            setError("Please select a client")
         }
         
     }
