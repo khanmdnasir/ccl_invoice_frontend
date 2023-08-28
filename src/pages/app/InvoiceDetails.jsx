@@ -357,7 +357,7 @@ const InvoiceDetails = withSwal(({swal}) => {
                                     
                                 </Dropdown.Item>
 
-                                {user_role.includes('change_invoice') && invoiceDetails?.status === 'draft' && 
+                                {user_role.includes('change_invoice') && (invoiceDetails?.status === 'draft' || invoiceDetails?.status === 'approve') && 
                                 <Dropdown.Item as={Link} to={{ pathname: '/app/invoice_form', state: { invoiceId : invoiceId } }}
 
                                 >
