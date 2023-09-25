@@ -1,6 +1,6 @@
 FROM node:16-alpine
 RUN apk update && apk add git
-WORKDIR /frontend
+WORKDIR /
 COPY package.json /frontend
 COPY yarn.lock /frontend
 COPY . .
